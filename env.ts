@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-
-
 const envVariables = z.object({
   DATABASE_URL: z.string(),
 });
