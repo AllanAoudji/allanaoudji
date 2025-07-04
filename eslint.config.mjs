@@ -14,7 +14,18 @@ const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript", "prettier"],
     rules: {
+      "@typescript-eslint/no-empty-object-type": ["off"],
+      "@typescript-eslint/no-namespace": ["off"],
+      "comma-dangle": ["error", "always-multiline"],
       indent: ["error", 2],
+      "key-spacing": [
+        "error",
+        {
+          afterColon: true,
+          beforeColon: false,
+          mode: "strict",
+        },
+      ],
       "linebreak-style": ["error", "unix"],
       "no-unused-vars": "warn",
       "prefer-arrow-callback": ["error"],
