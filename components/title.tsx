@@ -4,7 +4,7 @@ type props = {
 
 export default function Title({ children }: props) {
 	return (
-		<h1 className="border-b-4 bg-amber-200 px-8 py-5 text-4xl font-bold text-green-600 uppercase">
+		<h1 className="border-b-4 bg-emerald-50 px-8 py-5 text-2xl font-bold text-red-400 uppercase">
 			{children}
 		</h1>
 	);
