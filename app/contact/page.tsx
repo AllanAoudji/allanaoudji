@@ -3,7 +3,7 @@ import Title from "@/components/title";
 export default function Contact() {
 	return (
 		<div>
-			<Title title="Contact" />
+			<Title>Contact</Title>
 		</div>
 	);
 }

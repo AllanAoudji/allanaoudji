@@ -4,7 +4,7 @@ export default async function TagDetail({ params }: { params: Promise<{ tagId: s
 	const { tagId } = await params;
 	return (
 		<div>
-			<Title title={`Galerie - tags: ${tagId}`} />
+			<Title>Galerie - tags: {tagId}</Title>
 		</div>
 	);
 }

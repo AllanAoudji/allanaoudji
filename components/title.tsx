@@ -1,7 +1,7 @@
 type props = {
-	title: string;
+	children: string | string[];
 };
 
-export default function Title({ title }: props) {
-	return <h1 className="text-3xl uppercase">{title}</h1>;
+export default function Title({ children }: props) {
+	return <h1 className="text-3xl uppercase">{children}</h1>;
 }

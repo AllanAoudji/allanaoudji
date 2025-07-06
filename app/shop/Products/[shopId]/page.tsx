@@ -4,7 +4,7 @@ export default async function ShopDetail({ params }: { params: Promise<{ shopId:
 	const { shopId } = await params;
 	return (
 		<div>
-			<Title title={`shop - produits: ${shopId}`} />
+			<Title>shop - produits: {shopId}</Title>
 		</div>
 	);
 }

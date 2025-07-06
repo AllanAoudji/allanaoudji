@@ -3,7 +3,7 @@ import Title from "@/components/title";
 export default function Tag() {
 	return (
 		<div>
-			<Title title="Galerie - tags" />
+			<Title>Galerie - tags</Title>
 		</div>
 	);
 }
