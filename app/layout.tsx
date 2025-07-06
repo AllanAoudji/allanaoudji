@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Menu from "@/components/menu";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,7 +10,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en">
-			<body className="antialiased">{children}</body>
+			<body className="antialiased">
+				<header>
+					<Menu />
+				</header>
+				{children}
+			</body>
 		</html>
 	);
 }
