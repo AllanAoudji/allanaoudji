@@ -1,7 +1,7 @@
 export default function Work() {
 	return (
 		<div>
-			<h1>Work</h1>
+			<h1>Gallerie</h1>
 		</div>
 	);
 }

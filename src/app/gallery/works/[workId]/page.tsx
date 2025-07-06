@@ -2,8 +2,8 @@ export default async function WorkDetail({ params }: { params: Promise<{ workId:
 	const { workId } = await params;
 	return (
 		<div>
-			<h1>Work</h1>
-			<h2>{workId}</h2>
+			<h1>Galerie - works</h1>
+			<h2>work: {workId}</h2>
 		</div>
 	);
 }
