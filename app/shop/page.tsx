@@ -1,7 +1,9 @@
+import Title from "@/components/title";
+
 export default function Shop() {
 	return (
 		<div>
-			<h1>Shop</h1>
+			<Title title="shop" />
 		</div>
 	);
 }

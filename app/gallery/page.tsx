@@ -1,7 +1,9 @@
+import Title from "@/components/title";
+
 export default function Work() {
 	return (
 		<div>
-			<h1>Gallerie</h1>
+			<Title title="galerie" />
 		</div>
 	);
 }
