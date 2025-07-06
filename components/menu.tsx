@@ -14,7 +14,7 @@ const routes: MenuItem[] = [
 	{
 		id: 0,
 		href: "/",
-		title: "Home",
+		title: "home",
 		activeSegment: null,
 	},
 	{
@@ -46,7 +46,7 @@ const routes: MenuItem[] = [
 export default function Menu() {
 	const activeSegment = useSelectedLayoutSegment();
 	return (
-		<ul className="sticky flex w-screen justify-end gap-4 bg-red-400 p-4 text-2xl text-emerald-50">
+		<ul className="sticky flex w-screen justify-end gap-4 bg-red-400 px-8 py-5 text-2xl text-emerald-50">
 			{routes.map(route => (
 				<li key={route.id}>
 					<Link href={route.href} className={activeSegment === route.activeSegment ? "underline" : ""}>
