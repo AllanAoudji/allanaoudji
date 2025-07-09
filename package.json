@@ -12,6 +12,11 @@
 		"lint:fix": "next lint --fix",
 		"prepare": "husky install"
 	},
+	"packageManager": "npm@0.5.2",
+	"overrides": {
+		"react": "$react",
+		"react-dom": "$react-dom"
+	},
 	"dependencies": {
 		"next": "15.3.5",
 		"react": "^19.0.0",
