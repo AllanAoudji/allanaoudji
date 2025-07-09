@@ -1,4 +1,4 @@
-import Title from "@/components/title";
+import Title from "@/components/Title";
 
 export default async function TagDetail({ params }: { params: Promise<{ tagId: string }> }) {
 	const { tagId } = await params;

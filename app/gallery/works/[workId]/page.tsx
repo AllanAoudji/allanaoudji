@@ -1,4 +1,4 @@
-import Title from "@/components/title";
+import Title from "@/components/Title";
 
 export default async function WorkDetail({ params }: { params: Promise<{ workId: string }> }) {
 	const { workId } = await params;

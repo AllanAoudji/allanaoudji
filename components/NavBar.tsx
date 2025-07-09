@@ -49,7 +49,7 @@ export default function Menu() {
 		<ul className="sticky flex w-screen justify-end gap-4 bg-red-400 px-8 py-5 text-2xl text-emerald-50">
 			{routes.map(route => (
 				<li key={route.id}>
-					<Link href={route.href} className={activeSegment === route.activeSegment ? "underline" : ""}>
+					<Link className={activeSegment === route.activeSegment ? "underline" : ""} href={route.href}>
 						{route.title}
 					</Link>
 				</li>
