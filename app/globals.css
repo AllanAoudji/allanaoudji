@@ -6,3 +6,7 @@
 	--color-tertiary: #bafff5;
 	--color-quaternary: #496580;
 }
+
+@utility text-fluid {
+	@apply text-[min(4vw,35px)];
+}
