@@ -36,9 +36,9 @@ const routes: MenuItem[] = [
 
 export default function Menu() {
 	return (
-		<ul className="sticky flex w-screen justify-between bg-red-400 px-8 py-5 text-2xl text-emerald-50">
-			<NavBarItem href={"/"} title="home" className="font-black" />
-			<div className="flex justify-end gap-4">
+		<nav className="sticky w-screen bg-red-400 px-8 py-5 text-2xl text-emerald-50">
+			<ul className="flex items-center justify-end gap-4">
+				<NavBarItem className="mr-auto font-black" href={"/"} title="home" />
 				{routes.map(route => (
 					<NavBarItem
 						activeSegment={route.activeSegment}
@@ -47,7 +47,7 @@ export default function Menu() {
 						title={route.title}
 					/>
 				))}
-			</div>
-		</ul>
+			</ul>
+		</nav>
 	);
 }

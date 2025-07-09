@@ -23,12 +23,9 @@ export default function NavBarItem({
 	const isActiveSegment = useSelectedLayoutSegment();
 
 	return (
-		<li>
-			<Link
-				className={`${className} + ${isActiveSegment === activeSegment ? "underline" : ""}`}
-				href={href}
-			>
-				{imageSrc ? <Image src={title} alt="test" width={208} height={300} /> : title}
+		<li className={className}>
+			<Link className={isActiveSegment === activeSegment ? "underline" : ""} href={href}>
+				{imageSrc ? <Image alt="test" height={300} src={title} width={208} /> : title}
 			</Link>
 		</li>
 	);
