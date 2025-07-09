@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import NavBarItem from "./NavBarItem";
 
 type MenuItem = {
 	id: number;
@@ -13,30 +10,24 @@ type MenuItem = {
 const routes: MenuItem[] = [
 	{
 		id: 0,
-		href: "/",
-		title: "home",
-		activeSegment: null,
-	},
-	{
-		id: 1,
 		href: "/gallery",
 		title: "galerie",
 		activeSegment: "gallery",
 	},
 	{
-		id: 2,
+		id: 1,
 		href: "/shop",
 		title: "boutique",
 		activeSegment: "shop",
 	},
 	{
-		id: 3,
+		id: 2,
 		href: "/about",
 		title: "à propos",
 		activeSegment: "about",
 	},
 	{
-		id: 4,
+		id: 3,
 		href: "/contact",
 		title: "contact",
 		activeSegment: "contact",
@@ -44,16 +35,19 @@ const routes: MenuItem[] = [
 ];
 
 export default function Menu() {
-	const activeSegment = useSelectedLayoutSegment();
 	return (
-		<ul className="sticky flex w-screen justify-end gap-4 bg-red-400 px-8 py-5 text-2xl text-emerald-50">
-			{routes.map(route => (
-				<li key={route.id}>
-					<Link className={activeSegment === route.activeSegment ? "underline" : ""} href={route.href}>
-						{route.title}
-					</Link>
-				</li>
-			))}
+		<ul className="sticky flex w-screen justify-between bg-red-400 px-8 py-5 text-2xl text-emerald-50">
+			<NavBarItem href={"/"} title="home" className="font-black" />
+			<div className="flex justify-end gap-4">
+				{routes.map(route => (
+					<NavBarItem
+						activeSegment={route.activeSegment}
+						href={route.href}
+						key={route.id}
+						title={route.title}
+					/>
+				))}
+			</div>
 		</ul>
 	);
 }
