@@ -36,7 +36,7 @@ const ITEMS: item[] = [
 export default function ContactSection() {
 	return (
 		<section className="section-container">
-			<SubTitle className="pb-10">Contact</SubTitle>
+			<SubTitle className="pb-16">Contact</SubTitle>
 			<ul className="items-gap grid grid-cols-1 sm:grid-cols-3">
 				{ITEMS.map(item => (
 					<ContactSectionItem

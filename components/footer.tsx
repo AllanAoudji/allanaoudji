@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
 	return (
-		<footer className="padding-container pt-64 pb-8 text-sm">
+		<footer className="padding-container pt-52 pb-8 text-sm">
 			<ul className="items-gap justify-center text-center sm:flex">
 				<li>
 					<Link href="/legal-notices">Mentions légales</Link>
