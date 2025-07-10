@@ -12,7 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	return (
 		<html lang="en">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
-				<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-2">
+				<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
 					<Menu />
 				</header>
 				<main className="padding-container mb-auto pt-28">{children}</main>

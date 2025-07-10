@@ -1,13 +1,13 @@
 import ContactSection from "@/components/ContactSection";
 import InstagramSection from "@/components/InstagramSection";
 import ShopSection from "@/components/ShopSection";
-import WorkSection from "@/components/WorkSection";
+import WorksSection from "@/components/WorksSection";
 
 export default function Home() {
 	return (
 		<>
 			<ShopSection />
-			<WorkSection />
+			<WorksSection />
 			<InstagramSection />
 			<ContactSection />
 		</>

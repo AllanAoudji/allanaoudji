@@ -17,7 +17,7 @@ export default function ContactSectionItem({
 }: Readonly<Props>) {
 	return (
 		<li className={`${className}`}>
-			<h3 className="text-lg font-bold uppercase italic">{title}</h3>
+			<h3 className="text-lg uppercase">{title}</h3>
 			<a href={href} target={target}>
 				{text}
 			</a>
