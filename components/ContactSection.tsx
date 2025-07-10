@@ -37,7 +37,7 @@ export default function ContactSection() {
 	return (
 		<section className="section-container">
 			<SubTitle className="pb-16">Contact</SubTitle>
-			<ul className="items-gap grid grid-cols-1 sm:grid-cols-3">
+			<ul className="items-gap grid-default">
 				{ITEMS.map(item => (
 					<ContactSectionItem
 						href={item.href}

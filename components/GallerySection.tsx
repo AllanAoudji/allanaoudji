@@ -1,41 +1,20 @@
-import GallerySectionItem from "@/components/GallerySectionItem";
+import SubTitle from "./SubTitle";
+import WorkImages from "./WorkImages";
+import WorkText from "./WorkText";
+import { Work } from "@/types/work";
 
 type Props = {
+	className?: string;
 	separator?: boolean;
+	work: Work;
 };
 
-type item = {
-	id: number;
-	href: string;
-	title: string;
-};
-
-const ITEMS: item[] = [
-	{
-		id: 0,
-		href: "sable-metallique",
-		title: "sable métallique",
-	},
-	{
-		id: 1,
-		href: "linogravures",
-		title: "linogravures",
-	},
-	{
-		id: 2,
-		href: "aquarelles",
-		title: "aquarelles",
-	},
-];
-
-export default function GallerySection({ separator }: Readonly<Props>) {
+export default function GallerySection({ className, separator = true, work }: Readonly<Props>) {
 	return (
-		<section
-			className={`${separator && "section-separator"} section-container items-gap grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`}
-		>
-			{ITEMS.map(item => (
-				<GallerySectionItem key={item.id} href={item.href} title={item.title} />
-			))}
+		<section className={`${className} section-container ${separator && "section-separator"}`}>
+			<SubTitle className="pb-4">{work.title}</SubTitle>
+			{work.text && <WorkText className="pb-4">{work.text}</WorkText>}
+			<WorkImages />
 		</section>
 	);
 }

@@ -5,7 +5,7 @@ export default function InstagramSection() {
 		<section className="section-container section-separator">
 			<SubTitle>Instagram</SubTitle>
 			<a
-				className="items-gap grid grid-cols-2 pt-5 sm:grid-cols-4"
+				className="items-gap grid-default pt-5"
 				href="https://www.instagram.com/allanaoudji/"
 				target="_blank"
 			>
