@@ -15,7 +15,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 				<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-2">
 					<Menu />
 				</header>
-				<main className="padding-container mb-auto pt-20">{children}</main>
+				<main className="padding-container mb-auto pt-28">{children}</main>
 				<Footer />
 			</body>
 		</html>
