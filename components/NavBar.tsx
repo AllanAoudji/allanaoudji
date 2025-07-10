@@ -36,17 +36,19 @@ const routes: MenuItem[] = [
 
 export default function Menu() {
 	return (
-		<nav className="bg-tertiary text-quaternary border-primary text-fluid sticky w-screen border-b-4">
-			<ul className="padding-container flex items-center justify-end gap-4">
-				<NavBarItem className="mr-auto font-black" href={"/"} title="home" />
+		<nav className="text-quaternary">
+			<ul className="padding-container items-gap flex items-center justify-end">
+				<NavBarItem className="mr-auto font-black" href={"/"} title="logo" />
 				{routes.map(route => (
 					<NavBarItem
 						activeSegment={route.activeSegment}
+						className="hidden sm:inline"
 						href={route.href}
 						key={route.id}
 						title={route.title}
 					/>
 				))}
+				<p className="inlin sm:hidden">hamburger</p>
 			</ul>
 		</nav>
 	);

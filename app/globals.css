@@ -23,10 +23,6 @@
 		@apply py-5;
 	}
 	.section-separator {
-		@apply border-quaternary border-b-4;
+		@apply border-quaternary border-b-2;
 	}
-}
-
-@utility text-fluid {
-	@apply text-[min(4vw,35px)];
 }
