@@ -1,9 +1,11 @@
-import Title from "@/components/Title";
+import InstagramSection from "@/components/InstagramSection";
+import WorkSection from "@/components/WorkSection";
 
 export default function Home() {
 	return (
-		<div>
-			<Title>Home</Title>
-		</div>
+		<>
+			<WorkSection />
+			<InstagramSection />
+		</>
 	);
 }

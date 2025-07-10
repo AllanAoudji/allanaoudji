@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en">
-			<body className="font-gopher flex h-screen flex-col justify-between antialiased">
+			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<header>
 					<Menu />
 				</header>
-				<main className="mb-auto h-10">{children}</main>
+				<main className="padding-container mb-auto">{children}</main>
 				<Footer />
 			</body>
 		</html>

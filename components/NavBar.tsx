@@ -36,8 +36,8 @@ const routes: MenuItem[] = [
 
 export default function Menu() {
 	return (
-		<nav className="bg-tertiary text-quaternary border-primary text-fluid sticky w-screen border-b-4 px-8 py-5">
-			<ul className="flex items-center justify-end gap-4">
+		<nav className="bg-tertiary text-quaternary border-primary text-fluid sticky w-screen border-b-4">
+			<ul className="padding-container flex items-center justify-end gap-4">
 				<NavBarItem className="mr-auto font-black" href={"/"} title="home" />
 				{routes.map(route => (
 					<NavBarItem
