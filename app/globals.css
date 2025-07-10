@@ -1,3 +1,5 @@
+@import url("https://use.typekit.net/ajn0gbi.css");
+
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -6,6 +8,8 @@
 	--color-secondary: #baddff;
 	--color-tertiary: #bafff5;
 	--color-quaternary: #496580;
+
+	--font-gopher: "gopher";
 }
 
 @utility text-fluid {
