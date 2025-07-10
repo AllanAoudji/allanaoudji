@@ -32,6 +32,12 @@ const routes: MenuItem[] = [
 		title: "contact",
 		activeSegment: "contact",
 	},
+	{
+		id: 4,
+		href: "/basket",
+		title: "panier",
+		activeSegment: "panier",
+	},
 ];
 
 export default function Menu() {
