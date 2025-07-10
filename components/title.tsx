@@ -1,11 +1,8 @@
 type props = {
 	children: string | string[];
+	className?: string;
 };
 
-export default function Title({ children }: props) {
-	return (
-		<h1 className="border-b-4 bg-emerald-50 px-8 py-5 text-2xl font-bold text-red-400 uppercase">
-			{children}
-		</h1>
-	);
+export default function Title({ children, className }: Readonly<props>) {
+	return <h1 className={`${className} text-quaternary text-3xl font-bold uppercase`}>{children}</h1>;
 }

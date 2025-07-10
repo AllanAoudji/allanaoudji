@@ -12,6 +12,11 @@
 		"lint:fix": "next lint --fix",
 		"prepare": "husky install"
 	},
+	"packageManager": "npm@0.5.2",
+	"overrides": {
+		"react": "$react",
+		"react-dom": "$react-dom"
+	},
 	"dependencies": {
 		"next": "15.3.5",
 		"react": "^19.0.0",
@@ -21,6 +26,7 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
 		"@tailwindcss/postcss": "^4",
+		"@tailwindcss/typography": "^0.5.16",
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/node": "^20",
 		"@types/react": "^19",

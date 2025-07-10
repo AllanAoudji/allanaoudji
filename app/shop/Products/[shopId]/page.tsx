@@ -1,4 +1,4 @@
-import Title from "@/components/title";
+import Title from "@/components/Title";
 
 export default async function ShopDetail({ params }: { params: Promise<{ shopId: string }> }) {
 	const { shopId } = await params;

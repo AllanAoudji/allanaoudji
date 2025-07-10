@@ -1,1 +1,28 @@
+@import url("https://use.typekit.net/ajn0gbi.css");
+
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--color-primary: #ffdbbb;
+	--color-secondary: #baddff;
+	--color-tertiary: #bafff5;
+	--color-quaternary: #496580;
+
+	--font-gopher: "gopher";
+}
+
+@layer utilities {
+	.items-gap {
+		@apply gap-4;
+	}
+	.padding-container {
+		@apply px-2 sm:px-8 lg:px-10 xl:mx-auto xl:w-full xl:max-w-7xl;
+	}
+	.section-container {
+		@apply py-5;
+	}
+	.section-separator {
+		@apply border-quaternary border-b-2;
+	}
+}
