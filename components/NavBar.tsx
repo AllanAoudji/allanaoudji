@@ -36,8 +36,8 @@ const routes: MenuItem[] = [
 
 export default function Menu() {
 	return (
-		<nav className="text-quaternary">
-			<ul className="padding-container items-gap flex items-center justify-end">
+		<nav className="text-quaternary padding-container">
+			<ul className="items-gap flex h-16 items-center justify-end">
 				<NavBarItem className="mr-auto font-black" href={"/"} title="logo" />
 				{routes.map(route => (
 					<NavBarItem
