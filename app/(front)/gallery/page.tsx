@@ -8,9 +8,19 @@ export default async function Gallery() {
 	return (
 		<div>
 			<Title>galerie</Title>
-			{query.works.map((work, i) => (
-				<GallerySection key={work._id} work={work} separator={query.works.length - 1 !== i} />
-			))}
+			{query.works ? (
+				query.works.map((work, i) => (
+					<GallerySection
+						key={work._id}
+						work={work}
+						separator={query.works ? query.works.length - 1 !== i : false}
+					/>
+				))
+			) : (
+				<div>
+					<p>Empty</p>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -4,7 +4,7 @@ import { getHomeWorks } from "@/sanity/lib/queries";
 export default async function GallerySection() {
 	const query = await getHomeWorks();
 
-	if (query.works.length == 0) {
+	if (!query.works || query.works.length == 0) {
 		return null;
 	}
 

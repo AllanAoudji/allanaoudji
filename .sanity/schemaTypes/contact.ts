@@ -2,8 +2,8 @@ import { EnvelopeIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export default defineType({
-	name: "social",
-	title: "Social Medias",
+	name: "contact",
+	title: "Contacts",
 	type: "document",
 	icon: EnvelopeIcon,
 	fields: [
@@ -41,6 +41,7 @@ export default defineType({
 			name: "blank",
 			title: "Blank",
 			type: "boolean",
+			initialValue: false,
 		}),
 	],
 });

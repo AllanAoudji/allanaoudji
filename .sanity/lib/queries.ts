@@ -1,8 +1,9 @@
 import { defineQuery } from "next-sanity";
 import { getCachedClient } from "./getClient";
+import { Contact } from "@/types/contact";
 import { Work } from "@/types/work";
 
-const HOME_WORK_QUERY = defineQuery(`
+const HOME_WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     works[0...3]->{
       _id,
@@ -20,9 +21,9 @@ const HOME_WORK_QUERY = defineQuery(`
     }
   }
 `);
-export const getHomeWorks = () => getCachedClient()<{ works: Work[] }>(HOME_WORK_QUERY);
+export const getHomeWorks = () => getCachedClient()<{ works: Work[] | null }>(HOME_WORKS_QUERY);
 
-const GALLERY_WORK_QUERY = defineQuery(`
+const GALLERY_WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     works[0...10]->{
       _id,
@@ -41,7 +42,8 @@ const GALLERY_WORK_QUERY = defineQuery(`
     }
   }
 `);
-export const getGalleryWorks = () => getCachedClient()<{ works: Work[] }>(GALLERY_WORK_QUERY);
+export const getGalleryWorks = () =>
+	getCachedClient()<{ works: Work[] | null }>(GALLERY_WORKS_QUERY);
 
 const WORK_QUERY = defineQuery(`
   *[_type == "work" && slug.current == $slug][0]{
@@ -60,5 +62,18 @@ const WORK_QUERY = defineQuery(`
     }
   }  
 `);
-
 export const getWork = (slug: string) => getCachedClient()<Work>(WORK_QUERY, { slug });
+
+const CONTACT_QUERY = defineQuery(`
+  *[_type == "settings"][0]{
+    contacts[0...10]->{
+      _id,
+      "slug": slug.current,
+      text,
+      title,
+      url,
+      blank
+    }
+  }
+`);
+export const getContact = () => getCachedClient()<{ contacts: Contact[] | null }>(CONTACT_QUERY);

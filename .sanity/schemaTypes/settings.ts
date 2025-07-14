@@ -24,10 +24,10 @@ export default defineType({
 		}),
 
 		defineField({
-			name: "socials",
-			title: "social ordering",
+			name: "contacts",
+			title: "Contacts ordering",
 			type: "array",
-			of: [{ type: "reference", to: { type: "social" } }],
+			of: [{ type: "reference", to: { type: "contact" } }],
 			group: "ordering",
 		}),
 		defineField({

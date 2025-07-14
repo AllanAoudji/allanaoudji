@@ -9,6 +9,6 @@ export const structure: StructureResolver = S =>
 		.items([
 			S.documentTypeListItem("work").title("Works"),
 			S.documentTypeListItem("tag").title("Tags"),
-			S.documentTypeListItem("social").title("Socials"),
+			S.documentTypeListItem("contact").title("Contacts"),
 			singletonListItem(S, "settings", "Settings", CogIcon),
 		]);
