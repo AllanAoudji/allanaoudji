@@ -3,11 +3,12 @@ import { redirect, RedirectType } from "next/navigation";
 import Title from "@/components/Title";
 import WorkImages from "@/components/WorkImages";
 import WorkText from "@/components/WorkText";
-import WORKS from "@/utils/works";
+import { getWork } from "@/.sanity/lib/queries";
 
 export default async function WorkDetail({ params }: { params: Promise<{ workId: string }> }) {
 	const { workId } = await params;
-	const work = WORKS.find(work => work.id == workId);
+
+	const work = await getWork(workId);
 
 	if (!work) {
 		redirect("/gallery", RedirectType.replace);
@@ -22,7 +23,7 @@ export default async function WorkDetail({ params }: { params: Promise<{ workId:
 			</div>
 			<Title className="pb-8">{work.title}</Title>
 			{work.text && <WorkText className="pb-8">{work.text}</WorkText>}
-			<WorkImages />
+			{work.gallery && <WorkImages images={work.gallery} />}
 		</>
 	);
 }

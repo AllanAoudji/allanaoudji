@@ -1,10 +1,8 @@
-import { HTMLAttributeAnchorTarget } from "react";
-
 export interface Contact {
-	id: number;
-	title: string;
-	href: string;
+	_id: string;
+	slug: string;
 	text: string;
-	target?: HTMLAttributeAnchorTarget;
-	className?: string;
+	title: string;
+	url: string;
+	blank?: boolean;
 }

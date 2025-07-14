@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ImageContainer from "./ImageContainer";
 import { Work } from "@/types/work";
 
 type Props = {
@@ -7,9 +8,9 @@ type Props = {
 
 export default function WorkSectionItem({ work }: Readonly<Props>) {
 	return (
-		<Link href={`/gallery/${work.id}`}>
+		<Link href={`/gallery/${work.slug}`}>
 			<h2>{work.title}</h2>
-			<div className="bg-secondary aspect-3/2 w-full" />
+			{work.mainImage && <ImageContainer image={work.mainImage} ratio="4/3" />}
 		</Link>
 	);
 }

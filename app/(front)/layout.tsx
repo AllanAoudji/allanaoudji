@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Menu from "@/components/NavBar";
-import "./globals.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
 	title: "Allan Aoudji",
