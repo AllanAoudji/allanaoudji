@@ -4,13 +4,13 @@
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/studio/[[...tool]]/page.tsx` route
  */
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import { apiVersion, dataset, projectId } from ".sanity/env";
-import { schema, singletonTypes } from ".sanity/schemaTypes";
-import { structure } from ".sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { markdownSchema } from "sanity-plugin-markdown/next";
 import { structureTool } from "sanity/structure";
+import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { schema, singletonTypes } from "@/sanity/schemaTypes";
+import { structure } from "@/sanity/structure";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 

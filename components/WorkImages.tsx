@@ -1,16 +1,20 @@
-export default function WorkImages() {
+import ImageContainer from "./ImageContainer";
+import { SanityImage } from "@/types/sanityImage";
+
+type Props = {
+	images: SanityImage[];
+};
+
+export default function WorkImages({ images }: Readonly<Props>) {
+	if (images.length == 0) {
+		return null;
+	}
+
 	return (
 		<div className="items-gap grid-default">
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
-			<div className="bg-secondary aspect-3/4" />
+			{images.map(image => (
+				<ImageContainer key={image._id} image={image} ratio="3/4" />
+			))}
 		</div>
 	);
 }

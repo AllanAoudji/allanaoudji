@@ -1,13 +1,15 @@
 import GallerySection from "@/components/GallerySection";
 import Title from "@/components/Title";
-import WORKS from "@/utils/works";
+import { getGalleryWorks } from "@/.sanity/lib/queries";
 
-export default function Work() {
+export default async function Gallery() {
+	const query = await getGalleryWorks();
+
 	return (
 		<div>
 			<Title>galerie</Title>
-			{WORKS.map((work, i) => (
-				<GallerySection key={work.id} work={work} separator={WORKS.length - 1 !== i} />
+			{query.works.map((work, i) => (
+				<GallerySection key={work._id} work={work} separator={query.works.length - 1 !== i} />
 			))}
 		</div>
 	);

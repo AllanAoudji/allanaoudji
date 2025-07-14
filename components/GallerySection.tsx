@@ -14,7 +14,7 @@ export default function GallerySection({ className, separator = true, work }: Re
 		<section className={`${className} section-container ${separator && "section-separator"}`}>
 			<SubTitle className="pb-4">{work.title}</SubTitle>
 			{work.text && <WorkText className="pb-4">{work.text}</WorkText>}
-			<WorkImages />
+			{work.gallery && <WorkImages images={work.gallery} />}
 		</section>
 	);
 }

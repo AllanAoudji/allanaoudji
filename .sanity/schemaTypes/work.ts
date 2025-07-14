@@ -46,6 +46,11 @@ export default defineType({
 			of: [{ type: "reference", to: { type: "tag" } }],
 		}),
 		defineField({
+			name: "text",
+			title: "Text",
+			type: "text",
+		}),
+		defineField({
 			name: "gallery",
 			title: "Galerie",
 			type: "array",
