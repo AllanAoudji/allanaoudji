@@ -21,11 +21,13 @@
 		"@sanity/icons": "^3.7.4",
 		"@sanity/image-url": "^1.1.0",
 		"@sanity/vision": "^3.99.0",
+		"easymde": "^2.20.0",
 		"next": "15.3.5",
 		"next-sanity": "^9.12.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"sanity": "^3.99.0",
+		"sanity-plugin-markdown": "^5.1.0",
 		"styled-components": "^6.1.19",
 		"zod": "^3.25.74"
 	},

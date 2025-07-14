@@ -1,3 +1,4 @@
+import "easymde/dist/easymde.min.css";
 import type { Metadata } from "next";
 import "@/app/globals.css";
 

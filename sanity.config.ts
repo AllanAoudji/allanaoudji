@@ -9,6 +9,7 @@ import { schema, singletonTypes } from ".sanity/schemaTypes";
 import { structure } from ".sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
+import { markdownSchema } from "sanity-plugin-markdown/next";
 import { structureTool } from "sanity/structure";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
@@ -24,6 +25,7 @@ export default defineConfig({
 		// Vision is for querying with GROQ from inside the Studio
 		// https://www.sanity.io/docs/the-vision-plugin
 		visionTool({ defaultApiVersion: apiVersion }),
+		markdownSchema(),
 	],
 	document: {
 		// For singleton types, filter out actions that are not explicitly included

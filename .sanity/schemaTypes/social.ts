@@ -27,7 +27,10 @@ export default defineType({
 			name: "url",
 			title: "URL",
 			type: "url",
-			validation: Rule => Rule.required(),
+			validation: Rule =>
+				Rule.uri({
+					scheme: ["http", "https", "mailto", "tel"],
+				}).required(),
 		}),
 		defineField({
 			name: "text",
