@@ -2,6 +2,8 @@ import { CircleIcon } from "@sanity/icons";
 import { ComponentType, ReactNode } from "react";
 import { StructureBuilder } from "sanity/structure";
 
+// https://www.sanity.io/guides/singleton-document
+
 const singletonListItem = (
 	S: StructureBuilder,
 	typeName: string,
