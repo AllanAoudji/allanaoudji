@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const envVariables = z.object({
 	DATABASE_URL: z.string(),
+	INSTAGRAM_ACCESS_TOKEN: z.string(),
 });
 
 envVariables.parse(process.env);
