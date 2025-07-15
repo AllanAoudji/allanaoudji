@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { FaHeart } from "react-icons/fa";
+import { FaCommentAlt } from "react-icons/fa";
 import SubTitle from "./SubTitle";
 
 type Data =
@@ -46,16 +48,32 @@ export default async function InstagramSection() {
 		<section className="section-container section-separator">
 			<SubTitle>Instagram</SubTitle>
 			<a
-				className="items-gap grid-default pt-5"
+				className="items-gap grid grid-cols-2 pt-5 lg:grid-cols-4"
 				href="https://www.instagram.com/allanaoudji/"
 				target="_blank"
 			>
 				{data.data.map(image => (
-					<div key={image.id}>
-						<Image alt="instagram image" src={image.media_url} width={1080} height={1350} />
-						<div>
-							<p>likes: {image.like_count}</p>
-							<p>comments: {image.comments_count}</p>
+					<div key={image.id} className="text-primary relative">
+						<Image
+							alt="instagram image"
+							className="border-quaternary border-4"
+							src={image.media_url}
+							width={1080}
+							height={1350}
+						/>
+						<div className="bg-quaternary flex w-full justify-center gap-5 p-2">
+							<div className="flex">
+								<div className="flex pr-2">
+									<FaHeart className="my-auto" size="20px" />
+								</div>
+								<p className="inline-block align-middle">{image.like_count}</p>
+							</div>
+							<div className="flex">
+								<div className="flex pr-2">
+									<FaCommentAlt className="my-auto" size="20px" />
+								</div>
+								<p className="inline-block align-middle">{image.comments_count}</p>
+							</div>
 						</div>
 					</div>
 				))}
