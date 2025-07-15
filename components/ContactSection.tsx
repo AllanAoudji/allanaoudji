@@ -4,7 +4,6 @@ import { getContact } from "@/.sanity/lib/queries";
 
 export default async function ContactSection() {
 	const query = await getContact();
-	console.log(query);
 
 	if (!query.contacts || query.contacts.length === 0) {
 		return null;
