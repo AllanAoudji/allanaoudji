@@ -1,39 +1,15 @@
 import Image from "next/image";
-import { FaHeart } from "react-icons/fa";
-import { FaCommentAlt } from "react-icons/fa";
+import InstagramSectionIcon from "./InstagramSectionIcon";
 import SubTitle from "./SubTitle";
+import { InstagramFeeds } from "@/types/instagramFeed";
 
-type Data =
-	| {
-			id: string;
-			media_type: "IMAGE" | "CAROUSEL_ALBUM";
-			media_url: string;
-			like_count: number;
-			comments_count: number;
-	  }
-	| {
-			id: string;
-			media_type: "VIDEO";
-			media_url: string;
-			thumbnail_url: string;
-			like_count: number;
-			comments_count: number;
-	  };
+const END_POINT = "https://graph.instagram.com/";
+const FIELDS =
+	"fields=id,media_type,media_url,alt_text,comments_count,like_count,thumbnail_url&limit=4";
 
-type InstaFeeds = {
-	data: Data[];
-	paging: {
-		cursors: {
-			after: string;
-			before: string;
-		};
-		next: string;
-	};
-};
-
-async function getData(): Promise<InstaFeeds> {
+async function getData(): Promise<InstagramFeeds> {
 	const res = await fetch(
-		`https://graph.instagram.com/me/media?fields=id,media_type,media_url,alt_text,comments_count,like_count,thumbnail_url&limit=4&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`,
+		`${END_POINT}/me/media?${FIELDS}&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`,
 	);
 
 	return res.json();
@@ -42,38 +18,30 @@ async function getData(): Promise<InstaFeeds> {
 export default async function InstagramSection() {
 	const data = await getData();
 
-	console.log(data);
+	if (data.error) {
+		return null;
+	}
 
 	return (
 		<section className="section-container section-separator">
 			<SubTitle>Instagram</SubTitle>
 			<a
-				className="items-gap grid grid-cols-2 pt-5 lg:grid-cols-4"
+				className="items-gap mt-5 grid grid-cols-2 lg:grid-cols-4"
 				href="https://www.instagram.com/allanaoudji/"
 				target="_blank"
 			>
-				{data.data.map(image => (
-					<div key={image.id} className="text-primary relative">
+				{data.data.map(post => (
+					<div key={post.id} className="text-primary">
 						<Image
-							alt="instagram image"
+							alt="instagram post"
 							className="border-quaternary border-4"
-							src={image.media_url}
-							width={1080}
 							height={1350}
+							src={post.media_type === "VIDEO" ? post.thumbnail_url : post.media_url}
+							width={1080}
 						/>
 						<div className="bg-quaternary flex w-full justify-center gap-5 p-2">
-							<div className="flex">
-								<div className="flex pr-2">
-									<FaHeart className="my-auto" size="20px" />
-								</div>
-								<p className="inline-block align-middle">{image.like_count}</p>
-							</div>
-							<div className="flex">
-								<div className="flex pr-2">
-									<FaCommentAlt className="my-auto" size="20px" />
-								</div>
-								<p className="inline-block align-middle">{image.comments_count}</p>
-							</div>
+							<InstagramSectionIcon type="likes" count={post.like_count} />
+							<InstagramSectionIcon type="comments" count={post.comments_count} />
 						</div>
 					</div>
 				))}
