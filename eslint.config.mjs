@@ -26,6 +26,7 @@ const eslintConfig = [
 					mode: "strict",
 				},
 			],
+			"object-shorthand": "error",
 			"linebreak-style": ["error", "unix"],
 			"no-unused-vars": [
 				"error",
