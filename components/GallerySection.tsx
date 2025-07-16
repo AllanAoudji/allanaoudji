@@ -1,7 +1,7 @@
 import SubTitle from "./SubTitle";
 import WorkImages from "./WorkImages";
 import WorkText from "./WorkText";
-import { SanityWork } from "@/.sanity/lib/queries";
+import { SanityWork } from "@/sanity/lib/queries";
 
 type Props = {
 	className?: string;

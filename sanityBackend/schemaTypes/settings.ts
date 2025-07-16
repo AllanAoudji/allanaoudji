@@ -21,6 +21,7 @@ export default defineType({
 			type: "array",
 			of: [{ type: "reference", to: { type: "work" } }],
 			group: "ordering",
+			validation: Rule => Rule.unique(),
 		}),
 
 		defineField({
@@ -29,6 +30,7 @@ export default defineType({
 			type: "array",
 			of: [{ type: "reference", to: { type: "contact" } }],
 			group: "ordering",
+			validation: Rule => Rule.unique(),
 		}),
 		defineField({
 			name: "banner",

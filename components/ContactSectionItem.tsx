@@ -1,4 +1,4 @@
-import { SanityContact } from "@/.sanity/lib/queries";
+import { SanityContact } from "@/sanity/lib/queries";
 
 type Props = {
 	className?: string;
