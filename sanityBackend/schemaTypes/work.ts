@@ -73,7 +73,7 @@ export default defineType({
 				},
 			],
 			options: {
-				layout: "grid",
+				layout: "list",
 			},
 		}),
 	],
