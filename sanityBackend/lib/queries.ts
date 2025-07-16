@@ -67,7 +67,7 @@ const CONTACTS_QUERY = defineQuery(`
 
 const HOME_WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
-    works[0...3]{
+    works[0...6]{
       "_id": _key,
       ...(@-> {
         title,
