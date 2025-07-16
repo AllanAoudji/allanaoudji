@@ -15,6 +15,11 @@ export const serverToken = assertValue(
 	"Missing envirionment variable: NEXT_PUBLIC_SANITY_SERVER_TOKEN",
 );
 
+export const useCdn =
+	process.env.NEXT_PUBLIC_SANITY_USE_CDN === undefined
+		? false
+		: process.env.NEXT_PUBLIC_SANITY_USE_CDN;
+
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
 	if (v === undefined) {
 		throw new Error(errorMessage);
