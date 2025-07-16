@@ -1,14 +1,53 @@
 import { defineQuery } from "next-sanity";
 import { getCachedClient } from "./getClient";
-import { Contact } from "@/types/contact";
-import { Work } from "@/types/work";
+import { Contact, SanityImageAsset, Work } from "@/sanity/types";
+
+export type SanityContact = Omit<Contact, "_type" | "_createdAt" | "_updatedAt" | "_rev"> & {
+	title: string;
+	slug: string;
+};
+
+export type SanityImage = Omit<
+	SanityImageAsset,
+	| "_type"
+	| "_createdAt"
+	| "_updatedAt"
+	| "_rev"
+	| "originalFileName"
+	| "label"
+	| "description"
+	| "altText"
+	| "sha1hash"
+	| "extension"
+	| "mimeType"
+	| "size"
+	| "assetId"
+	| "uploadId"
+	| "path"
+	| "metadata"
+	| "source"
+> & {
+	alt: string;
+	blurHash: string;
+	height: number;
+	lqip: string;
+	url: string;
+	width: number;
+};
+
+export type SanityWork = Omit<Work, "_type" | "_createdAt" | "_updatedAt" | "_rev" | "tags"> & {
+	gallery: SanityImage[];
+	mainImage?: SanityImage;
+	slug: string;
+	title: string;
+};
 
 const HOME_WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     works[0...3]->{
       _id,
-      "slug": slug.current,
       title,
+      "slug": slug.current,
       "mainImage": mainImage {
         alt,
         "url": asset->url,
@@ -21,7 +60,9 @@ const HOME_WORKS_QUERY = defineQuery(`
     }
   }
 `);
-export const getHomeWorks = () => getCachedClient()<{ works: Work[] | null }>(HOME_WORKS_QUERY);
+
+export const getHomeWorks = () =>
+	getCachedClient()<{ works: SanityWork[] | null }>(HOME_WORKS_QUERY);
 
 const GALLERY_WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
@@ -43,7 +84,7 @@ const GALLERY_WORKS_QUERY = defineQuery(`
   }
 `);
 export const getGalleryWorks = () =>
-	getCachedClient()<{ works: Work[] | null }>(GALLERY_WORKS_QUERY);
+	getCachedClient()<{ works: SanityWork[] | null }>(GALLERY_WORKS_QUERY);
 
 const WORK_QUERY = defineQuery(`
   *[_type == "work" && slug.current == $slug][0]{
@@ -62,7 +103,7 @@ const WORK_QUERY = defineQuery(`
     }
   }  
 `);
-export const getWork = (slug: string) => getCachedClient()<Work>(WORK_QUERY, { slug });
+export const getWork = (slug: string) => getCachedClient()<SanityWork | null>(WORK_QUERY, { slug });
 
 const CONTACT_QUERY = defineQuery(`
   *[_type == "settings"][0]{
@@ -76,4 +117,5 @@ const CONTACT_QUERY = defineQuery(`
     }
   }
 `);
-export const getContact = () => getCachedClient()<{ contacts: Contact[] | null }>(CONTACT_QUERY);
+export const getContact = () =>
+	getCachedClient()<{ contacts: SanityContact[] | null }>(CONTACT_QUERY);

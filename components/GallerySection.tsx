@@ -1,12 +1,12 @@
 import SubTitle from "./SubTitle";
 import WorkImages from "./WorkImages";
 import WorkText from "./WorkText";
-import { Work } from "@/types/work";
+import { SanityWork } from "@/.sanity/lib/queries";
 
 type Props = {
 	className?: string;
 	separator?: boolean;
-	work: Work;
+	work: SanityWork;
 };
 
 export default function GallerySection({ className, separator = true, work }: Readonly<Props>) {
