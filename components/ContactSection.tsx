@@ -14,13 +14,7 @@ export default async function ContactSection() {
 			<SubTitle className="pb-16">Contact</SubTitle>
 			<ul className="items-gap grid-default">
 				{query.contacts.map(contact => (
-					<ContactSectionItem
-						href={contact.url}
-						key={contact._id}
-						target={contact.blank ? "_blank" : undefined}
-						text={contact.text}
-						title={contact.title}
-					/>
+					<ContactSectionItem contact={contact} key={contact._id} />
 				))}
 			</ul>
 		</section>

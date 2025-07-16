@@ -1,5 +1,5 @@
 import ImageContainer from "./ImageContainer";
-import { SanityImage } from "@/types/sanityImage";
+import { SanityImage } from "@/.sanity/lib/queries";
 
 type Props = {
 	images: SanityImage[];

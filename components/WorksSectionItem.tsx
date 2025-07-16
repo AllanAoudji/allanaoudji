@@ -1,9 +1,9 @@
 import Link from "next/link";
 import ImageContainer from "./ImageContainer";
-import { Work } from "@/types/work";
+import { SanityWork } from "@/.sanity/lib/queries";
 
 type Props = {
-	work: Work;
+	work: SanityWork;
 };
 
 export default function WorkSectionItem({ work }: Readonly<Props>) {

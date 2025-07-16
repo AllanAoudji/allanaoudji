@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SanityImage } from "@/types/sanityImage";
+import { SanityImage } from "@/.sanity/lib/queries";
 
 type Props = {
 	image: SanityImage;
