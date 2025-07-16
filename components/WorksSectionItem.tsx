@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ImageContainer from "./ImageContainer";
-import { SanityWork } from "@/.sanity/lib/queries";
+import { SanityWork } from "@/sanity/lib/queries";
 
 type Props = {
 	work: SanityWork;

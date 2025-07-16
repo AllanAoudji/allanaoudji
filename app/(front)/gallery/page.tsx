@@ -1,6 +1,6 @@
 import GallerySection from "@/components/GallerySection";
 import Title from "@/components/Title";
-import { getGalleryWorks } from "@/.sanity/lib/queries";
+import { getGalleryWorks } from "@/sanity/lib/queries";
 
 export default async function Gallery() {
 	const query = await getGalleryWorks();

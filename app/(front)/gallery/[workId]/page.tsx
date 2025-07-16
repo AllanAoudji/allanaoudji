@@ -3,7 +3,7 @@ import { redirect, RedirectType } from "next/navigation";
 import Title from "@/components/Title";
 import WorkImages from "@/components/WorkImages";
 import WorkText from "@/components/WorkText";
-import { getWork } from "@/.sanity/lib/queries";
+import { getWork } from "@/sanity/lib/queries";
 
 export default async function WorkDetail({ params }: { params: Promise<{ workId: string }> }) {
 	const { workId } = await params;

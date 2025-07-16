@@ -1,9 +1,9 @@
 import ContactSectionItem from "./ContactSectionItem";
 import SubTitle from "./SubTitle";
-import { getContact } from "@/.sanity/lib/queries";
+import { getContacts } from "@/sanity/lib/queries";
 
 export default async function ContactSection() {
-	const query = await getContact();
+	const query = await getContacts();
 
 	if (!query.contacts || query.contacts.length === 0) {
 		return null;
