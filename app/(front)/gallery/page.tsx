@@ -6,7 +6,7 @@ export default async function Gallery() {
 	const query = await getGalleryWorks();
 
 	return (
-		<div>
+		<>
 			<Title>galerie</Title>
 			{query.works ? (
 				query.works.map((work, i) => (
@@ -21,6 +21,6 @@ export default async function Gallery() {
 					<p>Empty</p>
 				</div>
 			)}
-		</div>
+		</>
 	);
 }
