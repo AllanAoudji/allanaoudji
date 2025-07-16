@@ -1,4 +1,4 @@
-import { apiVersion, dataset, projectId } from "../env";
+import { apiVersion, dataset, projectId, useCdn } from "../env";
 import { createClient } from "@sanity/client";
 import type { SanityClient } from "@sanity/client";
 import { cache } from "react";
@@ -8,7 +8,7 @@ export function getClient(preview?: { token?: string }): SanityClient {
 		projectId,
 		dataset,
 		apiVersion,
-		// useCdn,
+		useCdn,
 		perspective: "published",
 	});
 	if (preview) {
