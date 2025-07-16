@@ -1,5 +1,6 @@
+import { getExtension, getImageDimensions } from "@sanity/asset-utils";
 import { DocumentIcon } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, ImageValue } from "sanity";
 
 export default defineType({
 	name: "work",
@@ -27,7 +28,33 @@ export default defineType({
 			name: "mainImage",
 			title: "Main image",
 			type: "image",
-			validation: Rule => Rule.required(),
+			description: "jpg or png file, 1200 x 810 pixel (4/3 ratio)",
+			validation: rule => [
+				rule.required(),
+				rule.custom(value => {
+					if (!value) {
+						return true;
+					}
+
+					if (!value.asset) {
+						return "Something went wrong";
+					}
+
+					const filetype = getExtension(value.asset._ref);
+
+					if (filetype !== "jpg" && filetype !== "png") {
+						return "Image must be a JPG or PNG";
+					}
+
+					const { width, height } = getImageDimensions(value.asset._ref);
+
+					if (width != 1080 || height != 810) {
+						return "Image must be 1200x810 pixels";
+					}
+
+					return true;
+				}),
+			],
 			options: {
 				hotspot: true,
 			},
@@ -60,6 +87,32 @@ export default defineType({
 					name: "image",
 					type: "image",
 					title: "Image",
+					description: "jpg or png file, 1080 x 1440 pixel (3/4 ratio)",
+					validation: rule => [
+						rule.custom<ImageValue>(value => {
+							if (!value) {
+								return true;
+							}
+
+							if (!value.asset) {
+								return "Something went wrong";
+							}
+
+							const filetype = getExtension(value.asset._ref);
+
+							if (filetype !== "jpg" && filetype !== "png") {
+								return "Image must be a JPG or PNG";
+							}
+
+							const { width, height } = getImageDimensions(value.asset._ref);
+
+							if (width != 1080 || height != 1440) {
+								return "Image must be 1080 x 1440 pixels";
+							}
+
+							return true;
+						}),
+					],
 					options: {
 						hotspot: true,
 					},
