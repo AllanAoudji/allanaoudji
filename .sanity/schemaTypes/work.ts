@@ -44,6 +44,7 @@ export default defineType({
 			title: "Tags",
 			type: "array",
 			of: [{ type: "reference", to: { type: "tag" } }],
+			validation: Rule => Rule.unique(),
 		}),
 		defineField({
 			name: "text",
