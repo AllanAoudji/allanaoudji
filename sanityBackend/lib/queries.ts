@@ -1,50 +1,6 @@
 import { defineQuery } from "next-sanity";
 import { client } from "./client";
-import { Contact, SanityImageAsset, Work } from "@/sanity/types";
-
-/*-----------------------------------
--- Types ----------------------------
------------------------------------*/
-
-export type SanityContact = Omit<Contact, "_type" | "_createdAt" | "_updatedAt" | "_rev"> & {
-	title: string;
-	slug: string;
-};
-
-export type SanityImage = Omit<
-	SanityImageAsset,
-	| "_type"
-	| "_createdAt"
-	| "_updatedAt"
-	| "_rev"
-	| "originalFileName"
-	| "label"
-	| "description"
-	| "altText"
-	| "sha1hash"
-	| "extension"
-	| "mimeType"
-	| "size"
-	| "assetId"
-	| "uploadId"
-	| "path"
-	| "metadata"
-	| "source"
-> & {
-	alt: string;
-	blurHash: string;
-	height: number;
-	lqip: string;
-	url: string;
-	width: number;
-};
-
-export type SanityWork = Omit<Work, "_type" | "_createdAt" | "_updatedAt" | "_rev" | "tags"> & {
-	gallery: SanityImage[];
-	mainImage?: SanityImage;
-	slug: string;
-	title: string;
-};
+import { CONTACTS_QUERYResult, WORK_QUERYResult, WORKS_QUERYResult } from "@/sanity/types";
 
 /*-----------------------------------
 -- Queries --------------------------
@@ -65,35 +21,21 @@ const CONTACTS_QUERY = defineQuery(`
   }
 `);
 
-const HOME_WORKS_QUERY = defineQuery(`
+const WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
-    works[0...6]{
-      "_id": _key,
-      ...(@-> {
-        title,
-        "slug": slug.current,
-        "mainImage": mainImage {
-          alt,
-          "url": asset->url,
-          "_id": _key,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "blurHash": asset->metadata.blurHash,
-          "lqip": asset->metadata.lqip,
-        },
-      })
-    }
-  }
-`);
-
-const GALLERY_WORKS_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    works[0...10]{
+    works[0...$number]{
       "_id": _key,
       ...(@-> {
         "slug": slug.current,
         title,
         text,
+        mainImage{
+          alt,
+          "url": asset->url,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip,
+        },
         "gallery": gallery[]{
           alt,
           "url": asset->url,
@@ -131,17 +73,14 @@ const WORK_QUERY = defineQuery(`
 -----------------------------------*/
 
 export const getContacts = () => {
-	return client.fetch<{ contacts: SanityContact[] | null }>(CONTACTS_QUERY);
+	return client.fetch<CONTACTS_QUERYResult>(CONTACTS_QUERY);
 };
 
-export const getGalleryWorks = () => {
-	return client.fetch<{ works: SanityWork[] | null }>(GALLERY_WORKS_QUERY);
-};
-
-export const getHomeWorks = () => {
-	return client.fetch<{ works: SanityWork[] | null }>(HOME_WORKS_QUERY);
+export const getWorks = (type: "home" | "gallery") => {
+	const number = type === "home" ? 6 : 10;
+	return client.fetch<WORKS_QUERYResult>(WORKS_QUERY, { number });
 };
 
 export const getWork = (slug: string) => {
-	return client.fetch<SanityWork | null>(WORK_QUERY, { slug });
+	return client.fetch<WORK_QUERYResult>(WORK_QUERY, { slug });
 };

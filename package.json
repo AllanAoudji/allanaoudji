@@ -13,7 +13,7 @@
 		"prepare": "husky install",
 		"predev": "npm run typegen",
 		"prebuild": "npm run typegen",
-		"typegen": "sanity schema extract --path=./sanityBackend/extract.json && sanity typegen generate"
+		"typegen": "sanity schema extract --enforce-required-fields --path=./sanityBackend/extract.json && sanity typegen generate"
 	},
 	"packageManager": "npm@0.5.2",
 	"overrides": {

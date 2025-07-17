@@ -1,8 +1,8 @@
-import { SanityContact } from "@/sanity/lib/queries";
+import { contact } from "@/types/sanityType";
 
 type Props = {
 	className?: string;
-	contact: SanityContact;
+	contact: contact;
 };
 
 export default function ContactSectionItem({ className, contact }: Readonly<Props>) {
@@ -10,7 +10,7 @@ export default function ContactSectionItem({ className, contact }: Readonly<Prop
 		<li className={`${className}`}>
 			<h3 className="text-lg uppercase">{contact.title}</h3>
 			<a href={contact.url} target={contact.blank ? "_blank" : undefined}>
-				{contact.text}
+				{contact.text || contact.title}
 			</a>
 		</li>
 	);
