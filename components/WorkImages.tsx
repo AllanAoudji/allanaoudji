@@ -8,8 +8,8 @@ type Props = {
 export default function WorkImages({ images }: Readonly<Props>) {
 	if (
 		!images ||
-		images.length == 0 ||
-		images.filter(image => !!image.height && !!image.width && !!image.url)
+		!images.length ||
+		!images.filter(image => !!image.height && !!image.width && !!image.url).length
 	) {
 		return null;
 	}
