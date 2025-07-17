@@ -13,7 +13,7 @@ export default function ImageContainer({ image, ratio = "3/4" }: Props) {
 
 	return (
 		<div
-			className={`bg-secondary flex aspect-${ratio} w-full items-center justify-center overflow-hidden`}
+			className={`bg-secondary flex ${ratio === "3/4" ? "aspect-3/4" : "aspect-4/3"} w-full items-center justify-center overflow-hidden`}
 		>
 			<Image
 				alt={image.alt || "image"}
