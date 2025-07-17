@@ -49,9 +49,9 @@ export type Contact = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	title?: string;
-	slug?: Slug;
-	url?: string;
+	title: string;
+	slug: Slug;
+	url: string;
 	text?: string;
 	blank?: boolean;
 };
@@ -62,9 +62,9 @@ export type Work = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	title?: string;
-	slug?: Slug;
-	mainImage?: {
+	title: string;
+	slug: Slug;
+	mainImage: {
 		asset?: {
 			_ref: string;
 			_type: "reference";
@@ -107,8 +107,8 @@ export type Tag = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	name?: string;
-	slug?: Slug;
+	name: string;
+	slug: Slug;
 };
 
 export type Markdown = string;
@@ -220,7 +220,7 @@ export type Geopoint = {
 
 export type Slug = {
 	_type: "slug";
-	current?: string;
+	current: string;
 	source?: string;
 };
 
@@ -255,39 +255,28 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 export type CONTACTS_QUERYResult = {
 	contacts: Array<{
 		_id: string;
-		slug: string | null;
+		slug: string;
 		text: string | null;
-		title: string | null;
-		url: string | null;
+		title: string;
+		url: string;
 		blank: boolean | null;
 	}> | null;
 } | null;
-// Variable: HOME_WORKS_QUERY
-// Query: *[_type == "settings"][0]{    works[0...3]{      "_id": _key,      ...(@-> {        title,        "slug": slug.current,        "mainImage": mainImage {          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        },      })    }  }
-export type HOME_WORKS_QUERYResult = {
+// Variable: WORKS_QUERY
+// Query: *[_type == "settings"][0]{    works[0...$number]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
+export type WORKS_QUERYResult = {
 	works: Array<{
 		_id: string;
-		title: string | null;
-		slug: string | null;
+		slug: string;
+		title: string;
+		text: string | null;
 		mainImage: {
 			alt: string | null;
 			url: string | null;
-			_id: null;
 			width: number | null;
 			height: number | null;
-			blurHash: string | null;
 			lqip: string | null;
-		} | null;
-	}> | null;
-} | null;
-// Variable: GALLERY_WORKS_QUERY
-// Query: *[_type == "settings"][0]{    works[0...10]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
-export type GALLERY_WORKS_QUERYResult = {
-	works: Array<{
-		_id: string;
-		slug: string | null;
-		title: string | null;
-		text: string | null;
+		};
 		gallery: Array<{
 			alt: string | null;
 			url: string | null;
@@ -303,8 +292,8 @@ export type GALLERY_WORKS_QUERYResult = {
 // Query: *[_type == "work" && slug.current == $slug][0]{    _id,    "slug": slug.current,    title,    text,    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
 export type WORK_QUERYResult = {
 	_id: string;
-	slug: string | null;
-	title: string | null;
+	slug: string;
+	title: string;
 	text: string | null;
 	gallery: Array<{
 		alt: string | null;
@@ -320,8 +309,7 @@ export type WORK_QUERYResult = {
 declare module "@sanity/client" {
 	interface SanityQueries {
 		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    works[0...3]{\n      "_id": _key,\n      ...(@-> {\n        title,\n        "slug": slug.current,\n        "mainImage": mainImage {\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        },\n      })\n    }\n  }\n': HOME_WORKS_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    works[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': GALLERY_WORKS_QUERYResult;
+		'\n  *[_type == "settings"][0]{\n    works[0...$number]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERYResult;
 		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERYResult;
 	}
 }

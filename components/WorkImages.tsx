@@ -1,12 +1,16 @@
 import ImageContainer from "./ImageContainer";
-import { SanityImage } from "@/sanity/lib/queries";
+import { workGallery } from "@/types/sanityType";
 
 type Props = {
-	images: SanityImage[];
+	images: workGallery | null;
 };
 
 export default function WorkImages({ images }: Readonly<Props>) {
-	if (images.length == 0) {
+	if (
+		!images ||
+		!images.length ||
+		!images.filter(image => !!image.height && !!image.width && !!image.url).length
+	) {
 		return null;
 	}
 
