@@ -1,27 +1,44 @@
 import Image from "next/image";
 import { workGalleryImage, workMainImage } from "@/types/sanityType";
 
+type AspectRatio = "4/3" | "3/4" | "4/5";
+
 type Props = {
 	image: workGalleryImage | workMainImage;
-	ratio?: "4/3" | "3/4";
+	ratio: AspectRatio;
+	className?: string;
 };
 
-export default function ImageContainer({ image, ratio = "3/4" }: Props) {
+const getAspectRatio = (ratio: AspectRatio) => {
+	switch (ratio) {
+		case "3/4":
+			return "aspect-3/4";
+		case "4/3":
+			return "aspect-4/3";
+		case "4/5":
+			return "aspect-4/5";
+		default:
+			return "aspect-3/4";
+	}
+};
+
+export default function ImageContainer({ image, ratio, className }: Readonly<Props>) {
 	if (!image.height || !image.width || !image.url) {
 		return null;
 	}
 
 	return (
 		<div
-			className={`bg-secondary flex ${ratio === "3/4" ? "aspect-3/4" : "aspect-4/3"} w-full items-center justify-center overflow-hidden`}
+			className={`${className} ${getAspectRatio(ratio)} bg-secondary flex w-full items-center justify-center overflow-hidden`}
 		>
 			<Image
 				alt={image.alt || "image"}
+				blurDataURL={image.lqip || undefined}
+				className="min-h-full min-w-full shrink-0"
+				height={image.height}
+				placeholder={image.lqip ? "blur" : "empty"}
 				src={image.url}
 				width={image.width}
-				height={image.height}
-				placeholder="blur"
-				blurDataURL={image.lqip || undefined}
 			/>
 		</div>
 	);

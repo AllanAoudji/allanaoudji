@@ -5,13 +5,18 @@ import InstagramSection from "@/components/InstagramSection";
 import InstagramSectionLoader from "@/components/InstagramSectionLoader";
 import ShopSection from "@/components/ShopSection";
 import WorksHomeSection from "@/components/WorksHomeSection";
+import WorksHomeSectionLoader from "@/components/WorksHomeSectionLoader";
 import Error from "./error";
 
 export default function Home() {
 	return (
 		<>
 			<ShopSection />
-			<WorksHomeSection />
+			<ErrorBoundary errorComponent={Error}>
+				<Suspense fallback={<WorksHomeSectionLoader />}>
+					<WorksHomeSection />
+				</Suspense>
+			</ErrorBoundary>
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<InstagramSectionLoader />}>
 					<InstagramSection />
