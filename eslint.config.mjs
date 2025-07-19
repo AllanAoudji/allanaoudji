@@ -17,7 +17,7 @@ const eslintConfig = [
 			"@typescript-eslint/no-empty-object-type": ["off"],
 			"@typescript-eslint/no-namespace": ["off"],
 			"comma-dangle": ["error", "always-multiline"],
-			indent: ["error", "tab"],
+			indent: ["error", "tab", { SwitchCase: 1 }],
 			"key-spacing": [
 				"error",
 				{

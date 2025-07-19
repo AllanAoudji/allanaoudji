@@ -26,7 +26,7 @@
 		"@sanity/image-url": "^1.1.0",
 		"@sanity/vision": "^3.99.0",
 		"easymde": "^2.20.0",
-		"next": "15.3.5",
+		"next": "^15.4.2-canary.5",
 		"next-sanity": "^9.12.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
