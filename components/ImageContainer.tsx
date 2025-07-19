@@ -23,21 +23,19 @@ const getAspectRatio = (ratio: AspectRatio) => {
 };
 
 export default function ImageContainer({ image, ratio, className }: Readonly<Props>) {
-	if (!image.height || !image.width || !image.url) {
-		return null;
-	}
-
 	return (
 		<div className={`${className} ${getAspectRatio(ratio)} bg-secondary w-full overflow-hidden`}>
-			<Image
-				alt={image.alt || "image"}
-				blurDataURL={image.lqip || undefined}
-				className="h-full w-full object-cover"
-				height={image.height}
-				placeholder={image.lqip ? "blur" : "empty"}
-				src={image.url}
-				width={image.width}
-			/>
+			{!!image.height && !!image.width && !!image.url && (
+				<Image
+					alt={image.alt || "image"}
+					blurDataURL={image.lqip || undefined}
+					className="h-full w-full object-cover"
+					height={image.height}
+					placeholder={image.lqip ? "blur" : "empty"}
+					src={image.url}
+					width={image.width}
+				/>
+			)}
 		</div>
 	);
 }
