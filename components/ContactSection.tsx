@@ -1,5 +1,5 @@
+import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionItem from "./ContactSectionItem";
-import SubTitle from "./SubTitle";
 import { getContacts } from "@/sanity/lib/queries";
 
 export default async function ContactSection() {
@@ -9,13 +9,12 @@ export default async function ContactSection() {
 		return null;
 	}
 	return (
-		<section className="section-container">
-			<SubTitle className="pb-16">Contact</SubTitle>
+		<ContactSectionContainer>
 			<ul className="items-gap grid-default">
 				{query.contacts.map(contact => (
 					<ContactSectionItem key={contact._id} contact={contact} />
 				))}
 			</ul>
-		</section>
+		</ContactSectionContainer>
 	);
 }
