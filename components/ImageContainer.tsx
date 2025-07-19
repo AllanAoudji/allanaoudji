@@ -28,13 +28,11 @@ export default function ImageContainer({ image, ratio, className }: Readonly<Pro
 	}
 
 	return (
-		<div
-			className={`${className} ${getAspectRatio(ratio)} bg-secondary flex w-full items-center justify-center overflow-hidden`}
-		>
+		<div className={`${className} ${getAspectRatio(ratio)} bg-secondary w-full overflow-hidden`}>
 			<Image
 				alt={image.alt || "image"}
 				blurDataURL={image.lqip || undefined}
-				className="min-h-full min-w-full shrink-0"
+				className="h-full w-full object-cover"
 				height={image.height}
 				placeholder={image.lqip ? "blur" : "empty"}
 				src={image.url}
