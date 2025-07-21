@@ -1,5 +1,6 @@
 import SubTitle from "./SubTitle";
 import WorkImages from "./WorkImages";
+import WorkText from "./WorkText";
 import { work } from "@/types/sanityType";
 
 type Props = {
@@ -16,7 +17,7 @@ export default function WorksGallerySection({
 	return (
 		<section className={`${className} section-container ${separator && "section-separator"}`}>
 			<SubTitle className="pb-4">{work.title}</SubTitle>
-			{work.text && <p>{work.text}</p>}
+			<WorkText text={work.text} />
 			<WorkImages images={work.gallery} />
 		</section>
 	);
