@@ -11,8 +11,8 @@ export const projectId = assertValue(
 );
 
 export const serverToken = assertValue(
-	process.env.NEXT_PUBLIC_SANITY_SERVER_TOKEN,
-	"Missing envirionment variable: NEXT_PUBLIC_SANITY_SERVER_TOKEN",
+	process.env.SANITY_SERVER_TOKEN,
+	"Missing envirionment variable: SANITY_SERVER_TOKEN",
 );
 
 export const useCdn =
