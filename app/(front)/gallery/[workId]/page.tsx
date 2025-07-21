@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
 import Title from "@/components/Title";
 import WorkImages from "@/components/WorkImages";
+import WorkText from "@/components/WorkText";
 import { getWork } from "@/sanity/lib/queries";
 
 export default async function WorkDetail({ params }: { params: Promise<{ workId: string }> }) {
@@ -21,8 +22,8 @@ export default async function WorkDetail({ params }: { params: Promise<{ workId:
 				</Link>
 			</div>
 			<Title className="pb-8">{work.title}</Title>
-			{work.text && <p>{work.text}</p>}
-			{work.gallery && <WorkImages images={work.gallery} />}
+			<WorkText text={work.text} />
+			<WorkImages images={work.gallery} />
 		</>
 	);
 }
