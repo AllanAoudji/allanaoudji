@@ -1,6 +1,5 @@
-import Link from "next/link";
-import ImageContainer from "./ImageContainer";
 import WorksHomeSectionContainer from "./WorksHomeSectionContainer";
+import WorksHomeSectionItem from "./WorksHomeSectionItem";
 import { getWorks } from "@/sanity/lib/queries";
 import { WORKS_QUERYResult } from "@/sanity/types";
 
@@ -22,10 +21,7 @@ export default async function WorksSection() {
 	return (
 		<WorksHomeSectionContainer>
 			{query.works.map(work => (
-				<Link key={work._id} href={`/gallery/${work.slug}`}>
-					<h3>{work.title}</h3>
-					{!!work.mainImage && <ImageContainer image={work.mainImage} ratio="4/3" />}
-				</Link>
+				<WorksHomeSectionItem key={work._id} work={work} />
 			))}
 		</WorksHomeSectionContainer>
 	);
