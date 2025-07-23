@@ -1,5 +1,5 @@
+import { HEAD_MENU } from "@/lib/constants";
 import NavBarItem from "./NavBarItem";
-import { HEAD_MENU } from "@/utils/menu";
 
 export default function Menu() {
 	return (
@@ -11,7 +11,7 @@ export default function Menu() {
 						activeSegment={menu.activeSegment}
 						className="hidden sm:inline"
 						href={menu.href}
-						key={menu.id}
+						key={menu.href}
 						title={menu.title}
 					/>
 				))}

@@ -1,6 +1,6 @@
 import { CogIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
-import singletonListItem from "@/utils/singletonListItem";
+import singletonListItem from "@/lib/singletonListItem";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = S =>

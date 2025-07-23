@@ -22,7 +22,7 @@
 		"paths": {
 			"@/components/*": ["components/*"],
 			"@/app/*": ["app/*"],
-			"@/utils/*": ["utils/*"],
+			"@/lib/*": ["lib/*"],
 			"@/types/*": ["types/*"],
 			"@/sanity/*": ["sanityBackend/*"],
 			"@/*": ["./*"]
