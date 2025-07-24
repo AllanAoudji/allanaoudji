@@ -1,8 +1,4 @@
-export interface ShopifyError {
-	cause?: string;
-	status?: number;
-	message: string;
-}
+import { ShopifyError } from "@/types/shopifyError";
 
 export function isObject(object: unknown): object is Record<string, unknown> {
 	return typeof object === "object" && object !== null && !Array.isArray(object);
