@@ -1,4 +1,12 @@
 import { Menu } from "@/types/menu";
+import { SortFilterItem } from "@/types/sortFilterItem";
+
+export const DEFAULT_SORT: SortFilterItem = {
+	title: "Relevance",
+	slug: null,
+	sortKey: "RELEVANCE",
+	reverse: false,
+};
 
 export const FOOT_MENU: Menu[] = [
 	{
@@ -46,10 +54,20 @@ export const HEAD_MENU: Menu[] = [
 	},
 ];
 
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2025-07/graphql.json";
+
+export const SORTING: SortFilterItem[] = [
+	DEFAULT_SORT,
+	{ title: "Trending", slug: "trending-desc", sortKey: "BEST_SELLING", reverse: false },
+	{ title: "Lastest arrival", slug: "latest-desc", sortKey: "CREATED_AT", reverse: true },
+	{ title: "Price: low to high", slug: "price-asc", sortKey: "PRICE", reverse: false },
+	{ title: "Price: high to low", slug: "price-desc", sortKey: "PRICE", reverse: true },
+];
+
 export const TAGS = {
 	collections: "collections",
 	products: "produits",
 	cart: "cart",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2025-07/graphql.json";
+export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
