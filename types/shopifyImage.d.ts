@@ -1,4 +1,4 @@
-export type Image = {
+export type shopifyImage = {
 	url: string;
 	altText?: string;
 	width: number;

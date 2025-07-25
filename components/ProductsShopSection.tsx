@@ -1,13 +1,13 @@
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getProducts } from "@/lib/shopify";
-import { convertCurrencyCode } from "@/lib/utils";
+import ProductsShopSectionItem from "./ProductsShopSectionItem";
 import { Product } from "@/types/product";
 
 type Props = {
 	searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default async function ProductContainer({ searchParams }: Readonly<Props>) {
+export default async function ProductsShopSection({ searchParams }: Readonly<Props>) {
 	const { sort, q: searchValue } = searchParams;
 	const { sortKey, reverse } = SORTING.find(item => item.slug === sort) || DEFAULT_SORT;
 
@@ -26,16 +26,10 @@ export default async function ProductContainer({ searchParams }: Readonly<Props>
 	}
 
 	return (
-		<section className="items-gap grid-default">
+		<section className="items-gap grid-default section-container">
+			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
-				<div key={product.id}>
-					<h3 className="font-bold">{product.title}</h3>
-					<p>{product.description}</p>
-					<p className="font-light">
-						{product.priceRange.maxVariantPrice.amount}{" "}
-						{convertCurrencyCode(product.priceRange.maxVariantPrice.currencyCode)}
-					</p>
-				</div>
+				<ProductsShopSectionItem key={product.id} product={product} />
 			))}
 		</section>
 	);

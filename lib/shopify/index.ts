@@ -4,8 +4,8 @@ import { ensureStartWith } from "../utils";
 import { getMenuQuery } from "./queries/menu";
 import { getProductsQuery } from "./queries/product";
 import { Connection } from "@/types/connection";
-import { Image } from "@/types/image";
 import { Product } from "@/types/product";
+import { shopifyImage } from "@/types/shopifyImage";
 import { ShopifyMenu } from "@/types/shopifyMenu";
 import { ShopifyMenuOperation } from "@/types/shopifyMenuOperation";
 import { ShopifyProduct } from "@/types/shopifyProduct";
@@ -23,7 +23,7 @@ function removeEdgesAndNode<T>(array: Connection<T>): T[] {
 	return array.edges.map(edge => edge?.node);
 }
 
-function reshapeImages(images: Connection<Image>, title: string) {
+function reshapeImages(images: Connection<shopifyImage>, title: string) {
 	const flattened = removeEdgesAndNode(images);
 
 	return flattened.map(image => {
@@ -135,17 +135,19 @@ export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 
 export async function getProducts({
 	query,
-	reverse,
+	reverse = true,
 	sortKey,
+	first = 20,
 }: {
 	query?: string;
 	reverse?: boolean;
 	sortKey?: string;
+	first?: number;
 }): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
 		query: getProductsQuery,
 		tags: [TAGS.products],
-		variables: { query, reverse, sortKey },
+		variables: { query, reverse, sortKey, first },
 	});
 
 	return reshapeProducts(removeEdgesAndNode(res.body.data.products));

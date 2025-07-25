@@ -1,8 +1,8 @@
-import { Image } from "./image";
 import { Money } from "./money";
 import { ProductOption } from "./productOption";
 import { ProductVariant } from "./productVariant";
 import { SEO } from "./seo";
+import { shopifyImage } from "./shopifyImage";
 
 export type ShopifyProduct = {
 	id: string;
@@ -16,8 +16,8 @@ export type ShopifyProduct = {
 		minVariantPrice: Money;
 	};
 	variants: Connection<ProductVariant>;
-	featuredImage: Image;
-	images: Connection<Image>;
+	featuredImage: shopifyImage;
+	images: Connection<shopifyImage>;
 	seo: SEO;
 	tags: string[];
 	updatedAt: string;

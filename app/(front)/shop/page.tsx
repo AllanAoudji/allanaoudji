@@ -1,4 +1,4 @@
-import ProductContainer from "@/components/ProductContainer";
+import ProductsShopSection from "@/components/ProductsShopSection";
 import Title from "@/components/Title";
 
 type Props = {
@@ -11,7 +11,7 @@ export default async function Shop({ searchParams }: Props) {
 	return (
 		<div>
 			<Title>shop</Title>
-			<ProductContainer searchParams={currSearchParams} />
+			<ProductsShopSection searchParams={currSearchParams} />
 		</div>
 	);
 }

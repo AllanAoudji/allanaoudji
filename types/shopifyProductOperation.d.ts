@@ -9,5 +9,6 @@ export type ShopifyProductOperation = {
 		query?: string;
 		reverse?: boolean;
 		sortKey?: string;
+		first?: number;
 	};
 };

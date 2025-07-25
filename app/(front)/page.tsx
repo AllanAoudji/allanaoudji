@@ -4,7 +4,8 @@ import ContactSection from "@/components/ContactSection";
 import ContactSectionLoader from "@/components/ContactSectionLoader";
 import InstagramSection from "@/components/InstagramSection";
 import InstagramSectionLoader from "@/components/InstagramSectionLoader";
-import ShopSection from "@/components/ShopSection";
+import ProductsHomeSection from "@/components/ProductsHomeSection";
+import ProductsHomeSectionLoader from "@/components/ProductsHomeSectionLoader";
 import WorksHomeSection from "@/components/WorksHomeSection";
 import WorksHomeSectionLoader from "@/components/WorksHomeSectionLoader";
 import Error from "./error";
@@ -12,7 +13,11 @@ import Error from "./error";
 export default function Home() {
 	return (
 		<>
-			<ShopSection />
+			<ErrorBoundary errorComponent={Error}>
+				<Suspense fallback={<ProductsHomeSectionLoader />}>
+					<ProductsHomeSection />
+				</Suspense>
+			</ErrorBoundary>
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<WorksHomeSectionLoader />}>
 					<WorksHomeSection />

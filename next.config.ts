@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
 				hostname: "*.cdninstagram.com",
 				port: "",
 			},
+			{ hostname: "cdn.shopify.com" },
 		],
 	},
 	experimental: {
