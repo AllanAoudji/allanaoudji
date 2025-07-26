@@ -1,23 +1,32 @@
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
-import { getProducts } from "@/lib/shopify";
+import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import ProductsShopSectionItem from "./ProductsShopSectionItem";
 import { Product } from "@/types/product";
 
 type Props = {
+	handle?: string;
 	searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default async function ProductsShopSection({ searchParams }: Readonly<Props>) {
+export default async function ProductsShopSection({ handle, searchParams }: Readonly<Props>) {
 	const { sort, q: searchValue } = searchParams;
 	const { sortKey, reverse } = SORTING.find(item => item.slug === sort) || DEFAULT_SORT;
 
 	let products: Product[];
 	try {
-		products = await getProducts({
-			query: typeof searchValue === "string" ? searchValue : undefined,
-			reverse,
-			sortKey,
-		});
+		if (handle) {
+			products = await getCollectionProducts({
+				collection: handle,
+				reverse,
+				sortKey,
+			});
+		} else {
+			products = await getProducts({
+				query: typeof searchValue === "string" ? searchValue : undefined,
+				reverse,
+				sortKey,
+			});
+		}
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error;

@@ -31,6 +31,7 @@ export default async function ProductsHomeSection() {
 						height: product.featuredImage.height,
 						lqip: null,
 					}}
+					priority={true}
 					ratio="3/4"
 					key={product.id}
 				/>

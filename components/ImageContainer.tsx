@@ -5,6 +5,7 @@ type AspectRatio = "4/3" | "3/4" | "4/5";
 
 type Props = {
 	image: workGalleryImage | workMainImage;
+	priority?: boolean;
 	ratio: AspectRatio;
 	className?: string;
 };
@@ -22,7 +23,12 @@ const getAspectRatio = (ratio: AspectRatio) => {
 	}
 };
 
-export default function ImageContainer({ image, ratio, className }: Readonly<Props>) {
+export default function ImageContainer({
+	image,
+	priority = false,
+	ratio,
+	className,
+}: Readonly<Props>) {
 	return (
 		<div className={`${className} ${getAspectRatio(ratio)} bg-secondary w-full overflow-hidden`}>
 			{!!image.height && !!image.width && !!image.url && (
@@ -32,6 +38,7 @@ export default function ImageContainer({ image, ratio, className }: Readonly<Pro
 					className="h-full w-full object-cover"
 					height={image.height}
 					placeholder={image.lqip ? "blur" : "empty"}
+					priority={priority}
 					src={image.url}
 					width={image.width}
 				/>

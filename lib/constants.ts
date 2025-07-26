@@ -1,5 +1,5 @@
 import { Menu } from "@/types/menu";
-import { SortFilterItem } from "@/types/sortFilterItem";
+import SortFilterItem from "@/types/sortFilterItem";
 
 export const DEFAULT_SORT: SortFilterItem = {
 	title: "Relevance",

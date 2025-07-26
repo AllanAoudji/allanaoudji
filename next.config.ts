@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
 				hostname: "*.cdninstagram.com",
 				port: "",
 			},
-			{ hostname: "cdn.shopify.com" },
+			{
+				protocol: "https",
+				hostname: "cdn.shopify.com",
+				pathname: "/s/files/**",
+			},
 		],
 	},
 	experimental: {
