@@ -35,11 +35,11 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	}
 
 	return (
-		<section className="items-gap grid-default section-container">
+		<div className="items-gap grid-default col-span-4">
 			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
 				<ProductsShopSectionItem key={product.id} product={product} />
 			))}
-		</section>
+		</div>
 	);
 }
