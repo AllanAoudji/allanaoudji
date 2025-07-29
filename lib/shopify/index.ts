@@ -3,7 +3,8 @@ import { isShopifyError } from "../type-guards";
 import { ensureStartWith } from "../utils";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
-import { getProductsQuery } from "./queries/product";
+import { getProductQuery, getProductsQuery } from "./queries/product";
+import ShopifyProductOperation from "@/types/ShopifyProductOperation";
 import Collection from "@/types/collection";
 import { Connection } from "@/types/connection";
 import { Product } from "@/types/product";
@@ -14,7 +15,7 @@ import { shopifyImage } from "@/types/shopifyImage";
 import { ShopifyMenu } from "@/types/shopifyMenu";
 import { ShopifyMenuOperation } from "@/types/shopifyMenuOperation";
 import { ShopifyProduct } from "@/types/shopifyProduct";
-import { ShopifyProductOperation } from "@/types/shopifyProductOperation";
+import { ShopifyProductsOperation } from "@/types/shopifyProductsOperation";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
@@ -170,7 +171,7 @@ export async function getProducts({
 	sortKey?: string;
 	first?: number;
 }): Promise<Product[]> {
-	const res = await shopifyFetch<ShopifyProductOperation>({
+	const res = await shopifyFetch<ShopifyProductsOperation>({
 		cache: "no-store",
 		query: getProductsQuery,
 		tags: [TAGS.products],
@@ -234,4 +235,15 @@ export async function getCollectionProducts({
 	}
 
 	return reshapeProducts(removeEdgesAndNode(res.body.data.collection.products));
+}
+
+export async function getProduct(handle: string): Promise<Product | undefined> {
+	const res = await shopifyFetch<ShopifyProductOperation>({
+		cache: "no-store",
+		query: getProductQuery,
+		tags: [TAGS.products],
+		variables: { handle },
+	});
+
+	return reshapeProduct(res.body.data.product, false);
 }

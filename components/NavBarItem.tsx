@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 type Props = {
-	activeSegment?: string | null;
+	activeSegment?: string[];
 	className?: string;
 	href: string;
 	title: string;
@@ -24,7 +24,10 @@ export default function NavBarItem({
 
 	return (
 		<li className={className}>
-			<Link className={isActiveSegment === activeSegment ? "underline" : ""} href={href}>
+			<Link
+				className={isActiveSegment && activeSegment?.includes(isActiveSegment) ? "underline" : ""}
+				href={href}
+			>
 				{imageSrc ? <Image alt="test" height={300} src={title} width={208} /> : title}
 			</Link>
 		</li>

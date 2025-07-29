@@ -9,7 +9,7 @@ export type ShopifyProduct = {
 	handle: string;
 	title: string;
 	description: string;
-	descriptionHtml: string;
+	descriptionHtml?: string;
 	options: ProductOption[];
 	priceRange: {
 		maxVariantPrice: Money;

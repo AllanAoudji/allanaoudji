@@ -9,7 +9,7 @@ export default function ProductsHomeSectionContainer({ children }: Readonly<Prop
 	return (
 		<section className="section-container section-separator text-center">
 			<SubTitle className="pb-8">Nouveauté de la boutique</SubTitle>
-			<Link className="items-gap grid-default" href="/shop">
+			<Link className="items-gap grid-default" href="/collections">
 				{children}
 			</Link>
 		</section>

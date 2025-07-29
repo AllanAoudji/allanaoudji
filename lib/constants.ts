@@ -12,17 +12,17 @@ export const FOOT_MENU: Menu[] = [
 	{
 		href: "/legal-notices",
 		title: "mentions légales",
-		activeSegment: "legal-notices",
+		activeSegment: ["legal-notices"],
 	},
 	{
 		href: "/privacy-policy",
 		title: "politique de confidentialité",
-		activeSegment: "privacy-policy",
+		activeSegment: ["privacy-policy"],
 	},
 	{
 		href: "/general-conditions-of-sale",
 		title: "conditions générales de vente",
-		activeSegment: "general-conditions-of-sale",
+		activeSegment: ["general-conditions-of-sale"],
 	},
 ];
 
@@ -30,27 +30,27 @@ export const HEAD_MENU: Menu[] = [
 	{
 		href: "/gallery",
 		title: "galerie",
-		activeSegment: "gallery",
+		activeSegment: ["gallery"],
 	},
 	{
-		href: "/shop",
+		href: "/collections",
 		title: "boutique",
-		activeSegment: "shop",
+		activeSegment: ["collections", "products"],
 	},
 	{
 		href: "/about",
 		title: "à propos",
-		activeSegment: "about",
+		activeSegment: ["about"],
 	},
 	{
 		href: "/contact",
 		title: "contact",
-		activeSegment: "contact",
+		activeSegment: ["contact"],
 	},
 	{
 		href: "/basket",
 		title: "panier",
-		activeSegment: "panier",
+		activeSegment: ["panier"],
 	},
 ];
 

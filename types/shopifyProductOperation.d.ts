@@ -1,14 +1,12 @@
-import { Connection } from "./connection";
 import { ShopifyProduct } from "./shopifyProduct";
 
-export type ShopifyProductOperation = {
+type ShopifyProductOperation = {
 	data: {
-		products: Connection<ShopifyProduct>;
+		product: ShopifyProduct;
 	};
 	variables: {
-		query?: string;
-		reverse?: boolean;
-		sortKey?: string;
-		first?: number;
+		handle: string;
 	};
 };
+
+export default ShopifyProductOperation;

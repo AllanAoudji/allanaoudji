@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { convertCurrencyCode } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
+import ProductPrice from "./ProductPrice";
 import { Product } from "@/types/product";
 
 type Props = {
@@ -23,10 +23,7 @@ export default function ProductsShopSectionItem({ className, product }: Readonly
 				priority={true}
 				ratio="4/3"
 			/>
-			<p className="text-right font-light">
-				{parseFloat(product.priceRange.maxVariantPrice.amount).toFixed(2)}{" "}
-				{convertCurrencyCode(product.priceRange.maxVariantPrice.currencyCode)}
-			</p>
+			<ProductPrice price={product.priceRange.maxVariantPrice} className="text-right font-light" />
 		</Link>
 	);
 }
