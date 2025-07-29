@@ -75,7 +75,7 @@ function reshapeCollection(collection: ShopifyColelction): Collection | undefine
 	if (!collection) return undefined;
 	return {
 		...collection,
-		path: `/shop/collections/${collection.handle}`,
+		path: `/collections/${collection.handle}`,
 	};
 }
 
@@ -197,7 +197,7 @@ export async function getCollections(): Promise<Collection[]> {
 				title: "All",
 				description: "All products",
 			},
-			path: "/shop",
+			path: "/collections",
 			updatedAt: new Date().toISOString(),
 			image: null,
 		},

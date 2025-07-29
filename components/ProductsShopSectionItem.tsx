@@ -10,7 +10,7 @@ type Props = {
 
 export default function ProductsShopSectionItem({ className, product }: Readonly<Props>) {
 	return (
-		<Link className={`${className}`} href={`/shop/products/${product.handle}`}>
+		<Link className={`${className}`} href={`/products/${product.handle}`}>
 			<h3 className="font-bold">{product.title}</h3>
 			<ImageContainer
 				image={{
