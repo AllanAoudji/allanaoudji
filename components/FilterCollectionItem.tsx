@@ -8,7 +8,7 @@ type Props = {
 	item: Collection;
 };
 
-export default function CollectionItem({ item }: Readonly<Props>) {
+export default function FilterCollectionItem({ item }: Readonly<Props>) {
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
 	const active = pathName === item.path;

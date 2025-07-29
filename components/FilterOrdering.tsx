@@ -1,15 +1,12 @@
 import { SORTING } from "@/lib/constants";
-import SortItem from "./SortItem";
+import FilterOrderingItem from "./FilterOrderingItem";
 
 export default function FilterOrdering() {
 	return (
-		<div className="col-span-1">
-			<h3 className="hidden underline md:block">ordering:</h3>
-			<ul>
-				{SORTING.map(item => (
-					<SortItem key={item.slug} item={item} />
-				))}
-			</ul>
-		</div>
+		<ul>
+			{SORTING.map(item => (
+				<FilterOrderingItem key={item.slug} item={item} />
+			))}
+		</ul>
 	);
 }

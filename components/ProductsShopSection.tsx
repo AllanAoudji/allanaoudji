@@ -35,7 +35,7 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	}
 
 	return (
-		<div className="items-gap grid-default col-span-4">
+		<div className="items-gap col-span-4 grid grid-cols-3">
 			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
 				<ProductsShopSectionItem key={product.id} product={product} />

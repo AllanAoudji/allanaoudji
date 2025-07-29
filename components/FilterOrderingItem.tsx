@@ -8,7 +8,7 @@ type Props = {
 	item: SortFilterItem;
 };
 
-export default function SortItem({ item }: Readonly<Props>) {
+export default function FilterOrderingItem({ item }: Readonly<Props>) {
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
 	const active = searchParams.get("sort") === item.slug;

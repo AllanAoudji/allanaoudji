@@ -1,8 +1,4 @@
-import Error from "../error";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Suspense } from "react";
-import FilterCollection from "@/components/FilterCollection";
-import FilterOrdering from "@/components/FilterOrdering";
+import Filter from "@/components/Filter";
 import Title from "@/components/Title";
 
 type Props = {
@@ -13,14 +9,10 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<>
 			<Title>boutique</Title>
-			<section className="grid grid-cols-5 gap-4">
-				<div>
-					<ErrorBoundary errorComponent={Error}>
-						<Suspense fallback={<div />}>
-							<FilterCollection />
-						</Suspense>
-					</ErrorBoundary>
-					<FilterOrdering />
+			<section className="section-container grid grid-cols-5 gap-4">
+				<div className="col-span-1">
+					<Filter className="pb-4" type="collections" />
+					<Filter type="ordering" />
 				</div>
 				{children}
 			</section>
