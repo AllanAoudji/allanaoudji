@@ -1,5 +1,5 @@
-import CollectionsSection from "@/components/CollectionsSection";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
-	return <CollectionsSection />;
+	redirect("/shop");
 }
