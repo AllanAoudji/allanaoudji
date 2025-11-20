@@ -1,11 +1,13 @@
+import Grid from "./Grid";
+
 type Props = {
 	children: React.ReactNode;
 };
 
 export default function WorksHomeSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<section className="section-separator section-container items-gap grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+		<Grid tag="section" type="large" className="section-separator section-container">
 			{children}
-		</section>
+		</Grid>
 	);
 }

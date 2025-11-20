@@ -1,5 +1,6 @@
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
+import Grid from "./Grid";
 import ProductsShopSectionItem from "./ProductsShopSectionItem";
 import { Product } from "@/types/product";
 
@@ -35,11 +36,11 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	}
 
 	return (
-		<div className="items-gap col-span-4 grid grid-cols-3">
+		<Grid className="col-span-4" type="large">
 			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
 				<ProductsShopSectionItem key={product.id} product={product} />
 			))}
-		</div>
+		</Grid>
 	);
 }

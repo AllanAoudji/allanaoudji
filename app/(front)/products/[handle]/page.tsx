@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { ProductProvider } from "@/lib/contexts/product-context";
 import { getProduct } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
+import Grid from "@/components/Grid";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPrice from "@/components/ProductPrice";
 import ProductVariantSelector from "@/components/ProductVariantSelector";
@@ -32,7 +33,7 @@ export default async function Page({ params }: Readonly<Props>) {
 	return (
 		<ProductProvider>
 			<Title>{product.title}</Title>
-			<section className="section-container items-gap grid grid-cols-5">
+			<Grid tag="section" className="section-container" type="small">
 				<ProductGallery className="col-span-3" images={product.images} />
 				<div className="col-span-2">
 					{/* {!!product.descriptionHtml && <Prose html={product.descriptionHtml} />} */}
@@ -40,7 +41,7 @@ export default async function Page({ params }: Readonly<Props>) {
 					<ProductPrice price={product.priceRange.maxVariantPrice} />
 					{/* <AddToCard product={product} /> */}
 				</div>
-			</section>
+			</Grid>
 		</ProductProvider>
 	);
 }

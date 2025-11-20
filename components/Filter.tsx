@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import FilterCollection from "./FilterCollection";
 import FilterOrdering from "./FilterOrdering";
 
@@ -8,7 +9,7 @@ type Props = {
 
 export default function Filter({ className, type }: Readonly<Props>) {
 	return (
-		<nav className={`${className}`}>
+		<nav className={cn(className)}>
 			<h4>{type}</h4>
 			{type === "collections" ? <FilterCollection /> : <FilterOrdering />}
 		</nav>
