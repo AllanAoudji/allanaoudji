@@ -1,11 +1,12 @@
+import { Suspense } from "react";
 import Title from "@/components/Title";
 import WorksGallerySection from "@/components/WorksGallerySection";
 import { getWorks } from "@/sanity/lib/queries";
 
-export default async function Gallery() {
+const GalleryLoader = async () => {
 	const query = await getWorks("gallery");
-
 	return (
+		// TODO: create fallback
 		<>
 			<Title>galerie</Title>
 			{!!query && query.works && !!query.works.length ? (
@@ -22,5 +23,13 @@ export default async function Gallery() {
 				</div>
 			)}
 		</>
+	);
+};
+
+export default function Gallery() {
+	return (
+		<Suspense fallback={<p>Loading...</p>}>
+			<GalleryLoader />
+		</Suspense>
 	);
 }
