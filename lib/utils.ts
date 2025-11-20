@@ -1,3 +1,7 @@
+import clsx from "clsx";
+import { ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export function convertCurrencyCode(currencyCode: string): string {
 	switch (currencyCode) {
 		case "USD":
@@ -16,4 +20,8 @@ export const ensureStartWith = (url: string, prefix: string): string => {
 		return prefix + url;
 	}
 	return url;
+};
+
+export const cn = (...inputs: ClassValue[]): string => {
+	return twMerge(clsx(inputs));
 };

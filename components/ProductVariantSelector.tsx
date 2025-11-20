@@ -3,6 +3,7 @@
 import Form from "next/form";
 import { useProduct } from "@/lib/contexts/product-context";
 import { useUpdateURL } from "@/lib/hooks/useUpdateUrl";
+import { cn } from "@/lib/utils";
 import { ProductOption } from "@/types/productOption";
 import { ProductVariant } from "@/types/productVariant";
 
@@ -61,7 +62,7 @@ export default function ProductVariantSelector({ options, variants }: Readonly<P
 								aria-disabled={!isAvailableForSale}
 								disabled={!isAvailableForSale}
 								title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
-								className={`${isActive && "text-red-400"}`}
+								className={cn({ "text-red-400": isActive })}
 								formAction={() => {
 									const newState = updateOption(optionNameLowerCase, value);
 									updateURL(newState);

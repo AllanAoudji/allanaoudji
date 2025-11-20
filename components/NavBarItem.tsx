@@ -4,6 +4,7 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type Props = {
 	activeSegment?: string[];
@@ -23,9 +24,9 @@ export default function NavBarItem({
 	const isActiveSegment = useSelectedLayoutSegment();
 
 	return (
-		<li className={className}>
+		<li className={cn(className)}>
 			<Link
-				className={isActiveSegment && activeSegment?.includes(isActiveSegment) ? "underline" : ""}
+				className={cn({ underline: isActiveSegment && activeSegment?.includes(isActiveSegment) })}
 				href={href}
 			>
 				{imageSrc ? <Image alt="test" height={300} src={title} width={208} /> : title}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 import SortFilterItem from "@/types/sortFilterItem";
 
 type Props = {
@@ -22,7 +23,7 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 	const DynamicTag = active ? "p" : Link;
 
 	return (
-		<li className={`${active && "font-bold"}`}>
+		<li className={cn({ "font-bold": active })}>
 			<DynamicTag href={href}>{item.title}</DynamicTag>
 		</li>
 	);

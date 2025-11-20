@@ -1,4 +1,4 @@
-import { convertCurrencyCode } from "@/lib/utils";
+import { cn, convertCurrencyCode } from "@/lib/utils";
 import { Money } from "@/types/money";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProductPrice({ className, price }: Readonly<Props>) {
 	return (
-		<p className={`${className}`}>
+		<p className={cn(className)}>
 			{parseFloat(price.amount).toFixed(2)} {convertCurrencyCode(price.currencyCode)}
 		</p>
 	);

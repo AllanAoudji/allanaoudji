@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+	cacheComponents: true,
 	images: {
 		remotePatterns: [
 			{ hostname: "http://cdn.sanity.io|cdn.sanity.io" },
@@ -15,9 +16,6 @@ const nextConfig: NextConfig = {
 				pathname: "/s/files/**",
 			},
 		],
-	},
-	experimental: {
-		ppr: "incremental",
 	},
 };
 

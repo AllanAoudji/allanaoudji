@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 import Collection from "@/types/collection";
 
 type Props = {
@@ -20,7 +21,7 @@ export default function FilterCollectionItem({ item }: Readonly<Props>) {
 	const href = `${item.path}?${newParams.toString()}`;
 
 	return (
-		<li className={`${active && "font-bold"}`}>
+		<li className={cn({ "font-bold": active })}>
 			<DynamicTag href={href}>{item.title}</DynamicTag>
 		</li>
 	);

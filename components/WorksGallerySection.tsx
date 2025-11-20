@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import SubTitle from "./SubTitle";
 import WorkImages from "./WorkImages";
 import WorkText from "./WorkText";
@@ -15,7 +16,11 @@ export default function WorksGallerySection({
 	work,
 }: Readonly<Props>) {
 	return (
-		<section className={`${className} section-container ${separator && "section-separator"}`}>
+		<section
+			className={cn(className, "section-container", {
+				"section-separator": separator,
+			})}
+		>
 			<SubTitle className="pb-4">{work.title}</SubTitle>
 			<WorkText text={work.text} />
 			<WorkImages images={work.gallery} />

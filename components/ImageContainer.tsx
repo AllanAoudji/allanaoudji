@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import { workGalleryImage, workMainImage } from "@/types/sanityType";
 
 type AspectRatio = "4/3" | "3/4" | "4/5";
@@ -30,7 +31,7 @@ export default function ImageContainer({
 	className,
 }: Readonly<Props>) {
 	return (
-		<div className={`${className} ${getAspectRatio(ratio)} bg-secondary w-full overflow-hidden`}>
+		<div className={cn(className, getAspectRatio(ratio), "bg-secondary w-full overflow-hidden")}>
 			{!!image.height && !!image.width && !!image.url && (
 				<Image
 					alt={image.alt || "image"}
