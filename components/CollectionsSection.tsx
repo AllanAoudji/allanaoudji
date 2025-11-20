@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCollections } from "@/lib/shopify";
 import CollectionsSectionItem from "./CollectionsSectionItem";
+import Grid from "./Grid";
 import Title from "./Title";
 import Collection from "@/types/collection";
 
@@ -20,13 +21,11 @@ export default async function CollectionsSection() {
 	return (
 		<>
 			<Title>Collections</Title>
-			<section className="section-container">
-				<div className="grid-default items-gap">
-					{collections.map(collection => (
-						<CollectionsSectionItem key={collection.handle} collection={collection} />
-					))}
-				</div>
-			</section>
+			<Grid className="section-container" tag="section">
+				{collections.map(collection => (
+					<CollectionsSectionItem key={collection.handle} collection={collection} />
+				))}
+			</Grid>
 		</>
 	);
 }

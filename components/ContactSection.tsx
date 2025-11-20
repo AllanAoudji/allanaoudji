@@ -1,5 +1,6 @@
 import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionItem from "./ContactSectionItem";
+import Grid from "./Grid";
 import { getContacts } from "@/sanity/lib/queries";
 import { CONTACTS_QUERYResult } from "@/sanity/types";
 
@@ -20,11 +21,11 @@ export default async function ContactSection() {
 
 	return (
 		<ContactSectionContainer>
-			<ul className="items-gap grid-default">
+			<Grid tag="ul">
 				{query.contacts.map(contact => (
 					<ContactSectionItem key={contact._id} contact={contact} />
 				))}
-			</ul>
+			</Grid>
 		</ContactSectionContainer>
 	);
 }

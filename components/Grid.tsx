@@ -1,26 +1,15 @@
-import { HTMLAttributeAnchorTarget } from "react";
 import { cn } from "@/lib/utils";
 
-type Type = "small" | "default" | "large";
+type Type = "small" | "default" | "large" | "largest";
 
-type PropsDefault = {
+type Props = {
 	children: React.ReactNode;
 	className?: string;
-	tag?: "div" | "section";
+	tag?: "div" | "section" | "ul";
 	type?: Type;
 	href?: never;
 	target?: never;
 };
-type PropsLink = {
-	children: React.ReactNode;
-	className?: string;
-	tag: "a";
-	type?: Type;
-	href: string;
-	target?: HTMLAttributeAnchorTarget;
-};
-
-type Props = PropsDefault | PropsLink;
 
 const getStyle = (type: Type): string => {
 	switch (type) {
@@ -31,6 +20,8 @@ const getStyle = (type: Type): string => {
 			return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 		case "small":
 			return "grid-cols-5";
+		case "largest":
+			return "grid-cols-2";
 	}
 };
 
@@ -39,13 +30,7 @@ export default function Grid({
 	className,
 	tag = "div",
 	type = "default",
-	href,
-	target,
 }: Readonly<Props>) {
 	const DynamicTag = tag;
-	return (
-		<DynamicTag className={cn(className, getStyle(type), "grid gap-4")} href={href} target={target}>
-			{children}
-		</DynamicTag>
-	);
+	return <DynamicTag className={cn(className, getStyle(type), "grid gap-4")}>{children}</DynamicTag>;
 }

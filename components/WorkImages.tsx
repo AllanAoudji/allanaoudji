@@ -1,3 +1,4 @@
+import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
 import { workGallery } from "@/types/sanityType";
 
@@ -15,10 +16,10 @@ export default function WorkImages({ images }: Readonly<Props>) {
 	}
 
 	return (
-		<div className="items-gap grid-default">
+		<Grid>
 			{images.map(image => (
 				<ImageContainer key={image._id} image={image} ratio="3/4" />
 			))}
-		</div>
+		</Grid>
 	);
 }

@@ -4,7 +4,7 @@ import NavBarItem from "./NavBarItem";
 export default function Menu() {
 	return (
 		<nav className="text-quaternary padding-container">
-			<ul className="items-gap flex h-16 items-center justify-end">
+			<ul className="flex h-16 items-center justify-end gap-4">
 				<NavBarItem className="mr-auto font-black" href={"/"} title="logo" />
 				{HEAD_MENU.map(menu => (
 					<NavBarItem

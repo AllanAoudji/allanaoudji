@@ -3,7 +3,7 @@ import { FOOT_MENU } from "@/lib/constants";
 
 export default function FooterMenu() {
 	return (
-		<ul className="items-gap justify-center text-center sm:flex">
+		<ul className="justify-center gap-4 text-center sm:flex">
 			{FOOT_MENU.map(menu => (
 				<li key={menu.href}>
 					<Link href={menu.href}>{menu.title}</Link>
