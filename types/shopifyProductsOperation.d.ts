@@ -1,7 +1,7 @@
-import { Connection } from "./connection";
-import { ShopifyProduct } from "./shopifyProduct";
+import Connection from "./connection";
+import ShopifyProduct from "./shopifyProduct";
 
-export type ShopifyProductsOperation = {
+type ShopifyProductsOperation = {
 	data: {
 		products: Connection<ShopifyProduct>;
 	};
@@ -12,3 +12,5 @@ export type ShopifyProductsOperation = {
 		first?: number;
 	};
 };
+
+export default ShopifyProductsOperation;

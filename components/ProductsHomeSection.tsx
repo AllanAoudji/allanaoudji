@@ -2,7 +2,7 @@ import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getProducts } from "@/lib/shopify";
 import ImageContainer from "./ImageContainer";
 import ProductsHomeSectionContainer from "./ProductsHomeSectionContainer";
-import { Product } from "@/types/product";
+import Product from "@/types/product";
 
 export default async function ProductsHomeSection() {
 	const { reverse, sortKey } = SORTING.find(item => item.slug === "latest-desc") || DEFAULT_SORT;

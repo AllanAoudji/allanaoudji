@@ -1,3 +1,5 @@
-export type Edge<T> = {
+type Edge<T> = {
 	node: T;
 };
+
+export default Edge;

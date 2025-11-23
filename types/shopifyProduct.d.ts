@@ -4,9 +4,10 @@ import { ProductVariant } from "./productVariant";
 import { SEO } from "./seo";
 import { shopifyImage } from "./shopifyImage";
 
-export type ShopifyProduct = {
+type ShopifyProduct = {
 	id: string;
 	handle: string;
+	availableForSale: boolean;
 	title: string;
 	description: string;
 	descriptionHtml?: string;
@@ -22,3 +23,5 @@ export type ShopifyProduct = {
 	tags: string[];
 	updatedAt: string;
 };
+
+export default ShopifyProduct;

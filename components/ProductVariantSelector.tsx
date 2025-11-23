@@ -1,38 +1,42 @@
 "use client";
 
 import Form from "next/form";
+import { useMemo } from "react";
 import { useProduct } from "@/lib/contexts/product-context";
 import { useUpdateURL } from "@/lib/hooks/useUpdateUrl";
 import { cn } from "@/lib/utils";
 import { ProductOption } from "@/types/productOption";
 import { ProductVariant } from "@/types/productVariant";
 
-type Props = {
-	options: ProductOption[];
-	variants: ProductVariant[];
-};
-
 type Combination = {
 	id: string;
 	availableForSale: boolean;
 	[key: string]: string | boolean;
 };
+type Props = {
+	options: ProductOption[];
+	variants: ProductVariant[];
+};
 
 export default function ProductVariantSelector({ options, variants }: Readonly<Props>) {
-	const updateURL = useUpdateURL();
 	const { state, updateOption } = useProduct();
+	const updateURL = useUpdateURL();
 
-	const combinations: Combination[] = variants.map(variant => ({
-		id: variant.id,
-		availableForSale: variant.availableForSale,
-		...variant.selectedOptions.reduce(
-			(acc, option) => ({
-				...acc,
-				[option.name.toLowerCase()]: option.value,
-			}),
-			{},
-		),
-	}));
+	const combinations: Combination[] = useMemo(
+		() =>
+			variants.map(variant => ({
+				id: variant.id,
+				availableForSale: variant.availableForSale,
+				...variant.selectedOptions.reduce(
+					(acc, option) => ({
+						...acc,
+						[option.name.toLowerCase()]: option.value,
+					}),
+					{},
+				),
+			})),
+		[variants],
+	);
 
 	const hasNoOptionsOrJustOneOption =
 		!options.length || (options.length === 1 && options[0].values.length === 1);
@@ -41,9 +45,9 @@ export default function ProductVariantSelector({ options, variants }: Readonly<P
 
 	return options.map(option => (
 		<Form key={option.id} action="pick variant">
-			<dl className="mb-8">
-				<dt className="mb-4 text-sm tracking-wide uppercase">{option.name}</dt>
-				<dd className="flex flex-wrap gap-3">
+			<dl className="mb-4">
+				<dt className="mb-2 text-sm tracking-wide uppercase">{option.name}</dt>
+				<dd className="flex flex-wrap gap-2">
 					{option.values.map(value => {
 						const optionNameLowerCase = option.name.toLocaleLowerCase();
 						const optionParams = { ...state, [optionNameLowerCase]: value };

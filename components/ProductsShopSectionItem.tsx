@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import ProductPrice from "./ProductPrice";
-import { Product } from "@/types/product";
+import Product from "@/types/product";
 
 type Props = {
 	className?: string;

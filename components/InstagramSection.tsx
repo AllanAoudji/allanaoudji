@@ -1,6 +1,6 @@
 import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
-import { InstagramFeeds } from "@/types/instagramFeed";
+import InstagramFeeds from "@/types/instagramFeed";
 
 const ROOT = "https://graph.instagram.com/";
 const END_POINT = "/me/media";

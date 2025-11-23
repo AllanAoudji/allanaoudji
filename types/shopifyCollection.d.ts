@@ -1,6 +1,6 @@
 import { shopifyImage } from "./shopifyImage";
 
-type ShopifyColelction = {
+type ShopifyCollection = {
 	handle: string;
 	title: string;
 	description: string;
@@ -9,4 +9,4 @@ type ShopifyColelction = {
 	image: shopifyImage | null;
 };
 
-export default ShopifyColelction;
+export default ShopifyCollection;

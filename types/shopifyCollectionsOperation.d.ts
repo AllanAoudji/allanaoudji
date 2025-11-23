@@ -1,4 +1,4 @@
-import { Connection } from "./connection";
+import Connection from "./connection";
 import ShopifyColelction from "./shopifyCollection";
 
 type ShopifyCollectionsOperation = {

@@ -7,12 +7,8 @@ type ProductState = { [key: string]: string };
 
 type ProductContextType = {
 	state: ProductState;
-	updateOption: (
-		_name: string,
-		_value: string,
-	) => {
-		[x: string]: string;
-	};
+	updateOption: (_name: string, _value: string) => ProductState;
+	updateImage: (_index: string) => ProductState;
 };
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -49,12 +45,22 @@ export function ProductProvider({ children }: Readonly<Props>) {
 		[state, setOptimisticState],
 	);
 
+	const updateImage = useCallback(
+		(index: string) => {
+			const newState = { image: index };
+			setOptimisticState(newState);
+			return { ...state, ...updateImage };
+		},
+		[state, setOptimisticState],
+	);
+
 	const value = useMemo(
 		() => ({
 			state,
 			updateOption,
+			updateImage,
 		}),
-		[state, updateOption],
+		[state, updateOption, updateImage],
 	);
 
 	return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

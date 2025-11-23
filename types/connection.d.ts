@@ -1,5 +1,7 @@
-import { Edge } from "./edge";
+import Edge from "./edge";
 
-export type Connection<T> = {
+type Connection<T> = {
 	edges: Array<Edge<T>>;
 };
+
+export default Connection;

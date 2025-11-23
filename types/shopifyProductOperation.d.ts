@@ -1,4 +1,4 @@
-import { ShopifyProduct } from "./shopifyProduct";
+import ShopifyProduct from "./shopifyProduct";
 
 type ShopifyProductOperation = {
 	data: {

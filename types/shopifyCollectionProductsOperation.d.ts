@@ -1,5 +1,5 @@
-import { Connection } from "./connection";
-import { ShopifyProduct } from "./shopifyProduct";
+import Connection from "./connection";
+import ShopifyProduct from "./shopifyProduct";
 
 type ShopifyCollectionProductsOperation = {
 	data: {

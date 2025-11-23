@@ -1,4 +1,4 @@
-export type ShopifyMenuOperation = {
+type ShopifyMenuOperation = {
 	data: {
 		menu?: {
 			items: {
@@ -11,3 +11,5 @@ export type ShopifyMenuOperation = {
 		handle: string;
 	};
 };
+
+export default ShopifyMenuOperation;

@@ -2,12 +2,15 @@ import { redirect } from "next/navigation";
 import { ProductProvider } from "@/lib/contexts/product-context";
 import { getProduct } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
+import CartAddTo from "@/components/CartAddTo";
 import Grid from "@/components/Grid";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPrice from "@/components/ProductPrice";
+import ProductRelated from "@/components/ProductRelated";
 import ProductVariantSelector from "@/components/ProductVariantSelector";
+import Prose from "@/components/Prose";
 import Title from "@/components/Title";
-import { Product } from "@/types/product";
+import Product from "@/types/product";
 
 type Props = {
 	params: Promise<{ handle: string }>;
@@ -36,10 +39,11 @@ export default async function Page({ params }: Readonly<Props>) {
 			<Grid tag="section" className="section-container" type="small">
 				<ProductGallery className="col-span-3" images={product.images} />
 				<div className="col-span-2">
-					{/* {!!product.descriptionHtml && <Prose html={product.descriptionHtml} />} */}
+					{!!product.descriptionHtml && <Prose className="pb-4" html={product.descriptionHtml} />}
 					<ProductVariantSelector variants={product.variants} options={product.options} />
 					<ProductPrice price={product.priceRange.maxVariantPrice} />
-					{/* <AddToCard product={product} /> */}
+					<CartAddTo product={product} />
+					<ProductRelated id={product.id} />
 				</div>
 			</Grid>
 		</ProductProvider>

@@ -2,7 +2,7 @@ import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import Grid from "./Grid";
 import ProductsShopSectionItem from "./ProductsShopSectionItem";
-import { Product } from "@/types/product";
+import Product from "@/types/product";
 
 type Props = {
 	handle?: string;
