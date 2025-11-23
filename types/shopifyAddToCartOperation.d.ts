@@ -1,6 +1,6 @@
 import ShopifyCart from "./ShopifyCart";
 
-export type ShopifyAddToCartOperation = {
+type ShopifyAddToCartOperation = {
 	data: {
 		cartLinesAdd: {
 			cart: ShopifyCart;
@@ -14,3 +14,5 @@ export type ShopifyAddToCartOperation = {
 		}[];
 	};
 };
+
+export default ShopifyAddToCartOperation;

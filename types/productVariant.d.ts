@@ -1,6 +1,6 @@
-import { Money } from "./money";
+import Money from "./money";
 
-export type ProductVariant = {
+type ProductVariant = {
 	id: string;
 	title: string;
 	availableForSale: boolean;
@@ -10,3 +10,5 @@ export type ProductVariant = {
 	}[];
 	price: Money;
 };
+
+export default ProductVariant;

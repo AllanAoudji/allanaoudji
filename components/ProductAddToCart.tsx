@@ -7,11 +7,11 @@ import { useProduct } from "@/lib/contexts/product-context";
 import { cn } from "@/lib/utils";
 import Product from "@/types/product";
 
-type CartAddToProps = {
+type Props = {
 	product: Product;
 };
 
-export default function CartAddTo({ product }: Readonly<CartAddToProps>) {
+export default function ProductAddToCart({ product }: Readonly<Props>) {
 	const { variants, availableForSale } = product;
 	const { addCartItem } = useCart();
 	const { state } = useProduct();

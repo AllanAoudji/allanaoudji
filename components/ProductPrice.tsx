@@ -1,5 +1,5 @@
 import { cn, convertCurrencyCode } from "@/lib/utils";
-import { Money } from "@/types/money";
+import Money from "@/types/money";
 
 type Props = {
 	className?: string;

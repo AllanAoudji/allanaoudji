@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import Collection from "@/types/collection";
 
 type Props = {
 	collection: Collection;
+	className?: string;
 };
 
-export default function CollectionsSectionItem({ collection }: Readonly<Props>) {
+export default function CollectionsSectionItem({ collection, className }: Readonly<Props>) {
 	return (
-		<Link href={collection.path}>
+		<Link className={cn(className)} href={collection.path}>
 			<h3>{collection.title}</h3>
 			{!!collection.image ? (
 				<ImageContainer

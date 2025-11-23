@@ -5,8 +5,8 @@ import { useMemo } from "react";
 import { useProduct } from "@/lib/contexts/product-context";
 import { useUpdateURL } from "@/lib/hooks/useUpdateUrl";
 import { cn } from "@/lib/utils";
-import { ProductOption } from "@/types/productOption";
-import { ProductVariant } from "@/types/productVariant";
+import ProductOption from "@/types/productOption";
+import ProductVariant from "@/types/productVariant";
 
 type Combination = {
 	id: string;
@@ -37,6 +37,8 @@ export default function ProductVariantSelector({ options, variants }: Readonly<P
 			})),
 		[variants],
 	);
+
+	console.log({ options, variants, combinations });
 
 	const hasNoOptionsOrJustOneOption =
 		!options.length || (options.length === 1 && options[0].values.length === 1);

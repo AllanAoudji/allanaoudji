@@ -1,6 +1,6 @@
 import CartItem from "./cartItem";
 import Connection from "./connection";
-import { Money } from "./money";
+import Money from "./money";
 
 type ShopifyCart = {
 	id: string | undefined;

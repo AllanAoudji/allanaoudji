@@ -1,15 +1,15 @@
 import { cn } from "@/lib/utils";
-import SubTitle from "./SubTitle";
+import Title from "./Title";
 
 type Props = {
 	children: React.ReactNode;
 	className?: string;
 };
 
-export default function ContactSectionContainer({ children, className }: Readonly<Props>) {
+export default function CollectionsSectionContainer({ children, className }: Readonly<Props>) {
 	return (
 		<section className={cn("section-container", className)}>
-			<SubTitle className="pb-16">Contact</SubTitle>
+			<Title>Collections</Title>
 			{children}
 		</section>
 	);

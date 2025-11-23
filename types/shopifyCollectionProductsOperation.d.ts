@@ -13,3 +13,5 @@ type ShopifyCollectionProductsOperation = {
 		sortKey?: string;
 	};
 };
+
+export default ShopifyCollectionProductsOperation;

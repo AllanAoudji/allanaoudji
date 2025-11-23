@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
 import { getCollections } from "@/lib/shopify";
+import CollectionsSectionContainer from "./CollectionsSectionContainer";
 import CollectionsSectionItem from "./CollectionsSectionItem";
 import Grid from "./Grid";
-import Title from "./Title";
 import Collection from "@/types/collection";
 
-export default async function CollectionsSection() {
+type Props = {
+	className?: string;
+};
+
+export default async function CollectionsSection({ className }: Readonly<Props>) {
 	let collections: Collection[];
 	try {
 		collections = await getCollections();
@@ -19,13 +23,12 @@ export default async function CollectionsSection() {
 	if (!collections.length) redirect("/shop");
 
 	return (
-		<>
-			<Title>Collections</Title>
-			<Grid className="section-container" tag="section">
+		<CollectionsSectionContainer className={className}>
+			<Grid className="section-container">
 				{collections.map(collection => (
 					<CollectionsSectionItem key={collection.handle} collection={collection} />
 				))}
 			</Grid>
-		</>
+		</CollectionsSectionContainer>
 	);
 }

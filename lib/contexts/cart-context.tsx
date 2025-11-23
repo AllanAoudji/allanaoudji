@@ -4,7 +4,7 @@ import { createContext, use, useCallback, useContext, useMemo, useOptimistic } f
 import Cart from "@/types/cart";
 import CartItem from "@/types/cartItem";
 import Product from "@/types/product";
-import { ProductVariant } from "@/types/productVariant";
+import ProductVariant from "@/types/productVariant";
 
 type CartAction =
 	| { type: "UPDATE_ITEM"; payload: { merchandiseId: string; updateType: UpdateType } }

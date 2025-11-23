@@ -1,8 +1,8 @@
-import { Money } from "./money";
-import { ProductOption } from "./productOption";
-import { ProductVariant } from "./productVariant";
-import { SEO } from "./seo";
-import { shopifyImage } from "./shopifyImage";
+import Money from "./money";
+import ProductOption from "./productOption";
+import ProductVariant from "./productVariant";
+import SEO from "./seo";
+import shopifyImage from "./shopifyImage";
 
 type ShopifyProduct = {
 	id: string;

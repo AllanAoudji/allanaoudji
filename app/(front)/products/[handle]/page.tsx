@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { ProductProvider } from "@/lib/contexts/product-context";
 import { getProduct } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
-import CartAddTo from "@/components/CartAddTo";
 import Grid from "@/components/Grid";
+import ProductAddToCart from "@/components/ProductAddToCart";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPrice from "@/components/ProductPrice";
 import ProductRelated from "@/components/ProductRelated";
@@ -42,7 +42,7 @@ export default async function Page({ params }: Readonly<Props>) {
 					{!!product.descriptionHtml && <Prose className="pb-4" html={product.descriptionHtml} />}
 					<ProductVariantSelector variants={product.variants} options={product.options} />
 					<ProductPrice price={product.priceRange.maxVariantPrice} />
-					<CartAddTo product={product} />
+					<ProductAddToCart product={product} />
 					<ProductRelated id={product.id} />
 				</div>
 			</Grid>

@@ -1,4 +1,4 @@
-import { shopifyImage } from "./shopifyImage";
+import shopifyImage from "./shopifyImage";
 
 type ShopifyCollection = {
 	handle: string;

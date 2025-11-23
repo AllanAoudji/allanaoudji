@@ -1,6 +1,6 @@
 import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
-import { shopifyImage } from "@/types/shopifyImage";
+import shopifyImage from "@/types/shopifyImage";
 
 type Props = {
 	className?: string;

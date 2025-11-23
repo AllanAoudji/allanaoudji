@@ -1,7 +1,7 @@
 import { HEAD_MENU } from "@/lib/constants";
 import NavBarItem from "./NavBarItem";
 
-export default function Menu() {
+export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container">
 			<ul className="flex h-16 items-center justify-end gap-4">

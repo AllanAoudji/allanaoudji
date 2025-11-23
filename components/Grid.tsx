@@ -7,8 +7,6 @@ type Props = {
 	className?: string;
 	tag?: "div" | "section" | "ul";
 	type?: Type;
-	href?: never;
-	target?: never;
 };
 
 const getStyle = (type: Type): string => {

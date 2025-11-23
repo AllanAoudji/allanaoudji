@@ -1,12 +1,14 @@
 import { getProductRecommendations } from "@/lib/shopify";
+import { cn } from "@/lib/utils";
+import ProductRelatedContainer from "./ProductRelatedContainer";
 import ProductRelatedItem from "./ProductRelatedItem";
-import SubTitle from "./SubTitle";
 
 type Props = {
+	className?: string;
 	id: string;
 };
 
-export default async function ProductRelated({ id }: Readonly<Props>) {
+export default async function ProductRelated({ className, id }: Readonly<Props>) {
 	const relatedProducts = await getProductRecommendations(id);
 
 	if (!relatedProducts || !relatedProducts.length) {
@@ -14,13 +16,12 @@ export default async function ProductRelated({ id }: Readonly<Props>) {
 	}
 
 	return (
-		<div className="py-8">
-			<SubTitle>Related products:</SubTitle>
+		<ProductRelatedContainer className={cn(className)}>
 			<ul className="flex gap-2 overflow-x-auto">
-				{relatedProducts.slice(0, 4).map(product => (
+				{relatedProducts.slice(0, 3).map(product => (
 					<ProductRelatedItem key={product.id} product={product} />
 				))}
 			</ul>
-		</div>
+		</ProductRelatedContainer>
 	);
 }
