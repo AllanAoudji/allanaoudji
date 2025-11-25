@@ -5,20 +5,20 @@ import Cart from "@/types/cart";
 import CartItem from "@/types/cartItem";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
+import UpdateCartType from "@/types/updateCartType";
 
 type CartAction =
-	| { type: "UPDATE_ITEM"; payload: { merchandiseId: string; updateType: UpdateType } }
+	| { type: "UPDATE_ITEM"; payload: { merchandiseId: string; updateType: UpdateCartType } }
 	| { type: "ADD_ITEM"; payload: { variant: ProductVariant; product: Product } };
 type CartContextCart = {
 	cart: Cart | undefined;
-	updateCartItem: (_merchandiseId: string, _updateType: UpdateType) => void;
+	updateCartItem: (_merchandiseId: string, _updateType: UpdateCartType) => void;
 	addCartItem: (_variant: ProductVariant, _product: Product) => void;
 };
 type Props = {
 	children: React.ReactNode;
 	cartPromise: Promise<Cart | undefined>;
 };
-type UpdateType = "plus" | "minus" | "delete";
 
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
@@ -130,7 +130,7 @@ function updatedCartTotals(lines: CartItem[]): Pick<Cart, "totalQuantity" | "cos
 	};
 }
 
-function updateReducerCartItem(item: CartItem, updateType: UpdateType): CartItem | null {
+function updateReducerCartItem(item: CartItem, updateType: UpdateCartType): CartItem | null {
 	if (updateType === "delete") return null;
 	const newQuantity = updateType === "plus" ? item.quantity + 1 : item.quantity - 1;
 
@@ -167,7 +167,7 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
 
 	const updateCartItem = useCallback(
-		(merchandiseId: string, updateType: UpdateType) => {
+		(merchandiseId: string, updateType: UpdateCartType) => {
 			updateOptimisticCart({
 				type: "UPDATE_ITEM",
 				payload: { merchandiseId, updateType },

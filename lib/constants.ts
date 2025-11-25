@@ -47,11 +47,6 @@ export const HEAD_MENU: Menu[] = [
 		title: "contact",
 		activeSegment: ["contact"],
 	},
-	{
-		href: "/basket",
-		title: "panier",
-		activeSegment: ["panier"],
-	},
 ];
 
 export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2025-07/graphql.json";
@@ -71,3 +66,4 @@ export const TAGS = {
 };
 
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
+export const DEFAULT_OPTION = "Default Title";

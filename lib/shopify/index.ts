@@ -1,7 +1,12 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartWith } from "../utils";
-import addToCartMutation from "./mutations/cart";
+import {
+	addToCartMutation,
+	createCartMutation,
+	editCartItemMutation,
+	removeFromCartMutation,
+} from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
@@ -21,12 +26,15 @@ import ShopifyCartOperation from "@/types/shopifyCartOperation";
 import ShopifyCollection from "@/types/shopifyCollection";
 import ShopifyCollectionProductsOperation from "@/types/shopifyCollectionProductsOperation";
 import ShopifyCollectionsOperation from "@/types/shopifyCollectionsOperation";
+import ShopifyCreateCartOperation from "@/types/shopifyCreateCartOperation";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import ShopifyMenuOperation from "@/types/shopifyMenuOperation";
 import ShopifyProduct from "@/types/shopifyProduct";
 import ShopifyProductRecommendationsOperation from "@/types/shopifyProductRecommendationsOperation";
 import ShopifyProductsOperation from "@/types/shopifyProductsOperation";
+import ShopifyRemoveFromCartOperation from "@/types/shopifyRemoveFromCartOperation";
+import ShopifyUpdateCartOperation from "@/types/shopifyUpdateCartOperation";
 
 type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
 
@@ -195,6 +203,15 @@ export async function addToCart(
 	return reshapeCart(res.body.data.cartLinesAdd.cart);
 }
 
+export async function createCart(): Promise<Cart> {
+	const res = await shopifyFetch<ShopifyCreateCartOperation>({
+		query: createCartMutation,
+		cache: "no-cache",
+	});
+
+	return reshapeCart(res.body.data.cartCreate.cart);
+}
+
 export async function getCart(cartId: string | undefined): Promise<Cart | undefined> {
 	if (!cartId) {
 		return undefined;
@@ -205,6 +222,13 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 		variables: { cartId },
 		tags: [TAGS.cart],
 	});
+
+	// old carts becomes 'null' when you checkout
+	if (!res.body.data.cart) {
+		return undefined;
+	}
+
+	return reshapeCart(res.body.data.cart);
 }
 
 export async function getCollectionProducts({
@@ -319,4 +343,27 @@ export async function getProducts({
 	});
 
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+}
+
+export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
+	const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
+		query: removeFromCartMutation,
+		cache: "no-store",
+		variables: { cartId, lineIds },
+	});
+
+	return reshapeCart(res.body.data.cartLinesRemove.cart);
+}
+
+export async function updateCart(
+	cartId: string,
+	lines: { id: string; merchandiseId: string; quantity: number }[],
+): Promise<Cart> {
+	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
+		query: editCartItemMutation,
+		cache: "no-store",
+		variables: { cartId, lines },
+	});
+
+	return reshapeCart(res.body.data.cartLinesUpdate.cart);
 }

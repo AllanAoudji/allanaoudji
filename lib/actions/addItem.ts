@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 export default async function addItem(_prevState: unknown, selectedVariantId: string | undefined) {
 	let cartId: string | undefined;
 	try {
-		cartId = (await cookies()).get("cardId")?.value;
+		cartId = (await cookies()).get("cartId")?.value;
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error.message;
@@ -22,7 +22,7 @@ export default async function addItem(_prevState: unknown, selectedVariantId: st
 
 	try {
 		await addToCart(cartId, [{ merchandiseId: selectedVariantId, quantity: 1 }]);
-		revalidateTag(TAGS.cart, "max");
+		revalidateTag(TAGS.cart, { expire: 0 });
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error.message;

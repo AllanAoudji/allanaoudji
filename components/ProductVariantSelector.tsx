@@ -38,8 +38,6 @@ export default function ProductVariantSelector({ options, variants }: Readonly<P
 		[variants],
 	);
 
-	console.log({ options, variants, combinations });
-
 	const hasNoOptionsOrJustOneOption =
 		!options.length || (options.length === 1 && options[0].values.length === 1);
 
