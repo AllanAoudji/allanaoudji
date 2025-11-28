@@ -16,25 +16,27 @@ import {
 	getProductsQuery,
 } from "./queries/product";
 import ShopifyCart from "@/types/ShopifyCart";
-import ShopifyProductOperation from "@/types/ShopifyProductOperation";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
 import Connection from "@/types/connection";
 import Product from "@/types/product";
-import ShopifyAddToCartOperation from "@/types/shopifyAddToCartOperation";
-import ShopifyCartOperation from "@/types/shopifyCartOperation";
 import ShopifyCollection from "@/types/shopifyCollection";
-import ShopifyCollectionProductsOperation from "@/types/shopifyCollectionProductsOperation";
-import ShopifyCollectionsOperation from "@/types/shopifyCollectionsOperation";
-import ShopifyCreateCartOperation from "@/types/shopifyCreateCartOperation";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
-import ShopifyMenuOperation from "@/types/shopifyMenuOperation";
+import {
+	ShopifyAddToCartOperation,
+	ShopifyCartOperation,
+	ShopifyCollectionProductsOperation,
+	ShopifyCollectionsOperation,
+	ShopifyCreateCartOperation,
+	ShopifyMenuOperation,
+	ShopifyProductOperation,
+	ShopifyProductRecommendationsOperation,
+	ShopifyProductsOperation,
+	ShopifyRemoveFromCartOperation,
+	ShopifyUpdateCartOperation,
+} from "@/types/shopifyOperations";
 import ShopifyProduct from "@/types/shopifyProduct";
-import ShopifyProductRecommendationsOperation from "@/types/shopifyProductRecommendationsOperation";
-import ShopifyProductsOperation from "@/types/shopifyProductsOperation";
-import ShopifyRemoveFromCartOperation from "@/types/shopifyRemoveFromCartOperation";
-import ShopifyUpdateCartOperation from "@/types/shopifyUpdateCartOperation";
 
 type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
 
