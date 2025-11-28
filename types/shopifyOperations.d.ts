@@ -40,13 +40,13 @@ export type ShopifyCollectionProductsOperation = {
 	};
 };
 
-type ShopifyCollectionsOperation = {
+export type ShopifyCollectionsOperation = {
 	data: {
 		collections: Connection<ShopifyColelction>;
 	};
 };
 
-type ShopifyCreateCartOperation = {
+export type ShopifyCreateCartOperation = {
 	data: {
 		cartCreate: {
 			cart: ShopifyCart;
@@ -54,7 +54,7 @@ type ShopifyCreateCartOperation = {
 	};
 };
 
-type ShopifyMenuOperation = {
+export type ShopifyMenuOperation = {
 	data: {
 		menu?: {
 			items: {
@@ -68,7 +68,7 @@ type ShopifyMenuOperation = {
 	};
 };
 
-type ShopifyProductOperation = {
+export type ShopifyProductOperation = {
 	data: {
 		product: ShopifyProduct;
 	};
@@ -77,7 +77,7 @@ type ShopifyProductOperation = {
 	};
 };
 
-type ShopifyProductRecommendationsOperation = {
+export type ShopifyProductRecommendationsOperation = {
 	data: {
 		productRecommendations: ShopifyProduct[];
 	};
