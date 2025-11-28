@@ -1,4 +1,6 @@
-import { redirect } from "next/navigation";
+import { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { HIDDEN_PRODUCT_TAG } from "@/lib/constants";
 import { ProductProvider } from "@/lib/contexts/product-context";
 import { getProduct } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
@@ -12,9 +14,49 @@ import Prose from "@/components/Prose";
 import Title from "@/components/Title";
 import Product from "@/types/product";
 
+type MetadataProps = {
+	params: {
+		handle: string;
+	};
+};
 type Props = {
 	params: Promise<{ handle: string }>;
 };
+
+export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
+	const product = await getProduct(params.handle);
+
+	if (!product) {
+		return notFound();
+	}
+
+	const { height, url, width, altText: alt } = product.featuredImage || {};
+	const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
+	const openGraph = {
+		images: [
+			{
+				url,
+				width,
+				height,
+				alt,
+			},
+		],
+	};
+
+	return {
+		title: product.seo.title || product.title,
+		description: product.seo.description || product.description,
+		robots: {
+			index: indexable,
+			follow: indexable,
+			googleBot: {
+				index: indexable,
+				follow: indexable,
+			},
+		},
+		openGraph: url ? openGraph : null,
+	};
+}
 
 export default async function Page({ params }: Readonly<Props>) {
 	let product: Product | undefined;

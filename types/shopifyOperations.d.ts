@@ -78,6 +78,12 @@ export type ShopifyPageOperation = {
 	};
 };
 
+export type ShopifyPagesOperation = {
+	data: {
+		pages: Connection<ShopifyPage>;
+	};
+};
+
 export type ShopifyProductOperation = {
 	data: {
 		product: ShopifyProduct;

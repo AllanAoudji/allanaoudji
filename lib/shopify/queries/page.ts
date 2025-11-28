@@ -8,3 +8,16 @@ export const getPageQuery = /* GraphQL */ `
 	}
 	${pageFragment}
 `;
+
+export const getPagesQuery = /* Graphql */ `
+	query getPages {
+		pages(first: 100) {
+			edges {
+				node {
+					...page	
+				}
+			}
+		}
+	}
+	${pageFragment}
+`;
