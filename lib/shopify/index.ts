@@ -13,6 +13,7 @@ import {
 import { getCartQuery } from "./queries/cart";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
+import { getPageQuery } from "./queries/page";
 import {
 	getProductQuery,
 	getProductRecommendationsQuery,
@@ -33,12 +34,14 @@ import {
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
 	ShopifyMenuOperation,
+	ShopifyPageOperation,
 	ShopifyProductOperation,
 	ShopifyProductRecommendationsOperation,
 	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
 } from "@/types/shopifyOperations";
+import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyProduct from "@/types/shopifyProduct";
 
 type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
@@ -305,6 +308,16 @@ export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 			path: item.url.replace(domain, "").replace("/collections", "/search").replace("/pages", ""),
 		})) || []
 	);
+}
+
+export async function getPage(handle: string): Promise<ShopifyPage> {
+	const res = await shopifyFetch<ShopifyPageOperation>({
+		query: getPageQuery,
+		cache: "no-store",
+		variables: { handle },
+	});
+
+	return res.body.data.pageByHandle;
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {

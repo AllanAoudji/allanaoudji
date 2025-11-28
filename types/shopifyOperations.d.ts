@@ -1,6 +1,7 @@
 import ShopifyCart from "./ShopifyCart";
 import Connection from "./connection";
 import ShopifyColelction from "./shopifyCollection";
+import { ShopifyPage } from "./shopifyPage";
 import ShopifyProduct from "./shopifyProduct";
 
 export type ShopifyAddToCartOperation = {
@@ -62,6 +63,15 @@ export type ShopifyMenuOperation = {
 				url: string;
 			}[];
 		};
+	};
+	variables: {
+		handle: string;
+	};
+};
+
+export type ShopifyPageOperation = {
+	data: {
+		pageByHandle: ShopifyPage;
 	};
 	variables: {
 		handle: string;
