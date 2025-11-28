@@ -10,6 +10,7 @@ const envVariables = z.object({
 	NEXT_PUBLIC_SANITY_USE_CDN: z.boolean(),
 	SHOPIFY_PUBLIC_ACCESS_TOKEN: z.string(),
 	SHOPIFY_PRIVATE_ACCESS_TOKEN: z.string(),
+	SHOPIFY_REVALIDATION_SECRET: z.string(),
 	SHOPIFY_STORE_DOMAIN: z.string(),
 });
 
