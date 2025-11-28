@@ -4,8 +4,8 @@ import Link from "next/link";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { useCart } from "@/lib/contexts/cart-context";
 import { createUrl } from "@/lib/utils";
-import { CartEditItemQuantityButton } from "./CartEditItemQuantityButton";
 import CartItemDeleteButton from "./CartItemDeleteButton";
+import CartUpdateQuantityButton from "./CartUpdateQuantityButton";
 import ImageContainer from "./ImageContainer";
 import ProductPrice from "./ProductPrice";
 import CartItem from "@/types/cartItem";
@@ -51,7 +51,7 @@ export function CartSectionItem({ item }: Readonly<Props>) {
 			</div>
 			<div className="bg-secondary flex items-center justify-between p-4">
 				<div className="flex items-center justify-between gap-4">
-					<Link className="flex" href={merchandiseUrl}>
+					<Link className="flex overflow-hidden rounded-xl border-4" href={merchandiseUrl}>
 						<ImageContainer
 							image={{
 								alt: item.merchandise.product.featuredImage.altText || item.merchandise.product.title,
@@ -61,28 +61,12 @@ export function CartSectionItem({ item }: Readonly<Props>) {
 								lqip: null,
 							}}
 							ratio="4/3"
-							className="h-32 rounded-xl border-4"
+							className="h-32"
 						/>
 					</Link>
 				</div>
 				<div className="flex flex-col items-end justify-between gap-8">
-					<div className="flex items-center">
-						<CartEditItemQuantityButton
-							item={item}
-							optimisticUpdate={updateCartItem}
-							type="minus"
-							className="bg-primary rounded-tl-xl rounded-bl-xl"
-						/>
-						<div className="bg-primary flex h-8 w-16 items-center justify-center border-t-2 border-b-2 font-bold">
-							<p>{item.quantity}</p>
-						</div>
-						<CartEditItemQuantityButton
-							item={item}
-							optimisticUpdate={updateCartItem}
-							type="plus"
-							className="bg-primary rounded-tr-xl rounded-br-xl"
-						/>
-					</div>
+					<CartUpdateQuantityButton item={item} />
 					<div className="flex gap-2">
 						<p>total:</p>
 						<ProductPrice className="font-bold" price={item.cost.totalAmount} />

@@ -1,5 +1,5 @@
 import { CartSectionItem } from "./CartSectionItem";
-import ProductPrice from "./ProductPrice";
+import CartSummary from "./CartSummary";
 import Cart from "@/types/cart";
 
 type Props = {
@@ -16,15 +16,7 @@ export default function CartSection({ cart }: Readonly<Props>) {
 						<CartSectionItem key={line.merchandise.id} item={line} />
 					))}
 			</ul>
-			<div>
-				<h3>total items:</h3>
-				<p>{cart.totalQuantity}</p>
-				<h3>total cost:</h3>
-				<ProductPrice price={cart.cost.totalAmount} />
-			</div>
-			{/* <form action={redirectToCheckout}>
-				<CartCheckoutButton />
-			</form> */}
+			<CartSummary cart={cart} />
 		</section>
 	);
 }
