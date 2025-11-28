@@ -1,6 +1,6 @@
-import { InstagramImage } from "./instagramImage";
+import InstagramImage from "./instagramImage";
 
-export type InstagramFeeds =
+type InstagramFeeds =
 	| {
 			data: InstagramImage[];
 			paging: {
@@ -20,3 +20,5 @@ export type InstagramFeeds =
 				fbtrace_id: string;
 			};
 	  };
+
+export default InstagramFeeds;

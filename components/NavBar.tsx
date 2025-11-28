@@ -1,20 +1,22 @@
+import { HEAD_MENU } from "@/lib/constants";
+import CartIcon from "./CartIcon";
 import NavBarItem from "./NavBarItem";
-import { HEAD_MENU } from "@/utils/menu";
 
-export default function Menu() {
+export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container">
-			<ul className="items-gap flex h-16 items-center justify-end">
+			<ul className="flex h-16 items-center justify-end gap-4">
 				<NavBarItem className="mr-auto font-black" href={"/"} title="logo" />
 				{HEAD_MENU.map(menu => (
 					<NavBarItem
 						activeSegment={menu.activeSegment}
 						className="hidden sm:inline"
 						href={menu.href}
-						key={menu.id}
+						key={menu.href}
 						title={menu.title}
 					/>
 				))}
+				<CartIcon />
 				<p className="inlin sm:hidden">hamburger</p>
 			</ul>
 		</nav>

@@ -1,6 +1,7 @@
-export interface Menu {
-	id: number;
+interface Menu {
 	href: string;
 	title: string;
-	activeSegment: string | null;
+	activeSegment: string[];
 }
+
+export default Menu;

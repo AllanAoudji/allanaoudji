@@ -1,10 +1,11 @@
 import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionLoaderItem from "./ContactSectionLoaderItem";
+import Grid from "./Grid";
 
 export default function ContactSectionLoader() {
 	return (
 		<ContactSectionContainer>
-			<div className="items-gap grid-default">
+			<Grid>
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
@@ -13,7 +14,7 @@ export default function ContactSectionLoader() {
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
-			</div>
+			</Grid>
 		</ContactSectionContainer>
 	);
 }

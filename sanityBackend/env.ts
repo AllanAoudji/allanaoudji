@@ -15,8 +15,6 @@ export const serverToken = assertValue(
 	"Missing envirionment variable: SANITY_SERVER_TOKEN",
 );
 
-console.log({ serverToken });
-
 export const useCdn =
 	process.env.NEXT_PUBLIC_SANITY_USE_CDN === undefined
 		? false

@@ -15,4 +15,6 @@ type InstagramVideoType = {
 	comments_count: number;
 };
 
-export type InstagramImage = InstagramImageType | InstagramVideoType;
+type InstagramImage = InstagramImageType | InstagramVideoType;
+
+export default InstagramImage;

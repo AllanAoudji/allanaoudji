@@ -1,6 +1,6 @@
 import ImageContainer from "./ImageContainer";
 import InstagramSectionIcon from "./InstagramSectionIcon";
-import { InstagramImage } from "@/types/instagramImage";
+import InstagramImage from "@/types/instagramImage";
 import { workGalleryImage, workMainImage } from "@/types/sanityType";
 
 type Props = {
