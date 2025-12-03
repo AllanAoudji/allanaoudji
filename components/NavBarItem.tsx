@@ -29,6 +29,7 @@ export default function NavBarItem({
 				className={cn({
 					underline: isActiveSegment && activeSegment?.includes(isActiveSegment),
 					block: !!imageSrc,
+					"hover:text-tertiary transition-all duration-300": !imageSrc,
 				})}
 				href={href}
 			>
