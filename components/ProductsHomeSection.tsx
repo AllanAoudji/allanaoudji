@@ -34,6 +34,7 @@ export default async function ProductsHomeSection() {
 					priority={true}
 					ratio="3/4"
 					key={product.id}
+					className="border-primary border-2"
 				/>
 			))}
 		</ProductsHomeSectionContainer>

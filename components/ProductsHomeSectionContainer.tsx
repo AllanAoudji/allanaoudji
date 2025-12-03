@@ -8,11 +8,13 @@ type Props = {
 
 export default function ProductsHomeSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<section className="section-container section-separator text-center">
-			<SubTitle className="pb-8">Nouveauté de la boutique</SubTitle>
-			<Link className="block" href="/collections">
-				<Grid>{children}</Grid>
-			</Link>
+		<section className="section-container from-quaternary to-primary bg-gradient-to-b text-center">
+			<div className="padding-container">
+				<SubTitle className="text-primary mb-12">🔥 Nouveauté de la boutique 🔥</SubTitle>
+				<Link className="block pb-8" href="/collections">
+					<Grid>{children}</Grid>
+				</Link>
+			</div>
 		</section>
 	);
 }

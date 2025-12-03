@@ -17,7 +17,7 @@
 		@apply px-5 lg:px-10 xl:mx-auto xl:w-full xl:max-w-7xl;
 	}
 	.section-container {
-		@apply py-5;
+		@apply py-20;
 	}
 	.section-separator {
 		@apply border-quaternary border-b-2;

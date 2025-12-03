@@ -13,7 +13,7 @@ const getStyle = (type: Type): string => {
 	switch (type) {
 		default:
 		case "default":
-			return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+			return "grid-cols-2 lg:grid-cols-4";
 		case "large":
 			return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 		case "small":

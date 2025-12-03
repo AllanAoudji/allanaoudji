@@ -5,7 +5,7 @@ import NavBarItem from "./NavBarItem";
 export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container">
-			<ul className="flex h-16 items-center justify-end gap-4">
+			<ul className="flex h-20 items-center justify-end gap-4">
 				<NavBarItem
 					className="mr-auto font-black"
 					href={"/"}

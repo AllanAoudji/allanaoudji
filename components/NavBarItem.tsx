@@ -33,7 +33,7 @@ export default function NavBarItem({
 				href={href}
 			>
 				{imageSrc ? (
-					<Image alt={title} height={1419} src={imageSrc} width={762} className="h-16 w-auto py-3" />
+					<Image alt={title} height={1419} src={imageSrc} width={762} className="h-20 w-auto py-6" />
 				) : (
 					title
 				)}
