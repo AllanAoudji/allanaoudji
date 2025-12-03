@@ -6,7 +6,9 @@ export default function FooterMenu() {
 		<ul className="justify-center gap-4 text-center sm:flex">
 			{FOOT_MENU.map(menu => (
 				<li key={menu.href}>
-					<Link href={menu.href}>{menu.title}</Link>
+					<Link className="animation nav-hover" href={menu.href}>
+						{menu.title}
+					</Link>
 				</li>
 			))}
 		</ul>
