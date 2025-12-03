@@ -26,11 +26,15 @@ export default function NavBarItem({
 	return (
 		<li className={cn(className)}>
 			<Link
-				className={cn({
-					underline: isActiveSegment && activeSegment?.includes(isActiveSegment),
-					block: !!imageSrc,
-					"hover:text-tertiary transition-all duration-300": !imageSrc,
-				})}
+				className={cn(
+					{
+						underline: isActiveSegment && activeSegment?.includes(isActiveSegment),
+						block: !!imageSrc,
+						"nav-hover animation":
+							!imageSrc && !(isActiveSegment && activeSegment?.includes(isActiveSegment)),
+					},
+					"decoration-2 underline-offset-4",
+				)}
 				href={href}
 			>
 				{imageSrc ? (

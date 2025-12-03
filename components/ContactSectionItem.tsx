@@ -8,11 +8,15 @@ type Props = {
 
 export default function ContactSectionItem({ className, contact }: Readonly<Props>) {
 	return (
-		<li className={cn(className)}>
-			<h3 className="text-lg uppercase">{contact.title}</h3>
-			<a href={contact.url} target={contact.blank ? "_blank" : undefined}>
+		<div className={cn(className)}>
+			<h3 className="text-xl font-bold tracking-widest uppercase">{contact.title}</h3>
+			<a
+				className="nav-hover animation text-xl italic"
+				href={contact.url}
+				target={contact.blank ? "_blank" : undefined}
+			>
 				{contact.text || contact.title}
 			</a>
-		</li>
+		</div>
 	);
 }

@@ -21,7 +21,7 @@ export default function CartIcon() {
 		<Link
 			href="/basket"
 			className={cn(
-				"hover:bg-quaternary hover:text-primary border-quaternary relative block rounded-lg border-2 px-4 transition-all duration-200",
+				"hover:bg-quaternary hover:text-primary border-quaternary animation relative block rounded-lg border-2 px-4",
 				{
 					"bg-quaternary text-primary": isActiveSegment === "basket",
 				},

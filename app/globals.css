@@ -17,9 +17,15 @@
 		@apply px-10 xl:mx-auto xl:w-full xl:max-w-7xl;
 	}
 	.section-container {
-		@apply py-20;
+		@apply py-16;
 	}
 	.section-separator {
 		@apply border-quaternary border-b-2;
+	}
+	.nav-hover {
+		@apply hover:text-secondary;
+	}
+	.animation {
+		@apply transition-all duration-300 ease-in-out;
 	}
 }

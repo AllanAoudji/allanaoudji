@@ -1,6 +1,6 @@
+import { cn } from "@/lib/utils";
 import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionItem from "./ContactSectionItem";
-import Grid from "./Grid";
 import { getContacts } from "@/sanity/lib/queries";
 import { CONTACTS_QUERYResult } from "@/sanity/types";
 
@@ -23,13 +23,17 @@ export default async function ContactSection({ className }: Readonly<Props>) {
 		return null;
 	}
 
+	const contactLength = query.contacts.length;
+
 	return (
 		<ContactSectionContainer className={className}>
-			<Grid tag="ul">
-				{query.contacts.map(contact => (
-					<ContactSectionItem key={contact._id} contact={contact} />
-				))}
-			</Grid>
+			{query.contacts.map((contact, i) => (
+				<ContactSectionItem
+					key={contact._id}
+					contact={contact}
+					className={cn({ "pb-6": i !== contactLength - 1 })}
+				/>
+			))}
 		</ContactSectionContainer>
 	);
 }
