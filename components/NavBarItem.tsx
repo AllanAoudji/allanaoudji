@@ -26,10 +26,17 @@ export default function NavBarItem({
 	return (
 		<li className={cn(className)}>
 			<Link
-				className={cn({ underline: isActiveSegment && activeSegment?.includes(isActiveSegment) })}
+				className={cn({
+					underline: isActiveSegment && activeSegment?.includes(isActiveSegment),
+					block: !!imageSrc,
+				})}
 				href={href}
 			>
-				{imageSrc ? <Image alt="test" height={300} src={title} width={208} /> : title}
+				{imageSrc ? (
+					<Image alt={title} height={1419} src={imageSrc} width={762} className="h-16 w-auto py-3" />
+				) : (
+					title
+				)}
 			</Link>
 		</li>
 	);

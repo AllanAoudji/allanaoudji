@@ -6,7 +6,12 @@ export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container">
 			<ul className="flex h-16 items-center justify-end gap-4">
-				<NavBarItem className="mr-auto font-black" href={"/"} title="logo" />
+				<NavBarItem
+					className="mr-auto font-black"
+					href={"/"}
+					title="logo"
+					imageSrc="/images/logo.png"
+				/>
 				{HEAD_MENU.map(menu => (
 					<NavBarItem
 						activeSegment={menu.activeSegment}
