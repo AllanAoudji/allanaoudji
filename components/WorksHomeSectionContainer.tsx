@@ -1,4 +1,5 @@
 import Grid from "./Grid";
+import SubTitle from "./SubTitle";
 
 type Props = {
 	children: React.ReactNode;
@@ -6,8 +7,9 @@ type Props = {
 
 export default function WorksHomeSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<Grid tag="section" type="large" className="section-separator section-container">
-			{children}
-		</Grid>
+		<section className="padding-container section-container">
+			<SubTitle className="mb-12 text-center">Découvrire mon travail</SubTitle>
+			<Grid type="large">{children}</Grid>
+		</section>
 	);
 }
