@@ -18,7 +18,7 @@ export default function WorksHomeSectionItem({ work }: Readonly<Props>) {
 					/>
 				</div>
 			)}
-			<h3 className="pt-2 text-xl tracking-wider uppercase">{work.title}</h3>
+			<h3 className="pt-2 tracking-wider uppercase">{work.title}</h3>
 		</Link>
 	);
 }

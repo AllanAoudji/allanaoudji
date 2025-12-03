@@ -26,13 +26,13 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 			{!!post ? (
 				<ImageContainer
 					image={convertInstagramImageForContainerImage(post)}
-					className="border-quaternary border-4"
+					className="border-4"
 					ratio="4/5"
 				/>
 			) : (
 				<div className="bg-secondary border-quaternary aspect-4/5 w-full border-4" />
 			)}
-			<div className="bg-quaternary flex w-full justify-center gap-5 p-2">
+			<div className="bg-primary text-quaternary flex w-full justify-center gap-5 p-2">
 				<InstagramSectionIcon type="likes" count={!!post ? post.like_count : 0} />
 				<InstagramSectionIcon type="comments" count={!!post ? post.comments_count : 0} />
 			</div>
