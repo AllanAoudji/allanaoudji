@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 import { workGalleryImage, workMainImage } from "@/types/sanityType";
 
@@ -9,6 +10,7 @@ type Props = {
 	priority?: boolean;
 	ratio: AspectRatio;
 	className?: string;
+	onClick?: MouseEventHandler<HTMLImageElement> | undefined;
 };
 
 const getAspectRatio = (ratio: AspectRatio) => {
@@ -29,6 +31,7 @@ export default function ImageContainer({
 	priority = false,
 	ratio,
 	className,
+	onClick,
 }: Readonly<Props>) {
 	return (
 		<div className={cn(className, getAspectRatio(ratio), "bg-secondary w-full overflow-hidden")}>
@@ -42,6 +45,7 @@ export default function ImageContainer({
 					priority={priority}
 					src={image.url}
 					width={image.width}
+					onClick={onClick}
 				/>
 			)}
 		</div>
