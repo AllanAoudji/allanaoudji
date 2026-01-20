@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MouseEvent, useEffect } from "react";
+import LightBoxButton from "./LightboxButton";
 import { workGalleryImage } from "@/types/sanityType";
 
 type Props = {
@@ -45,15 +46,20 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 			className="bg-secondary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
 			onClick={handleClick}
 		>
+			<LightBoxButton className="right-5" text="X" />
 			{!!nextImage && (
-				<div onClick={hancleNextClick} className="absolute right-0 z-50 h-10 w-10 bg-red-400">
-					next
-				</div>
+				<LightBoxButton
+					onClick={hancleNextClick}
+					className="top-1/2 right-5 -translate-y-1/2"
+					text="N"
+				/>
 			)}
 			{!!prevImage && (
-				<div onClick={handlePrevClick} className="absolute left-0 z-50 h-10 w-10 bg-red-400">
-					prev
-				</div>
+				<LightBoxButton
+					onClick={handlePrevClick}
+					className="top-1/2 left-5 -translate-y-1/2"
+					text="P"
+				/>
 			)}
 			<div id="link" className="relative h-full w-full overflow-hidden">
 				<Image
