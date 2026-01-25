@@ -56,6 +56,13 @@ const WORK_QUERY = defineQuery(`
     "slug": slug.current,
     title,
     text,
+    mainImage{
+      alt,
+      "url": asset->url,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height,
+      "lqip": asset->metadata.lqip,
+    },
     "gallery": gallery[]{
       alt,
       "url": asset->url,
