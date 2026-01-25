@@ -39,7 +39,9 @@ export default function ImageContainer({
 				<Image
 					alt={image.alt || "image"}
 					blurDataURL={image.lqip || undefined}
-					className="h-full w-full object-cover"
+					className={cn("h-full w-full object-cover", {
+						"cursor-pointer transition-all duration-300 hover:scale-105": !!onClick,
+					})}
 					height={image.height}
 					placeholder={image.lqip ? "blur" : "empty"}
 					priority={priority}
