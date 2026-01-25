@@ -8,7 +8,6 @@ type Props = {
 	children: React.ReactNode;
 };
 type LightBoxContectType = {
-	images: null | workGalleryImage[];
 	updateImages: (_images: workGalleryImage[]) => void;
 	resetImages: () => void;
 	setImage: (_id: string) => void;
@@ -52,11 +51,6 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		setImages(null);
 	}, []);
 
-	const value = useMemo(
-		() => ({ images, updateImages, resetImages, setImage }),
-		[images, setImage, resetImages, updateImages],
-	);
-
 	useEffect(() => {
 		if (clickedImage === null || images === null) {
 			setClickedIndex(null);
@@ -72,6 +66,11 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		}
 		setClickedImage(images[clickedIndex]);
 	}, [clickedIndex, images]);
+
+	const value = useMemo(
+		() => ({ updateImages, resetImages, setImage }),
+		[setImage, resetImages, updateImages],
+	);
 
 	return (
 		<LightboxContext.Provider value={value}>
