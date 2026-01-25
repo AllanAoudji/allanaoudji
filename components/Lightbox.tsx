@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MouseEvent, useEffect } from "react";
+import useEscape from "@/lib/hooks/useEscape";
 import LightBoxButton from "./LightboxButton";
 import { workGalleryImage } from "@/types/sanityType";
 
@@ -25,6 +26,10 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		e.stopPropagation();
 		if (prevImage) prevImage();
 	};
+
+	useEscape(() => {
+		resetClick();
+	});
 
 	useEffect(() => {
 		if (!image || !image.height || !image.width || !image.url) {
@@ -51,14 +56,14 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 				<LightBoxButton
 					onClick={hancleNextClick}
 					className="top-1/2 right-5 -translate-y-1/2"
-					text="N"
+					text=">"
 				/>
 			)}
 			{!!prevImage && (
 				<LightBoxButton
 					onClick={handlePrevClick}
 					className="top-1/2 left-5 -translate-y-1/2"
-					text="P"
+					text="<"
 				/>
 			)}
 			<div id="link" className="relative h-full w-full overflow-hidden">
