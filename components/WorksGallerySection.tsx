@@ -1,4 +1,4 @@
-import WorksGallerySectionItem from "./WorksGallerySectionItem";
+import WorksGallerySectionItemContainer from "./WorksGallerySectionItemContainer";
 import { getWorks } from "@/sanity/lib/queries";
 import { WORKS_QUERYResult } from "@/sanity/types";
 
@@ -22,11 +22,5 @@ export default async function WorksGallerySection() {
 		);
 	}
 
-	return query.works.map((work, i) => (
-		<WorksGallerySectionItem
-			key={work._id}
-			separator={query.works ? query.works.length - 1 !== i : false}
-			work={work}
-		/>
-	));
+	return <WorksGallerySectionItemContainer works={query.works} />;
 }
