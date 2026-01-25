@@ -1,4 +1,4 @@
-import WorksGallerySectionItemContainer from "./WorksGallerySectionItemContainer";
+import WorksGallerySectionContainer from "./WorksGallerySectionContainer";
 import { getWorks } from "@/sanity/lib/queries";
 import { WORKS_QUERYResult } from "@/sanity/types";
 
@@ -22,5 +22,5 @@ export default async function WorksGallerySection() {
 		);
 	}
 
-	return <WorksGallerySectionItemContainer works={query.works} />;
+	return <WorksGallerySectionContainer works={query.works} />;
 }

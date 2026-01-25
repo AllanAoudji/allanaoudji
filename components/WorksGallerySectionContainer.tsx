@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
-import WorksGallerySectionItem from "./WorksGallerySectionItem";
+import WorksGallerySectionContainerItem from "./WorksGallerySectionContainerItem";
 import { works } from "@/types/sanityType";
 
 type Props = {
@@ -17,7 +17,7 @@ const getLightBoxImages = (works: works) => {
 	return images;
 };
 
-export default function WorksGallerySectionItemContainer({ works }: Readonly<Props>) {
+export default function WorksGallerySectionContainer({ works }: Readonly<Props>) {
 	const { updateImages, resetImages } = useLightBox();
 
 	useEffect(() => {
@@ -28,6 +28,6 @@ export default function WorksGallerySectionItemContainer({ works }: Readonly<Pro
 	}, [resetImages, updateImages, works]);
 
 	return works.map((work, i) => (
-		<WorksGallerySectionItem key={work._id} separator={works.length - 1 !== i} work={work} />
+		<WorksGallerySectionContainerItem key={work._id} separator={works.length - 1 !== i} work={work} />
 	));
 }

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { MouseEvent, useEffect } from "react";
 import useEscape from "@/lib/hooks/useEscape";
+import useLeftArrow from "@/lib/hooks/useLeftArrow";
+import useRightArrow from "@/lib/hooks/useRightArrow";
 import LightBoxButton from "./LightboxButton";
 import { workGalleryImage } from "@/types/sanityType";
 
@@ -29,6 +31,12 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 
 	useEscape(() => {
 		resetClick();
+	});
+	useLeftArrow(() => {
+		if (prevImage) prevImage();
+	});
+	useRightArrow(() => {
+		if (nextImage) nextImage();
 	});
 
 	useEffect(() => {

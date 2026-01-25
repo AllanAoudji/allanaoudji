@@ -10,7 +10,7 @@ type Props = {
 	work: work;
 };
 
-export default function WorksGallerySectionItem({
+export default function WorksGallerySectionContainerItem({
 	className,
 	separator = true,
 	work,
