@@ -11,7 +11,7 @@ type LightBoxContectType = {
 	images: null | workGalleryImage[];
 	updateImages: (_images: workGalleryImage[]) => void;
 	resetImages: () => void;
-	setImage: (_image: workGalleryImage) => void;
+	setImage: (_id: string) => void;
 };
 
 const LightboxContext = createContext<LightBoxContectType | undefined>(undefined);
@@ -27,21 +27,20 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 	}, []);
 
 	const setImage = useCallback(
-		(image: workGalleryImage) => {
+		(id: string) => {
+			const image = images?.find(img => img._id === id) || null;
 			setClickedImage(image);
 		},
-		[setClickedImage],
+		[images, setClickedImage],
 	);
 
 	const nextImage = useCallback(() => {
-		if (!images) return;
-		if (clickedIndex === null) return;
+		if (!images || clickedIndex === null) return;
 		setClickedIndex(prev => (prev !== null ? (prev + 1) % images.length : null));
 	}, [clickedIndex, images]);
 
 	const prevImage = useCallback(() => {
-		if (!images) return;
-		if (clickedIndex === null) return;
+		if (!images || clickedIndex === null) return;
 		setClickedIndex(prev => (prev !== null ? (prev - 1 + images.length) % images.length : null));
 	}, [clickedIndex, images]);
 
@@ -65,6 +64,14 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		}
 		setClickedIndex(images.findIndex(img => img._id === clickedImage._id));
 	}, [clickedImage, images]);
+
+	useEffect(() => {
+		if (clickedIndex === null || images === null) {
+			setClickedImage(null);
+			return;
+		}
+		setClickedImage(images[clickedIndex]);
+	}, [clickedIndex, images]);
 
 	return (
 		<LightboxContext.Provider value={value}>
