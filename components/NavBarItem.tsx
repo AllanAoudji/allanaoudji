@@ -7,7 +7,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 type Props = {
-	activeSegment?: string[];
+	activeSegment?: string[] | null;
 	className?: string;
 	href: string;
 	title: string;
