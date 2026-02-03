@@ -8,7 +8,7 @@ type Props = {
 
 export default function Layout({ children }: Readonly<Props>) {
 	return (
-		<>
+		<div className="padding-container section-container">
 			<Title>boutique</Title>
 			<Grid tag="section" className="section-container" type="small">
 				<div className="col-span-1">
@@ -17,6 +17,6 @@ export default function Layout({ children }: Readonly<Props>) {
 				</div>
 				{children}
 			</Grid>
-		</>
+		</div>
 	);
 }

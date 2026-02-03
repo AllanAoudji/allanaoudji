@@ -1,5 +1,6 @@
 import { HEAD_MENU } from "@/lib/constants";
 import CartIcon from "./CartIcon";
+import NavBarHamburger from "./NavBarHamburger";
 import NavBarItem from "./NavBarItem";
 
 export default function NavBar() {
@@ -22,7 +23,7 @@ export default function NavBar() {
 					/>
 				))}
 				<CartIcon />
-				<p className="inlin sm:hidden">hamburger</p>
+				<NavBarHamburger />
 			</ul>
 		</nav>
 	);
