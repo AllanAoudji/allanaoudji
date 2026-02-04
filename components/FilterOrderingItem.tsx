@@ -23,7 +23,7 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 	const DynamicTag = active ? "p" : Link;
 
 	return (
-		<li className={cn({ "font-bold": active })}>
+		<li className={cn({ "font-bold underline": active }, "text-sm")}>
 			<DynamicTag href={href}>{item.title}</DynamicTag>
 		</li>
 	);

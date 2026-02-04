@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type Type = "small" | "default" | "large" | "largest";
+type Type = "smallest" | "small" | "default" | "large" | "largest";
 
 type Props = {
 	children: React.ReactNode;
@@ -18,6 +18,8 @@ const getStyle = (type: Type): string => {
 			return "grid-cols-2 lg:grid-cols-3";
 		case "small":
 			return "grid-cols-5";
+		case "smallest":
+			return "grid-cols-6";
 		case "largest":
 			return "grid-cols-2";
 	}

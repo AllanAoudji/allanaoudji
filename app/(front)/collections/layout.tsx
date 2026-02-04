@@ -1,4 +1,7 @@
-import Filter from "@/components/Filter";
+import { Suspense } from "react";
+import CollectionsFilters from "@/components/CollectionsFilters";
+import CollectionsFiltersDropDown from "@/components/CollectionsFiltersDropDown";
+import CollectionsFiltersDropDownBox from "@/components/CollectionsFiltersDropDownBox";
 import Grid from "@/components/Grid";
 import Title from "@/components/Title";
 
@@ -10,13 +13,15 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container section-container">
 			<Title>boutique</Title>
-			<Grid tag="section" className="section-container" type="small">
-				<div className="col-span-1">
-					<Filter className="pb-4" type="collections" />
-					<Filter type="ordering" />
-				</div>
-				{children}
-			</Grid>
+			<CollectionsFiltersDropDown>
+				<CollectionsFiltersDropDownBox />
+			</CollectionsFiltersDropDown>
+			<div className="section-container">
+				<Grid tag="section" type="smallest">
+					<CollectionsFilters />
+					<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
+				</Grid>
+			</div>
 		</div>
 	);
 }

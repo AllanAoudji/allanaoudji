@@ -21,7 +21,7 @@ export default function FilterCollectionItem({ item }: Readonly<Props>) {
 	const href = `${item.path}?${newParams.toString()}`;
 
 	return (
-		<li className={cn({ "font-bold": active })}>
+		<li className={cn({ "font-bold underline": active }, "text-sm")}>
 			<DynamicTag href={href}>{item.title}</DynamicTag>
 		</li>
 	);

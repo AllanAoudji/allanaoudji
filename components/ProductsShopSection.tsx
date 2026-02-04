@@ -36,7 +36,7 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	}
 
 	return (
-		<Grid className="col-span-4" type="large">
+		<Grid className="col-span-6 lg:col-span-5" type="large">
 			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
 				<ProductsShopSectionItem key={product.id} product={product} />
