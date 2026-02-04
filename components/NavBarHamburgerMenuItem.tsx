@@ -38,7 +38,7 @@ export default function NavBarHamburgerMenuItem({ setIsClose, menu }: Readonly<P
 			href={menu.href}
 			className={cn(
 				{
-					"cursor-default underline": isActive,
+					"cursor-default underline opacity-50": isActive,
 					"nav-hover animation": !isActive,
 				},
 				"text-center text-5xl uppercase decoration-2 underline-offset-4",
