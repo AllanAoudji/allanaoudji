@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import Grid from "./Grid";
@@ -33,6 +34,10 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 			throw error;
 		}
 		throw new Error("fetch failed");
+	}
+
+	if (!products || !products.length) {
+		redirect("/collections");
 	}
 
 	return (
