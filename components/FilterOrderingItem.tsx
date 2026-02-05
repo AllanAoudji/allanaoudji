@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
+import { useFiltersSideBar } from "@/lib/contexts/filters-sidebar-context";
 import { cn } from "@/lib/utils";
 import SortFilterItem from "@/types/sortFilterItem";
 
@@ -10,6 +12,7 @@ type Props = {
 };
 
 export default function FilterOrderingItem({ item }: Readonly<Props>) {
+	const { setIsClose } = useFiltersSideBar();
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
 	const active = searchParams.get("sort") === item.slug;
@@ -22,9 +25,16 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 
 	const DynamicTag = active ? "p" : Link;
 
+	const onClick = useCallback(() => {
+		if (active) return;
+		setIsClose();
+	}, [setIsClose, active]);
+
 	return (
 		<li className={cn({ "font-bold underline": active }, "text-sm")}>
-			<DynamicTag href={href}>{item.title}</DynamicTag>
+			<DynamicTag onClick={onClick} href={href}>
+				{item.title}
+			</DynamicTag>
 		</li>
 	);
 }

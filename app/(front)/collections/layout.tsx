@@ -1,7 +1,7 @@
 import { Suspense } from "react";
+import { FiltersSideBarProvider } from "@/lib/contexts/filters-sidebar-context";
+import CollectionsFiltersSideBarButton from "@/components/CollectionsFilterSideBarButton";
 import CollectionsFilters from "@/components/CollectionsFilters";
-import CollectionsFiltersDropDown from "@/components/CollectionsFiltersDropDown";
-import CollectionsFiltersDropDownBox from "@/components/CollectionsFiltersDropDownBox";
 import Grid from "@/components/Grid";
 import Title from "@/components/Title";
 
@@ -11,17 +11,17 @@ type Props = {
 
 export default function Layout({ children }: Readonly<Props>) {
 	return (
-		<div className="padding-container section-container">
-			<Title>boutique</Title>
-			<CollectionsFiltersDropDown>
-				<CollectionsFiltersDropDownBox />
-			</CollectionsFiltersDropDown>
-			<div className="section-container">
-				<Grid tag="section" type="smallest">
-					<CollectionsFilters />
-					<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
-				</Grid>
+		<FiltersSideBarProvider SideBarContent={<CollectionsFilters />}>
+			<div className="padding-container section-container">
+				<Title>boutique</Title>
+				<div className="section-container">
+					<CollectionsFiltersSideBarButton />
+					<Grid tag="section" type="smallest">
+						<CollectionsFilters className="hidden lg:block" />
+						<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
+					</Grid>
+				</div>
 			</div>
-		</div>
+		</FiltersSideBarProvider>
 	);
 }

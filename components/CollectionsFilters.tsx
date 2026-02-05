@@ -2,12 +2,12 @@ import { cn } from "@/lib/utils";
 import Filter from "./Filter";
 
 type Props = {
-	responsive?: boolean;
+	className?: string;
 };
 
-export default function CollectionsFilters({ responsive = false }: Readonly<Props>) {
+export default function CollectionsFilters({ className }: Readonly<Props>) {
 	return (
-		<div className={cn({ "hidden lg:block": !responsive }, "col-span-1")}>
+		<div className={cn(className)}>
 			<Filter className="mb-16" type="collections" />
 			<Filter type="ordering" />
 		</div>
