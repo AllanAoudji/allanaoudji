@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProductPrice({ className, price }: Readonly<Props>) {
 	return (
-		<p className={cn(className)}>
+		<p className={cn("text-lg font-bold tracking-wide", className)}>
 			{parseFloat(price.amount).toFixed(2)} {convertCurrencyCode(price.currencyCode)}
 		</p>
 	);

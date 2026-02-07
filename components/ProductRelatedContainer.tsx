@@ -8,8 +8,8 @@ type Props = {
 
 export default function ProductRelatedContainer({ children, className }: Readonly<Props>) {
 	return (
-		<section className={cn("mt-12 border-t-2 pt-4", className)}>
-			<SubTitle className="pb-4">Related products:</SubTitle>
+		<section className={cn("mt-8 border-t-2 pt-8 lg:mt-12 lg:border-0 lg:pt-0", className)}>
+			<SubTitle className="pb-4">Vous aimerez peut-être...</SubTitle>
 			{children}
 		</section>
 	);

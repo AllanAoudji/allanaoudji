@@ -17,7 +17,7 @@ const getStyle = (type: Type): string => {
 		case "large":
 			return "grid-cols-2 lg:grid-cols-3";
 		case "small":
-			return "grid-cols-5";
+			return "grid-cols-2 lg:grid-cols-5";
 		case "smallest":
 			return "grid-cols-6";
 		case "largest":

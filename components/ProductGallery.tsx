@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
 import shopifyImage from "@/types/shopifyImage";
@@ -9,7 +10,7 @@ type Props = {
 
 export default function ProductGallery({ className, images }: Readonly<Props>) {
 	return (
-		<Grid tag="ul" type="largest" className={className}>
+		<Grid tag="ul" type="largest" className={cn(className)}>
 			{images.slice(0, 6).map(image => (
 				<ImageContainer
 					key={image.id}

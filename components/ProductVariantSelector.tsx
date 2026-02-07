@@ -16,9 +16,10 @@ type Combination = {
 type Props = {
 	options: ProductOption[];
 	variants: ProductVariant[];
+	className?: string;
 };
 
-export default function ProductVariantSelector({ options, variants }: Readonly<Props>) {
+export default function ProductVariantSelector({ className, options, variants }: Readonly<Props>) {
 	const { state, updateOption } = useProduct();
 	const updateURL = useUpdateURL();
 
@@ -43,41 +44,49 @@ export default function ProductVariantSelector({ options, variants }: Readonly<P
 
 	if (hasNoOptionsOrJustOneOption) return null;
 
-	return options.map(option => (
-		<Form key={option.id} action="pick variant">
-			<dl className="mb-4">
-				<dt className="mb-2 text-sm tracking-wide uppercase">{option.name}</dt>
-				<dd className="flex flex-wrap gap-2">
-					{option.values.map(value => {
-						const optionNameLowerCase = option.name.toLocaleLowerCase();
-						const optionParams = { ...state, [optionNameLowerCase]: value };
-						const filtered = Object.entries(optionParams).filter(([key, value]) =>
-							options.find(option => option.name.toLowerCase() === key && option.values.includes(value)),
-						);
-						const isAvailableForSale = combinations.find(combination =>
-							filtered.every(([key, value]) => combination[key] === value && combination.availableForSale),
-						);
+	return (
+		<div className={cn(className)}>
+			{options.map(option => (
+				<Form key={option.id} action="pick variant">
+					<dl className="mb-8">
+						<dt className="mb-2 text-sm tracking-wide uppercase">{option.name}</dt>
+						<dd className="flex flex-wrap gap-2">
+							{option.values.map(value => {
+								const optionNameLowerCase = option.name.toLocaleLowerCase();
+								const optionParams = { ...state, [optionNameLowerCase]: value };
+								const filtered = Object.entries(optionParams).filter(([key, value]) =>
+									options.find(option => option.name.toLowerCase() === key && option.values.includes(value)),
+								);
+								const isAvailableForSale = combinations.find(combination =>
+									filtered.every(
+										([key, value]) => combination[key] === value && combination.availableForSale,
+									),
+								);
 
-						const isActive = state[optionNameLowerCase] === value;
+								const isActive = state[optionNameLowerCase] === value;
 
-						return (
-							<button
-								key={value}
-								aria-disabled={!isAvailableForSale}
-								disabled={!isAvailableForSale}
-								title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
-								className={cn({ "text-red-400": isActive })}
-								formAction={() => {
-									const newState = updateOption(optionNameLowerCase, value);
-									updateURL(newState);
-								}}
-							>
-								{value}
-							</button>
-						);
-					})}
-				</dd>
-			</dl>
-		</Form>
-	));
+								return (
+									<button
+										key={value}
+										aria-disabled={!isAvailableForSale}
+										disabled={!isAvailableForSale}
+										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
+										className={cn("border-quaternary rounded-full border-2 px-4", {
+											"bg-quaternary text-primary": isActive,
+										})}
+										formAction={() => {
+											const newState = updateOption(optionNameLowerCase, value);
+											updateURL(newState);
+										}}
+									>
+										{value}
+									</button>
+								);
+							})}
+						</dd>
+					</dl>
+				</Form>
+			))}
+		</div>
+	);
 }

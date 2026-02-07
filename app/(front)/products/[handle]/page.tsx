@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { ProductProvider } from "@/lib/contexts/product-context";
 import { getProduct } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
 import Grid from "@/components/Grid";
@@ -74,18 +73,24 @@ export default async function Page({ params }: Readonly<Props>) {
 	}
 
 	return (
-		<ProductProvider>
+		<>
 			<Title>{product.title}</Title>
 			<Grid tag="section" className="section-container" type="small">
-				<ProductGallery className="col-span-3" images={product.images} />
+				<ProductGallery className="col-span-2 mb-8 lg:col-span-3 lg:mb-0" images={product.images} />
 				<div className="col-span-2">
-					{!!product.descriptionHtml && <Prose className="pb-4" html={product.descriptionHtml} />}
-					<ProductVariantSelector variants={product.variants} options={product.options} />
-					<ProductPrice price={product.priceRange.maxVariantPrice} />
+					{!!product.descriptionHtml && (
+						<Prose className="pb-8 lg:pb-16" html={product.descriptionHtml} />
+					)}
+					<ProductVariantSelector
+						className="pb-8 lg:pb-16"
+						variants={product.variants}
+						options={product.options}
+					/>
+					<ProductPrice className="mb-8" price={product.priceRange.maxVariantPrice} />
 					<ProductAddToCart product={product} />
-					<ProductRelated id={product.id} />
 				</div>
 			</Grid>
-		</ProductProvider>
+			<ProductRelated id={product.id} />
+		</>
 	);
 }

@@ -33,11 +33,14 @@ export default function ProductAddToCart({ product }: Readonly<Props>) {
 		>
 			<button
 				disabled={!availableForSale || !selectedVariantId}
-				className={cn({
-					"cursor-not-allowed bg-gray-400 hover:opacity-50": !availableForSale || !selectedVariantId,
-				})}
+				className={cn(
+					"bg-quaternary text-primary hover:bg-primary hover:text-quaternary w-full max-w-xs cursor-pointer border-2 py-3 tracking-wide uppercase",
+					{
+						"cursor-not-allowed bg-gray-400 hover:opacity-50": !availableForSale || !selectedVariantId,
+					},
+				)}
 			>
-				{!availableForSale ? "Out of stock" : "Add to cart"}
+				{!availableForSale ? "Out of stock" : "Ajouter au panier"}
 			</button>
 			<p className="sr-only" role="status" aria-label="polite">
 				{message}
