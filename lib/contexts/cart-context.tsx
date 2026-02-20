@@ -8,12 +8,15 @@ import ProductVariant from "@/types/productVariant";
 import UpdateCartType from "@/types/updateCartType";
 
 type CartAction =
-	| { type: "UPDATE_ITEM"; payload: { merchandiseId: string; updateType: UpdateCartType } }
-	| { type: "ADD_ITEM"; payload: { variant: ProductVariant; product: Product } };
+	| {
+			type: "UPDATE_ITEM";
+			payload: { merchandiseId: string; updateType: UpdateCartType; quantity?: number };
+	  }
+	| { type: "ADD_ITEM"; payload: { variant: ProductVariant; product: Product; quantity: number } };
 type CartContextCart = {
 	cart: Cart | undefined;
-	updateCartItem: (_merchandiseId: string, _updateType: UpdateCartType) => void;
-	addCartItem: (_variant: ProductVariant, _product: Product) => void;
+	updateCartItem: (_merchandiseId: string, _updateType: UpdateCartType, _quantity?: number) => void;
+	addCartItem: (_variant: ProductVariant, _product: Product, _quantity: number) => void;
 };
 type Props = {
 	children: React.ReactNode;
@@ -31,10 +34,12 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
 
 	switch (action.type) {
 		case "UPDATE_ITEM": {
-			const { merchandiseId, updateType } = action.payload;
+			const { merchandiseId, updateType, quantity } = action.payload;
 			const updatedLines = currentCart.lines
 				.map(item =>
-					item.merchandise.id === merchandiseId ? updateReducerCartItem(item, updateType) : item,
+					item.merchandise.id === merchandiseId
+						? updateReducerCartItem(item, updateType, quantity)
+						: item,
 				)
 				.filter(Boolean) as CartItem[];
 			if (updatedLines.length === 0) {
@@ -54,9 +59,9 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
 			return { ...currentCart, ...updatedCartTotals(updatedLines), lines: updatedLines };
 		}
 		case "ADD_ITEM": {
-			const { variant, product } = action.payload;
+			const { variant, product, quantity } = action.payload;
 			const existingItem = currentCart.lines.find(item => item.merchandise.id === variant.id);
-			const updatedItem = createOrUpdateCartItem(existingItem, variant, product);
+			const updatedItem = createOrUpdateCartItem(existingItem, variant, product, quantity);
 			const updatedLines = existingItem
 				? currentCart.lines.map(item => (item.merchandise.id === variant.id ? updatedItem : item))
 				: [...currentCart.lines, updatedItem];
@@ -86,13 +91,14 @@ function createOrUpdateCartItem(
 	existingItem: CartItem | undefined,
 	variant: ProductVariant,
 	product: Product,
+	quantity: number,
 ): CartItem {
-	const quantity = existingItem ? existingItem.quantity + 1 : 1;
-	const totalAmount = calculateItemCost(quantity, variant.price.amount);
+	const newQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+	const totalAmount = calculateItemCost(newQuantity, variant.price.amount);
 
 	return {
 		id: existingItem?.id,
-		quantity,
+		quantity: newQuantity,
 		cost: {
 			totalAmount: {
 				amount: totalAmount,
@@ -130,9 +136,29 @@ function updatedCartTotals(lines: CartItem[]): Pick<Cart, "totalQuantity" | "cos
 	};
 }
 
-function updateReducerCartItem(item: CartItem, updateType: UpdateCartType): CartItem | null {
+function updateReducerCartItem(
+	item: CartItem,
+	updateType: UpdateCartType,
+	quantity?: number,
+): CartItem | null {
 	if (updateType === "delete") return null;
-	const newQuantity = updateType === "plus" ? item.quantity + 1 : item.quantity - 1;
+	let newQuantity: number;
+	switch (updateType) {
+		case "update":
+			if (!quantity) {
+				return item;
+			}
+			newQuantity = quantity;
+			break;
+		case "plus":
+			newQuantity = item.quantity + 1;
+			break;
+		case "minus":
+			newQuantity = item.quantity - 1;
+			break;
+		default:
+			return item;
+	}
 
 	if (newQuantity <= 0) return null;
 
@@ -167,21 +193,21 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
 
 	const updateCartItem = useCallback(
-		(merchandiseId: string, updateType: UpdateCartType) => {
+		(merchandiseId: string, updateType: UpdateCartType, quantity?: number) => {
 			updateOptimisticCart({
 				type: "UPDATE_ITEM",
-				payload: { merchandiseId, updateType },
+				payload: { merchandiseId, updateType, quantity },
 			});
 		},
 		[updateOptimisticCart],
 	);
 
 	const addCartItem = useCallback(
-		(variant: ProductVariant | undefined, product: Product) => {
+		(variant: ProductVariant | undefined, product: Product, quantity: number) => {
 			if (!variant) return;
 			updateOptimisticCart({
 				type: "ADD_ITEM",
-				payload: { variant, product },
+				payload: { variant, product, quantity },
 			});
 		},
 		[updateOptimisticCart],

@@ -27,7 +27,7 @@ export default function ProductAddToCart({ product }: Readonly<Props>) {
 	return (
 		<form
 			action={() => {
-				addCartItem(finalVariant, product);
+				addCartItem(finalVariant, product, 1);
 				actionWithVariant();
 			}}
 		>
