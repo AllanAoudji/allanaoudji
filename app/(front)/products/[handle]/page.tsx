@@ -5,6 +5,7 @@ import Grid from "@/components/Grid";
 import ProductAddToCart from "@/components/ProductAddToCart";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPrice from "@/components/ProductPrice";
+import ProductQuantityButton from "@/components/ProductQuantityButton";
 import ProductRelated from "@/components/ProductRelated";
 import ProductVariantSelector from "@/components/ProductVariantSelector";
 import Prose from "@/components/Prose";
@@ -87,6 +88,7 @@ export default async function Page({ params }: Readonly<Props>) {
 						options={product.options}
 					/>
 					<ProductPrice className="mb-8" price={product.priceRange.maxVariantPrice} />
+					<ProductQuantityButton />
 					<ProductAddToCart product={product} />
 				</div>
 			</Grid>
