@@ -1,12 +1,13 @@
 import { HEAD_MENU } from "@/lib/constants";
 import CartIcon from "./CartIcon";
+import NavBarCartModal from "./NavBarCartModal";
 import NavBarHamburger from "./NavBarHamburger";
 import NavBarItem from "./NavBarItem";
 
 export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container">
-			<ul className="flex h-20 items-center justify-end gap-4">
+			<ul className="relative flex h-20 items-center justify-end gap-4">
 				<NavBarItem
 					className="mr-auto font-black"
 					href={"/"}
@@ -24,6 +25,7 @@ export default function NavBar() {
 				))}
 				<CartIcon />
 				<NavBarHamburger />
+				<NavBarCartModal className="top-20" />
 			</ul>
 		</nav>
 	);

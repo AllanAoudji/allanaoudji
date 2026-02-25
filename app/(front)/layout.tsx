@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { CartModalProvider } from "@/lib/contexts/cartModal-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import CartDispenser from "@/components/CartDispenser";
 import Footer from "@/components/Footer";
@@ -18,10 +19,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 				<Suspense fallback={<div>...loading</div>}>
 					<LightboxProvider>
 						<CartDispenser>
-							<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
-								<NavBar />
-							</header>
-							<main className="mb-auto pt-20">{children}</main>
+							<CartModalProvider>
+								<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
+									<NavBar />
+								</header>
+								<main className="mb-auto pt-20">{children}</main>
+							</CartModalProvider>
 						</CartDispenser>
 					</LightboxProvider>
 				</Suspense>

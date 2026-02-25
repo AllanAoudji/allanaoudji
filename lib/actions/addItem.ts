@@ -4,6 +4,7 @@ import { TAGS } from "../constants";
 import { addToCart } from "../shopify";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import CartItem from "@/types/cartItem";
 import MessageCallback from "@/types/messageCallback";
 
 type Payload =
@@ -19,7 +20,10 @@ type Payload =
 export default async function addItem(
 	_prevState: unknown,
 	actionPayload: Payload,
-): Promise<MessageCallback> {
+): Promise<MessageCallback<{
+	cartItem?: CartItem;
+	quantityAdded?: number;
+}> | null> {
 	if (actionPayload.type === "RESET") {
 		return null;
 	}
@@ -30,18 +34,20 @@ export default async function addItem(
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
+				data: null,
 				message: error.message,
 				type: "error",
 			};
 		}
 		return {
+			data: null,
 			message: "Unknown error occurred while retrieving cart ID from cookies.",
 			type: "error",
 		};
 	}
 
 	if (!cartId || !actionPayload.selectedVariantId || !actionPayload.quantity) {
-		return { message: "Error adding item to cart.", type: "error" };
+		return { data: null, message: "Error adding item to cart.", type: "error" };
 	}
 
 	try {
@@ -56,18 +62,30 @@ export default async function addItem(
 		const res = await addToCart(cartId, actionPayload.selectedVariantId, finalQuantity);
 		revalidateTag(TAGS.cart, { expire: 0 });
 
+		const cartItem = res.data.cart.lines.find(
+			line => line.merchandise.id === actionPayload.selectedVariantId,
+		);
+
 		return {
-			message: res.warning || `${finalQuantity} item${finalQuantity > 1 ? "s" : ""} ajoutés au panier`,
+			data: {
+				cartItem: cartItem ? cartItem : undefined,
+				quantityAdded: res.data.quantityAdded,
+			},
+			message:
+				res.warning ||
+				`${res.data.quantityAdded} item${res.data.quantityAdded > 1 ? "s" : ""} ajoutés au panier`,
 			type: !!res.warning ? "warning" : "success",
 		};
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
+				data: null,
 				message: error.message,
 				type: "error",
 			};
 		}
 		return {
+			data: null,
 			message: "Unknown error occurred while adding item to cart.",
 			type: "error",
 		};

@@ -1,6 +1,7 @@
-type MessageCallback = {
+type MessageCallback<T> = {
 	type: "success" | "error" | "warning";
 	message: string;
-} | null;
+	data: T | null;
+};
 
 export default MessageCallback;

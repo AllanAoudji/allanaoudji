@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import CartItem from "@/types/cartItem";
 import MessageCallback from "@/types/messageCallback";
 import Product from "@/types/product";
 
@@ -10,7 +11,7 @@ type Props = {
 	className?: string;
 	disableButton: boolean;
 	isPending: boolean;
-	message: MessageCallback;
+	message: MessageCallback<{ cartItem?: CartItem; quantityAdded?: number }> | null;
 	onClick?: () => void;
 	product: Product;
 	selectedVariantId: string | undefined;
@@ -45,10 +46,6 @@ export default function ProductCartAdd({
 			onClick();
 		}
 	}, [availableForSale, disableButton, isPending, onClick, selectedVariantId]);
-
-	useEffect(() => {
-		console.log(isPending);
-	}, [isPending]);
 
 	return (
 		<form action={cartAction} className={cn(className)}>

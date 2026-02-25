@@ -11,6 +11,7 @@ import {
 } from "react";
 import addItem from "@/lib/actions/addItem";
 import { useCart } from "@/lib/contexts/cart-context";
+import { useCartModal } from "@/lib/contexts/cartModal-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { cn } from "@/lib/utils";
 import ProductCartAdd from "./ProductCartAdd";
@@ -35,6 +36,7 @@ export default function ProductCart({ className, product, variantsInventory }: R
 
 	const { state } = useProduct();
 	const { addCartItem } = useCart();
+	const { handleOpenCartModal } = useCartModal();
 
 	const [addToCartPending, setAddToCartPending] = useState(false);
 	const [quantity, setQuantity] = useState<number | string>(1);
@@ -224,10 +226,17 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	}, [isPending]);
 
 	useLayoutEffect(() => {
+		resetForm();
 		return () => {
 			resetForm();
 		};
 	}, [resetForm]);
+
+	useEffect(() => {
+		if (message && showCallbackMessage) {
+			handleOpenCartModal(message);
+		}
+	}, [handleOpenCartModal, message, showCallbackMessage]);
 
 	// --------------------------------
 	// ------------ return ------------

@@ -205,7 +205,7 @@ export async function addToCart(
 	cartId: string,
 	variantId: string,
 	quantity: number,
-): Promise<{ warning?: string; cart: Cart }> {
+): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
 	// Deux requêtes = fetch le cart avec l'ID
 
 	const cartBeforeMutation = await getCart(cartId);
@@ -224,14 +224,16 @@ export async function addToCart(
 
 	const actuallyAdded = newQuantity - previousQuantity;
 
-	if (actuallyAdded < quantity) {
-		return {
+	return {
+		data: {
 			cart: updatedCart,
-			warning: `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`,
-		};
-	}
-
-	return { cart: updatedCart };
+			quantityAdded: actuallyAdded,
+		},
+		warning:
+			actuallyAdded < quantity
+				? `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`
+				: undefined,
+	};
 }
 
 export async function createCart(): Promise<Cart> {
