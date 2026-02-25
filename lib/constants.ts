@@ -49,7 +49,7 @@ export const HEAD_MENU: Menu[] = [
 	},
 ];
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2025-07/graphql.json";
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
 
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,

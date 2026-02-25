@@ -1,15 +1,13 @@
 import { redirect } from "next/navigation";
-import { getProduct } from "@/lib/shopify";
+import { getProduct, getProductVariantsInventory } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
 import Grid from "@/components/Grid";
-import ProductAddToCart from "@/components/ProductAddToCart";
+import ProductCart from "@/components/ProductCart";
 import ProductGallery from "@/components/ProductGallery";
-import ProductPrice from "@/components/ProductPrice";
-import ProductQuantityButton from "@/components/ProductQuantityButton";
 import ProductRelated from "@/components/ProductRelated";
-import ProductVariantSelector from "@/components/ProductVariantSelector";
 import Prose from "@/components/Prose";
 import Title from "@/components/Title";
+import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
 
 // type MetadataProps = {
@@ -58,6 +56,7 @@ type Props = {
 
 export default async function Page({ params }: Readonly<Props>) {
 	let product: Product | undefined;
+	let variantsInventory: VariantInventory[];
 
 	try {
 		const { handle } = await params;
@@ -73,23 +72,25 @@ export default async function Page({ params }: Readonly<Props>) {
 		redirect("/collections");
 	}
 
+	try {
+		variantsInventory = await getProductVariantsInventory(product.id);
+	} catch (error) {
+		if (error instanceof Error) {
+			throw error;
+		}
+		throw new Error("fetch failed");
+	}
+
 	return (
 		<>
 			<Title>{product.title}</Title>
-			<Grid tag="section" className="section-container" type="small">
+			<Grid className="section-container" tag="section" type="small">
 				<ProductGallery className="col-span-2 mb-8 lg:col-span-3 lg:mb-0" images={product.images} />
 				<div className="col-span-2">
 					{!!product.descriptionHtml && (
 						<Prose className="pb-8 lg:pb-16" html={product.descriptionHtml} />
 					)}
-					<ProductVariantSelector
-						className="pb-8 lg:pb-16"
-						variants={product.variants}
-						options={product.options}
-					/>
-					<ProductPrice className="mb-8" price={product.priceRange.maxVariantPrice} />
-					<ProductQuantityButton />
-					<ProductAddToCart product={product} />
+					<ProductCart product={product} variantsInventory={variantsInventory} />
 				</div>
 			</Grid>
 			<ProductRelated id={product.id} />

@@ -1,6 +1,6 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
-import { ensureStartWith } from "../utils";
+import { ensureStartWith, getLineQuantity } from "../utils";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,8 +18,10 @@ import {
 	getProductQuery,
 	getProductRecommendationsQuery,
 	getProductsQuery,
+	getProductVariantsInventoryQuery,
 } from "./queries/product";
 import ShopifyCart from "@/types/ShopifyCart";
+import VariantInventory from "@/types/VariantInventory";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
 import Connection from "@/types/connection";
@@ -201,15 +203,35 @@ export async function shopifyFetch<T>({
 ---------------------- */
 export async function addToCart(
 	cartId: string,
-	lines: { merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
+	variantId: string,
+	quantity: number,
+): Promise<{ warning?: string; cart: Cart }> {
+	// Deux requêtes = fetch le cart avec l'ID
+
+	const cartBeforeMutation = await getCart(cartId);
+
+	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
+
 	const res = await shopifyFetch<ShopifyAddToCartOperation>({
 		cache: "no-cache",
 		query: addToCartMutation,
-		variables: { cartId, lines },
+		variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
 	});
 
-	return reshapeCart(res.body.data.cartLinesAdd.cart);
+	const updatedCart = reshapeCart(res.body.data.cartLinesAdd.cart);
+
+	const newQuantity = getLineQuantity(updatedCart, variantId);
+
+	const actuallyAdded = newQuantity - previousQuantity;
+
+	if (actuallyAdded < quantity) {
+		return {
+			cart: updatedCart,
+			warning: `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`,
+		};
+	}
+
+	return { cart: updatedCart };
 }
 
 export async function createCart(): Promise<Cart> {
@@ -373,6 +395,58 @@ export async function getProducts({
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
+interface ShopifyVariantsQueryResponse {
+	data: {
+		product: {
+			variants: Connection<{
+				id: string;
+				title: string;
+				sku: string | null;
+				inventoryQuantity: number;
+				inventoryItem: {
+					tracked: boolean;
+				};
+			}>;
+		} | null;
+	};
+}
+
+export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {
+	const response = await fetch(
+		`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+			},
+			body: JSON.stringify({
+				query: getProductVariantsInventoryQuery,
+				variables: {
+					productId,
+				},
+			}),
+			cache: "no-store",
+		},
+	);
+
+	if (!response.ok) {
+		throw new Error("Erreur API Shopify");
+	}
+
+	const result: ShopifyVariantsQueryResponse = await response.json();
+
+	return (
+		result.data.product?.variants.edges.map(edge => ({
+			variantId: edge.node.id,
+			variantTitle: edge.node.title,
+			sku: edge.node.sku,
+			inventoryQuantity: edge.node.inventoryQuantity,
+			inventoryTracked: edge.node.inventoryItem.tracked,
+		})) ?? []
+	);
+}
+
 export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
 	const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
 		query: removeFromCartMutation,
@@ -387,6 +461,8 @@ export async function updateCart(
 	cartId: string,
 	lines: { id: string; merchandiseId: string; quantity: number }[],
 ): Promise<Cart> {
+	// TODO:
+	// check if quantity can be updated
 	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
 		query: editCartItemMutation,
 		cache: "no-store",

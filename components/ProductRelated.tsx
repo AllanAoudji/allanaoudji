@@ -19,7 +19,7 @@ export default async function ProductRelated({ className, id }: Readonly<Props>)
 	return (
 		<ProductRelatedContainer className={cn(className)}>
 			<Grid tag="ul">
-				{relatedProducts.slice(0, 3).map(product => (
+				{relatedProducts.slice(0, 4).map(product => (
 					<ProductRelatedItem key={product.id} product={product} />
 				))}
 			</Grid>

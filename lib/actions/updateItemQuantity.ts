@@ -49,7 +49,7 @@ export default async function updateItemQuantity(
 				]);
 			}
 		} else if (quantity > 0) {
-			await addToCart(cartId, [{ merchandiseId, quantity }]);
+			await addToCart(cartId, merchandiseId, quantity);
 		}
 
 		revalidateTag(TAGS.cart, { expire: 0 });

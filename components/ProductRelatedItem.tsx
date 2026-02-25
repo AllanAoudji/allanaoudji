@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getProductDefaultVariant } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import Product from "@/types/product";
 
@@ -9,7 +10,10 @@ type Props = {
 export default function ProductRelatedItem({ product }: Readonly<Props>) {
 	return (
 		<li>
-			<Link className="block" href={`/products/${product.handle}`}>
+			<Link
+				className="block"
+				href={`/products/${product.handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`}
+			>
 				<ImageContainer
 					image={{
 						alt: product.featuredImage.altText || product.title,

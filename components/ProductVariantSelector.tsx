@@ -1,7 +1,7 @@
 "use client";
 
 import Form from "next/form";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useProduct } from "@/lib/contexts/product-context";
 import { useUpdateURL } from "@/lib/hooks/useUpdateUrl";
 import { cn } from "@/lib/utils";
@@ -9,17 +9,23 @@ import ProductOption from "@/types/productOption";
 import ProductVariant from "@/types/productVariant";
 
 type Combination = {
-	id: string;
 	availableForSale: boolean;
+	id: string;
 	[key: string]: string | boolean;
 };
 type Props = {
+	className?: string;
+	onClick?: () => void;
 	options: ProductOption[];
 	variants: ProductVariant[];
-	className?: string;
 };
 
-export default function ProductVariantSelector({ className, options, variants }: Readonly<Props>) {
+export default function ProductVariantSelector({
+	className,
+	onClick,
+	options,
+	variants,
+}: Readonly<Props>) {
 	const { state, updateOption } = useProduct();
 	const updateURL = useUpdateURL();
 
@@ -41,6 +47,10 @@ export default function ProductVariantSelector({ className, options, variants }:
 
 	const hasNoOptionsOrJustOneOption =
 		!options.length || (options.length === 1 && options[0].values.length === 1);
+
+	const handleClick = useCallback(() => {
+		if (onClick) onClick();
+	}, [onClick]);
 
 	if (hasNoOptionsOrJustOneOption) return null;
 
@@ -70,9 +80,11 @@ export default function ProductVariantSelector({ className, options, variants }:
 										key={value}
 										aria-disabled={!isAvailableForSale}
 										disabled={!isAvailableForSale}
+										onClick={handleClick}
 										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
 										className={cn("border-quaternary rounded-full border-2 px-4", {
 											"bg-quaternary text-primary": isActive,
+											"line-through opacity-50": !isAvailableForSale,
 										})}
 										formAction={() => {
 											const newState = updateOption(optionNameLowerCase, value);

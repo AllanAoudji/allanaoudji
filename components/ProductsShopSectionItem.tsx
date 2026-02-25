@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, getProductDefaultVariant } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import ProductPrice from "./ProductPrice";
 import Product from "@/types/product";
@@ -11,7 +11,10 @@ type Props = {
 
 export default function ProductsShopSectionItem({ className, product }: Readonly<Props>) {
 	return (
-		<Link className={cn(className)} href={`/products/${product.handle}`}>
+		<Link
+			className={cn(className)}
+			href={`/products/${product.handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`}
+		>
 			<h3 className="font-bold">{product.title}</h3>
 			<div
 				className={cn("relative", {

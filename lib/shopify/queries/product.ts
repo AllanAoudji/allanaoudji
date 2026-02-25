@@ -30,3 +30,23 @@ export const getProductRecommendationsQuery = /* GraphQL */ `
 	}
 	${productFragment}
 `;
+
+export const getProductVariantsInventoryQuery = /* GraphQL */ `
+	query getProductVariantsInventory($productId: ID!) {
+		product(id: $productId) {
+			variants(first: 100) {
+				edges {
+					node {
+						id
+						title
+						sku
+						inventoryQuantity
+						inventoryItem {
+							tracked
+						}
+					}
+				}
+			}
+		}
+	}
+`;

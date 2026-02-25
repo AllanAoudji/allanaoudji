@@ -1,5 +1,6 @@
 import imageFragment from "./image";
 import seoFragment from "./seo";
+import variantFragment from "./variant";
 
 const productFragment = /* GraphQl */ `
     fragment product on Product {
@@ -27,17 +28,7 @@ const productFragment = /* GraphQl */ `
         variants(first: 250) {
             edges {
                 node {
-                    id
-                    title
-                    availableForSale
-                    selectedOptions {
-                        name
-                        value
-                    }
-                    price {
-                        amount
-                        currencyCode
-                    }
+                    ...variant
                 }
             }
         }
@@ -59,6 +50,7 @@ const productFragment = /* GraphQl */ `
     }
     ${imageFragment}
     ${seoFragment}
+    ${variantFragment}
 `;
 
 export default productFragment;
