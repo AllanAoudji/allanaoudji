@@ -15,7 +15,9 @@ export default function ProductsShopSectionItem({ className, product }: Readonly
 			className={cn(className)}
 			href={`/products/${product.handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`}
 		>
-			<h3 className="font-bold">{product.title}</h3>
+			<h3 className="w-full overflow-hidden font-bold text-ellipsis whitespace-nowrap">
+				{product.title}
+			</h3>
 			<div
 				className={cn("relative", {
 					"border-4 border-red-500 bg-red-500": !product.availableForSale,

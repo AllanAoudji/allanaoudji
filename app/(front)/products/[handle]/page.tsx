@@ -84,7 +84,7 @@ export default async function Page({ params }: Readonly<Props>) {
 	return (
 		<>
 			<Title>{product.title}</Title>
-			<Grid className="section-container" tag="section" type="small">
+			<Grid className="vertical-padding" tag="section" type="small">
 				<ProductGallery className="col-span-2 mb-8 lg:col-span-3 lg:mb-0" images={product.images} />
 				<div className="col-span-2">
 					{!!product.descriptionHtml && (

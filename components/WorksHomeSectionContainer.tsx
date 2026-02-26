@@ -7,7 +7,7 @@ type Props = {
 
 export default function WorksHomeSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<section className="padding-container section-container">
+		<section className="padding-container vertical-padding">
 			<SubTitle className="mb-12 text-center">Découvrire mon travail</SubTitle>
 			<Grid type="large">{children}</Grid>
 		</section>

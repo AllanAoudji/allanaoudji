@@ -14,9 +14,9 @@ type Props = {
 export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<FiltersSideBarProvider SideBarContent={<CollectionsFilters />}>
-			<div className="padding-container section-container">
+			<div className="padding-container vertical-padding">
 				<Title>boutique</Title>
-				<div className="section-container">
+				<div className="vertical-padding">
 					<CollectionsFiltersSideBarButton />
 					<Grid tag="section" type="smallest">
 						<CollectionsFilters className="hidden lg:block" />

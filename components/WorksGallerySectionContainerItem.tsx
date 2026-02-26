@@ -17,7 +17,7 @@ export default function WorksGallerySectionContainerItem({
 }: Readonly<Props>) {
 	return (
 		<section
-			className={cn(className, "section-container", {
+			className={cn(className, "vertical-padding", {
 				"section-separator": separator,
 			})}
 		>

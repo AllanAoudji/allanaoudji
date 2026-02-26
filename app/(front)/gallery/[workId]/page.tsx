@@ -16,7 +16,7 @@ export default async function WorkDetail({ params }: { params: Promise<{ workId:
 	}
 
 	return (
-		<div className="padding-container section-container">
+		<div className="padding-container vertical-padding">
 			<Title>{work.title}</Title>
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<p>...loading</p>}>

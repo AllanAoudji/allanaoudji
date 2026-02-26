@@ -8,7 +8,7 @@ type Props = {
 
 export default function ContactSectionContainer({ children, className }: Readonly<Props>) {
 	return (
-		<section className={cn("section-container padding-container", className)}>
+		<section className={cn("vertical-padding padding-container", className)}>
 			<SubTitle className="py-16">Contact</SubTitle>
 			{children}
 		</section>

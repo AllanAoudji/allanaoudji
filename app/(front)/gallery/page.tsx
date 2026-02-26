@@ -7,7 +7,7 @@ import WorksGallerySectionLoader from "@/components/WorksGallerySectionLoader";
 
 export default function Gallery() {
 	return (
-		<div className="padding-container section-container">
+		<div className="padding-container vertical-padding">
 			<Title>galerie</Title>
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<WorksGallerySectionLoader />}>
