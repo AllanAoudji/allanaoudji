@@ -6,8 +6,8 @@ import NavBarItem from "./NavBarItem";
 
 export default function NavBar() {
 	return (
-		<nav className="text-quaternary padding-container">
-			<ul className="relative flex h-20 items-center justify-end gap-4">
+		<nav className="text-quaternary padding-container relative">
+			<ul className="flex h-20 items-center justify-end gap-4">
 				<NavBarItem
 					className="mr-auto font-black"
 					href={"/"}
@@ -25,8 +25,8 @@ export default function NavBar() {
 				))}
 				<CartIcon />
 				<NavBarHamburger />
-				<NavBarCartModal className="top-20" />
 			</ul>
+			<NavBarCartModal />
 		</nav>
 	);
 }

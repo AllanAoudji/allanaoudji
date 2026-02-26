@@ -50,7 +50,7 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 	return (
 		<div
 			className={cn(
-				"bg-primary border-quaternary absolute right-0 w-92 border-2 p-8 shadow-xl",
+				"bg-quaternary text-primary border-primary lg:border-quaternary lg:bg-primary lg:text-quaternary fixed inset-x-0 top-20 w-full border-2 p-8 shadow-xl lg:absolute lg:inset-x-auto lg:right-12 lg:w-92",
 				className,
 			)}
 			ref={modalRef}
@@ -61,40 +61,48 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 					<p className="text-xl">x</p>
 				</div>
 			</div>
-			<div className="mb-8 grid grid-cols-3 gap-4">
-				<ImageContainer
-					image={{
-						alt: cartItem.merchandise.product.featuredImage.altText || cartItem.merchandise.product.title,
-						height: cartItem.merchandise.product.featuredImage.height,
-						width: cartItem.merchandise.product.featuredImage.width,
-						url: cartItem.merchandise.product.featuredImage.url,
-						lqip: null,
-					}}
-					ratio="3/4"
-					className="col-span-1"
-				/>
-				<div className="col-span-2">
-					<p className="pb-2 text-sm font-bold uppercase">{cartItem.merchandise.product.title}</p>
-					{!hasNoOptions &&
-						cartItem.merchandise.selectedOptions.map(option => (
-							<p key={option.name} className="text-xs italic">
-								<span className="font-bold uppercase">{option.name}</span> : {option.value}
-							</p>
-						))}
+
+			<div className="grid grid-cols-2 gap-4 lg:block">
+				<div className="col-span-1 block grid-cols-3 gap-4 lg:mb-8 lg:grid">
+					<ImageContainer
+						image={{
+							alt:
+								cartItem.merchandise.product.featuredImage.altText || cartItem.merchandise.product.title,
+							height: cartItem.merchandise.product.featuredImage.height,
+							width: cartItem.merchandise.product.featuredImage.width,
+							url: cartItem.merchandise.product.featuredImage.url,
+							lqip: null,
+						}}
+						ratio="3/4"
+						className="col-span-1 hidden lg:block"
+					/>
+					<div className="col-span-2">
+						<p className="pb-0 text-sm font-bold uppercase lg:pb-2">
+							{cartItem.merchandise.product.title}
+						</p>
+						{!hasNoOptions &&
+							cartItem.merchandise.selectedOptions.map(option => (
+								<p key={option.name} className="text-xs italic">
+									<span className="font-bold uppercase">{option.name}</span> : {option.value}
+								</p>
+							))}
+					</div>
 				</div>
+				<div className="col-span-1">
+					<Link
+						className="border-primary lg:border-quaternary hover:bg-quaternary hover:text-primary mb-0 ml-auto block w-full max-w-80 items-center border-2 p-3 text-center lg:mb-4"
+						href="/basket"
+					>
+						Voir le panier {cart?.totalQuantity ? `(${cart.totalQuantity})` : ""}
+					</Link>
+					<button className="bg-primary text-quaternary lg:bg-quaternary lg:text-primary mb-4 hidden h-12 w-full text-center lg:block">
+						Procéder au paiement
+					</button>
+				</div>
+				<p onClick={handleCloseCartModal} className="col-span-2 cursor-pointer text-center underline">
+					Continuer les achats
+				</p>
 			</div>
-			<Link
-				className="border-quaternary hover:bg-quaternary hover:text-primary mb-4 block w-full items-center border-2 p-3 text-center"
-				href="/basket"
-			>
-				Voir le panier {cart?.totalQuantity ? `(${cart.totalQuantity})` : ""}
-			</Link>
-			<button className="bg-quaternary text-primary mb-4 h-12 w-full text-center">
-				Procéder au paiement
-			</button>
-			<p onClick={handleCloseCartModal} className="cursor-pointer text-center underline">
-				Continuer les achats
-			</p>
 		</div>
 	);
 }
