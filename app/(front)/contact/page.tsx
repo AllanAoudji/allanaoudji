@@ -1,9 +1,3 @@
-import Title from "@/components/Title";
-
 export default function Contact() {
-	return (
-		<>
-			<Title>Contact</Title>
-		</>
-	);
+	return <p>lorem ipsum dolor sit amet</p>;
 }

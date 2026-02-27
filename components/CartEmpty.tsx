@@ -1,13 +1,16 @@
 import Link from "next/link";
-import SubTitle from "./SubTitle";
+import Title from "./Title";
 
 export default function CartEmpty() {
 	return (
-		<section className="pt-12">
-			<SubTitle className="mb-8 border-b-2 pb-4">Votre panier est vide</SubTitle>
-			<div className="flex">
-				<Link href="/collections" className="block rounded-xl border-2 px-4 py-2">
-					Visitez ma boutique
+		<section>
+			<Title>Votre panier est vide</Title>
+			<div className="vertical-padding flex">
+				<Link
+					href="/collections"
+					className="bg-quaternary text-primary hover:bg-primary hover:text-quaternary block border-4 px-8 py-4 text-lg font-bold tracking-wider uppercase transition-colors"
+				>
+					Continuez les achats
 				</Link>
 			</div>
 		</section>
