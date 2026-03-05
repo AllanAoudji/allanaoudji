@@ -22,10 +22,4 @@
 	.section-separator {
 		@apply border-quaternary border-b-2;
 	}
-	.nav-hover {
-		@apply hover:text-secondary;
-	}
-	.animation {
-		@apply transition-all duration-300 ease-in-out;
-	}
 }

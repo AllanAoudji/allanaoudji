@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 					<LightboxProvider>
 						<CartFormProvider>
 							<CartDispenser>
-								<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
+								<header className="bg-primary fixed start-0 top-0 z-20 w-full">
 									<NavBar />
 								</header>
 								<main className="mb-auto pt-20">{children}</main>
@@ -40,4 +40,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Show title and price on "you may like..." products
 // Show second image (if exist) when hover product link
 // Instagram 6 last posts
-// Menu => opacity-50 for all but the hovered one
+// Change navmodal style
+// Add same header navigation animation to contact part
+// Add same header navigation animation to shop collection
+// Add same header navigation animation to footer header
+// Restyle cart modal (border not working anymore)
+// Add same header navigation animation to cart modal's "continuer les achats" button
+// Navbar modal "panier" link = add quantity like panier^22
+
+// Create logo large

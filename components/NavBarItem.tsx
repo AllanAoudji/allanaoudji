@@ -1,9 +1,8 @@
 "use client";
 
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import Image from "next/image";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -11,37 +10,42 @@ type Props = {
 	className?: string;
 	href: string;
 	title: string;
-	imageSrc?: string | StaticImport;
 };
 
-export default function NavBarItem({
-	activeSegment,
-	className,
-	href,
-	imageSrc,
-	title,
-}: Readonly<Props>) {
+export default function NavBarItem({ activeSegment, className, href, title }: Readonly<Props>) {
 	const isActiveSegment = useSelectedLayoutSegment();
 
+	const isActive = useMemo(() => {
+		return isActiveSegment && activeSegment?.includes(isActiveSegment);
+	}, [activeSegment, isActiveSegment]);
+
 	return (
-		<li className={cn(className)}>
+		<li className={cn("block", className)}>
 			<Link
 				className={cn(
+					"flex h-20 items-center px-2 text-sm font-black uppercase",
+					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
 					{
-						underline: isActiveSegment && activeSegment?.includes(isActiveSegment),
-						block: !!imageSrc,
-						"nav-hover animation":
-							!imageSrc && !(isActiveSegment && activeSegment?.includes(isActiveSegment)),
+						"group-hover:[&_span]:after:origin-right group-hover:[&_span]:after:scale-x-0 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
+							isActive,
+						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100": !isActive,
 					},
-					"decoration-2 underline-offset-4",
 				)}
 				href={href}
 			>
-				{imageSrc ? (
-					<Image alt={title} height={1419} src={imageSrc} width={762} className="h-20 w-auto py-6" />
-				) : (
-					title
-				)}
+				<span
+					className={cn(
+						"relative pb-1 transition-opacity duration-300",
+						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
+						{
+							"after:origin-left after:scale-x-100": isActive,
+							"after:origin-right after:scale-x-0": !isActive,
+						},
+					)}
+				>
+					{title}
+				</span>
 			</Link>
 		</li>
 	);
