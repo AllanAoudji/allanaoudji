@@ -1,75 +1,86 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { startTransition, useCallback, useMemo } from "react";
+import { useCartForm } from "@/lib/contexts/cartForm-context";
 import { cn } from "@/lib/utils";
-import CartItem from "@/types/cartItem";
-import MessageCallback from "@/types/messageCallback";
 import Product from "@/types/product";
 
 type Props = {
 	cartAction: () => void;
 	className?: string;
-	disableButton: boolean;
-	isPending: boolean;
-	message: MessageCallback<{ cartItem?: CartItem; quantityAdded?: number }> | null;
-	onClick?: () => void;
 	product: Product;
-	selectedVariantId: string | undefined;
+	selectedVariantId: string;
 	showMessage: boolean;
 };
 
 export default function ProductCartAdd({
 	cartAction,
 	className,
-	disableButton,
-	isPending,
-	message,
-	onClick,
 	product,
 	selectedVariantId,
 	showMessage,
 }: Readonly<Props>) {
-	const { availableForSale } = product;
+	const { message, productPending, setAddProductPending } = useCartForm();
 
 	const buttonMessage = useMemo(() => {
-		if (isPending) {
+		if (!!productPending && productPending.isPending) {
 			return "Ajout en cours...";
 		}
-		if (availableForSale) {
+		if (product.availableForSale) {
 			return "Ajouter au panier";
 		}
 		return "Out of stock";
-	}, [availableForSale, isPending]);
+	}, [product, productPending]);
 
+	const disable = useMemo(() => {
+		return !product.availableForSale || (!!productPending && productPending.isPending);
+	}, [product, productPending]);
+
+	const displayMessage = useMemo(() => {
+		return (
+			showMessage &&
+			!!message &&
+			message.data &&
+			message.data.type === "ADD" &&
+			message.data.cartItem &&
+			message.data.cartItem.merchandise.id === selectedVariantId
+		);
+	}, [message, selectedVariantId, showMessage]);
+
+	const handleAction = useCallback(() => {
+		startTransition(cartAction);
+	}, [cartAction]);
 	const handleClick = useCallback(() => {
-		if (onClick && !disableButton && !isPending && availableForSale && selectedVariantId) {
-			onClick();
+		if (!disable) {
+			setAddProductPending(selectedVariantId);
 		}
-	}, [availableForSale, disableButton, isPending, onClick, selectedVariantId]);
+	}, [disable, selectedVariantId, setAddProductPending]);
 
 	return (
-		<form action={cartAction} className={cn(className)}>
+		<form action={handleAction} className={cn(className)}>
 			<button
 				className={cn(
 					"bg-quaternary text-primary hover:bg-primary hover:text-quaternary border-quaternary w-full max-w-xs cursor-pointer border-2 py-3 tracking-wide uppercase",
 					{
-						"cursor-not-allowed bg-gray-400 hover:opacity-50": !availableForSale || !selectedVariantId,
+						"cursor-not-allowed bg-gray-400 hover:opacity-50":
+							!product.availableForSale || !selectedVariantId,
 					},
 				)}
-				disabled={!availableForSale || !selectedVariantId || disableButton}
+				disabled={disable}
 				onClick={handleClick}
+				type="submit"
 			>
 				{buttonMessage}
 			</button>
-			{!!message && showMessage && (
+			{displayMessage && (
 				<div className="border-quaternary mt-8 border-b-2 pb-4">
-					{message.type !== "success" && (
+					{message!.type !== "success" && (
 						<div
 							className={cn(
 								"text-primary float-left mr-2 flex h-6 w-6 justify-around rounded-full align-baseline font-black",
 								{
-									"bg-red-500": message.type === "error",
-									"bg-yellow-500": message.type === "warning",
+									"bg-red-500": message!.type === "error",
+									"bg-yellow-500": message!.type === "warning",
 								},
 							)}
 						>
@@ -77,7 +88,7 @@ export default function ProductCartAdd({
 						</div>
 					)}
 					<p aria-label="polite" className="text-sm" role="status">
-						{message.message}
+						{message!.message}
 					</p>
 				</div>
 			)}

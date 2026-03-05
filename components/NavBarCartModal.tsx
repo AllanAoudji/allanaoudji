@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useCart } from "@/lib/contexts/cart-context";
-import { useCartModal } from "@/lib/contexts/cartModal-context";
+import { useCartForm } from "@/lib/contexts/cartForm-context";
 import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 
@@ -13,19 +13,19 @@ type Props = {
 
 export default function NavBarCartModal({ className }: Readonly<Props>) {
 	const { cart } = useCart();
-	const { isOpenCartModal, handleCloseCartModal, cartItem } = useCartModal();
+	const { isOpenCartModal, handleCloseCartModal, cartModalItem } = useCartForm();
 
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
 	const hasNoOptions = useMemo(() => {
 		return (
-			!cartItem ||
-			!cartItem.merchandise.selectedOptions.length ||
-			(cartItem.merchandise.selectedOptions.length === 1 &&
-				cartItem.merchandise.selectedOptions[0].value === "Default Title" &&
-				cartItem.merchandise.selectedOptions[0].name === "Title")
+			!cartModalItem ||
+			!cartModalItem.merchandise.selectedOptions.length ||
+			(cartModalItem.merchandise.selectedOptions.length === 1 &&
+				cartModalItem.merchandise.selectedOptions[0].value === "Default Title" &&
+				cartModalItem.merchandise.selectedOptions[0].name === "Title")
 		);
-	}, [cartItem]);
+	}, [cartModalItem]);
 
 	const handleClickOutside = useCallback(
 		(event: MouseEvent) => {
@@ -43,7 +43,7 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 		};
 	}, [handleClickOutside]);
 
-	if (!isOpenCartModal || !cartItem) {
+	if (!isOpenCartModal || !cartModalItem) {
 		return null;
 	}
 
@@ -67,10 +67,11 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 					<ImageContainer
 						image={{
 							alt:
-								cartItem.merchandise.product.featuredImage.altText || cartItem.merchandise.product.title,
-							height: cartItem.merchandise.product.featuredImage.height,
-							width: cartItem.merchandise.product.featuredImage.width,
-							url: cartItem.merchandise.product.featuredImage.url,
+								cartModalItem.merchandise.product.featuredImage.altText ||
+								cartModalItem.merchandise.product.title,
+							height: cartModalItem.merchandise.product.featuredImage.height,
+							width: cartModalItem.merchandise.product.featuredImage.width,
+							url: cartModalItem.merchandise.product.featuredImage.url,
 							lqip: null,
 						}}
 						ratio="3/4"
@@ -78,10 +79,10 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 					/>
 					<div className="col-span-2">
 						<p className="pb-0 text-sm font-bold uppercase lg:pb-2">
-							{cartItem.merchandise.product.title}
+							{cartModalItem.merchandise.product.title}
 						</p>
 						{!hasNoOptions &&
-							cartItem.merchandise.selectedOptions.map(option => (
+							cartModalItem.merchandise.selectedOptions.map(option => (
 								<p key={option.name} className="text-xs italic">
 									<span className="font-bold uppercase">{option.name}</span> : {option.value}
 								</p>
@@ -91,6 +92,7 @@ export default function NavBarCartModal({ className }: Readonly<Props>) {
 				<div className="col-span-1">
 					<Link
 						className="border-primary lg:border-quaternary hover:bg-quaternary hover:text-primary mb-0 ml-auto block w-full max-w-80 items-center border-2 p-3 text-center lg:mb-4"
+						onClick={handleCloseCartModal}
 						href="/basket"
 					>
 						Voir le panier {cart?.totalQuantity ? `(${cart.totalQuantity})` : ""}

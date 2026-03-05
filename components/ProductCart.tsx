@@ -1,17 +1,8 @@
 "use client";
 
-import {
-	ChangeEventHandler,
-	useActionState,
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-	useMemo,
-	useState,
-} from "react";
-import addItem from "@/lib/actions/addItem";
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "react";
 import { useCart } from "@/lib/contexts/cart-context";
-import { useCartModal } from "@/lib/contexts/cartModal-context";
+import { useCartForm } from "@/lib/contexts/cartForm-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { cn } from "@/lib/utils";
 import ProductCartAdd from "./ProductCartAdd";
@@ -34,15 +25,12 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	// --------------------------------
 	const { variants } = product;
 
-	const { state } = useProduct();
 	const { addCartItem } = useCart();
-	const { handleOpenCartModal } = useCartModal();
+	const { addAction } = useCartForm();
+	const { state } = useProduct();
 
-	const [addToCartPending, setAddToCartPending] = useState(false);
 	const [quantity, setQuantity] = useState<number | string>(1);
-	const [showCallbackMessage, setShowCallbackMessage] = useState(false);
-
-	const [message, formAction, isPending] = useActionState(addItem, null);
+	const [showMessage, setShowMessage] = useState<boolean>(false);
 
 	// --------------------------------
 	// ------------ variant -----------
@@ -58,7 +46,7 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	}, [variants]);
 
 	const selectedVariantId = useMemo(() => {
-		return variant?.id || defaultVariantId;
+		return variant?.id || defaultVariantId!;
 	}, [defaultVariantId, variant]);
 
 	const finalVariant = useMemo(() => {
@@ -192,51 +180,26 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	// ------------ action ------------
 	// --------------------------------
 	const actionWithVariant = useMemo(() => {
-		return formAction.bind(null, { selectedVariantId, quantity: finalQuantity, type: "ADD" });
-	}, [finalQuantity, formAction, selectedVariantId]);
+		return addAction(selectedVariantId, finalQuantity);
+	}, [addAction, finalQuantity, selectedVariantId]);
 
 	const cartAction = useCallback(() => {
 		if (!finalVariant) return;
 		resetQuantity();
 		addCartItem(finalVariant, product, finalQuantity);
 		actionWithVariant();
-		setShowCallbackMessage(true);
+		setShowMessage(true);
 	}, [addCartItem, actionWithVariant, finalQuantity, finalVariant, product, resetQuantity]);
 
-	const resetForm = useCallback(() => {
-		setShowCallbackMessage(false);
-	}, []);
-
-	const onClickAddToCart = useCallback(() => {
-		setAddToCartPending(true);
-	}, []);
-
 	const onVariantClick = useCallback(() => {
-		resetForm();
 		resetQuantity();
-	}, [resetForm, resetQuantity]);
+	}, [resetQuantity]);
 
-	// --------------------------------
-	// ----------- effects ------------
-	// --------------------------------
 	useEffect(() => {
-		if (!isPending) {
-			setAddToCartPending(false);
-		}
-	}, [isPending]);
-
-	useLayoutEffect(() => {
-		resetForm();
 		return () => {
-			resetForm();
+			setShowMessage(false);
 		};
-	}, [resetForm]);
-
-	useEffect(() => {
-		if (message && showCallbackMessage) {
-			handleOpenCartModal(message);
-		}
-	}, [handleOpenCartModal, message, showCallbackMessage]);
+	}, []);
 
 	// --------------------------------
 	// ------------ return ------------
@@ -263,13 +226,9 @@ export default function ProductCart({ className, product, variantsInventory }: R
 			/>
 			<ProductCartAdd
 				cartAction={cartAction}
-				disableButton={isPending}
-				isPending={addToCartPending}
-				message={message}
-				onClick={onClickAddToCart}
 				product={product}
 				selectedVariantId={selectedVariantId}
-				showMessage={showCallbackMessage}
+				showMessage={showMessage}
 			/>
 			<ProductCartInventory className="mt-12" variantInventory={finalVariantInventory} />
 		</div>

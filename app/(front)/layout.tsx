@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CartModalProvider } from "@/lib/contexts/cartModal-context";
+import { CartFormProvider } from "@/lib/contexts/cartForm-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import CartDispenser from "@/components/CartDispenser";
 import Footer from "@/components/Footer";
@@ -18,14 +18,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<Suspense fallback={<div>...loading</div>}>
 					<LightboxProvider>
-						<CartDispenser>
-							<CartModalProvider>
+						<CartFormProvider>
+							<CartDispenser>
 								<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
 									<NavBar />
 								</header>
 								<main className="mb-auto pt-20">{children}</main>
-							</CartModalProvider>
-						</CartDispenser>
+							</CartDispenser>
+						</CartFormProvider>
 					</LightboxProvider>
 				</Suspense>
 				<Footer />
@@ -33,3 +33,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		</html>
 	);
 }
+
+// TODO:
+// Set logic for warning/error message when UPDATE/DELETE cart.line
+// Show error/warning message on cart UI
+// Show title and price on "you may like..." products
+// Show second image (if exist) when hover product link
+// Instagram 6 last posts
+// Menu => opacity-50 for all but the hovered one

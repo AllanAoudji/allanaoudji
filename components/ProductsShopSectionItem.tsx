@@ -15,15 +15,15 @@ export default function ProductsShopSectionItem({ className, product }: Readonly
 			className={cn(className)}
 			href={`/products/${product.handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`}
 		>
-			<h3 className="w-full overflow-hidden font-bold text-ellipsis whitespace-nowrap">
-				{product.title}
-			</h3>
 			<div
-				className={cn("relative", {
-					"border-4 border-red-500 bg-red-500": !product.availableForSale,
+				className={cn("relative mb-1", {
+					"bg-gray-300": !product.availableForSale,
 				})}
 			>
 				<ImageContainer
+					className={cn({
+						"opacity-50": !product.availableForSale,
+					})}
 					image={{
 						alt: product.featuredImage.altText || product.title,
 						url: product.featuredImage.url,
@@ -32,18 +32,21 @@ export default function ProductsShopSectionItem({ className, product }: Readonly
 						lqip: null,
 					}}
 					priority={true}
-					ratio="4/3"
-					className={cn({
-						"opacity-50": !product.availableForSale,
-					})}
+					ratio="3/4"
 				/>
+
 				{!product.availableForSale && (
-					<div className="bg-primary absolute top-1/2 left-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 transform border-4 px-2 py-3 text-center text-red-500 uppercase">
-						<p className="text-xl font-bold tracking-wide">out of stock</p>
+					<div className="text-primary absolute inset-x-0 bottom-0 bg-red-500 px-1 py-2 text-center text-sm uppercase">
+						<p className="font-bold tracking-widest">out of stock</p>
 					</div>
 				)}
 			</div>
-			<ProductPrice price={product.priceRange.maxVariantPrice} className="text-right font-light" />
+			<div className="flex justify-between text-sm">
+				<h3 className="w-full overflow-hidden font-bold text-ellipsis whitespace-nowrap">
+					{product.title}
+				</h3>
+				<ProductPrice className="text-right font-light" price={product.priceRange.maxVariantPrice} />
+			</div>
 		</Link>
 	);
 }

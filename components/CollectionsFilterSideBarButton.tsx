@@ -6,9 +6,9 @@ export default function CollectionsFiltersSideBarButton() {
 	const { setIsOpen } = useFiltersSideBar();
 
 	return (
-		<div className="mb-8 flex justify-center lg:hidden">
+		<div className="mb-12 flex justify-center lg:hidden">
 			<button
-				className="cursor-pointer rounded-full border-2 px-8 py-1 tracking-wide uppercase"
+				className="hover:bg-quaternary hover:text-primary w-full cursor-pointer border px-4 py-2 tracking-wider uppercase transition"
 				onClick={setIsOpen}
 			>
 				filtres

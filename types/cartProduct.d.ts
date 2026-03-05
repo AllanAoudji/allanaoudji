@@ -1,10 +1,15 @@
+import Money from "./money";
 import shopifyImage from "./shopifyImage";
 
 type CartProduct = {
-	id: string;
-	handle: string;
-	title: string;
 	featuredImage: shopifyImage;
+	handle: string;
+	id: string;
+	priceRange: {
+		maxVariantPrice: Money;
+		minVariantPrice: Money;
+	};
+	title: string;
 };
 
 export default CartProduct;

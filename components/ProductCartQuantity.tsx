@@ -3,7 +3,6 @@
 import { ChangeEventHandler, FocusEventHandler, useMemo } from "react";
 import { useCart } from "@/lib/contexts/cart-context";
 import { cn, getLineQuantity } from "@/lib/utils";
-import ProductCartQuantityButton from "./ProductCartQuantityButton";
 import ProductVariant from "@/types/productVariant";
 
 type Props = {
@@ -44,10 +43,16 @@ export default function ProductCartQuantity({
 	return (
 		<div className={cn(className)}>
 			<h4 className="mb-1 text-sm">Quantité{!!itemInCart && ` (${itemInCart} dans le panier)`}</h4>
-			<div className="border-quaternary inline-block border-2">
-				<ProductCartQuantityButton disable={disableDecrement} onClick={decrement} size={size}>
+			<div className={cn("border-quaternary inline-block border-2", className)}>
+				<button
+					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
+						"font-normal opacity-50": disableDecrement,
+					})}
+					disabled={disableDecrement}
+					onClick={decrement}
+				>
 					-
-				</ProductCartQuantityButton>
+				</button>
 				<input
 					className={cn(
 						"[appearance:textfield] text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
@@ -58,9 +63,15 @@ export default function ProductCartQuantity({
 					type="number"
 					value={quantity}
 				/>
-				<ProductCartQuantityButton disable={disableIncrement} onClick={increment} size={size}>
+				<button
+					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
+						"font-normal opacity-50": disableIncrement,
+					})}
+					disabled={disableIncrement}
+					onClick={increment}
+				>
 					+
-				</ProductCartQuantityButton>
+				</button>
 			</div>
 		</div>
 	);

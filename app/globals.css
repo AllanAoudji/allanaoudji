@@ -14,7 +14,7 @@
 
 @layer utilities {
 	.padding-container {
-		@apply mx-auto max-w-6xl px-4;
+		@apply mx-auto max-w-7xl px-4;
 	}
 	.vertical-padding {
 		@apply py-12;

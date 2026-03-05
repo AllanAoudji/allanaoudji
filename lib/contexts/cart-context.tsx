@@ -113,6 +113,7 @@ function createOrUpdateCartItem(
 				id: product.id,
 				title: product.title,
 				handle: product.handle,
+				priceRange: product.priceRange,
 				featuredImage: product.featuredImage,
 			},
 		},
