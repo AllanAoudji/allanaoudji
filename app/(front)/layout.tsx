@@ -43,7 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Change navmodal style
 // Add same header navigation animation to contact part
 // Add same header navigation animation to shop collection
-// Add same header navigation animation to footer header
+// ✅ Add same header navigation animation to footer header
 // Restyle cart modal (border not working anymore)
 // Add same header navigation animation to cart modal's "continuer les achats" button
 // Navbar modal "panier" link = add quantity like panier^22

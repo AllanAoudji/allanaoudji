@@ -1,9 +1,8 @@
-import { HEAD_MENU } from "@/lib/constants";
 import CartIcon from "./CartIcon";
 import Logo from "./Logo";
 import NavBarCartModal from "./NavBarCartModal";
 import NavBarHamburger from "./NavBarHamburger";
-import NavBarItem from "./NavBarItem";
+import NavBarMenu from "./NavBarMenu";
 
 export default function NavBar() {
 	return (
@@ -13,17 +12,7 @@ export default function NavBar() {
 				<NavBarHamburger className="justify-self-start sm:hidden" />
 
 				<Logo className="justify-self-center sm:hidden [&_a]:px-6" />
-				<ul className="group hidden items-center justify-center justify-self-center sm:flex">
-					{HEAD_MENU.map(menu => (
-						<NavBarItem
-							activeSegment={menu.activeSegment}
-							className="hidden sm:inline"
-							href={menu.href}
-							key={menu.href}
-							title={menu.title}
-						/>
-					))}
-				</ul>
+				<NavBarMenu className="hidden justify-self-center sm:flex" />
 
 				<CartIcon className="justify-self-end" />
 			</div>

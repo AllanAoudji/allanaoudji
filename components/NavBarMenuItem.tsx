@@ -7,12 +7,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
 	activeSegment?: string[] | null;
-	className?: string;
 	href: string;
 	title: string;
 };
 
-export default function NavBarItem({ activeSegment, className, href, title }: Readonly<Props>) {
+export default function NavBarMenuItem({ activeSegment, href, title }: Readonly<Props>) {
 	const isActiveSegment = useSelectedLayoutSegment();
 
 	const isActive = useMemo(() => {
@@ -20,7 +19,7 @@ export default function NavBarItem({ activeSegment, className, href, title }: Re
 	}, [activeSegment, isActiveSegment]);
 
 	return (
-		<li className={cn("block", className)}>
+		<li className="block">
 			<Link
 				className={cn(
 					"flex h-20 items-center px-2 text-sm font-black uppercase",
