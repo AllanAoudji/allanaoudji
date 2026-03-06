@@ -13,7 +13,7 @@ export default function FooterMenuItem({ href, title }: Readonly<Props>) {
 				className={cn(
 					"flex items-center justify-center px-2 text-xs font-black uppercase",
 					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
-					"group-hover:[&_span]:after:origin-right group-hover:[&_span]:after:scale-x-0 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
+					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 				)}
 				href={href}
 			>

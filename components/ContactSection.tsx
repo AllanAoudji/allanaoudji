@@ -27,13 +27,15 @@ export default async function ContactSection({ className }: Readonly<Props>) {
 
 	return (
 		<ContactSectionContainer className={className}>
-			{query.contacts.map((contact, i) => (
-				<ContactSectionItem
-					key={contact._id}
-					contact={contact}
-					className={cn({ "pb-6": i !== contactLength - 1 })}
-				/>
-			))}
+			<ul className="flex w-min flex-col">
+				{query.contacts.map((contact, i) => (
+					<ContactSectionItem
+						key={contact._id}
+						contact={contact}
+						className={cn({ "pb-6": i !== contactLength - 1 })}
+					/>
+				))}
+			</ul>
 		</ContactSectionContainer>
 	);
 }
