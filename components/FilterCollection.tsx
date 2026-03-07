@@ -7,7 +7,7 @@ export default async function FilterCollection() {
 	if (collections.length <= 1) return null;
 
 	return (
-		<ul>
+		<ul className="group flex flex-col">
 			{collections.map(collection => (
 				<FilterCollectionItem key={collection.handle} item={collection} />
 			))}

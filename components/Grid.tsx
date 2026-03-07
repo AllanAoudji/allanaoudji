@@ -32,5 +32,5 @@ export default function Grid({
 	type = "default",
 }: Readonly<Props>) {
 	const DynamicTag = tag;
-	return <DynamicTag className={cn(className, getStyle(type), "grid gap-4")}>{children}</DynamicTag>;
+	return <DynamicTag className={cn(getStyle(type), "grid gap-4", className)}>{children}</DynamicTag>;
 }
