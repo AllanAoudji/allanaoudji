@@ -1,8 +1,10 @@
-import { getCollections } from "@/lib/shopify";
+"use client";
+
+import { useCollections } from "@/lib/contexts/collections-context";
 import FilterCollectionItem from "./FilterCollectionItem";
 
-export default async function FilterCollection() {
-	const collections = await getCollections();
+export default function FilterCollection() {
+	const { collections } = useCollections();
 
 	if (collections.length <= 1) return null;
 

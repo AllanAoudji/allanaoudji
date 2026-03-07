@@ -179,16 +179,6 @@ function updateReducerCartItem(
 	};
 }
 
-export function useCart() {
-	const context = useContext(cartContext);
-
-	if (context === undefined) {
-		throw new Error("useCart must be used within a CartProvider");
-	}
-
-	return context;
-}
-
 export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	const initialCart = use(cartPromise);
 	const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
@@ -224,4 +214,14 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	);
 
 	return <cartContext.Provider value={value}>{children}</cartContext.Provider>;
+}
+
+export function useCart() {
+	const context = useContext(cartContext);
+
+	if (context === undefined) {
+		throw new Error("useCart must be used within a CartProvider");
+	}
+
+	return context;
 }

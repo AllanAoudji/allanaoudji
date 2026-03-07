@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CartFormProvider } from "@/lib/contexts/cartForm-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
+import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
+import CollectionsDispenser from "@/components/CollectionsDispenser";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import "@/app/globals.css";
@@ -17,16 +19,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="en">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<Suspense fallback={<div>...loading</div>}>
-					<LightboxProvider>
-						<CartFormProvider>
-							<CartDispenser>
-								<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-									<NavBar />
-								</header>
-								<main className="mb-auto pt-20">{children}</main>
-							</CartDispenser>
-						</CartFormProvider>
-					</LightboxProvider>
+					<CartDispenser>
+						<CollectionsDispenser>
+							<LightboxProvider>
+								<ModalProvider>
+									<CartFormProvider>
+										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+											<NavBar />
+										</header>
+
+										<main className="mb-auto pt-20">{children}</main>
+									</CartFormProvider>
+								</ModalProvider>
+							</LightboxProvider>
+						</CollectionsDispenser>
+					</CartDispenser>
 				</Suspense>
 				<Footer />
 			</body>

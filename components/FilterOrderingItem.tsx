@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import { useFiltersSideBar } from "@/lib/contexts/filters-sidebar-context";
 import { cn } from "@/lib/utils";
 import SortFilterItem from "@/types/sortFilterItem";
 
@@ -12,7 +10,6 @@ type Props = {
 };
 
 export default function FilterOrderingItem({ item }: Readonly<Props>) {
-	const { setIsClose } = useFiltersSideBar();
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
 	const active = searchParams.get("sort") === item.slug;
@@ -22,11 +19,6 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 		...(q && { q }),
 		...(item.slug && item.slug.length && { sort: item.slug }),
 	})}`;
-
-	const onClick = useCallback(() => {
-		if (active) return;
-		setIsClose();
-	}, [setIsClose, active]);
 
 	return (
 		<li className={cn("block text-sm")}>
@@ -40,7 +32,6 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100": !active,
 					},
 				)}
-				onClick={onClick}
 				href={href}
 			>
 				<span

@@ -309,7 +309,7 @@ export async function getCollections(): Promise<Collection[]> {
 				description: "All products",
 			},
 			path: "/collections",
-			updatedAt: new Date().toISOString(),
+			updatedAt: "",
 			image: null,
 		},
 		...reshapeCollections(shopifyCollections).filter(

@@ -1,7 +1,6 @@
 import Error from "../error";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import { FiltersSideBarProvider } from "@/lib/contexts/filters-sidebar-context";
 import CollectionsFiltersSideBarButton from "@/components/CollectionsFilterSideBarButton";
 import CollectionsFilters from "@/components/CollectionsFilters";
 import Grid from "@/components/Grid";
@@ -13,19 +12,17 @@ type Props = {
 
 export default function Layout({ children }: Readonly<Props>) {
 	return (
-		<FiltersSideBarProvider SideBarContent={<CollectionsFilters />}>
-			<div className="padding-container vertical-padding">
-				<Title>boutique</Title>
-				<div className="vertical-padding">
-					<CollectionsFiltersSideBarButton />
-					<Grid tag="section" type="smallest">
-						<CollectionsFilters className="hidden lg:block" />
-						<ErrorBoundary errorComponent={Error}>
-							<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
-						</ErrorBoundary>
-					</Grid>
-				</div>
+		<div className="padding-container vertical-padding">
+			<Title>boutique</Title>
+			<div className="vertical-padding">
+				<CollectionsFiltersSideBarButton />
+				<Grid tag="section" type="smallest">
+					<CollectionsFilters className="hidden lg:block" />
+					<ErrorBoundary errorComponent={Error}>
+						<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
+					</ErrorBoundary>
+				</Grid>
 			</div>
-		</FiltersSideBarProvider>
+		</div>
 	);
 }

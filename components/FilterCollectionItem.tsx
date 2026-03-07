@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import { useFiltersSideBar } from "@/lib/contexts/filters-sidebar-context";
 import { cn } from "@/lib/utils";
 import Collection from "@/types/collection";
 
@@ -12,15 +10,10 @@ type Props = {
 };
 
 export default function FilterCollectionItem({ item }: Readonly<Props>) {
-	const { setIsClose } = useFiltersSideBar();
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
 	const active = pathName === item.path;
 	const newParams = new URLSearchParams(searchParams.toString());
-	const onClick = useCallback(() => {
-		if (active) return;
-		setIsClose();
-	}, [setIsClose, active]);
 
 	newParams.delete("q");
 
@@ -38,7 +31,6 @@ export default function FilterCollectionItem({ item }: Readonly<Props>) {
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100": !active,
 					},
 				)}
-				onClick={onClick}
 				href={href}
 			>
 				<span
