@@ -10,6 +10,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
+import { useModal } from "./modal-context";
 import CartItem from "@/types/cartItem";
 import MessageCallback from "@/types/messageCallback";
 
@@ -30,9 +31,6 @@ type Type = "ADD" | "DELETE" | "UPDATE";
 
 type CartFormContextType = {
 	addAction: (_id: string, _quantity: number) => () => void;
-	cartModalItem: CartItem | null;
-	handleCloseCartModal: () => void;
-	isOpenCartModal: boolean;
 	setAddProductPending: (_id: string) => void;
 	setUpdateProductPending: (_id: string) => void;
 	message: MessageCallback<MessageData> | null;
@@ -45,8 +43,7 @@ const CartFormContext = createContext<CartFormContextType | undefined>(undefined
 
 export function CartFormProvider({ children }: Readonly<Props>) {
 	const [productPending, setProductPending] = useState<ProductPending | null>(null);
-	const [cartModalItem, setCartModalItem] = useState<CartItem | null>(null);
-	const [isOpenCartModal, setIsOpenCartModal] = useState<boolean>(false);
+	const { openModal } = useModal();
 
 	const [message, formAction, isPending] = useActionState(itemReducer, null);
 
@@ -86,12 +83,6 @@ export function CartFormProvider({ children }: Readonly<Props>) {
 		});
 	}, []);
 
-	// Modal
-	const handleCloseCartModal = useCallback(() => {
-		setIsOpenCartModal(false);
-		setCartModalItem(null);
-	}, []);
-
 	useEffect(() => {
 		// TODO:
 		// Seulement quand l'action = ADD
@@ -102,10 +93,9 @@ export function CartFormProvider({ children }: Readonly<Props>) {
 			!!message.data.cartItem &&
 			!!message.data.quantityAdded
 		) {
-			setCartModalItem(message.data.cartItem);
-			setIsOpenCartModal(true);
+			openModal("cart");
 		}
-	}, [message]);
+	}, [message, openModal]);
 
 	useEffect(() => {
 		if (!isPending) {
@@ -127,12 +117,9 @@ export function CartFormProvider({ children }: Readonly<Props>) {
 	const value = useMemo(
 		() => ({
 			addAction,
-			cartModalItem,
-			handleCloseCartModal,
-			isOpenCartModal,
+			message,
 			setAddProductPending,
 			setUpdateProductPending,
-			message,
 			isPending,
 			productPending,
 			removeAction,
@@ -140,9 +127,6 @@ export function CartFormProvider({ children }: Readonly<Props>) {
 		}),
 		[
 			addAction,
-			cartModalItem,
-			handleCloseCartModal,
-			isOpenCartModal,
 			message,
 			setAddProductPending,
 			setUpdateProductPending,

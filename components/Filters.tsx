@@ -5,7 +5,7 @@ type Props = {
 	className?: string;
 };
 
-export default function CollectionsFilters({ className }: Readonly<Props>) {
+export default function Filters({ className }: Readonly<Props>) {
 	return (
 		<div className={cn(className)}>
 			<Filter className="mb-16" type="collections" />

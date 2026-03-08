@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import FiltersModal from "@/components/FiltersModal";
 import ModalType from "@/types/type";
 
 type Props = {
@@ -9,6 +8,7 @@ type Props = {
 };
 type ModalContextType = {
 	closeModal: () => void;
+	modal: ModalType | null;
 	openModal: (_modal: ModalType) => void;
 };
 
@@ -24,16 +24,9 @@ export function ModalProvider({ children }: Readonly<Props>) {
 		setModal(name);
 	}, []);
 
-	const value = useMemo(() => ({ closeModal, openModal }), [closeModal, openModal]);
+	const value = useMemo(() => ({ closeModal, modal, openModal }), [closeModal, modal, openModal]);
 
-	return (
-		<ModalContext.Provider value={value}>
-			{children}
-
-			{/* Toutes les modals sont centralisées ici */}
-			<FiltersModal onCloseAction={closeModal} open={modal === "filters"} />
-		</ModalContext.Provider>
-	);
+	return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 }
 
 export function useModal() {

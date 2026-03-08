@@ -1,5 +1,5 @@
-import CollectionsFilters from "./CollectionsFilters";
 import DrawerModal from "./DrawerModal";
+import Filters from "./Filters";
 
 type Props = {
 	onCloseAction: () => void;
@@ -9,7 +9,7 @@ type Props = {
 export default function FiltersModal({ onCloseAction, open }: Readonly<Props>) {
 	return (
 		<DrawerModal onCloseAction={onCloseAction} open={open} position="left">
-			<CollectionsFilters />
+			<Filters />
 		</DrawerModal>
 	);
 }

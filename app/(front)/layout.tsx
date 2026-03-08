@@ -6,6 +6,7 @@ import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
 import CollectionsDispenser from "@/components/CollectionsDispenser";
 import Footer from "@/components/Footer";
+import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
 import "@/app/globals.css";
 
@@ -21,17 +22,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 				<Suspense fallback={<div>...loading</div>}>
 					<CartDispenser>
 						<CollectionsDispenser>
-							<LightboxProvider>
-								<ModalProvider>
+							<ModalProvider>
+								<LightboxProvider>
 									<CartFormProvider>
 										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
 											<NavBar />
 										</header>
 
 										<main className="mb-auto pt-20">{children}</main>
+										<Modals />
 									</CartFormProvider>
-								</ModalProvider>
-							</LightboxProvider>
+								</LightboxProvider>
+							</ModalProvider>
 						</CollectionsDispenser>
 					</CartDispenser>
 				</Suspense>

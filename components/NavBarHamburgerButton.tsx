@@ -9,7 +9,7 @@ type Props = {
 	className?: string;
 };
 
-export default function NavBarHamburger({ className }: Readonly<Props>) {
+export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
 	const [open, setOpen] = useState<boolean>(false);
 
