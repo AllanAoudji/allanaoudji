@@ -1,6 +1,5 @@
 import FullscreenModal from "./FullScreenModal";
 import NavBarMenu from "./NavBarMenu";
-import NavBarModalHeader from "./NavBarModalHeader";
 
 type Props = {
 	onCloseAction: () => void;
@@ -12,11 +11,10 @@ export default function NavBarModal({ onCloseAction, open }: Readonly<Props>) {
 		<FullscreenModal
 			onCloseAction={onCloseAction}
 			open={open}
-			className="flex flex-col items-stretch justify-between"
+			className="flex flex-col items-stretch justify-end"
 			closeOn="sm"
 		>
-			<NavBarModalHeader />
-			<NavBarMenu asHome={true} className="padding-container pb-20" color="light" type="vertical" />
+			<NavBarMenu asHome={true} className="padding-container pb-16" type="vertical" />
 		</FullscreenModal>
 	);
 }

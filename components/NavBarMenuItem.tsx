@@ -35,7 +35,7 @@ export default function NavBarMenuItem({
 					"text-quaternary text-md flex items-center py-0.5 pr-4 font-black uppercase",
 					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
 					{
-						"h-20 px-2 py-0": type === "horizontal",
+						"header-height px-2 py-0": type === "horizontal",
 						"text-primary": color === "light",
 						"group-hover:[&_span]:after:origin-right group-hover:[&_span]:after:scale-x-0 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
 							isActive,

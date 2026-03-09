@@ -7,29 +7,24 @@ import { cn } from "@/lib/utils";
 type Props = {
 	className?: string;
 	color?: "dark" | "light";
-	type?: "open" | "close";
 };
 
-export default function NavBarHamburgerButton({
-	className,
-	color = "dark",
-	type = "open",
-}: Readonly<Props>) {
-	const { openModal, closeModal } = useModal();
+export default function NavBarHamburgerButton({ className, color = "dark" }: Readonly<Props>) {
+	const { openModal, closeModal, modal } = useModal();
 	const handClick = useCallback(() => {
-		if (type === "close") {
+		if (modal === "menu") {
 			closeModal();
 			return;
 		}
 		openModal("menu");
-	}, [closeModal, openModal, type]);
+	}, [closeModal, openModal, modal]);
 
 	return (
 		<>
 			<div className={cn(className)}>
 				<button
 					className={cn(
-						"text-quaternary h-20 cursor-pointer pr-4 text-sm font-black uppercase",
+						"text-quaternary header-height cursor-pointer pr-4 text-sm font-black uppercase",
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 						{
 							"text-primary": color === "light",
@@ -48,7 +43,7 @@ export default function NavBarHamburgerButton({
 							},
 						)}
 					>
-						{type === "open" ? "menu" : "fermer"}
+						{modal === "menu" ? "fermer" : "menu"}
 					</span>
 				</button>
 			</div>

@@ -26,11 +26,11 @@ export default function CartButton({ className, color = "dark" }: Readonly<Props
 	}, [cart]);
 
 	return (
-		<div className={cn("flex h-20 items-center justify-end", className)}>
+		<div className={cn("header-height flex items-center justify-end", className)}>
 			<button
 				onClick={handleClick}
 				className={cn(
-					"text-quaternary h-20 cursor-pointer pl-4 text-sm font-black uppercase",
+					"text-quaternary header-height cursor-pointer pl-4 text-sm font-black uppercase",
 					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 					{
 						"text-primary": color === "light",

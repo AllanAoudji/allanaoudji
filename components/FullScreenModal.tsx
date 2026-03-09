@@ -37,16 +37,16 @@ export default function FullscreenModal({
 		<AnimatePresence>
 			{open && (
 				<motion.div
-					className={cn("bg-quaternary fixed inset-0 z-50")}
-					initial={{ opacity: 0, scale: 0.98 }}
-					animate={{ opacity: 1, scale: 1 }}
-					exit={{ opacity: 0, scale: 0.98 }}
+					className={cn("bg-primary fixed top-16 left-0 z-50 h-full w-full shadow-xl")}
+					initial={{ x: "-100%" }}
+					animate={{ x: 0 }}
+					exit={{ x: "-100%" }}
 					transition={{
 						duration: 0.32,
 						ease: [0.32, 0.72, 0, 1],
 					}}
 				>
-					<div className={cn("h-full overflow-y-auto", className)}>{children}</div>
+					<div className={cn("vertical-padding h-full overflow-y-auto", className)}>{children}</div>
 				</motion.div>
 			)}
 		</AnimatePresence>

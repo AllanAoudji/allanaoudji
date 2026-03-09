@@ -4,10 +4,10 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-primary: #ede1d5;
+	--color-primary: #f5f0eb;
 	--color-secondary: #baddff;
 	--color-tertiary: #bafff5;
-	--color-quaternary: #496580;
+	--color-quaternary: #1e3142;
 
 	--font-gopher: "gopher";
 }
@@ -18,5 +18,8 @@
 	}
 	.vertical-padding {
 		@apply pt-16 pb-20;
+	}
+	.header-height {
+		@apply h-16;
 	}
 }

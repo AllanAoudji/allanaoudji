@@ -29,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 											<NavBar />
 										</header>
 
-										<main className="mb-auto pt-20">{children}</main>
+										<main className="mb-auto pt-16">{children}</main>
 										<Modals />
 									</CartFormProvider>
 								</LightboxProvider>

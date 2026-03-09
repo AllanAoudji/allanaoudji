@@ -5,7 +5,7 @@ import NavBarMenu from "./NavBarMenu";
 
 export default function NavBar() {
 	return (
-		<nav className="text-quaternary padding-container relative h-20">
+		<nav className="text-quaternary padding-container header-height relative">
 			<div className="grid grid-cols-[1fr_auto_1fr] items-center">
 				<Logo className="hidden justify-self-start sm:block [&_a]:pr-6" />
 				<NavBarHamburgerButton className="justify-self-start sm:hidden" />

@@ -32,7 +32,7 @@ export default function Logo({ className, color = "dark", type = "square" }: Rea
 			<Link className={"block"} href={"/"} onClick={closeModal}>
 				<Image
 					alt={"logo"}
-					className="h-20 w-auto py-6"
+					className="header-height w-auto py-4"
 					height={1419}
 					src={logoPath(type, color)}
 					width={762}
