@@ -23,7 +23,7 @@ export default function FilterCollectionItem({ item }: Readonly<Props>) {
 		<li className={cn("block text-sm")}>
 			<Link
 				className={cn(
-					"flex items-center py-0.5 text-xs font-bold uppercase",
+					"flex h-10 items-center px-2 py-0.5 text-xs font-bold uppercase",
 					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
 					{
 						"group-hover:[&_span]:after:origin-right group-hover:[&_span]:after:scale-x-0 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
@@ -35,12 +35,12 @@ export default function FilterCollectionItem({ item }: Readonly<Props>) {
 			>
 				<span
 					className={cn(
-						"relative transition-opacity duration-300",
+						"relative pb-1 transition-opacity duration-300",
 						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						{
 							"after:origin-left after:scale-x-100": active,
-							"opacity-25 after:origin-right after:scale-x-0": !active,
+							"after:origin-right after:scale-x-0": !active,
 						},
 					)}
 				>

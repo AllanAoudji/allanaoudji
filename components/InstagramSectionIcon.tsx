@@ -7,15 +7,15 @@ type Props = {
 
 export default function InstagramSectionIcon({ type, count }: Readonly<Props>) {
 	return (
-		<div className="flex">
-			<div className="flex pr-2">
+		<div className="flex items-center gap-1">
+			<div>
 				{type === "comments" ? (
-					<FaCommentAlt className="my-auto" size="20px" />
+					<FaCommentAlt className="my-auto" size="12px" />
 				) : (
-					<FaHeart className="my-auto" size="20px" />
+					<FaHeart className="my-auto" size="12px" />
 				)}
 			</div>
-			<p className="inline-block align-middle">{count}</p>
+			<p className="inline-block align-middle text-sm">{count}</p>
 		</div>
 	);
 }

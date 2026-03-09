@@ -9,7 +9,7 @@ export default function FilterCollection() {
 	if (collections.length <= 1) return null;
 
 	return (
-		<ul className="group flex flex-col">
+		<ul className="group -mx-2 flex flex-wrap items-baseline">
 			{collections.map(collection => (
 				<FilterCollectionItem key={collection.handle} item={collection} />
 			))}

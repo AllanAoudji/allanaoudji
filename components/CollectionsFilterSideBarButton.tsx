@@ -2,8 +2,13 @@
 
 import { useCallback } from "react";
 import { useModal } from "@/lib/contexts/modal-context";
+import { cn } from "@/lib/utils";
 
-export default function CollectionsFiltersSideBarButton() {
+type Props = {
+	className?: string;
+};
+
+export default function CollectionsFiltersSideBarButton({ className }: Readonly<Props>) {
 	const { openModal } = useModal();
 
 	const handleClick = useCallback(() => {
@@ -11,9 +16,9 @@ export default function CollectionsFiltersSideBarButton() {
 	}, [openModal]);
 
 	return (
-		<div className="mb-12 flex justify-center lg:hidden">
+		<div className={cn("flex justify-center", className)}>
 			<button
-				className="hover:bg-quaternary hover:text-primary w-full cursor-pointer border px-4 py-2 tracking-wider uppercase transition"
+				className="hover:bg-quaternary hover:text-primary h-10 w-full cursor-pointer border py-2 tracking-wider uppercase transition"
 				onClick={handleClick}
 			>
 				filtres

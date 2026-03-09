@@ -22,5 +22,9 @@ export default async function WorksGallerySection() {
 		);
 	}
 
-	return <WorksGallerySectionContainer works={query.works} />;
+	return (
+		<div className="grid grid-cols-1 divide-y divide-solid">
+			<WorksGallerySectionContainer works={query.works} />
+		</div>
+	);
 }

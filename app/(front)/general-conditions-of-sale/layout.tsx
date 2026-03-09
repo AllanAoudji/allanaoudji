@@ -8,7 +8,7 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>Conditions générales de vente</Title>
-			<div className="vertical-padding">{children}</div>
+			<div>{children}</div>
 		</div>
 	);
 }

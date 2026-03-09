@@ -21,9 +21,9 @@ export default function WorkSingleContainer({ work }: Readonly<Props>) {
 	}, [resetImages, updateImages, work.gallery]);
 
 	return (
-		<div className="vertical-padding">
+		<section>
 			<WorkText text={work.text} />
 			<WorkImages images={work.gallery} />
-		</div>
+		</section>
 	);
 }

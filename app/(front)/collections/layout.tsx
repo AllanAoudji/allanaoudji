@@ -3,7 +3,6 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import CollectionsFiltersSideBarButton from "@/components/CollectionsFilterSideBarButton";
 import Filters from "@/components/Filters";
-import Grid from "@/components/Grid";
 import Title from "@/components/Title";
 
 type Props = {
@@ -14,15 +13,11 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>boutique</Title>
-			<div className="vertical-padding">
-				<CollectionsFiltersSideBarButton />
-				<Grid tag="section" type="smallest">
-					<Filters className="hidden lg:block" />
-					<ErrorBoundary errorComponent={Error}>
-						<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
-					</ErrorBoundary>
-				</Grid>
-			</div>
+			<CollectionsFiltersSideBarButton className="mb-4 sm:hidden" />
+			<Filters className="mb-4 hidden sm:block" />
+			<ErrorBoundary errorComponent={Error}>
+				<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
+			</ErrorBoundary>
 		</div>
 	);
 }

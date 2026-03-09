@@ -8,8 +8,8 @@ type Props = {
 export default function Filters({ className }: Readonly<Props>) {
 	return (
 		<div className={cn(className)}>
-			<Filter className="mb-16" type="collections" />
-			<Filter type="ordering" />
+			<Filter type="collections" />
+			{/* <Filter type="ordering" /> */}
 		</div>
 	);
 }

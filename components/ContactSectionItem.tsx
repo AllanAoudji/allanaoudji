@@ -12,7 +12,7 @@ export default function ContactSectionItem({ className, contact }: Readonly<Prop
 			<h3 className="block text-xl font-bold uppercase">{contact.title}</h3>
 			<a
 				className={cn(
-					"nav-hover animation flex text-xl italic",
+					"nav-hover flex text-xl italic",
 					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 				)}
 				href={contact.url}

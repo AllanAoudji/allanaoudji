@@ -1,8 +1,8 @@
 import { getProductRecommendations } from "@/lib/shopify";
 import { cn } from "@/lib/utils";
 import Grid from "./Grid";
+import ProductLink from "./ProductLink";
 import ProductRelatedContainer from "./ProductRelatedContainer";
-import ProductRelatedItem from "./ProductRelatedItem";
 
 type Props = {
 	className?: string;
@@ -18,9 +18,9 @@ export default async function ProductRelated({ className, id }: Readonly<Props>)
 
 	return (
 		<ProductRelatedContainer className={cn(className)}>
-			<Grid tag="ul">
+			<Grid className="md:grid-cols-4" tag="ul">
 				{relatedProducts.slice(0, 4).map(product => (
-					<ProductRelatedItem key={product.id} product={product} />
+					<ProductLink key={product.id} product={product} />
 				))}
 			</Grid>
 		</ProductRelatedContainer>

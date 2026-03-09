@@ -6,5 +6,5 @@ type props = {
 };
 
 export default function SubTitle({ children, className }: Readonly<props>) {
-	return <h2 className={cn("text-xl tracking-wider uppercase", className)}>{children}</h2>;
+	return <h2 className={cn("mb-4 text-lg tracking-wider uppercase", className)}>{children}</h2>;
 }

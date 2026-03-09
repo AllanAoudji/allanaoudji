@@ -7,11 +7,11 @@ type Props = {
 
 export default function InstagramSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<section className="vertical-padding section-separator bg-quaternary text-primary">
+		<section className="vertical-padding bg-quaternary text-primary">
 			<div className="padding-container">
-				<SubTitle className="mb-12 text-center">Instagram</SubTitle>
+				<SubTitle>Instagram</SubTitle>
 				<a className="block" href="https://www.instagram.com/allanaoudji/" target="_blank">
-					<Grid>{children}</Grid>
+					<Grid type="smallest">{children}</Grid>
 				</a>
 			</div>
 		</section>

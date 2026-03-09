@@ -8,7 +8,7 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>À propos</Title>
-			<div className="vertical-padding">{children}</div>
+			<section>{children}</section>
 		</div>
 	);
 }

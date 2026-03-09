@@ -27,7 +27,5 @@ export default function WorksGallerySectionContainer({ works }: Readonly<Props>)
 		};
 	}, [resetImages, updateImages, works]);
 
-	return works.map((work, i) => (
-		<WorksGallerySectionContainerItem key={work._id} separator={works.length - 1 !== i} work={work} />
-	));
+	return works.map(work => <WorksGallerySectionContainerItem key={work._id} work={work} />);
 }

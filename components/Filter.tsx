@@ -9,8 +9,7 @@ type Props = {
 
 export default function Filter({ className, type }: Readonly<Props>) {
 	return (
-		<nav className={cn(className)}>
-			<h4 className="pb-2 text-xs tracking-wide capitalize">{type}</h4>
+		<nav className={cn("flex", className)}>
 			{type === "collections" ? <FilterCollection /> : <FilterOrdering />}
 		</nav>
 	);
