@@ -1,41 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
+import { useCallback } from "react";
+import { useModal } from "@/lib/contexts/modal-context";
 import { cn } from "@/lib/utils";
-import NavBarHamburgerMenu from "./NavBarHamburgerMenu";
 
 type Props = {
 	className?: string;
 };
 
 export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
-	const { width } = useWindowDimensions();
-	const [open, setOpen] = useState<boolean>(false);
-
-	const setIsClose = useCallback(() => {
-		setOpen(false);
-	}, []);
-	const setIsOpen = useCallback(() => {
-		setOpen(true);
-	}, []);
-
-	useEffect(() => {
-		if (open) {
-			document.documentElement.style.overflow = "hidden";
-		} else {
-			document.documentElement.style.overflow = "";
-		}
-		return () => {
-			document.documentElement.style.overflow = "";
-		};
-	}, [open]);
-
-	useEffect(() => {
-		if (!width || (width >= 640 && open)) {
-			setIsClose();
-		}
-	}, [open, setIsClose, width]);
+	const { openModal } = useModal();
+	const handClick = useCallback(() => {
+		openModal("menu");
+	}, [openModal]);
 
 	return (
 		<>
@@ -45,7 +22,7 @@ export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
 						"h-20 cursor-pointer pr-4 text-sm font-black uppercase",
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 					)}
-					onClick={setIsOpen}
+					onClick={handClick}
 				>
 					<span
 						className={cn(
@@ -59,7 +36,6 @@ export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
 					</span>
 				</button>
 			</div>
-			<NavBarHamburgerMenu open={open} setIsClose={setIsClose} />
 		</>
 	);
 }

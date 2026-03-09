@@ -8,7 +8,7 @@ type Props = {
 
 export default function FiltersModal({ onCloseAction, open }: Readonly<Props>) {
 	return (
-		<DrawerModal onCloseAction={onCloseAction} open={open} position="left">
+		<DrawerModal closeOn="lg" onCloseAction={onCloseAction} open={open} position="left">
 			<Filters />
 		</DrawerModal>
 	);

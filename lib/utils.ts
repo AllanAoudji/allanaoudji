@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
 import Product from "@/types/product";
 
@@ -21,6 +22,22 @@ export function convertCurrencyCode(currencyCode: string): string {
 			return currencyCode;
 	}
 }
+
+export const convertMediaQuery = (mediaQuery: MediaQuery): number => {
+	switch (mediaQuery) {
+		default:
+		case "sm":
+			return 640;
+		case "md":
+			return 768;
+		case "lg":
+			return 1024;
+		case "xl":
+			return 1280;
+		case "2xl":
+			return 1536;
+	}
+};
 
 export function createUrl(
 	pathname: string,
