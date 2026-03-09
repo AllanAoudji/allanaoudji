@@ -6,21 +6,34 @@ import { cn } from "@/lib/utils";
 
 type Props = {
 	className?: string;
+	color?: "dark" | "light";
+	type?: "open" | "close";
 };
 
-export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
-	const { openModal } = useModal();
+export default function NavBarHamburgerButton({
+	className,
+	color = "dark",
+	type = "open",
+}: Readonly<Props>) {
+	const { openModal, closeModal } = useModal();
 	const handClick = useCallback(() => {
+		if (type === "close") {
+			closeModal();
+			return;
+		}
 		openModal("menu");
-	}, [openModal]);
+	}, [closeModal, openModal, type]);
 
 	return (
 		<>
 			<div className={cn(className)}>
 				<button
 					className={cn(
-						"h-20 cursor-pointer pr-4 text-sm font-black uppercase",
+						"text-quaternary h-20 cursor-pointer pr-4 text-sm font-black uppercase",
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
+						{
+							"text-primary": color === "light",
+						},
 					)}
 					onClick={handClick}
 				>
@@ -30,9 +43,12 @@ export default function NavBarHamburgerButton({ className }: Readonly<Props>) {
 							"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 							"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 							"after:origin-right after:scale-x-0",
+							{
+								"after:bg-primary": color === "light",
+							},
 						)}
 					>
-						menu
+						{type === "open" ? "menu" : "fermer"}
 					</span>
 				</button>
 			</div>
