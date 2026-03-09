@@ -10,6 +10,8 @@
 	--color-quaternary: #1e3142;
 
 	--font-gopher: "gopher";
+
+	--spacing-header: 64px;
 }
 
 @layer utilities {
@@ -18,8 +20,5 @@
 	}
 	.vertical-padding {
 		@apply pt-16 pb-20;
-	}
-	.header-height {
-		@apply h-16;
 	}
 }

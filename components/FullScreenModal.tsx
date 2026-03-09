@@ -37,7 +37,7 @@ export default function FullscreenModal({
 		<AnimatePresence>
 			{open && (
 				<motion.div
-					className={cn("bg-primary fixed top-16 left-0 z-50 h-full w-full shadow-xl")}
+					className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
 					initial={{ x: "-100%" }}
 					animate={{ x: 0 }}
 					exit={{ x: "-100%" }}
