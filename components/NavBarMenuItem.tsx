@@ -29,10 +29,14 @@ export default function NavBarMenuItem({
 	}, [activeSegment, isActiveSegment]);
 
 	return (
-		<li className="block">
+		<li
+			className={cn("block", {
+				"w-full": type === "vertical",
+			})}
+		>
 			<Link
 				className={cn(
-					"text-quaternary text-md flex items-center py-0.5 pr-4 font-black uppercase",
+					"text-quaternary text-md flex items-center py-0.5 font-bold uppercase",
 					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
 					{
 						"h-header px-2 py-0": type === "horizontal",
@@ -51,7 +55,7 @@ export default function NavBarMenuItem({
 						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						{
-							"pb-1 text-sm": type === "horizontal",
+							"py-1 text-sm": type === "horizontal",
 							"after:bg-primary": color === "light",
 							"after:origin-left after:scale-x-100": isActive,
 							"after:origin-right after:scale-x-0": !isActive,

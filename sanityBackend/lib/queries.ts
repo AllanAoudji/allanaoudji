@@ -1,10 +1,21 @@
 import { defineQuery } from "next-sanity";
 import { client } from "./client";
-import { CONTACTS_QUERYResult, WORK_QUERYResult, WORKS_QUERYResult } from "@/sanity/types";
+import {
+	BANNET_QUERYResult,
+	CONTACTS_QUERYResult,
+	WORK_QUERYResult,
+	WORKS_QUERYResult,
+} from "@/sanity/types";
 
 /*-----------------------------------
 -- Queries --------------------------
 -----------------------------------*/
+
+const BANNET_QUERY = defineQuery(`
+  *[_type == "settings"][0]{
+    banner
+  }
+`);
 
 const CONTACTS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
@@ -78,6 +89,10 @@ const WORK_QUERY = defineQuery(`
 /*-----------------------------------
 -- Fetchs ---------------------------
 -----------------------------------*/
+
+export const getBanner = () => {
+	return client.fetch<BANNET_QUERYResult>(BANNET_QUERY);
+};
 
 export const getContacts = () => {
 	return client.fetch<CONTACTS_QUERYResult>(CONTACTS_QUERY);

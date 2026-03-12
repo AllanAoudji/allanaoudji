@@ -24,7 +24,7 @@ export default function NavBarHamburgerButton({ className, color = "dark" }: Rea
 			<div className={cn(className)}>
 				<button
 					className={cn(
-						"text-quaternary h-header cursor-pointer pr-4 text-sm font-black uppercase",
+						"text-quaternary h-header cursor-pointer pr-4 text-sm font-bold uppercase",
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 						{
 							"text-primary": color === "light",
@@ -34,7 +34,7 @@ export default function NavBarHamburgerButton({ className, color = "dark" }: Rea
 				>
 					<span
 						className={cn(
-							"relative pb-1 transition-opacity duration-300",
+							"relative py-1 transition-opacity duration-300",
 							"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 							"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 							"after:origin-right after:scale-x-0",
