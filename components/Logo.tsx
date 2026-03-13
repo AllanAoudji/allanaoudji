@@ -20,7 +20,7 @@ const logoPath = (type?: Type, color?: Color) => {
 			return color === "dark" ? "/images/logo-large-dark.png" : "/images/logo-large-light.png";
 		default:
 		case "square":
-			return color === "dark" ? "/images/logo-dark.png" : "logo-light.png";
+			return color === "dark" ? "/images/logo-square-dark.png" : "logo-square-light.png";
 	}
 };
 
