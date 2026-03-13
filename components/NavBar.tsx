@@ -10,7 +10,7 @@ export default function NavBar() {
 				<Logo className="hidden justify-self-start sm:block [&_a]:pr-6" />
 				<NavBarHamburgerButton className="justify-self-start sm:hidden" />
 
-				<Logo className="justify-self-center sm:hidden [&_a]:px-6" type="large" />
+				<Logo className="justify-self-center sm:hidden" type="large" />
 				<NavBarMenu className="hidden justify-self-center sm:flex" />
 
 				<CartButton className="justify-self-end" />

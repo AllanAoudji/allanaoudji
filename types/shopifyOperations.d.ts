@@ -84,6 +84,12 @@ export type ShopifyPagesOperation = {
 	};
 };
 
+export type ShopifyPopularProductsOperation = {
+	data: {
+		products: Connection<ShopifyProduct>;
+	};
+};
+
 export type ShopifyProductOperation = {
 	data: {
 		product: ShopifyProduct;

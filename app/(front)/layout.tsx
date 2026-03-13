@@ -4,8 +4,8 @@ import { CartFormProvider } from "@/lib/contexts/cartForm-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
-import CollectionsDispenser from "@/components/CollectionsDispenser";
 import Footer from "@/components/Footer";
+import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
 import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
 import "@/app/globals.css";
@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<Suspense fallback={<div>...loading</div>}>
 					<CartDispenser>
-						<CollectionsDispenser>
+						<LocalShopifyDispenser>
 							<ModalProvider>
 								<LightboxProvider>
 									<CartFormProvider>
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 									</CartFormProvider>
 								</LightboxProvider>
 							</ModalProvider>
-						</CollectionsDispenser>
+						</LocalShopifyDispenser>
 					</CartDispenser>
 				</Suspense>
 				<Footer />

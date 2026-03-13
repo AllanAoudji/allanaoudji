@@ -1,6 +1,6 @@
 "use client";
 
-import { useCollections } from "@/lib/contexts/collections-context";
+import { useLocalShopify } from "@/lib/contexts/localShopify-context";
 import { cn } from "@/lib/utils";
 import FilterCollectionItem from "./FilterCollectionItem";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function FilterCollection({ direction = "row" }: Readonly<Props>) {
-	const { collections } = useCollections();
+	const { collections } = useLocalShopify();
 
 	if (collections.length <= 1) return null;
 
@@ -21,7 +21,7 @@ export default function FilterCollection({ direction = "row" }: Readonly<Props>)
 			})}
 		>
 			{collections.map(collection => (
-				<FilterCollectionItem direction={direction} key={collection.handle} item={collection} />
+				<FilterCollectionItem direction={direction} item={collection} key={collection.handle} />
 			))}
 		</ul>
 	);

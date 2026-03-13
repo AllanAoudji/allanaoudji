@@ -15,6 +15,7 @@ import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/colle
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
+	getPopularProductsQuery,
 	getProductQuery,
 	getProductRecommendationsQuery,
 	getProductsQuery,
@@ -38,6 +39,7 @@ import {
 	ShopifyMenuOperation,
 	ShopifyPageOperation,
 	ShopifyPagesOperation,
+	ShopifyPopularProductsOperation,
 	ShopifyProductOperation,
 	ShopifyProductRecommendationsOperation,
 	ShopifyProductsOperation,
@@ -352,6 +354,16 @@ export async function getPages(): Promise<ShopifyPage[]> {
 	});
 
 	return removeEdgesAndNodes(res.body.data.pages);
+}
+
+export async function getPopularProducts(): Promise<Product[]> {
+	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
+		cache: "no-store",
+		query: getPopularProductsQuery,
+		tags: [TAGS.products],
+	});
+
+	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {

@@ -1,5 +1,18 @@
 import productFragment from "../fragments/product";
 
+export const getPopularProductsQuery = /* GraphQL */ `
+	query getPopularProducts($first: Int = 4) {
+		products(sortKey: BEST_SELLING, first: $first) {
+			edges {
+				node {
+					...product
+				}
+			}
+		}
+	}
+	${productFragment}
+`;
+
 export const getProductsQuery = /* GraphQL */ `
 	query getProducts($sortKey: ProductSortKeys, $reverse: Boolean, $query: String, $first: Int) {
 		products(sortKey: $sortKey, reverse: $reverse, query: $query, first: $first) {

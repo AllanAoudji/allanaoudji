@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MouseEventHandler } from "react";
 import { cn, getProductDefaultVariant } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import ProductPrice from "./ProductPrice";
@@ -7,15 +8,17 @@ import Product from "@/types/product";
 type Props = {
 	className?: string;
 	product: Product;
+	onClick?: MouseEventHandler<HTMLAnchorElement>;
 };
 
-export default function ProductLink({ className, product }: Readonly<Props>) {
+export default function ProductLink({ className, product, onClick }: Readonly<Props>) {
 	const hasSecondImage = product.images.length > 2;
 
 	return (
 		<Link
 			className={cn("group", className)}
 			href={`/products/${product.handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`}
+			onClick={onClick}
 		>
 			<div
 				className={cn("relative mb-1.5", {
