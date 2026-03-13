@@ -6,24 +6,24 @@ type Props = {
 	asHome?: boolean;
 	className?: string;
 	color?: "dark" | "light";
-	type?: "vertical" | "horizontal";
+	direction?: "column" | "row";
 };
 
 export default function NavBarMenu({
 	asHome = false,
 	className,
 	color,
-	type = "horizontal",
+	direction = "row",
 }: Readonly<Props>) {
 	return (
 		<ul
 			className={cn(
 				"group flex w-full items-center justify-center",
-				{ "flex-col items-start": type === "vertical" },
+				{ "flex-col items-start": direction === "column" },
 				className,
 			)}
 		>
-			{asHome && <NavBarMenuItem color={color} href="/" title="home" type={type} />}
+			{asHome && <NavBarMenuItem color={color} href="/" title="home" direction={direction} />}
 			{HEAD_MENU.map(menu => (
 				<NavBarMenuItem
 					activeSegment={menu.activeSegment}
@@ -31,7 +31,7 @@ export default function NavBarMenu({
 					href={menu.href}
 					key={menu.href}
 					title={menu.title}
-					type={type}
+					direction={direction}
 				/>
 			))}
 		</ul>

@@ -2,7 +2,7 @@ import Error from "../error";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import CollectionsFiltersSideBarButton from "@/components/CollectionsFilterSideBarButton";
-import Filters from "@/components/Filters";
+import Filter from "@/components/Filter";
 import Title from "@/components/Title";
 
 type Props = {
@@ -14,7 +14,7 @@ export default function Layout({ children }: Readonly<Props>) {
 		<div className="padding-container vertical-padding">
 			<Title>boutique</Title>
 			<CollectionsFiltersSideBarButton className="mb-4 sm:hidden" />
-			<Filters className="mb-4 hidden sm:block" />
+			<Filter className="mb-4 hidden sm:block" type="collections" />
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<div>...loading products</div>}>{children}</Suspense>
 			</ErrorBoundary>

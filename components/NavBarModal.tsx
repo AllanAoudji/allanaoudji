@@ -14,7 +14,7 @@ export default function NavBarModal({ onCloseAction, open }: Readonly<Props>) {
 			className="flex flex-col items-stretch justify-end"
 			closeOn="sm"
 		>
-			<NavBarMenu asHome={true} className="padding-container pb-16" type="vertical" />
+			<NavBarMenu asHome={true} className="padding-container pb-16" direction="column" />
 		</FullscreenModal>
 	);
 }

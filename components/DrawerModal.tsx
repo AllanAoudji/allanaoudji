@@ -10,6 +10,7 @@ import MediaQuery from "@/types/MediaQuery";
 
 type Props = {
 	children: ReactNode;
+	className?: string;
 	closeOn?: MediaQuery;
 	onCloseAction: () => void;
 	open: boolean;
@@ -18,6 +19,7 @@ type Props = {
 
 export default function DrawerModal({
 	children,
+	className,
 	closeOn,
 	onCloseAction,
 	open,
@@ -63,7 +65,7 @@ export default function DrawerModal({
 							ease: [0.32, 0.72, 0, 1],
 						}}
 					>
-						<div className="overflow-y-auto">{children}</div>
+						<div className={cn("overflow-y-auto", className)}>{children}</div>
 					</motion.div>
 				</>
 			)}
