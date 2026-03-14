@@ -14,10 +14,11 @@ export default function CartCheckout({ className = "" }: Readonly<Props>) {
 	const { pending } = useFormStatus();
 
 	return (
-		<form action={formAction} className={cn(className)}>
+		<form action={formAction} className={cn("bg-red-400", className)}>
 			<button
 				className={cn(
-					"bg-quaternary text-primary hover:bg-primary hover:text-quaternary w-80 cursor-pointer border px-4 py-3 font-bold tracking-wider transition",
+					"bg-quaternary border-qua text-primary hover:bg-primary hover:text-quaternary block w-full border px-8 py-3 text-center tracking-wider uppercase transition-colors",
+
 					{
 						"cursor-not-allowed": pending,
 					},

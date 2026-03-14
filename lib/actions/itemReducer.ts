@@ -34,7 +34,6 @@ export default async function itemReducer(
 		type: "ADD" | "DELETE" | "UPDATE";
 	}>
 > {
-	console.log("test");
 	let cartId: string | undefined;
 	try {
 		cartId = (await cookies()).get("cartId")?.value;

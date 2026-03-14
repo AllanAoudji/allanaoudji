@@ -8,7 +8,7 @@ type Props = {
 
 export default function CartModal({ onCloseAction, open }: Readonly<Props>) {
 	return (
-		<DrawerModal className="w-lg max-w-screen" onCloseAction={onCloseAction} open={open}>
+		<DrawerModal className="w-xl max-w-screen" onCloseAction={onCloseAction} open={open}>
 			<Cart />
 		</DrawerModal>
 	);

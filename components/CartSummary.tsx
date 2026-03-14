@@ -10,18 +10,14 @@ type Props = {
 
 export default function CartSummary({ cart, className = "" }: Readonly<Props>) {
 	return (
-		<div className={cn("mt-16", className)}>
-			<div>
-				<div className="flex justify-center gap-4 pb-1 text-sm md:justify-end">
-					<h3 className="font-bold tracking-wider">Nombre de produits</h3>
-					<p>{cart.totalQuantity}</p>
-				</div>
-				<div className="flex justify-center gap-4 md:justify-end">
-					<h3 className="text-lg font-bold tracking-wider">Total estimé</h3>
-					<ProductPrice className="text-xl" price={cart.cost.totalAmount} />
+		<div className={cn(className)}>
+			<div className="pb-4 text-sm font-bold">
+				<div className="flex justify-between">
+					<h3 className="tracking-wider">Total estimé</h3>
+					<ProductPrice price={cart.cost.totalAmount} />
 				</div>
 			</div>
-			<CartCheckout className="mt-8 flex justify-center md:justify-end" />
+			<CartCheckout />
 		</div>
 	);
 }

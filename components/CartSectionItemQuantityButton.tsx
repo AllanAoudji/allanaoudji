@@ -11,7 +11,6 @@ type Props = {
 	isPending: boolean;
 	item: CartItem;
 	optimisticUpdate: (_merchandiseId: string, _updateType: UpdateCartType) => void;
-	size?: number;
 	type: Exclude<UpdateCartType, "delete">;
 };
 
@@ -20,7 +19,6 @@ export default function CartSectionItemQuantityButton({
 	isPending,
 	item,
 	optimisticUpdate,
-	size = 10,
 	type,
 }: Readonly<Props>) {
 	const { updateAction, setUpdateProductPending } = useCartForm();
@@ -56,11 +54,10 @@ export default function CartSectionItemQuantityButton({
 	}, [isPending, item, setUpdateProductPending]);
 
 	return (
-		<form action={handleAction} className={`h-${size} w-${size}`}>
+		<form action={handleAction} className="group">
 			<button
 				aria-label={type === "plus" ? "Increase item quantity" : "Reduce item quantity"}
 				className={cn(
-					`h-${size} w-${size} flex items-center justify-center text-xl font-bold`,
 					{
 						"font-normal opacity-50": isPending,
 					},
@@ -70,7 +67,9 @@ export default function CartSectionItemQuantityButton({
 				onClick={handleClick}
 				type="submit"
 			>
-				<span>{text}</span>
+				<div className="flex h-4 w-4 origin-center items-center justify-center transition-transform group-hover:rotate-180">
+					<span>{text}</span>
+				</div>
 			</button>
 		</form>
 	);
