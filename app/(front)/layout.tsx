@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CartFormProvider } from "@/lib/contexts/cartForm-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
@@ -20,22 +19,20 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="en">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<Suspense fallback={<div>...loading</div>}>
-					<CartDispenser>
-						<LocalShopifyDispenser>
-							<ModalProvider>
+					<LocalShopifyDispenser>
+						<ModalProvider>
+							<CartDispenser>
 								<LightboxProvider>
-									<CartFormProvider>
-										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-											<NavBar />
-										</header>
+									<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+										<NavBar />
+									</header>
 
-										<main className="pt-header mb-auto">{children}</main>
-										<Modals />
-									</CartFormProvider>
+									<main className="pt-header mb-auto">{children}</main>
+									<Modals />
 								</LightboxProvider>
-							</ModalProvider>
-						</LocalShopifyDispenser>
-					</CartDispenser>
+							</CartDispenser>
+						</ModalProvider>
+					</LocalShopifyDispenser>
 				</Suspense>
 				<Footer />
 			</body>
@@ -44,18 +41,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// Set logic for warning/error message when UPDATE/DELETE cart.line
-// Show error/warning message on cart UI
-// Show title and price on "you may like..." products
-// Show second image (if exist) when hover product link
-// Instagram 6 last posts
-// Change navmodal style
-// ✅ Add same header navigation animation to contact part
-// ✅ Add same header navigation animation to shop collection
-// ✅ Add same header navigation animation to footer header
-// Restyle cart modal (border not working anymore)
-// Add same header navigation animation to cart modal's "continuer les achats" button
-// Navbar modal "panier" link = add quantity like panier^22
-// panier as modal
-
-// Create logo large
+// Error/warning messages styles
+// Product pages
+// infinite loader
+// pictogram + - x warning error
+// loading page
+// error handler
+// loading module

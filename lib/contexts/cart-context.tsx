@@ -14,9 +14,10 @@ type CartAction =
 	  }
 	| { type: "ADD_ITEM"; payload: { variant: ProductVariant; product: Product; quantity: number } };
 type CartContextCart = {
+	addCartItem: (_product: Product, _variant: ProductVariant, _quantity: number) => void;
 	cart: Cart | undefined;
-	updateCartItem: (_merchandiseId: string, _updateType: UpdateCartType, _quantity?: number) => void;
-	addCartItem: (_variant: ProductVariant, _product: Product, _quantity: number) => void;
+	removeCartItem: (_merchandiseId: string) => void;
+	updateCartItem: (_merchandiseId: string, _updateType: UpdateCartType) => void;
 };
 type Props = {
 	children: React.ReactNode;
@@ -34,12 +35,10 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
 
 	switch (action.type) {
 		case "UPDATE_ITEM": {
-			const { merchandiseId, updateType, quantity } = action.payload;
+			const { merchandiseId, updateType } = action.payload;
 			const updatedLines = currentCart.lines
 				.map(item =>
-					item.merchandise.id === merchandiseId
-						? updateReducerCartItem(item, updateType, quantity)
-						: item,
+					item.merchandise.id === merchandiseId ? updateReducerCartItem(item, updateType) : item,
 				)
 				.filter(Boolean) as CartItem[];
 			if (updatedLines.length === 0) {
@@ -97,7 +96,7 @@ function createOrUpdateCartItem(
 	const totalAmount = calculateItemCost(newQuantity, variant.price.amount);
 
 	return {
-		id: existingItem?.id,
+		id: existingItem?.id ?? `optimistic-${variant.id}-${Date.now()}`,
 		quantity: newQuantity,
 		cost: {
 			totalAmount: {
@@ -137,20 +136,10 @@ function updatedCartTotals(lines: CartItem[]): Pick<Cart, "totalQuantity" | "cos
 	};
 }
 
-function updateReducerCartItem(
-	item: CartItem,
-	updateType: UpdateCartType,
-	quantity?: number,
-): CartItem | null {
+function updateReducerCartItem(item: CartItem, updateType: UpdateCartType): CartItem | null {
 	if (updateType === "delete") return null;
 	let newQuantity: number;
 	switch (updateType) {
-		case "update":
-			if (!quantity) {
-				return item;
-			}
-			newQuantity = quantity;
-			break;
 		case "plus":
 			newQuantity = item.quantity + 1;
 			break;
@@ -183,22 +172,29 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	const initialCart = use(cartPromise);
 	const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
 
-	const updateCartItem = useCallback(
-		(merchandiseId: string, updateType: UpdateCartType, quantity?: number) => {
+	const addCartItem = useCallback(
+		(product: Product, variant: ProductVariant, quantity: number) => {
 			updateOptimisticCart({
-				type: "UPDATE_ITEM",
-				payload: { merchandiseId, updateType, quantity },
+				type: "ADD_ITEM",
+				payload: { product, quantity, variant },
 			});
 		},
 		[updateOptimisticCart],
 	);
-
-	const addCartItem = useCallback(
-		(variant: ProductVariant | undefined, product: Product, quantity: number) => {
-			if (!variant) return;
+	const removeCartItem = useCallback(
+		(merchandiseId: string) => {
 			updateOptimisticCart({
-				type: "ADD_ITEM",
-				payload: { variant, product, quantity },
+				type: "UPDATE_ITEM",
+				payload: { merchandiseId, updateType: "delete" },
+			});
+		},
+		[updateOptimisticCart],
+	);
+	const updateCartItem = useCallback(
+		(merchandiseId: string, updateType: UpdateCartType) => {
+			updateOptimisticCart({
+				type: "UPDATE_ITEM",
+				payload: { merchandiseId, updateType },
 			});
 		},
 		[updateOptimisticCart],
@@ -206,11 +202,12 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 
 	const value = useMemo(
 		() => ({
-			cart: optimisticCart,
-			updateCartItem,
 			addCartItem,
+			cart: optimisticCart,
+			removeCartItem,
+			updateCartItem,
 		}),
-		[optimisticCart, addCartItem, updateCartItem],
+		[optimisticCart, addCartItem, updateCartItem, removeCartItem],
 	);
 
 	return <cartContext.Provider value={value}>{children}</cartContext.Provider>;

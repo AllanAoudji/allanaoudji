@@ -1,8 +1,7 @@
 "use client";
 
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "react";
-import { useCart } from "@/lib/contexts/cart-context";
-import { useCartForm } from "@/lib/contexts/cartForm-context";
+import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { cn } from "@/lib/utils";
 import ProductCartAdd from "./ProductCartAdd";
@@ -25,12 +24,10 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	// --------------------------------
 	const { variants } = product;
 
-	const { addCartItem } = useCart();
-	const { addAction } = useCartForm();
 	const { state } = useProduct();
+	const { addItem, isPending, productMessage, resetProductMessage } = useCartActions();
 
 	const [quantity, setQuantity] = useState<number | string>(1);
-	const [showMessage, setShowMessage] = useState<boolean>(false);
 
 	// --------------------------------
 	// ------------ variant -----------
@@ -179,17 +176,12 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	// --------------------------------
 	// ------------ action ------------
 	// --------------------------------
-	const actionWithVariant = useMemo(() => {
-		return addAction(selectedVariantId, finalQuantity);
-	}, [addAction, finalQuantity, selectedVariantId]);
 
 	const cartAction = useCallback(() => {
 		if (!finalVariant) return;
 		resetQuantity();
-		addCartItem(finalVariant, product, finalQuantity);
-		actionWithVariant();
-		setShowMessage(true);
-	}, [addCartItem, actionWithVariant, finalQuantity, finalVariant, product, resetQuantity]);
+		addItem(finalVariant, product, finalQuantity);
+	}, [finalQuantity, finalVariant, product, resetQuantity, addItem]);
 
 	const onVariantClick = useCallback(() => {
 		resetQuantity();
@@ -197,9 +189,9 @@ export default function ProductCart({ className, product, variantsInventory }: R
 
 	useEffect(() => {
 		return () => {
-			setShowMessage(false);
+			resetProductMessage();
 		};
-	}, []);
+	}, [resetProductMessage]);
 
 	// --------------------------------
 	// ------------ return ------------
@@ -215,6 +207,7 @@ export default function ProductCart({ className, product, variantsInventory }: R
 			<ProductPrice className="mb-8" price={product.priceRange.maxVariantPrice} />
 			<ProductCartQuantity
 				className="mb-4"
+				isPending={isPending}
 				decrement={decrementQuantity}
 				disableDecrement={disableDecrementQuantity}
 				disableIncrement={disableIncrementQuantity}
@@ -226,11 +219,14 @@ export default function ProductCart({ className, product, variantsInventory }: R
 			/>
 			<ProductCartAdd
 				cartAction={cartAction}
+				isPending={isPending}
 				product={product}
 				selectedVariantId={selectedVariantId}
-				showMessage={showMessage}
 			/>
 			<ProductCartInventory className="mt-12" variantInventory={finalVariantInventory} />
+			{!!productMessage && !!finalVariant && productMessage.id === finalVariant.id && (
+				<p>{productMessage.message}</p>
+			)}
 		</div>
 	);
 }

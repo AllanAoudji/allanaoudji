@@ -1,32 +1,21 @@
 "use client";
 
-import { useActionState, useCallback } from "react";
-import removeItem from "@/lib/actions/removeItem";
+import { useCallback } from "react";
+import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { cn } from "@/lib/utils";
 import CartItem from "@/types/cartItem";
-import UpdateCartType from "@/types/updateCartType";
 
 type Props = {
 	className?: string;
-	isPending: boolean;
 	item: CartItem;
-	optimisticUpdate: (_merchandiseId: string, _updateType: UpdateCartType) => void;
 };
 
-export default function CartSectionItemQuantityDeleteButton({
-	className,
-	isPending,
-	item,
-	optimisticUpdate,
-}: Readonly<Props>) {
-	const [, formAction] = useActionState(removeItem, null);
-
-	const actionWithVariant = formAction.bind(null, item.merchandise.id);
+export default function CartSectionItemQuantityDeleteButton({ className, item }: Readonly<Props>) {
+	const { isPending, removeItem, resetCartMessage } = useCartActions();
 
 	const handleAction = useCallback(() => {
-		optimisticUpdate(item.merchandise.id, "delete");
-		actionWithVariant();
-	}, [actionWithVariant, item, optimisticUpdate]);
+		removeItem(item.merchandise.id);
+	}, [item, removeItem]);
 
 	return (
 		<form action={handleAction} className={className}>
@@ -38,6 +27,7 @@ export default function CartSectionItemQuantityDeleteButton({
 					"cursor-not-allowed": isPending,
 				})}
 				disabled={isPending}
+				onClick={resetCartMessage}
 				type="submit"
 			>
 				<span

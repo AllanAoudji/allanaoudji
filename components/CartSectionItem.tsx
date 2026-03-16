@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 import { DEFAULT_OPTION } from "@/lib/constants";
-import { useCart } from "@/lib/contexts/cart-context";
-import { useCartForm } from "@/lib/contexts/cartForm-context";
+import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useModal } from "@/lib/contexts/modal-context";
 import { cn, createUrl } from "@/lib/utils";
 import CartSectionItemQuantityButton from "./CartSectionItemQuantityButton";
@@ -21,9 +19,8 @@ type Props = {
 };
 
 export default function CartSectionItem({ item }: Readonly<Props>) {
-	const { productPending } = useCartForm();
 	const { closeModal } = useModal();
-	const { updateCartItem } = useCart();
+	const { isPending, cartMessage } = useCartActions();
 
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
 	item.merchandise.selectedOptions.forEach(({ name, value }) => {
@@ -35,16 +32,6 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 		`/products/${item.merchandise.product.handle}`,
 		new URLSearchParams(merchandiseSearchParams),
 	);
-
-	const isDeletePending = useMemo(() => {
-		return (
-			!!productPending && productPending.type === "UPDATE" && productPending.id === item.merchandise.id
-		);
-	}, [item, productPending]);
-
-	const isPending = useMemo(() => {
-		return !!productPending && productPending.isPending;
-	}, [productPending]);
 
 	return (
 		<div className="grid grid-cols-3 gap-4">
@@ -70,14 +57,9 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 								item.merchandise.selectedOptions.map(selectedOption => selectedOption.value).join("/")}
 						</p>
 					</Link>
+					{!!cartMessage && cartMessage.id === item.merchandise.id && <p>{cartMessage.message}</p>}
 					<div className="flex items-center text-sm">
-						<CartSectionItemQuantityButton
-							className="cursor-pointer pr-2"
-							isPending={isPending}
-							item={item}
-							optimisticUpdate={updateCartItem}
-							type="minus"
-						/>
+						<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
 						<div
 							className={cn("w-6 text-center font-bold", {
 								"opacity-50": isPending,
@@ -87,30 +69,16 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 						</div>
 						<CartSectionItemQuantityButton
 							className="cursor-pointer pl-2 text-right"
-							isPending={isPending}
 							item={item}
-							optimisticUpdate={updateCartItem}
 							type="plus"
 						/>
 					</div>
 				</div>
 				<div className="flex flex-col items-end justify-between pb-1">
 					<ProductPrice className="text-sm" price={item.cost.totalAmount} />
-					<CartSectionItemQuantityDeleteButton
-						className="text-sm"
-						isPending={isDeletePending}
-						item={item}
-						optimisticUpdate={updateCartItem}
-					/>
+					<CartSectionItemQuantityDeleteButton className="text-sm" item={item} />
 				</div>
 			</div>
 		</div>
-		// <tr key={item.merchandise.id} className="hover:bg-secondary border-t last:border-b">
-		// 	<CartSectionItemProduct item={item} />
-		// 	<CartSectionItemQuantityContainer>
-		// 		<CartSectionItemQuantity item={item} />
-		// 	</CartSectionItemQuantityContainer>
-		// 	<CartSectionItemPrice isPending={isPending} item={item} />
-		// </tr>
 	);
 }

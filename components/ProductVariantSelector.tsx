@@ -2,6 +2,7 @@
 
 import Form from "next/form";
 import { useCallback, useMemo } from "react";
+import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { useUpdateURL } from "@/lib/hooks/useUpdateUrl";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ export default function ProductVariantSelector({
 	variants,
 }: Readonly<Props>) {
 	const { state, updateOption } = useProduct();
+	const { resetProductMessage } = useCartActions();
 	const updateURL = useUpdateURL();
 
 	const combinations: Combination[] = useMemo(
@@ -50,7 +52,8 @@ export default function ProductVariantSelector({
 
 	const handleClick = useCallback(() => {
 		if (onClick) onClick();
-	}, [onClick]);
+		resetProductMessage();
+	}, [onClick, resetProductMessage]);
 
 	if (hasNoOptionsOrJustOneOption) return null;
 

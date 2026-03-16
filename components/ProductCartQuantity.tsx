@@ -6,6 +6,7 @@ import { cn, getLineQuantity } from "@/lib/utils";
 import ProductVariant from "@/types/productVariant";
 
 type Props = {
+	isPending: boolean;
 	className?: string;
 	decrement: () => void;
 	disableDecrement: boolean;
@@ -21,6 +22,7 @@ type Props = {
 export default function ProductCartQuantity({
 	className,
 	decrement,
+	isPending,
 	disableDecrement,
 	disableIncrement,
 	increment,
@@ -46,9 +48,9 @@ export default function ProductCartQuantity({
 			<div className={cn("border-quaternary inline-block border-2", className)}>
 				<button
 					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
-						"font-normal opacity-50": disableDecrement,
+						"font-normal opacity-50": disableDecrement || isPending,
 					})}
-					disabled={disableDecrement}
+					disabled={disableDecrement || isPending}
 					onClick={decrement}
 				>
 					-
@@ -57,17 +59,21 @@ export default function ProductCartQuantity({
 					className={cn(
 						"[appearance:textfield] text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 						`h-${size} w-${size}`,
+						{
+							"opacity-50": isPending,
+						},
 					)}
 					onBlur={onBlur}
 					onChange={onChange}
+					disabled={isPending}
 					type="number"
 					value={quantity}
 				/>
 				<button
 					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
-						"font-normal opacity-50": disableIncrement,
+						"font-normal opacity-50": disableIncrement || isPending,
 					})}
-					disabled={disableIncrement}
+					disabled={disableIncrement || isPending}
 					onClick={increment}
 				>
 					+

@@ -1,3 +1,3 @@
-type UpdateCartType = "plus" | "minus" | "delete" | "update";
+type UpdateCartType = "plus" | "minus" | "delete";
 
 export default UpdateCartType;

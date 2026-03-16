@@ -208,8 +208,6 @@ export async function addToCart(
 	variantId: string,
 	quantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
-	// Deux requêtes = fetch le cart avec l'ID
-
 	const cartBeforeMutation = await getCart(cartId);
 
 	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
@@ -473,17 +471,36 @@ export async function removeFromCart(cartId: string, lineIds: string[]): Promise
 
 export async function updateCart(
 	cartId: string,
-	lines: { id: string; merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
-	// TODO:
-	// check if quantity can be updated
+	lineId: string,
+	variantId: string,
+	quantity: number,
+): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
+	const cartBeforeMutation = await getCart(cartId);
+
+	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
+
+	const decremente = previousQuantity > quantity;
+
 	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
 		query: editCartItemMutation,
 		cache: "no-store",
-		variables: { cartId, lines },
+		variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
 	});
 
-	return reshapeCart(res.body.data.cartLinesUpdate.cart);
+	const updatedCart = reshapeCart(res.body.data.cartLinesUpdate.cart);
+	const newQuantity = getLineQuantity(updatedCart, variantId);
+	const actuallyAdded = newQuantity - previousQuantity;
+
+	return {
+		data: {
+			cart: updatedCart,
+			quantityAdded: actuallyAdded,
+		},
+		warning:
+			newQuantity < quantity && !decremente
+				? `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`
+				: undefined,
+	};
 }
 
 /* ---------------------
