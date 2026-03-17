@@ -145,6 +145,15 @@ function reshapeProducts(products: ShopifyProduct[]): Product[] {
 	return reshapedProducts;
 }
 
+const stockWarningMessage = (quantityAdded: number): string => {
+	if (!quantityAdded) {
+		return "Stock indisponible. L'article n'a pas pu être ajouté au panier";
+	}
+	if (quantityAdded === 1) return "Stock indisponible. Seulement 1 article a été ajouté au panier.";
+
+	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
+};
+
 /* ---------------------
 -- Main Fetch Function -
 ---------------------- */
@@ -229,10 +238,7 @@ export async function addToCart(
 			cart: updatedCart,
 			quantityAdded: actuallyAdded,
 		},
-		warning:
-			actuallyAdded < quantity
-				? `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`
-				: undefined,
+		warning: actuallyAdded < quantity ? stockWarningMessage(actuallyAdded) : undefined,
 	};
 }
 
@@ -500,10 +506,7 @@ export async function updateCart(
 			cart: updatedCart,
 			quantityAdded: actuallyAdded,
 		},
-		warning:
-			newQuantity < quantity && !decremente
-				? `Pas assez de stock disponible. Seulement ${actuallyAdded} article(s) ont été ajouté(s).`
-				: undefined,
+		warning: newQuantity < quantity && !decremente ? stockWarningMessage(actuallyAdded) : undefined,
 	};
 }
 

@@ -5,6 +5,7 @@ import { DEFAULT_OPTION } from "@/lib/constants";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useModal } from "@/lib/contexts/modal-context";
 import { cn, createUrl } from "@/lib/utils";
+import CartSectionItemMessage from "./CartSectionItemMessage";
 import CartSectionItemQuantityButton from "./CartSectionItemQuantityButton";
 import CartSectionItemQuantityDeleteButton from "./CartSectionItemQuantityDeleteButton";
 import ImageContainer from "./ImageContainer";
@@ -20,7 +21,7 @@ type Props = {
 
 export default function CartSectionItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
-	const { isPending, cartMessage } = useCartActions();
+	const { isPending } = useCartActions();
 
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
 	item.merchandise.selectedOptions.forEach(({ name, value }) => {
@@ -48,8 +49,8 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 					ratio="3/4"
 				/>
 			</Link>
-			<div className="col-span-2 flex justify-between">
-				<div className="flex flex-col justify-between pb-1">
+			<div className="col-span-2 flex justify-between gap-2">
+				<div className="flex grow flex-col justify-between pb-1">
 					<Link className="block" href={merchandiseUrl} onClick={closeModal}>
 						<h5 className="text-sm font-bold uppercase">{item.merchandise.product.title}</h5>
 						<p className="text-xs">
@@ -57,21 +58,23 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 								item.merchandise.selectedOptions.map(selectedOption => selectedOption.value).join("/")}
 						</p>
 					</Link>
-					{!!cartMessage && cartMessage.id === item.merchandise.id && <p>{cartMessage.message}</p>}
-					<div className="flex items-center text-sm">
-						<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
-						<div
-							className={cn("w-6 text-center font-bold", {
-								"opacity-50": isPending,
-							})}
-						>
-							<p>{item.quantity}</p>
+					<div>
+						<CartSectionItemMessage className="pb-2" item={item} />
+						<div className="flex items-center text-sm">
+							<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
+							<div
+								className={cn("w-6 text-center font-bold", {
+									"opacity-50": isPending,
+								})}
+							>
+								<p>{item.quantity}</p>
+							</div>
+							<CartSectionItemQuantityButton
+								className="cursor-pointer pl-2 text-right"
+								item={item}
+								type="plus"
+							/>
 						</div>
-						<CartSectionItemQuantityButton
-							className="cursor-pointer pl-2 text-right"
-							item={item}
-							type="plus"
-						/>
 					</div>
 				</div>
 				<div className="flex flex-col items-end justify-between pb-1">
