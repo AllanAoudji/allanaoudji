@@ -361,7 +361,11 @@ export async function getPopularProducts(): Promise<Product[]> {
 		tags: [TAGS.products],
 	});
 
-	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+	if (!res.body.data.collection) {
+		return [];
+	}
+
+	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -520,7 +524,6 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 	const isProductUpdate = productWebhooks.includes(topic);
 
 	if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
-		console.error("Invalid revalidation secret.");
 		return NextResponse.json({ status: 200 });
 	}
 

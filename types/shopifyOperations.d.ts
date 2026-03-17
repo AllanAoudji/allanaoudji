@@ -86,7 +86,9 @@ export type ShopifyPagesOperation = {
 
 export type ShopifyPopularProductsOperation = {
 	data: {
-		products: Connection<ShopifyProduct>;
+		collection: {
+			products: Connection<ShopifyProduct>;
+		};
 	};
 };
 

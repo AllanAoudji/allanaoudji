@@ -36,7 +36,7 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		throw new Error("fetch failed");
 	}
 
-	if (!products || !products.length) {
+	if (!products || !products.length || (!!handle && handle.startsWith("hidden"))) {
 		redirect("/collections");
 	}
 

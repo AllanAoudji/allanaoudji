@@ -2,10 +2,12 @@ import productFragment from "../fragments/product";
 
 export const getPopularProductsQuery = /* GraphQL */ `
 	query getPopularProducts($first: Int = 4) {
-		products(sortKey: BEST_SELLING, first: $first) {
-			edges {
-				node {
-					...product
+		collection(handle: "hidden_in-stock") {
+			products(first: $first, sortKey: BEST_SELLING) {
+				edges {
+					node {
+						...product
+					}
 				}
 			}
 		}
