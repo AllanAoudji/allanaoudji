@@ -17,7 +17,7 @@ export default function FilterCollection({ direction = "row" }: Readonly<Props>)
 		<ul
 			className={cn("group flex flex-wrap items-baseline", {
 				"flex-col": direction === "column",
-				"-mx-2": direction === "row",
+				"-mx-2 w-fit": direction === "row",
 			})}
 		>
 			{collections.map(collection => (
