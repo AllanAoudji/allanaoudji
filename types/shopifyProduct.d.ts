@@ -1,3 +1,4 @@
+import Connection from "./connection";
 import Money from "./money";
 import ProductOption from "./productOption";
 import ProductVariant from "./productVariant";
@@ -22,6 +23,7 @@ type ShopifyProduct = {
 	seo: SEO;
 	tags: string[];
 	updatedAt: string;
+	collections: Connection<{ id: string; title: string }>;
 };
 
 export default ShopifyProduct;

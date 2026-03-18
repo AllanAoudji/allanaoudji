@@ -9,7 +9,7 @@ import CartSectionItemMessage from "./CartSectionItemMessage";
 import CartSectionItemQuantityButton from "./CartSectionItemQuantityButton";
 import CartSectionItemQuantityDeleteButton from "./CartSectionItemQuantityDeleteButton";
 import ImageContainer from "./ImageContainer";
-import ProductPrice from "./ProductPrice";
+import Price from "./Price";
 import CartItem from "@/types/cartItem";
 
 type MerchandiseSearchParams = {
@@ -35,51 +35,53 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 	);
 
 	return (
-		<div className="grid grid-cols-3 gap-4">
-			<Link className="col-span-1" href={merchandiseUrl} onClick={closeModal}>
-				<ImageContainer
-					image={{
-						alt: item.merchandise.product.featuredImage.altText || item.merchandise.product.title,
-						url: item.merchandise.product.featuredImage.url,
-						width: item.merchandise.product.featuredImage.width,
-						height: item.merchandise.product.featuredImage.height,
-						lqip: null,
-					}}
-					priority={true}
-					ratio="3/4"
-				/>
-			</Link>
-			<div className="col-span-2 flex justify-between gap-2">
-				<div className="flex grow flex-col justify-between pb-1">
-					<Link className="block" href={merchandiseUrl} onClick={closeModal}>
-						<h5 className="text-sm font-bold uppercase">{item.merchandise.product.title}</h5>
-						<p className="text-xs">
-							{!!Object.keys(merchandiseSearchParams).length &&
-								item.merchandise.selectedOptions.map(selectedOption => selectedOption.value).join("/")}
-						</p>
-					</Link>
-					<div>
-						<CartSectionItemMessage className="pb-2" item={item} />
-						<div className="flex items-center text-sm">
-							<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
-							<div
-								className={cn("w-6 text-center font-bold", {
-									"opacity-50": isPending,
-								})}
-							>
-								<p>{item.quantity}</p>
+		<div>
+			<CartSectionItemMessage className="mb-2 border p-2" item={item} />
+			<div className="grid grid-cols-3 gap-4">
+				<Link className="col-span-1" href={merchandiseUrl} onClick={closeModal}>
+					<ImageContainer
+						image={{
+							alt: item.merchandise.product.featuredImage.altText || item.merchandise.product.title,
+							url: item.merchandise.product.featuredImage.url,
+							width: item.merchandise.product.featuredImage.width,
+							height: item.merchandise.product.featuredImage.height,
+							lqip: null,
+						}}
+						priority={true}
+						ratio="3/4"
+					/>
+				</Link>
+				<div className="col-span-2 flex justify-between gap-2">
+					<div className="flex grow flex-col justify-between pb-1">
+						<Link className="block" href={merchandiseUrl} onClick={closeModal}>
+							<h5 className="text-sm font-bold uppercase">{item.merchandise.product.title}</h5>
+							<p className="text-xs">
+								{!!Object.keys(merchandiseSearchParams).length &&
+									item.merchandise.selectedOptions.map(selectedOption => selectedOption.value).join("/")}
+							</p>
+						</Link>
+						<div>
+							<div className="flex items-center text-sm">
+								<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
+								<div
+									className={cn("w-6 text-center font-bold", {
+										"opacity-50": isPending,
+									})}
+								>
+									<p>{item.quantity}</p>
+								</div>
+								<CartSectionItemQuantityButton
+									className="cursor-pointer pl-2 text-right"
+									item={item}
+									type="plus"
+								/>
 							</div>
-							<CartSectionItemQuantityButton
-								className="cursor-pointer pl-2 text-right"
-								item={item}
-								type="plus"
-							/>
 						</div>
 					</div>
-				</div>
-				<div className="flex flex-col items-end justify-between pb-1">
-					<ProductPrice className="text-sm" price={item.cost.totalAmount} />
-					<CartSectionItemQuantityDeleteButton className="text-sm" item={item} />
+					<div className="flex flex-col items-end justify-between pb-1">
+						<Price className="text-sm" price={item.cost.totalAmount} />
+						<CartSectionItemQuantityDeleteButton className="text-sm" item={item} />
+					</div>
 				</div>
 			</div>
 		</div>

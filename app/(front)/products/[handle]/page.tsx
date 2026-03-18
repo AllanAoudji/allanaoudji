@@ -1,14 +1,15 @@
 import { redirect } from "next/navigation";
-import { getProduct, getProductVariantsInventory } from "@/lib/shopify";
+import { getDiscount, getProduct, getProductVariantsInventory } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
-import Grid from "@/components/Grid";
 import ProductCart from "@/components/ProductCart";
 import ProductGallery from "@/components/ProductGallery";
+import ProductPrice from "@/components/ProductPrice";
 import ProductRelated from "@/components/ProductRelated";
 import Prose from "@/components/Prose";
 import Title from "@/components/Title";
 import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
+import { DiscountNode } from "@/types/shopifyDiscount";
 
 // type MetadataProps = {
 // 	params: {
@@ -57,6 +58,7 @@ type Props = {
 export default async function Page({ params }: Readonly<Props>) {
 	let product: Product | undefined;
 	let variantsInventory: VariantInventory[];
+	let discountNode: DiscountNode[];
 
 	try {
 		const { handle } = await params;
@@ -81,18 +83,32 @@ export default async function Page({ params }: Readonly<Props>) {
 		throw new Error("fetch failed");
 	}
 
+	try {
+		discountNode = await getDiscount();
+	} catch (error) {
+		if (error instanceof Error) {
+			throw error;
+		}
+		throw new Error("fetch failed");
+	}
+
 	return (
 		<>
-			<Title>{product.title}</Title>
-			<Grid tag="section" type="small">
-				<ProductGallery className="col-span-2 mb-8 lg:col-span-3 lg:mb-0" images={product.images} />
-				<div className="col-span-2">
+			<section className="grid grid-cols-6 gap-4 lg:gap-12">
+				<ProductGallery className="col-span-6 lg:col-span-3" images={product.images} />
+				<div className="col-span-6 lg:col-span-3">
+					<Title className="mb-0">{product.title}</Title>
+					<ProductPrice product={product} />
 					{!!product.descriptionHtml && (
-						<Prose className="pb-8 lg:pb-16" html={product.descriptionHtml} />
+						<Prose className="mt-2 text-sm" html={product.descriptionHtml} />
 					)}
-					<ProductCart product={product} variantsInventory={variantsInventory} />
+					<ProductCart
+						discountNode={discountNode}
+						product={product}
+						variantsInventory={variantsInventory}
+					/>
 				</div>
-			</Grid>
+			</section>
 			<ProductRelated id={product.id} />
 		</>
 	);

@@ -4,18 +4,21 @@ import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "r
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { cn } from "@/lib/utils";
+import ProductCallbackMessage from "./ProductCallbackMessage";
 import ProductCartAdd from "./ProductCartAdd";
 import ProductCartInventory from "./ProductCartInventory";
 import ProductCartQuantity from "./ProductCartQuantity";
-import ProductPrice from "./ProductPrice";
+import ProductCartStock from "./ProductCartStock";
 import ProductVariantSelector from "./ProductVariantSelector";
 import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
+import { DiscountNode } from "@/types/shopifyDiscount";
 
 type Props = {
 	className?: string;
 	product: Product;
 	variantsInventory: VariantInventory[];
+	discountNode: DiscountNode[];
 };
 
 export default function ProductCart({ className, product, variantsInventory }: Readonly<Props>) {
@@ -25,7 +28,7 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	const { variants } = product;
 
 	const { state } = useProduct();
-	const { addItem, isPending, productMessage, resetProductMessage } = useCartActions();
+	const { addItem, isPending, resetProductMessage } = useCartActions();
 
 	const [quantity, setQuantity] = useState<number | string>(1);
 
@@ -199,34 +202,34 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	return (
 		<div className={cn(className)}>
 			<ProductVariantSelector
-				className="pb-8 lg:pb-16"
+				className="mt-16"
 				onClick={onVariantClick}
 				options={product.options}
 				variants={product.variants}
 			/>
-			<ProductPrice className="mb-8" price={product.priceRange.maxVariantPrice} />
-			<ProductCartQuantity
-				className="mb-4"
-				isPending={isPending}
-				decrement={decrementQuantity}
-				disableDecrement={disableDecrementQuantity}
-				disableIncrement={disableIncrementQuantity}
-				increment={incrementQuantity}
-				onBlur={onBlurQuantity}
-				onChange={onChangeQuantity}
-				quantity={quantity}
-				variant={finalVariant}
-			/>
-			<ProductCartAdd
-				cartAction={cartAction}
-				isPending={isPending}
-				product={product}
-				selectedVariantId={selectedVariantId}
-			/>
-			<ProductCartInventory className="mt-12" variantInventory={finalVariantInventory} />
-			{!!productMessage && !!finalVariant && productMessage.id === finalVariant.id && (
-				<p>{productMessage.message}</p>
-			)}
+			<ProductCartStock className="mt-16 mb-2" variant={finalVariant} />
+			<div className="flex flex-col gap-2 sm:flex-row">
+				<ProductCartQuantity
+					isPending={isPending}
+					decrement={decrementQuantity}
+					disableDecrement={disableDecrementQuantity}
+					disableIncrement={disableIncrementQuantity}
+					increment={incrementQuantity}
+					onBlur={onBlurQuantity}
+					onChange={onChangeQuantity}
+					quantity={quantity}
+					variant={finalVariant}
+				/>
+				<ProductCartAdd
+					className="grow"
+					cartAction={cartAction}
+					isPending={isPending}
+					product={product}
+					selectedVariantId={selectedVariantId}
+				/>
+			</div>
+			<ProductCallbackMessage className="mt-2" finalVariant={finalVariant} />
+			<ProductCartInventory className="mt-2" variantInventory={finalVariantInventory} />
 		</div>
 	);
 }

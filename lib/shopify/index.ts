@@ -12,6 +12,7 @@ import {
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
+import { getDiscountsQuery } from "./queries/discount";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
@@ -28,6 +29,7 @@ import Collection from "@/types/collection";
 import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ShopifyCollection from "@/types/shopifyCollection";
+import { DiscountNode } from "@/types/shopifyDiscount";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
@@ -36,6 +38,7 @@ import {
 	ShopifyCollectionProductsOperation,
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
+	ShopifyDiscountsQueryOperation,
 	ShopifyMenuOperation,
 	ShopifyPageOperation,
 	ShopifyPagesOperation,
@@ -45,6 +48,7 @@ import {
 	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
+	ShopifyVariantsInventoryQueryOperation,
 } from "@/types/shopifyOperations";
 import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyProduct from "@/types/shopifyProduct";
@@ -123,12 +127,13 @@ function reshapeProduct(
 		return undefined;
 	}
 
-	const { images, variants, ...rest } = product;
+	const { images, variants, collections, ...rest } = product;
 
 	return {
 		...rest,
 		images: reshapeImages(images, product.title),
 		variants: removeEdgesAndNodes(variants),
+		collections: collections.edges.map(edge => edge.node),
 	};
 }
 
@@ -157,6 +162,60 @@ const stockWarningMessage = (quantityAdded: number): string => {
 /* ---------------------
 -- Main Fetch Function -
 ---------------------- */
+export async function shopifyAdminFetch<T>({
+	cache = "force-cache",
+	headers,
+	query,
+	tags,
+	variables,
+}: {
+	cache?: RequestCache;
+	headers?: HeadersInit;
+	query: string;
+	tags?: string[];
+	variables?: ExtractVariables<T>;
+}): Promise<{ status: number; body: T }> {
+	try {
+		const result = await fetch(
+			`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+					...headers,
+				},
+				body: JSON.stringify({
+					...(query && { query }),
+					...(variables && { variables }),
+				}),
+				cache,
+				...(tags && { next: { tags } }),
+			},
+		);
+		const body = await result.json();
+		if (body.errors) {
+			throw body.errors[0];
+		}
+		return {
+			status: result.status,
+			body,
+		};
+	} catch (error) {
+		if (isShopifyError(error)) {
+			throw {
+				cause: error.cause?.toString() || "unknown",
+				status: error.status || "500",
+				message: error.message,
+				query,
+			};
+		}
+		throw {
+			error,
+			query,
+		};
+	}
+}
 export async function shopifyFetch<T>({
 	cache = "force-cache",
 	headers,
@@ -326,6 +385,15 @@ export async function getCollections(): Promise<Collection[]> {
 	return collections;
 }
 
+export async function getDiscount(): Promise<DiscountNode[]> {
+	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
+		query: getDiscountsQuery,
+		cache: "no-store",
+	});
+
+	return res.body.data.discountNodes.edges.map(edge => edge.node);
+}
+
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 	const res = await shopifyFetch<ShopifyMenuOperation>({
 		query: getMenuQuery,
@@ -382,6 +450,10 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 		variables: { handle },
 	});
 
+	if (!res.body.data.product) {
+		return undefined;
+	}
+
 	return reshapeProduct(res.body.data.product, false);
 }
 
@@ -417,49 +489,15 @@ export async function getProducts({
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
-interface ShopifyVariantsQueryResponse {
-	data: {
-		product: {
-			variants: Connection<{
-				id: string;
-				title: string;
-				sku: string | null;
-				inventoryQuantity: number;
-				inventoryItem: {
-					tracked: boolean;
-				};
-			}>;
-		} | null;
-	};
-}
-
 export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {
-	const response = await fetch(
-		`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
-			},
-			body: JSON.stringify({
-				query: getProductVariantsInventoryQuery,
-				variables: {
-					productId,
-				},
-			}),
-			cache: "no-store",
-		},
-	);
-
-	if (!response.ok) {
-		throw new Error("Erreur API Shopify");
-	}
-
-	const result: ShopifyVariantsQueryResponse = await response.json();
+	const res = await shopifyAdminFetch<ShopifyVariantsInventoryQueryOperation>({
+		query: getProductVariantsInventoryQuery,
+		cache: "no-store",
+		variables: { productId },
+	});
 
 	return (
-		result.data.product?.variants.edges.map(edge => ({
+		res.body.data.product?.variants.edges.map(edge => ({
 			variantId: edge.node.id,
 			variantTitle: edge.node.title,
 			sku: edge.node.sku,

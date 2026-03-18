@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function ProductLink({ className, product, onClick }: Readonly<Props>) {
-	const hasSecondImage = product.images.length > 2;
+	const hasSecondImage = product.images.length > 1;
 
 	return (
 		<Link
@@ -63,10 +63,10 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 					</div>
 				)}
 			</div>
-			<div className="flex justify-between text-xs font-bold">
+			<div className="truncate">
 				<h3
 					className={cn(
-						"overflow-hidden text-ellipsis whitespace-nowrap uppercase",
+						"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
 						"relative",
 						"group-hover:after:origin-left group-hover:after:scale-x-100",
 						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
@@ -76,8 +76,8 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 				>
 					{product.title}
 				</h3>
-				<ProductPrice className="pl-4 text-right" price={product.priceRange.maxVariantPrice} />
 			</div>
+			<ProductPrice size="xs" product={product} />
 		</Link>
 	);
 }

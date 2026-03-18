@@ -61,8 +61,8 @@ export default function ProductVariantSelector({
 		<div className={cn(className)}>
 			{options.map(option => (
 				<Form key={option.id} action="pick variant">
-					<dl className="mb-8">
-						<dt className="mb-2 text-sm tracking-wide uppercase">{option.name}</dt>
+					<dl className="mb-4">
+						<dt className="mb-1 text-xs tracking-wide uppercase">{option.name}</dt>
 						<dd className="flex flex-wrap gap-2">
 							{option.values.map(value => {
 								const optionNameLowerCase = option.name.toLocaleLowerCase();
@@ -85,7 +85,7 @@ export default function ProductVariantSelector({
 										disabled={!isAvailableForSale}
 										onClick={handleClick}
 										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
-										className={cn("border-quaternary rounded-full border-2 px-4", {
+										className={cn("border-quaternary font-sm rounded-full border-2 px-3", {
 											"bg-quaternary text-primary": isActive,
 											"line-through opacity-50": !isAvailableForSale,
 										})}

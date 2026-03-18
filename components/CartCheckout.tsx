@@ -17,7 +17,7 @@ export default function CartCheckout({ className = "" }: Readonly<Props>) {
 		<form action={formAction} className={cn("bg-red-400", className)}>
 			<button
 				className={cn(
-					"bg-quaternary border-qua text-primary hover:bg-primary hover:text-quaternary block w-full border px-8 py-3 text-center tracking-wider uppercase transition-colors",
+					"CTA",
 
 					{
 						"cursor-not-allowed": pending,

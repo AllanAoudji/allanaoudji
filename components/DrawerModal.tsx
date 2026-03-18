@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
 import useEscape from "@/lib/hooks/useEscape";
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
@@ -27,12 +27,17 @@ export default function DrawerModal({
 }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
 
+	const prevWidth = useRef(width);
+
 	const isRight = position === "right";
 
 	useEscape(onCloseAction);
 	useBodyScrollLock(open);
 
 	useEffect(() => {
+		if (prevWidth.current === width) return;
+		prevWidth.current = width;
+
 		if (!!closeOn && open && !!width && width >= convertMediaQuery(closeOn)) {
 			onCloseAction();
 		}

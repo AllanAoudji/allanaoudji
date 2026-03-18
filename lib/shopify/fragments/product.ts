@@ -42,6 +42,16 @@ const productFragment = /* GraphQl */ `
                 }
             }
         }
+
+        collections(first: 50) {
+            edges {
+                node {
+                    id
+                    title
+                }
+            }
+        }
+
         seo {
             ...seo
         }

@@ -12,8 +12,8 @@ export default function ProductCartInventory({ className, variantInventory }: Re
 	}
 
 	return (
-		<p className={cn("text-sm", className)}>
-			<span className="italic">{variantInventory.inventoryQuantity}</span> en stock
+		<p className={cn("text-right text-sm", className)}>
+			{variantInventory.inventoryQuantity} en stock
 		</p>
 	);
 }

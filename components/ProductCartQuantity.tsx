@@ -1,8 +1,5 @@
-"use client";
-
-import { ChangeEventHandler, FocusEventHandler, useMemo } from "react";
-import { useCart } from "@/lib/contexts/cart-context";
-import { cn, getLineQuantity } from "@/lib/utils";
+import { ChangeEventHandler, FocusEventHandler } from "react";
+import { cn } from "@/lib/utils";
 import ProductVariant from "@/types/productVariant";
 
 type Props = {
@@ -32,53 +29,52 @@ export default function ProductCartQuantity({
 	size = 10,
 	variant,
 }: Readonly<Props>) {
-	const { cart } = useCart();
-
-	const itemInCart = useMemo(() => {
-		return !!variant && !!cart ? getLineQuantity(cart, variant.id) : undefined;
-	}, [cart, variant]);
-
 	if (!variant?.availableForSale) {
 		return null;
 	}
 
 	return (
-		<div className={cn(className)}>
-			<h4 className="mb-1 text-sm">Quantité{!!itemInCart && ` (${itemInCart} dans le panier)`}</h4>
-			<div className={cn("border-quaternary inline-block border-2", className)}>
-				<button
-					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
+		<div className={cn("border-quaternary flex", className)}>
+			<button
+				className={cn("border-t border-b border-l", `h-${size} w-${size}`)}
+				disabled={disableDecrement || isPending}
+				onClick={decrement}
+			>
+				<span
+					className={cn("text-xl font-bold", {
 						"font-normal opacity-50": disableDecrement || isPending,
 					})}
-					disabled={disableDecrement || isPending}
-					onClick={decrement}
 				>
 					-
-				</button>
-				<input
-					className={cn(
-						"[appearance:textfield] text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-						`h-${size} w-${size}`,
-						{
-							"opacity-50": isPending,
-						},
-					)}
-					onBlur={onBlur}
-					onChange={onChange}
-					disabled={isPending}
-					type="number"
-					value={quantity}
-				/>
-				<button
-					className={cn("text-xl font-bold", `h-${size} w-${size}`, {
+				</span>
+			</button>
+			<input
+				className={cn(
+					"border-quaternary [appearance:textfield] border-t border-b text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+					`h-${size} w-${size}`,
+					{
+						"text-quaternary/50": isPending,
+					},
+				)}
+				onBlur={onBlur}
+				onChange={onChange}
+				disabled={isPending}
+				type="number"
+				value={quantity}
+			/>
+			<button
+				className={cn("border-t border-r border-b", `h-${size} w-${size}`, {})}
+				disabled={disableIncrement || isPending}
+				onClick={increment}
+			>
+				<span
+					className={cn("text-xl font-bold", {
 						"font-normal opacity-50": disableIncrement || isPending,
 					})}
-					disabled={disableIncrement || isPending}
-					onClick={increment}
 				>
 					+
-				</button>
-			</div>
+				</span>
+			</button>
 		</div>
 	);
 }

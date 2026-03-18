@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
 import useEscape from "@/lib/hooks/useEscape";
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
@@ -24,10 +24,15 @@ export default function FullscreenModal({
 }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
 
+	const prevWidth = useRef(width);
+
 	useBodyScrollLock(open);
 	useEscape(onCloseAction);
 
 	useEffect(() => {
+		if (prevWidth.current === width) return;
+		prevWidth.current = width;
+
 		if (!!closeOn && open && !!width && width >= convertMediaQuery(closeOn)) {
 			onCloseAction();
 		}

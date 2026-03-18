@@ -35,7 +35,7 @@ export const HEAD_MENU: Menu[] = [
 	{
 		href: "/collections",
 		title: "boutique",
-		activeSegment: ["collections", "products"],
+		activeSegment: ["collections"],
 	},
 	{
 		href: "/about",

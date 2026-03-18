@@ -39,13 +39,10 @@ export default function ProductCartAdd({
 	return (
 		<form action={cartAction} className={cn(className)}>
 			<button
-				className={cn(
-					"bg-quaternary text-primary hover:bg-primary hover:text-quaternary border-quaternary w-full max-w-xs cursor-pointer border-2 py-3 tracking-wide uppercase",
-					{
-						"cursor-not-allowed bg-gray-400 hover:opacity-50":
-							!product.availableForSale || !selectedVariantId,
-					},
-				)}
+				className={cn("CTA", {
+					"bg-quaternary/50 cursor-not-allowed!": !product.availableForSale || !selectedVariantId,
+					"cursor-progress!": isPending,
+				})}
 				disabled={disable}
 				onClick={resetProductMessage}
 				type="submit"
