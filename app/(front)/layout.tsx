@@ -41,12 +41,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// Error/warning messages styles
-// Product pages
 // infinite loader
-// pictogram + - x warning error
 // loading page
 // error handler
 // loading module
-// Message d'erreur pour le cart => sur le dessus de l'item
-// Ajouter au panier bouton n'a pas la meme height que proceder au payement/filtres/Etc
+// WYSIWYG
