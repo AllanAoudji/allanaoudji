@@ -1,3 +1,4 @@
+import { IconExclamationMark } from "@tabler/icons-react";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { cn } from "@/lib/utils";
 import ProductVariant from "@/types/productVariant";
@@ -19,10 +20,16 @@ export default function ProductCallbackMessage({ className, finalVariant }: Read
 			<div
 				className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-bold", {
 					"bg-danger": productMessage.type === "error",
-					"bg-amber-300": productMessage.type === "warning",
+					"bg-warning": productMessage.type === "warning",
 				})}
 			>
-				<p>!</p>
+				<IconExclamationMark
+					className={cn({
+						"text-primary": productMessage.type === "error",
+						"text-quaternary": productMessage.type === "warning",
+					})}
+					size={20}
+				/>
 			</div>
 			<div>
 				<p className="text-sm">{productMessage.message}</p>

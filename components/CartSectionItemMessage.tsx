@@ -1,5 +1,6 @@
 "use client";
 
+import { IconExclamationMark } from "@tabler/icons-react";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { cn } from "@/lib/utils";
 import CartItem from "@/types/cartItem";
@@ -17,17 +18,23 @@ export default function CartSectionItemMessage({ className, item }: Readonly<Pro
 	}
 
 	return (
-		<div className={cn("flex items-center gap-2", className)}>
+		<div className={cn("flex items-center gap-3 border p-3", className)}>
 			<div
 				className={cn(
-					"flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+					"flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold",
 					{
 						"bg-danger": cartMessage.type === "error",
-						"bg-amber-300": cartMessage.type === "warning",
+						"bg-warning": cartMessage.type === "warning",
 					},
 				)}
 			>
-				<p>!</p>
+				<IconExclamationMark
+					className={cn({
+						"text-primary": cartMessage.type === "error",
+						"text-quaternary": cartMessage.type === "warning",
+					})}
+					size={20}
+				/>
 			</div>
 			<div>
 				<p className="text-xs">{cartMessage.message}</p>

@@ -1,5 +1,6 @@
 import { ChangeEventHandler, FocusEventHandler } from "react";
 import { cn } from "@/lib/utils";
+import QuantityIcon from "./QuantityIcon";
 import ProductVariant from "@/types/productVariant";
 
 type Props = {
@@ -36,17 +37,19 @@ export default function ProductCartQuantity({
 	return (
 		<div className={cn("border-quaternary flex", className)}>
 			<button
-				className={cn("border-t border-b border-l", `h-${size} w-${size}`)}
+				className={cn(
+					"flex items-center justify-center border-t border-b border-l",
+					`h-${size} w-${size}`,
+				)}
 				disabled={disableDecrement || isPending}
 				onClick={decrement}
 			>
-				<span
-					className={cn("text-xl font-bold", {
-						"font-normal opacity-50": disableDecrement || isPending,
+				<QuantityIcon
+					className={cn({
+						"opacity-50": disableDecrement || isPending,
 					})}
-				>
-					-
-				</span>
+					type="minus"
+				/>
 			</button>
 			<input
 				className={cn(
@@ -63,17 +66,19 @@ export default function ProductCartQuantity({
 				value={quantity}
 			/>
 			<button
-				className={cn("border-t border-r border-b", `h-${size} w-${size}`, {})}
+				className={cn(
+					"flex items-center justify-center border-t border-r border-b",
+					`h-${size} w-${size}`,
+				)}
 				disabled={disableIncrement || isPending}
 				onClick={increment}
 			>
-				<span
-					className={cn("text-xl font-bold", {
-						"font-normal opacity-50": disableIncrement || isPending,
+				<QuantityIcon
+					className={cn({
+						"opacity-50": disableIncrement || isPending,
 					})}
-				>
-					+
-				</span>
+					type="plus"
+				/>
 			</button>
 		</div>
 	);

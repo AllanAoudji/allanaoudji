@@ -36,7 +36,7 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 
 	return (
 		<div>
-			<CartSectionItemMessage className="mb-2 border p-2" item={item} />
+			<CartSectionItemMessage className="mb-2" item={item} />
 			<div className="grid grid-cols-3 gap-4">
 				<Link className="col-span-1" href={merchandiseUrl} onClick={closeModal}>
 					<ImageContainer
@@ -62,7 +62,7 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 						</Link>
 						<div>
 							<div className="flex items-center text-sm">
-								<CartSectionItemQuantityButton className="cursor-pointer pr-2" item={item} type="minus" />
+								<CartSectionItemQuantityButton className="cursor-pointer pr-1" item={item} type="minus" />
 								<div
 									className={cn("w-6 text-center font-bold", {
 										"opacity-50": isPending,
@@ -71,7 +71,7 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 									<p>{item.quantity}</p>
 								</div>
 								<CartSectionItemQuantityButton
-									className="cursor-pointer pl-2 text-right"
+									className="cursor-pointer pl-1 text-right"
 									item={item}
 									type="plus"
 								/>

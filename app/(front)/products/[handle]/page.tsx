@@ -92,6 +92,8 @@ export default async function Page({ params }: Readonly<Props>) {
 		throw new Error("fetch failed");
 	}
 
+	console.log(product);
+
 	return (
 		<>
 			<section className="grid grid-cols-6 gap-4 lg:gap-12">

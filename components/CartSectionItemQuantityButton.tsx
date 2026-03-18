@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { cn } from "@/lib/utils";
+import QuantityIcon from "./QuantityIcon";
 import CartItem from "@/types/cartItem";
 import UpdateCartType from "@/types/updateCartType";
 
@@ -19,14 +20,14 @@ export default function CartSectionItemQuantityButton({
 }: Readonly<Props>) {
 	const { decrementItem, incrementItem, isPending, resetCartMessage } = useCartActions();
 
-	const text = useMemo(() => {
+	const iconType = useMemo(() => {
 		if (type === "plus") {
-			return "+";
+			return "plus";
 		}
 		if (item.quantity === 1) {
-			return "x";
+			return "delete";
 		}
-		return "-";
+		return "minus";
 	}, [item, type]);
 
 	const handleAction = useCallback(() => {
@@ -51,8 +52,8 @@ export default function CartSectionItemQuantityButton({
 				onClick={resetCartMessage}
 				type="submit"
 			>
-				<div className="flex h-4 w-4 origin-center items-center justify-center transition-transform duration-500 group-hover:rotate-180">
-					<span>{text}</span>
+				<div className="flex h-6 w-6 origin-center items-center justify-center transition-transform duration-500 group-hover:rotate-180">
+					<QuantityIcon type={iconType} size="small" />
 				</div>
 			</button>
 		</form>
