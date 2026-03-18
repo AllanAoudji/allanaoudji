@@ -1,29 +1,30 @@
-import { cn } from "@/lib/utils";
-import SubTitle from "./SubTitle";
-import WorkImages from "./WorkImages";
-import WorkText from "./WorkText";
-import { work } from "@/types/sanityType";
+import WorksGallerySectionContainer from "./WorksGallerySectionContainer";
+import { getWorks } from "@/sanity/lib/queries";
+import { WORKS_QUERYResult } from "@/sanity/types";
 
-type Props = {
-	className?: string;
-	separator?: boolean;
-	work: work;
-};
+export default async function WorksGallerySection() {
+	let query: WORKS_QUERYResult;
 
-export default function WorksGallerySection({
-	className,
-	separator = true,
-	work,
-}: Readonly<Props>) {
+	try {
+		query = await getWorks("gallery");
+	} catch (error) {
+		if (error instanceof Error) {
+			throw error;
+		}
+		throw new Error("fetch failed");
+	}
+
+	if (!query || !query.works || !query.works.length) {
+		return (
+			<div>
+				<p>Empty</p>
+			</div>
+		);
+	}
+
 	return (
-		<section
-			className={cn(className, "section-container", {
-				"section-separator": separator,
-			})}
-		>
-			<SubTitle className="pb-4">{work.title}</SubTitle>
-			<WorkText text={work.text} />
-			<WorkImages images={work.gallery} />
-		</section>
+		<div className="grid grid-cols-1 divide-y divide-solid">
+			<WorksGallerySectionContainer works={query.works} />
+		</div>
 	);
 }

@@ -3,7 +3,7 @@ import FilterOrderingItem from "./FilterOrderingItem";
 
 export default function FilterOrdering() {
 	return (
-		<ul>
+		<ul className="group flex flex-col">
 			{SORTING.map(item => (
 				<FilterOrderingItem key={item.slug} item={item} />
 			))}

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { LightboxProvider } from "@/lib/contexts/lightbox-context";
+import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
 import Footer from "@/components/Footer";
+import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
+import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
 import "@/app/globals.css";
 
@@ -15,15 +19,30 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="en">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
 				<Suspense fallback={<div>...loading</div>}>
-					<CartDispenser>
-						<header className="bg-primary border-b-quaternary fixed start-0 top-0 z-20 w-full border-b-2">
-							<NavBar />
-						</header>
-						<main className="padding-container mb-auto pt-28">{children}</main>
-					</CartDispenser>
+					<LocalShopifyDispenser>
+						<ModalProvider>
+							<CartDispenser>
+								<LightboxProvider>
+									<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+										<NavBar />
+									</header>
+
+									<main className="pt-header mb-auto">{children}</main>
+									<Modals />
+								</LightboxProvider>
+							</CartDispenser>
+						</ModalProvider>
+					</LocalShopifyDispenser>
 				</Suspense>
 				<Footer />
 			</body>
 		</html>
 	);
 }
+
+// TODO:
+// infinite loader
+// loading page
+// error handler
+// loading module
+// WYSIWYG

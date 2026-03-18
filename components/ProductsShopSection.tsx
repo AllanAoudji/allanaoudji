@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import Grid from "./Grid";
-import ProductsShopSectionItem from "./ProductsShopSectionItem";
+import ProductLink from "./ProductLink";
 import Product from "@/types/product";
 
 type Props = {
@@ -35,11 +36,15 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		throw new Error("fetch failed");
 	}
 
+	if (!products || !products.length || (!!handle && handle.startsWith("hidden"))) {
+		redirect("/collections");
+	}
+
 	return (
-		<Grid className="col-span-4" type="large">
+		<Grid>
 			{!!searchValue && !products.length && <p>There are no products that match</p>}
 			{products.map(product => (
-				<ProductsShopSectionItem key={product.id} product={product} />
+				<ProductLink key={product.id} product={product} />
 			))}
 		</Grid>
 	);

@@ -7,6 +7,8 @@ type props = {
 
 export default function Title({ children, className }: Readonly<props>) {
 	return (
-		<h1 className={cn(className, "text-quaternary text-4xl font-bold uppercase")}>{children}</h1>
+		<h1 className={cn("text-quaternary mb-6 text-2xl font-black uppercase", className)}>
+			{children}
+		</h1>
 	);
 }

@@ -14,9 +14,19 @@ export default function CartCheckout({ className = "" }: Readonly<Props>) {
 	const { pending } = useFormStatus();
 
 	return (
-		<form action={formAction} className={cn(className)}>
-			<button type="submit" disabled={pending}>
-				{pending ? "Processing..." : "Checkout"}
+		<form action={formAction} className={cn("bg-red-400", className)}>
+			<button
+				className={cn(
+					"CTA",
+
+					{
+						"cursor-not-allowed": pending,
+					},
+				)}
+				disabled={pending}
+				type="submit"
+			>
+				{pending ? "Processing..." : "Procéder au paiement"}
 			</button>
 			<p aria-label="polite" role="status">
 				{message}

@@ -1,6 +1,8 @@
 import ShopifyCart from "./ShopifyCart";
+import ShopifyVariantInventory from "./ShopifyVariantInventory";
 import Connection from "./connection";
 import ShopifyColelction from "./shopifyCollection";
+import { DiscountNode } from "./shopifyDiscount";
 import { ShopifyPage } from "./shopifyPage";
 import ShopifyProduct from "./shopifyProduct";
 
@@ -84,9 +86,17 @@ export type ShopifyPagesOperation = {
 	};
 };
 
+export type ShopifyPopularProductsOperation = {
+	data: {
+		collection: {
+			products: Connection<ShopifyProduct>;
+		};
+	};
+};
+
 export type ShopifyProductOperation = {
 	data: {
-		product: ShopifyProduct;
+		product?: ShopifyProduct;
 	};
 	variables: {
 		handle: string;
@@ -111,6 +121,23 @@ export type ShopifyProductsOperation = {
 		reverse?: boolean;
 		sortKey?: string;
 		first?: number;
+	};
+};
+
+export type ShopifyVariantsInventoryQueryOperation = {
+	data: {
+		product: {
+			variants: Connection<ShopifyVariantInventory>;
+		} | null;
+	};
+	variables: {
+		productId: string;
+	};
+};
+
+export type ShopifyDiscountsQueryOperation = {
+	data: {
+		discountNodes: Connection<DiscountNode>;
 	};
 };
 

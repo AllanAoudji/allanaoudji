@@ -1,6 +1,6 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
-import { ensureStartWith } from "../utils";
+import { ensureStartWith, getLineQuantity } from "../utils";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,19 +12,24 @@ import {
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
+import { getDiscountsQuery } from "./queries/discount";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
+	getPopularProductsQuery,
 	getProductQuery,
 	getProductRecommendationsQuery,
 	getProductsQuery,
+	getProductVariantsInventoryQuery,
 } from "./queries/product";
 import ShopifyCart from "@/types/ShopifyCart";
+import VariantInventory from "@/types/VariantInventory";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
 import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ShopifyCollection from "@/types/shopifyCollection";
+import { DiscountNode } from "@/types/shopifyDiscount";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
@@ -33,14 +38,17 @@ import {
 	ShopifyCollectionProductsOperation,
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
+	ShopifyDiscountsQueryOperation,
 	ShopifyMenuOperation,
 	ShopifyPageOperation,
 	ShopifyPagesOperation,
+	ShopifyPopularProductsOperation,
 	ShopifyProductOperation,
 	ShopifyProductRecommendationsOperation,
 	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
+	ShopifyVariantsInventoryQueryOperation,
 } from "@/types/shopifyOperations";
 import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyProduct from "@/types/shopifyProduct";
@@ -119,12 +127,13 @@ function reshapeProduct(
 		return undefined;
 	}
 
-	const { images, variants, ...rest } = product;
+	const { images, variants, collections, ...rest } = product;
 
 	return {
 		...rest,
 		images: reshapeImages(images, product.title),
 		variants: removeEdgesAndNodes(variants),
+		collections: collections.edges.map(edge => edge.node),
 	};
 }
 
@@ -141,9 +150,72 @@ function reshapeProducts(products: ShopifyProduct[]): Product[] {
 	return reshapedProducts;
 }
 
+const stockWarningMessage = (quantityAdded: number): string => {
+	if (!quantityAdded) {
+		return "Stock indisponible. L'article n'a pas pu être ajouté au panier";
+	}
+	if (quantityAdded === 1) return "Stock indisponible. Seulement 1 article a été ajouté au panier.";
+
+	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
+};
+
 /* ---------------------
 -- Main Fetch Function -
 ---------------------- */
+export async function shopifyAdminFetch<T>({
+	cache = "force-cache",
+	headers,
+	query,
+	tags,
+	variables,
+}: {
+	cache?: RequestCache;
+	headers?: HeadersInit;
+	query: string;
+	tags?: string[];
+	variables?: ExtractVariables<T>;
+}): Promise<{ status: number; body: T }> {
+	try {
+		const result = await fetch(
+			`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+					...headers,
+				},
+				body: JSON.stringify({
+					...(query && { query }),
+					...(variables && { variables }),
+				}),
+				cache,
+				...(tags && { next: { tags } }),
+			},
+		);
+		const body = await result.json();
+		if (body.errors) {
+			throw body.errors[0];
+		}
+		return {
+			status: result.status,
+			body,
+		};
+	} catch (error) {
+		if (isShopifyError(error)) {
+			throw {
+				cause: error.cause?.toString() || "unknown",
+				status: error.status || "500",
+				message: error.message,
+				query,
+			};
+		}
+		throw {
+			error,
+			query,
+		};
+	}
+}
 export async function shopifyFetch<T>({
 	cache = "force-cache",
 	headers,
@@ -201,15 +273,32 @@ export async function shopifyFetch<T>({
 ---------------------- */
 export async function addToCart(
 	cartId: string,
-	lines: { merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
+	variantId: string,
+	quantity: number,
+): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
+	const cartBeforeMutation = await getCart(cartId);
+
+	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
+
 	const res = await shopifyFetch<ShopifyAddToCartOperation>({
 		cache: "no-cache",
 		query: addToCartMutation,
-		variables: { cartId, lines },
+		variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
 	});
 
-	return reshapeCart(res.body.data.cartLinesAdd.cart);
+	const updatedCart = reshapeCart(res.body.data.cartLinesAdd.cart);
+
+	const newQuantity = getLineQuantity(updatedCart, variantId);
+
+	const actuallyAdded = newQuantity - previousQuantity;
+
+	return {
+		data: {
+			cart: updatedCart,
+			quantityAdded: actuallyAdded,
+		},
+		warning: actuallyAdded < quantity ? stockWarningMessage(actuallyAdded) : undefined,
+	};
 }
 
 export async function createCart(): Promise<Cart> {
@@ -285,7 +374,7 @@ export async function getCollections(): Promise<Collection[]> {
 				description: "All products",
 			},
 			path: "/collections",
-			updatedAt: new Date().toISOString(),
+			updatedAt: "",
 			image: null,
 		},
 		...reshapeCollections(shopifyCollections).filter(
@@ -294,6 +383,15 @@ export async function getCollections(): Promise<Collection[]> {
 	];
 
 	return collections;
+}
+
+export async function getDiscount(): Promise<DiscountNode[]> {
+	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
+		query: getDiscountsQuery,
+		cache: "no-store",
+	});
+
+	return res.body.data.discountNodes.edges.map(edge => edge.node);
 }
 
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
@@ -330,6 +428,20 @@ export async function getPages(): Promise<ShopifyPage[]> {
 	return removeEdgesAndNodes(res.body.data.pages);
 }
 
+export async function getPopularProducts(): Promise<Product[]> {
+	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
+		cache: "no-store",
+		query: getPopularProductsQuery,
+		tags: [TAGS.products],
+	});
+
+	if (!res.body.data.collection) {
+		return [];
+	}
+
+	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+}
+
 export async function getProduct(handle: string): Promise<Product | undefined> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
 		cache: "no-store",
@@ -337,6 +449,10 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 		tags: [TAGS.products],
 		variables: { handle },
 	});
+
+	if (!res.body.data.product) {
+		return undefined;
+	}
 
 	return reshapeProduct(res.body.data.product, false);
 }
@@ -373,6 +489,24 @@ export async function getProducts({
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
+export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {
+	const res = await shopifyAdminFetch<ShopifyVariantsInventoryQueryOperation>({
+		query: getProductVariantsInventoryQuery,
+		cache: "no-store",
+		variables: { productId },
+	});
+
+	return (
+		res.body.data.product?.variants.edges.map(edge => ({
+			variantId: edge.node.id,
+			variantTitle: edge.node.title,
+			sku: edge.node.sku,
+			inventoryQuantity: edge.node.inventoryQuantity,
+			inventoryTracked: edge.node.inventoryItem.tracked,
+		})) ?? []
+	);
+}
+
 export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
 	const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
 		query: removeFromCartMutation,
@@ -385,15 +519,33 @@ export async function removeFromCart(cartId: string, lineIds: string[]): Promise
 
 export async function updateCart(
 	cartId: string,
-	lines: { id: string; merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
+	lineId: string,
+	variantId: string,
+	quantity: number,
+): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
+	const cartBeforeMutation = await getCart(cartId);
+
+	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
+
+	const decremente = previousQuantity > quantity;
+
 	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
 		query: editCartItemMutation,
 		cache: "no-store",
-		variables: { cartId, lines },
+		variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
 	});
 
-	return reshapeCart(res.body.data.cartLinesUpdate.cart);
+	const updatedCart = reshapeCart(res.body.data.cartLinesUpdate.cart);
+	const newQuantity = getLineQuantity(updatedCart, variantId);
+	const actuallyAdded = newQuantity - previousQuantity;
+
+	return {
+		data: {
+			cart: updatedCart,
+			quantityAdded: actuallyAdded,
+		},
+		warning: newQuantity < quantity && !decremente ? stockWarningMessage(actuallyAdded) : undefined,
+	};
 }
 
 /* ---------------------
@@ -413,7 +565,6 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 	const isProductUpdate = productWebhooks.includes(topic);
 
 	if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
-		console.error("Invalid revalidation secret.");
 		return NextResponse.json({ status: 200 });
 	}
 

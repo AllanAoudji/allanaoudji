@@ -4,14 +4,14 @@ import FilterOrdering from "./FilterOrdering";
 
 type Props = {
 	className?: string;
+	direction?: "column" | "row";
 	type: "collections" | "ordering";
 };
 
-export default function Filter({ className, type }: Readonly<Props>) {
+export default function Filter({ className, direction = "row", type }: Readonly<Props>) {
 	return (
-		<nav className={cn(className)}>
-			<h4>{type}</h4>
-			{type === "collections" ? <FilterCollection /> : <FilterOrdering />}
+		<nav className={cn("flex", className)}>
+			{type === "collections" ? <FilterCollection direction={direction} /> : <FilterOrdering />}
 		</nav>
 	);
 }

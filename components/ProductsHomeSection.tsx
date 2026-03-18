@@ -24,16 +24,11 @@ export default async function ProductsHomeSection() {
 		<ProductsHomeSectionContainer>
 			{products.map(product => (
 				<ImageContainer
-					image={{
-						alt: product.featuredImage.altText || product.title,
-						url: product.featuredImage.url,
-						width: product.featuredImage.width,
-						height: product.featuredImage.height,
-						lqip: null,
-					}}
+					image={product.featuredImage}
 					priority={true}
 					ratio="3/4"
 					key={product.id}
+					className="border-primary border"
 				/>
 			))}
 		</ProductsHomeSectionContainer>

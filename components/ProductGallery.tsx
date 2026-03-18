@@ -1,29 +1,81 @@
-import Grid from "./Grid";
+"use client";
+
+import { useMemo, useState, useEffect } from "react";
+import { useProduct } from "@/lib/contexts/product-context";
+import { buildGalleryImages, cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
-import shopifyImage from "@/types/shopifyImage";
+import Product from "@/types/product";
 
 type Props = {
 	className?: string;
-	images: shopifyImage[];
+	product: Product;
 };
 
-export default function ProductGallery({ className, images }: Readonly<Props>) {
+export default function ProductGallery({ className, product }: Readonly<Props>) {
+	const { variants } = product;
+	const { state } = useProduct();
+	const [activeIndex, setActiveIndex] = useState(0);
+
+	const variant = useMemo(() => {
+		return variants.find(variant =>
+			variant.selectedOptions.every(option => option.value === state[option.name.toLowerCase()]),
+		);
+	}, [state, variants]);
+
+	const images = useMemo(() => {
+		return buildGalleryImages(product, variant);
+	}, [product, variant]);
+
+	// 🔹 Reset activeIndex à 0 quand la variant change
+	useEffect(() => {
+		setActiveIndex(0);
+	}, [variant?.id]); // dépend de l'id du variant
+
+	useEffect(() => () => setActiveIndex(0), []);
+
+	if (!images.length) return null;
+
 	return (
-		<Grid tag="ul" type="largest" className={className}>
-			{images.slice(0, 6).map(image => (
-				<ImageContainer
-					key={image.id}
-					image={{
-						alt: image.altText || "",
-						height: image.height,
-						url: image.url,
-						width: image.width,
-						lqip: null,
-					}}
-					ratio="3/4"
-					priority={true}
-				/>
-			))}
-		</Grid>
+		<div className={className}>
+			{/* 📱 MOBILE : image principale fixe */}
+			<div className="lg:hidden">
+				<div className="relative aspect-3/4 w-full overflow-hidden">
+					<div
+						className="flex transition-transform duration-300 ease-in-out"
+						style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+					>
+						{images.map(image => (
+							<div key={image.id} className="w-full shrink-0">
+								<ImageContainer image={image} ratio="3/4" />
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* 🔽 Thumbnails */}
+				{images.length > 1 && (
+					<div className="mt-2 grid grid-cols-4 gap-2">
+						{images.map((image, index) => (
+							<button
+								key={image.id}
+								onClick={() => setActiveIndex(index)}
+								className={cn("transition", {
+									"cursor-pointer opacity-30": activeIndex !== index,
+								})}
+							>
+								<ImageContainer image={image} ratio="4/3" />
+							</button>
+						))}
+					</div>
+				)}
+			</div>
+
+			{/* 💻 DESKTOP GRID */}
+			<div className="hidden grid-cols-2 gap-2 lg:grid">
+				{images.map(image => (
+					<ImageContainer key={image.url} image={image} ratio="3/4" />
+				))}
+			</div>
+		</div>
 	);
 }

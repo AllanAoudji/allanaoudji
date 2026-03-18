@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import CartCheckout from "./CartCheckout";
-import ProductPrice from "./ProductPrice";
+import Price from "./Price";
 import Cart from "@/types/cart";
 
 type Props = {
@@ -11,11 +11,11 @@ type Props = {
 export default function CartSummary({ cart, className = "" }: Readonly<Props>) {
 	return (
 		<div className={cn(className)}>
-			<div>
-				<h3>total items:</h3>
-				<p>{cart.totalQuantity}</p>
-				<h3>total cost:</h3>
-				<ProductPrice price={cart.cost.totalAmount} />
+			<div className="pb-4 text-sm font-bold">
+				<div className="flex justify-between">
+					<h3 className="tracking-wider">Total estimé</h3>
+					<Price price={cart.cost.totalAmount} />
+				</div>
 			</div>
 			<CartCheckout />
 		</div>

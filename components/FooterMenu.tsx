@@ -1,13 +1,11 @@
-import Link from "next/link";
 import { FOOT_MENU } from "@/lib/constants";
+import FooterMenuItem from "./FooterMenuItem";
 
 export default function FooterMenu() {
 	return (
-		<ul className="justify-center gap-4 text-center sm:flex">
+		<ul className="group items-center justify-center text-center sm:flex">
 			{FOOT_MENU.map(menu => (
-				<li key={menu.href}>
-					<Link href={menu.href}>{menu.title}</Link>
-				</li>
+				<FooterMenuItem href={menu.href} key={menu.href} title={menu.title} />
 			))}
 		</ul>
 	);

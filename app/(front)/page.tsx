@@ -1,5 +1,6 @@
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
+import BannerSection from "@/components/BannerSection";
 import ContactSection from "@/components/ContactSection";
 import ContactSectionLoader from "@/components/ContactSectionLoader";
 import InstagramSection from "@/components/InstagramSection";
@@ -13,6 +14,11 @@ import Error from "./error";
 export default function Home() {
 	return (
 		<>
+			<ErrorBoundary errorComponent={Error}>
+				<Suspense>
+					<BannerSection />
+				</Suspense>
+			</ErrorBoundary>
 			<ErrorBoundary errorComponent={Error}>
 				<Suspense fallback={<ProductsHomeSectionLoader />}>
 					<ProductsHomeSection />

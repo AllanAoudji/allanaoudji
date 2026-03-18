@@ -4,22 +4,26 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-primary: #ffdbbb;
+	--color-primary: #f5f0eb;
 	--color-secondary: #baddff;
 	--color-tertiary: #bafff5;
-	--color-quaternary: #496580;
+	--color-quaternary: #1e3142;
+	--color-danger: #d41e39;
+	--color-warning: #f0cb48;
 
 	--font-gopher: "gopher";
+
+	--spacing-header: 64px;
 }
 
 @layer utilities {
 	.padding-container {
-		@apply px-5 lg:px-10 xl:mx-auto xl:w-full xl:max-w-7xl;
+		@apply mx-auto max-w-7xl px-4;
 	}
-	.section-container {
-		@apply py-5;
+	.vertical-padding {
+		@apply pt-4 pb-20;
 	}
-	.section-separator {
-		@apply border-quaternary border-b-2;
+	.CTA {
+		@apply bg-quaternary text-primary border-quaternary hover:bg-primary hover:text-quaternary flex h-10 w-full cursor-pointer items-center justify-center border px-4 tracking-wider uppercase transition-colors;
 	}
 }

@@ -13,10 +13,7 @@ interface TextPros {
 
 const Prose: FunctionComponent<TextPros> = ({ className, html }: Readonly<Props>) => {
 	return (
-		<div
-			className={cn("prose mx-auto text-base", className)}
-			dangerouslySetInnerHTML={{ __html: html as string }}
-		/>
+		<div className={cn("prose", className)} dangerouslySetInnerHTML={{ __html: html as string }} />
 	);
 };
 

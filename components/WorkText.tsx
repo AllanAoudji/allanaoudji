@@ -7,5 +7,5 @@ type Props = {
 
 export default function WorkText({ className, text }: Readonly<Props>) {
 	if (!text) return null;
-	return <p className={cn(className, "pb-4 whitespace-pre-line")}>{text}</p>;
+	return <p className={cn(className, "pb-8 whitespace-pre-line")}>{text}</p>;
 }

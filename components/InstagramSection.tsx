@@ -5,7 +5,7 @@ import InstagramFeeds from "@/types/instagramFeed";
 const ROOT = "https://graph.instagram.com/";
 const END_POINT = "/me/media";
 const FIELDS =
-	"?fields=id,media_type,media_url,alt_text,comments_count,like_count,thumbnail_url&limit=4";
+	"?fields=id,media_type,media_url,alt_text,comments_count,like_count,thumbnail_url&limit=6";
 
 async function getData(): Promise<InstagramFeeds> {
 	const res = await fetch(

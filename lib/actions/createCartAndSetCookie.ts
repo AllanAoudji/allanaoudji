@@ -9,7 +9,11 @@ export default async function createCartAndSetCookie() {
 	try {
 		cart = await createCart();
 
-		(await cookies()).set("cartId", cart.id!);
+		const cookieStore = await cookies();
+
+		cookieStore.set("cartId", cart.id!);
+
+		return cart.id!;
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error.message;

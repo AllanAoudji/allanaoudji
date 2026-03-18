@@ -1,3 +1,7 @@
+"use client";
+
+import { useCallback } from "react";
+import { useLightBox } from "@/lib/contexts/lightbox-context";
 import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
 import { workGallery } from "@/types/sanityType";
@@ -7,6 +11,15 @@ type Props = {
 };
 
 export default function WorkImages({ images }: Readonly<Props>) {
+	const { setImage } = useLightBox();
+
+	const handleClick = useCallback(
+		(id: string) => {
+			setImage(id);
+		},
+		[setImage],
+	);
+
 	if (
 		!images ||
 		!images.length ||
@@ -16,10 +29,17 @@ export default function WorkImages({ images }: Readonly<Props>) {
 	}
 
 	return (
-		<Grid>
-			{images.map(image => (
-				<ImageContainer key={image._id} image={image} ratio="3/4" />
-			))}
-		</Grid>
+		<>
+			<Grid>
+				{images.map(image => (
+					<ImageContainer
+						image={image}
+						key={image._id}
+						onClick={() => handleClick(image._id)}
+						ratio="3/4"
+					/>
+				))}
+			</Grid>
+		</>
 	);
 }

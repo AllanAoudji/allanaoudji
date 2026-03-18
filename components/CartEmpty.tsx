@@ -1,15 +1,22 @@
+"use client";
+
 import Link from "next/link";
-import SubTitle from "./SubTitle";
+import { useModal } from "@/lib/contexts/modal-context";
+import CartEmptyPopularProducts from "./CartEmptyPopularProducts";
+import CartHeader from "./CartHeader";
 
 export default function CartEmpty() {
+	const { closeModal } = useModal();
+
 	return (
-		<section className="pt-12">
-			<SubTitle className="mb-8 border-b-2 pb-4">Votre panier est vide</SubTitle>
-			<div className="flex">
-				<Link href="/collections" className="block rounded-xl border-2 px-4 py-2">
-					Visitez ma boutique
+		<div className="flex h-screen flex-col">
+			<CartHeader />
+			<div className="flex-1 flex-col gap-4 overflow-y-auto px-4 pb-4">
+				<CartEmptyPopularProducts />
+				<Link className={"CTA mt-12"} href="/collections" onClick={closeModal}>
+					Continuez les achats
 				</Link>
 			</div>
-		</section>
+		</div>
 	);
 }

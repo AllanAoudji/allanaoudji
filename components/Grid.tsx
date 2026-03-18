@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type Type = "small" | "default" | "large" | "largest";
+type Type = "smallest" | "small" | "default" | "large" | "largest";
 
 type Props = {
 	children: React.ReactNode;
@@ -13,11 +13,13 @@ const getStyle = (type: Type): string => {
 	switch (type) {
 		default:
 		case "default":
-			return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+			return "grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
 		case "large":
-			return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+			return "grid-cols-2 lg:grid-cols-3";
 		case "small":
-			return "grid-cols-5";
+			return "grid-cols-2 lg:grid-cols-5";
+		case "smallest":
+			return "grid-cols-3 lg:grid-cols-6";
 		case "largest":
 			return "grid-cols-2";
 	}
@@ -30,5 +32,5 @@ export default function Grid({
 	type = "default",
 }: Readonly<Props>) {
 	const DynamicTag = tag;
-	return <DynamicTag className={cn(className, getStyle(type), "grid gap-4")}>{children}</DynamicTag>;
+	return <DynamicTag className={cn(getStyle(type), "grid gap-4", className)}>{children}</DynamicTag>;
 }

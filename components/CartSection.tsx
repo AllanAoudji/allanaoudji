@@ -1,4 +1,5 @@
-import { CartSectionItem } from "./CartSectionItem";
+import CartHeader from "./CartHeader";
+import CartSectionItem from "./CartSectionItem";
 import CartSummary from "./CartSummary";
 import Cart from "@/types/cart";
 
@@ -8,15 +9,16 @@ type Props = {
 
 export default function CartSection({ cart }: Readonly<Props>) {
 	return (
-		<section>
-			<ul className="flex flex-col gap-8">
+		<div className="flex h-screen flex-col">
+			<CartHeader />
+			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-8">
 				{cart.lines
 					.sort((a, b) => a.merchandise.product.title.localeCompare(b.merchandise.product.title))
 					.map(line => (
-						<CartSectionItem key={line.merchandise.id} item={line} />
+						<CartSectionItem item={line} key={line.id} />
 					))}
-			</ul>
-			<CartSummary cart={cart} />
-		</section>
+			</div>
+			<CartSummary cart={cart} className="px-4 pt-2 pb-4" />
+		</div>
 	);
 }

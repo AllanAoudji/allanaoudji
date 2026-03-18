@@ -24,7 +24,7 @@ export default async function CollectionsSection({ className }: Readonly<Props>)
 
 	return (
 		<CollectionsSectionContainer className={className}>
-			<Grid className="section-container">
+			<Grid className="vertical-padding">
 				{collections.map(collection => (
 					<CollectionsSectionItem key={collection.handle} collection={collection} />
 				))}

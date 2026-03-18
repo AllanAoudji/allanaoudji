@@ -1,15 +1,27 @@
-import { getCollections } from "@/lib/shopify";
+"use client";
+
+import { useLocalShopify } from "@/lib/contexts/localShopify-context";
+import { cn } from "@/lib/utils";
 import FilterCollectionItem from "./FilterCollectionItem";
 
-export default async function FilterCollection() {
-	const collections = await getCollections();
+type Props = {
+	direction?: "column" | "row";
+};
+
+export default function FilterCollection({ direction = "row" }: Readonly<Props>) {
+	const { collections } = useLocalShopify();
 
 	if (collections.length <= 1) return null;
 
 	return (
-		<ul>
+		<ul
+			className={cn("group flex flex-wrap items-baseline", {
+				"flex-col": direction === "column",
+				"-mx-2 w-fit": direction === "row",
+			})}
+		>
 			{collections.map(collection => (
-				<FilterCollectionItem key={collection.handle} item={collection} />
+				<FilterCollectionItem direction={direction} item={collection} key={collection.handle} />
 			))}
 		</ul>
 	);
