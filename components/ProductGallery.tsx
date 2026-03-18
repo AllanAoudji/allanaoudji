@@ -1,80 +1,79 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import shopifyImage from "@/types/shopifyImage";
+import { useMemo, useState, useEffect } from "react";
+import { useProduct } from "@/lib/contexts/product-context";
+import { buildGalleryImages, cn } from "@/lib/utils";
+import ImageContainer from "./ImageContainer";
+import Product from "@/types/product";
 
-type ImageSliderProps = {
+type Props = {
 	className?: string;
-	images: shopifyImage[];
+	product: Product;
 };
 
-export default function ImageSlider({ className, images }: ImageSliderProps) {
-	const scrollRef = useRef<HTMLDivElement>(null);
+export default function ProductGallery({ className, product }: Readonly<Props>) {
+	const { variants } = product;
+	const { state } = useProduct();
+	const [activeIndex, setActiveIndex] = useState(0);
 
-	// Keep --slide-w in sync with the container's rendered width so that each
-	// slide is always exactly as wide as the visible viewport of the scroller,
-	// regardless of the image's native aspect-ratio.
+	const variant = useMemo(() => {
+		return variants.find(variant =>
+			variant.selectedOptions.every(option => option.value === state[option.name.toLowerCase()]),
+		);
+	}, [state, variants]);
+
+	const images = useMemo(() => {
+		return buildGalleryImages(product, variant);
+	}, [product, variant]);
+
+	// 🔹 Reset activeIndex à 0 quand la variant change
 	useEffect(() => {
-		const el = scrollRef.current;
-		if (!el) return;
+		setActiveIndex(0);
+	}, [variant?.id]); // dépend de l'id du variant
 
-		const sync = () => el.style.setProperty("--slide-w", `${el.clientWidth}px`);
-
-		sync();
-		const ro = new ResizeObserver(sync);
-		ro.observe(el);
-		return () => ro.disconnect();
-	}, []);
+	useEffect(() => () => setActiveIndex(0), []);
 
 	if (!images.length) return null;
 
 	return (
-		<div
-			ref={scrollRef}
-			className={cn(
-				"relative aspect-3/4 w-full",
-				{
-					"overflow-x-auto overflow-y-hidden scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] lg:overflow-x-hidden lg:overflow-y-auto [&::-webkit-scrollbar]:hidden":
-						images.length > 1,
-				},
-				className,
-			)}
-		>
-			{/* Inner track — horizontal on mobile, vertical on lg+ */}
-			<div className="flex h-full w-max flex-row lg:h-auto lg:w-full lg:flex-col">
-				{images.map(image => (
-					/*
-					 * Mobile (< lg) : the slide must be exactly as wide as the scroll
-					 * container's viewport. We can't use w-full here because the flex
-					 * parent is w-max (wider than the viewport).
-					 * Fix: use 100cqw (container query width) via an inline style that
-					 * falls back to 100svw. The overflow container itself has a fixed
-					 * 3/4 aspect-ratio, so its height drives its width → each slide
-					 * must match that width exactly.
-					 *
-					 * Desktop (≥ lg) : the flex direction flips to column, the container
-					 * is w-full and h-auto, so w-full + aspect-ratio on the slide works
-					 * normally.
-					 */
+		<div className={className}>
+			{/* 📱 MOBILE : image principale fixe */}
+			<div className="lg:hidden">
+				<div className="relative aspect-3/4 w-full overflow-hidden">
 					<div
-						key={image.id}
-						className="relative aspect-3/4 shrink-0 lg:w-full"
-						style={{
-							// Mobile: width = container's own rendered width (not the track's w-max)
-							// We read it via the scroll container ref; before mount CSS handles it.
-							width: "var(--slide-w, 100%)",
-						}}
+						className="flex transition-transform duration-300 ease-in-out"
+						style={{ transform: `translateX(-${activeIndex * 100}%)` }}
 					>
-						<Image
-							src={image.url}
-							alt={image.altText ?? ""}
-							fill
-							className="object-cover select-none"
-							draggable={false}
-						/>
+						{images.map(image => (
+							<div key={image.id} className="w-full shrink-0">
+								<ImageContainer image={image} ratio="3/4" />
+							</div>
+						))}
 					</div>
+				</div>
+
+				{/* 🔽 Thumbnails */}
+				{images.length > 1 && (
+					<div className="mt-2 grid grid-cols-4 gap-2">
+						{images.map((image, index) => (
+							<button
+								key={image.id}
+								onClick={() => setActiveIndex(index)}
+								className={cn("transition", {
+									"cursor-pointer opacity-30": activeIndex !== index,
+								})}
+							>
+								<ImageContainer image={image} ratio="4/3" />
+							</button>
+						))}
+					</div>
+				)}
+			</div>
+
+			{/* 💻 DESKTOP GRID */}
+			<div className="hidden grid-cols-2 gap-2 lg:grid">
+				{images.map(image => (
+					<ImageContainer key={image.url} image={image} ratio="3/4" />
 				))}
 			</div>
 		</div>

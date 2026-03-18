@@ -4,6 +4,9 @@ const variantFragment = /* Graphql */ `
         title
         availableForSale
         quantityAvailable
+        image {
+            ...image
+        }
         selectedOptions {
             name
             value

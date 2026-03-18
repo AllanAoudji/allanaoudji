@@ -1,28 +1,33 @@
+"use client";
+
 import Image from "next/image";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { workGalleryImage, workMainImage } from "@/types/sanityType";
+import shopifyImage from "@/types/shopifyImage";
 
-type AspectRatio = "4/3" | "3/4" | "4/5";
+type AspectRatio = "4/3" | "3/4" | "4/5" | "1/1";
 
 type Props = {
-	image: workGalleryImage | workMainImage;
+	image: workGalleryImage | shopifyImage | workMainImage;
 	priority?: boolean;
 	ratio: AspectRatio;
 	className?: string;
-	onClick?: MouseEventHandler<HTMLImageElement> | undefined;
+	onClick?: MouseEventHandler<HTMLImageElement>;
 };
 
-const getAspectRatio = (ratio: AspectRatio) => {
+const getAspectRatioClass = (ratio: AspectRatio) => {
 	switch (ratio) {
 		case "3/4":
-			return "aspect-3/4";
+			return "aspect-[3/4]";
 		case "4/3":
-			return "aspect-4/3";
+			return "aspect-[4/3]";
 		case "4/5":
-			return "aspect-4/5";
+			return "aspect-[4/5]";
+		case "1/1":
+			return "aspect-square";
 		default:
-			return "aspect-3/4";
+			return "aspect-[3/4]";
 	}
 };
 
@@ -33,23 +38,42 @@ export default function ImageContainer({
 	className,
 	onClick,
 }: Readonly<Props>) {
+	// 🔥 Normalisation des données (clé du problème)
+	const normalized = useMemo(() => {
+		if (!image) return null;
+
+		return {
+			url: "url" in image ? image.url : null,
+			alt: "alt" in image ? image.alt : "altText" in image ? image.altText : null,
+			blur: "lqip" in image ? image.lqip : null,
+		};
+	}, [image]);
+
+	if (!normalized?.url) {
+		return <div className={cn(getAspectRatioClass(ratio), "bg-secondary w-full")} />;
+	}
+
 	return (
-		<div className={cn(className, getAspectRatio(ratio), "bg-secondary w-full overflow-hidden")}>
-			{!!image.height && !!image.width && !!image.url && (
-				<Image
-					alt={image.alt || "image"}
-					blurDataURL={image.lqip || undefined}
-					className={cn("h-full w-full object-cover", {
-						"cursor-pointer transition-all duration-300 hover:scale-105": !!onClick,
-					})}
-					height={image.height}
-					placeholder={image.lqip ? "blur" : "empty"}
-					priority={priority}
-					src={image.url}
-					width={image.width}
-					onClick={onClick}
-				/>
+		<div
+			className={cn(
+				"bg-secondary relative w-full overflow-hidden",
+				getAspectRatioClass(ratio),
+				className,
 			)}
+		>
+			<Image
+				src={normalized.url}
+				alt={normalized.alt ?? "image"}
+				fill // 🔥 clé du layout stable
+				priority={priority}
+				placeholder={normalized.blur ? "blur" : "empty"}
+				blurDataURL={normalized.blur ?? undefined}
+				className={cn("object-cover", {
+					"cursor-pointer transition-transform duration-300 hover:scale-105": !!onClick,
+				})}
+				sizes="(max-width: 768px) 100vw, 50vw" // 🔥 important pour perf
+				onClick={onClick}
+			/>
 		</div>
 	);
 }

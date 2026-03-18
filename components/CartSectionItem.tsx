@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useModal } from "@/lib/contexts/modal-context";
@@ -23,6 +24,11 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
 	const { isPending } = useCartActions();
 
+	const image = useMemo(
+		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
+		[item],
+	);
+
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
 	item.merchandise.selectedOptions.forEach(({ name, value }) => {
 		if (value !== DEFAULT_OPTION) {
@@ -39,17 +45,7 @@ export default function CartSectionItem({ item }: Readonly<Props>) {
 			<CartSectionItemMessage className="mb-2" item={item} />
 			<div className="grid grid-cols-3 gap-4">
 				<Link className="col-span-1" href={merchandiseUrl} onClick={closeModal}>
-					<ImageContainer
-						image={{
-							alt: item.merchandise.product.featuredImage.altText || item.merchandise.product.title,
-							url: item.merchandise.product.featuredImage.url,
-							width: item.merchandise.product.featuredImage.width,
-							height: item.merchandise.product.featuredImage.height,
-							lqip: null,
-						}}
-						priority={true}
-						ratio="3/4"
-					/>
+					<ImageContainer image={image} priority={true} ratio="3/4" />
 				</Link>
 				<div className="col-span-2 flex justify-between gap-2">
 					<div className="flex grow flex-col justify-between pb-1">

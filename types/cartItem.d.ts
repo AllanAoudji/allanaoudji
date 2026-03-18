@@ -1,4 +1,5 @@
 import CartProduct from "./cartProduct";
+import shopifyImage from "./shopifyImage";
 
 type CartItem = {
 	id: string | undefined;
@@ -13,6 +14,7 @@ type CartItem = {
 			name: string;
 			value: string;
 		}[];
+		image?: shopifyImage;
 		product: CartProduct;
 	};
 };

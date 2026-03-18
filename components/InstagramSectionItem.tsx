@@ -1,22 +1,31 @@
 import ImageContainer from "./ImageContainer";
 import InstagramSectionIcon from "./InstagramSectionIcon";
 import InstagramImage from "@/types/instagramImage";
-import { workGalleryImage, workMainImage } from "@/types/sanityType";
 
 type Props = {
 	post?: InstagramImage;
 };
 
-const convertInstagramImageForContainerImage = (
-	instagramImage: InstagramImage,
-): workMainImage | workGalleryImage => {
+type SanityImage = {
+	alt: string | null;
+	url: string | null;
+	_id: string;
+	width: number | null;
+	height: number | null;
+	blurHash: string | null;
+	lqip: string | null;
+};
+
+const convertInstagramImageForContainerImage = (instagramImage: InstagramImage): SanityImage => {
 	return {
 		alt: "image instagram",
-		height: 1350,
-		lqip: null,
 		url:
 			instagramImage.media_type === "VIDEO" ? instagramImage.thumbnail_url : instagramImage.media_url,
+		_id: "",
 		width: 1080,
+		height: 1350,
+		lqip: null,
+		blurHash: null,
 	};
 };
 

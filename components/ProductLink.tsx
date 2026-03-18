@@ -30,13 +30,7 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 						"opacity-50": !product.availableForSale,
 						"group-hover:opacity-0": hasSecondImage,
 					})}
-					image={{
-						alt: product.featuredImage.altText || product.title,
-						url: product.featuredImage.url,
-						width: product.featuredImage.width,
-						height: product.featuredImage.height,
-						lqip: null,
-					}}
+					image={product.featuredImage}
 					priority={true}
 					ratio="3/4"
 				/>
@@ -45,13 +39,7 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 						className={cn("absolute top-0 -z-10", {
 							"opacity-50": !product.availableForSale,
 						})}
-						image={{
-							alt: product.images[1].altText || product.title,
-							url: product.images[1].url,
-							width: product.images[1].width,
-							height: product.images[1].height,
-							lqip: null,
-						}}
+						image={product.images[1]}
 						priority={true}
 						ratio="3/4"
 					/>

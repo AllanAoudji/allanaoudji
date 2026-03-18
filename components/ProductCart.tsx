@@ -208,7 +208,7 @@ export default function ProductCart({ className, product, variantsInventory }: R
 				variants={product.variants}
 			/>
 			<ProductCartStock className="mt-16 mb-2" variant={finalVariant} />
-			<div className="flex flex-col gap-2 sm:flex-row">
+			<div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
 				<ProductCartQuantity
 					isPending={isPending}
 					decrement={decrementQuantity}
