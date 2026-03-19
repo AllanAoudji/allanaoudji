@@ -21,6 +21,7 @@
 		"@tabler/icons-react": "^3.40.0",
 		"clsx": "^2.1.1",
 		"easymde": "^2.20.0",
+		"html-react-parser": "^5.2.17",
 		"motion": "^12.27.5",
 		"next": "^16.0.2-canary.26",
 		"next-sanity": "^9.12.2",

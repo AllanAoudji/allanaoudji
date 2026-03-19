@@ -6,9 +6,9 @@ import { revalidateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import createCartAndSetCookie from "./createCartAndSetCookie";
+import RemoveActionFromCartActionData from "@/types/RemoveFromCartActionData";
 import ActionReponse from "@/types/actionResponse";
 import CartItem from "@/types/cartItem";
-import RemoveActionFromCartActionData from "@/types/removeFromCartActionData";
 
 export async function removeFromCartAction(
 	merchandiseId: string,
