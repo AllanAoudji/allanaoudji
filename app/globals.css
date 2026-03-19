@@ -34,7 +34,7 @@
 	/* ─── RACINE ──────────────────────────────────────────────────────────────── */
 
 	.editorial-root {
-		@apply text-quaternary text-sm leading-[1.45] tracking-[0.01em];
+		@apply text-quaternary text-sm leading-4.5 tracking-[0.01em];
 		font-family: "gopher", Georgia, serif;
 	}
 
@@ -75,19 +75,19 @@
 
 	/* h1 → text-xl (1.25rem) — sous le text-2xl du site */
 	.editorial-root h1 {
-		@apply text-quaternary mt-1 mb-2 text-xl font-bold tracking-[0.02em] uppercase;
+		@apply text-quaternary mt-1 mb-2 text-xl leading-5 font-bold tracking-[0.02em] uppercase;
 		font-family: "gopher", Georgia, serif;
 	}
 
 	/* h2 → text-lg (1.125rem) */
 	.editorial-root h2 {
-		@apply text-quaternary mt-1 mb-2 text-lg tracking-[0.02em] uppercase;
+		@apply text-quaternary mt-1 mb-2 text-lg leading-5 tracking-[0.02em] uppercase;
 		font-family: "gopher", Georgia, serif;
 	}
 
 	/* h3 → text-base (1rem) */
 	.editorial-root h3 {
-		@apply text-quaternary mt-4 mb-1.5 text-base font-semibold tracking-[0.02em] uppercase;
+		@apply text-quaternary mt-4 mb-1.5 text-base leading-5 font-semibold tracking-[0.02em] uppercase;
 		font-family: "gopher", Georgia, serif;
 	}
 
@@ -95,7 +95,7 @@
 
 	/* p → text-sm (0.875rem) — base */
 	.editorial-root p {
-		@apply text-quaternary mb-2 w-full text-sm leading-[1.45];
+		@apply text-quaternary mb-2 w-full text-sm;
 		font-family: "gopher", Georgia, serif;
 	}
 
@@ -117,7 +117,7 @@
 
 	/* li → text-sm (0.875rem) — aligné sur le corps */
 	.editorial-root li {
-		@apply text-quaternary text-sm leading-[1.45];
+		@apply text-quaternary text-sm;
 		font-family: "gopher", Georgia, serif;
 	}
 
@@ -157,7 +157,7 @@
 
 	/* caption → text-xs (0.75rem) — en dessous du corps */
 	.editorial-root .caption {
-		@apply mt-1.5 text-xs leading-snug tracking-[0.06em] uppercase;
+		@apply mt-1.5 text-xs tracking-[0.06em] uppercase;
 		color: color-mix(in srgb, var(--color-quaternary) 50%, transparent);
 	}
 

@@ -95,8 +95,11 @@ export default async function Page({ params }: Readonly<Props>) {
 	return (
 		<>
 			<section className="grid grid-cols-6 gap-4">
-				<ProductGallery className="col-span-6 md:col-span-3 lg:col-span-4" product={product} />
-				<div className="col-span-6 md:col-span-3 lg:col-span-2">
+				<ProductGallery
+					className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-4"
+					product={product}
+				/>
+				<div className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-2">
 					<Title className="mb-0">{product.title}</Title>
 					<ProductPrice product={product} />
 					{!!product.descriptionHtml && (
