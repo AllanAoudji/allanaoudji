@@ -46,3 +46,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // error handler
 // loading module
 // WYSIWYG
+// Accepter les cookies modules
