@@ -42,6 +42,7 @@ export default function FilterCollectionItem({ direction = "row", item }: Readon
 				)}
 				href={href}
 				onClick={closeModal}
+				replace={true}
 			>
 				<span
 					className={cn(
