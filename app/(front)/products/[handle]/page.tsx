@@ -94,7 +94,7 @@ export default async function Page({ params }: Readonly<Props>) {
 
 	return (
 		<>
-			<section className="grid grid-cols-6 gap-4">
+			<section className="grid grid-cols-6 gap-8 md:gap-4">
 				<ProductGallery
 					className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-4"
 					product={product}
@@ -103,7 +103,7 @@ export default async function Page({ params }: Readonly<Props>) {
 					<Title className="mb-0">{product.title}</Title>
 					<ProductPrice product={product} />
 					{!!product.descriptionHtml && (
-						<ProductDescription className="mt-4" html={product.descriptionHtml} />
+						<ProductDescription className="mt-10" html={product.descriptionHtml} />
 					)}
 					<ProductCart
 						discountNode={discountNode}

@@ -7,11 +7,11 @@ export default function NavBar() {
 	return (
 		<nav className="text-quaternary padding-container h-header relative">
 			<div className="grid grid-cols-[1fr_auto_1fr] items-center">
-				<Logo className="hidden justify-self-start sm:block [&_a]:pr-6" />
-				<NavBarHamburgerButton className="justify-self-start sm:hidden" />
+				<Logo className="hidden justify-self-start md:block [&_a]:pr-6" />
+				<NavBarHamburgerButton className="justify-self-start md:hidden" />
 
-				<Logo className="justify-self-center sm:hidden" type="large" />
-				<NavBarMenu className="hidden justify-self-center sm:flex" />
+				<Logo className="justify-self-center md:hidden" type="large" />
+				<NavBarMenu className="hidden justify-self-center md:flex" />
 
 				<CartButton className="justify-self-end" />
 			</div>

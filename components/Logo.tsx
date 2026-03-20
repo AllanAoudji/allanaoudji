@@ -32,8 +32,8 @@ export default function Logo({ className, color = "dark", type = "square" }: Rea
 			<Link className={"block"} href={"/"} onClick={closeModal}>
 				<Image
 					alt={"logo"}
-					className={cn("h-header w-auto py-3.5", {
-						"py-4": type === "large",
+					className={cn("h-header w-auto py-2.5", {
+						"py-3": type === "large",
 					})}
 					height={762}
 					src={logoPath(type, color)}

@@ -13,7 +13,7 @@
 
 	--font-gopher: "gopher";
 
-	--spacing-header: 64px;
+	--spacing-header: 48px;
 }
 
 @layer utilities {
@@ -42,12 +42,12 @@
 
 	/* Section ouverte par un h1 — espacement plein */
 	.editorial-section {
-		@apply py-3 first:pt-0;
+		@apply py-3 first:pt-0 last:pb-0;
 	}
 
 	/* Section ouverte par un h2 — espacement resserré */
 	.editorial-section--sub {
-		@apply pt-1 pb-2;
+		@apply pt-1 pb-2 last:pb-0;
 	}
 
 	/* Section ne contenant qu'un heading seul (h1 ou h2) suivie d'une autre section
@@ -68,6 +68,34 @@
 	.editorial-section::after {
 		content: "";
 		@apply clear-both table;
+	}
+
+	/* Supprime le margin/padding bas du dernier élément de la dernière section */
+	.editorial-section:last-child {
+		@apply pb-0;
+	}
+
+	.editorial-section:last-child > *:last-child {
+		@apply mb-0;
+	}
+
+	/* Cas table en dernière position — wrapper et table elle-même */
+	.editorial-section:last-child > .editorial-table-wrapper:last-child {
+		@apply mb-0;
+	}
+
+	.editorial-section:last-child > .editorial-table-wrapper:last-child table {
+		@apply mb-0;
+	}
+
+	/* Dernière cellule de la dernière row */
+	.editorial-section:last-child > .editorial-table-wrapper:last-child tr:last-child td {
+		@apply pb-0;
+	}
+
+	/* Supprime margin/padding du dernier élément dans la dernière section */
+	.editorial-section:last-child > *:last-child {
+		@apply mb-0 pb-0;
 	}
 
 	/* ─── HEADINGS ────────────────────────────────────────────────────────────── */

@@ -202,13 +202,13 @@ export default function ProductCart({ className, product, variantsInventory }: R
 	return (
 		<div className={cn(className)}>
 			<ProductVariantSelector
-				className="mt-16"
+				className="mt-12"
 				onClick={onVariantClick}
 				options={product.options}
 				variants={product.variants}
 			/>
-			<ProductCartStock className="mt-16 mb-2" variant={finalVariant} />
-			<div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
+			<ProductCartStock className="mt-8 mb-1" variant={finalVariant} />
+			<div className="bg-red flex flex-col gap-2 sm:flex-row lg:flex-col">
 				<ProductCartQuantity
 					isPending={isPending}
 					decrement={decrementQuantity}
