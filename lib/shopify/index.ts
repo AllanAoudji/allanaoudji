@@ -16,6 +16,7 @@ import { getDiscountsQuery } from "./queries/discount";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
+	getLatestProductsQuery,
 	getPopularProductsQuery,
 	getProductQuery,
 	getProductRecommendationsQuery,
@@ -39,6 +40,7 @@ import {
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
 	ShopifyDiscountsQueryOperation,
+	ShopifyLatestProductsOperation,
 	ShopifyMenuOperation,
 	ShopifyPageOperation,
 	ShopifyPagesOperation,
@@ -51,6 +53,7 @@ import {
 	ShopifyVariantsInventoryQueryOperation,
 } from "@/types/shopifyOperations";
 import { ShopifyPage } from "@/types/shopifyPage";
+import ShopifyPageInfo from "@/types/shopifyPageInfo";
 import ShopifyProduct from "@/types/shopifyProduct";
 
 type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
@@ -330,19 +333,28 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 }
 
 export async function getCollectionProducts({
+	after,
 	collection,
+	first = 10,
 	reverse,
 	sortKey,
 }: {
+	after?: string;
 	collection: string;
 	reverse?: boolean;
 	sortKey?: string;
-}): Promise<Product[]> {
+	first?: number;
+}): Promise<{
+	pageInfo: ShopifyPageInfo;
+	products: Product[];
+}> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
 		cache: "no-store",
 		query: getCollectionProductsQuery,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
+			after,
+			first,
 			handle: collection,
 			reverse,
 			sortKey: sortKey === "CREATED_AT" ? "CREATED" : sortKey,
@@ -350,10 +362,19 @@ export async function getCollectionProducts({
 	});
 
 	if (!res.body?.data?.collection) {
-		return [];
+		return {
+			pageInfo: {
+				endCursor: null,
+				hasNextPage: false,
+			},
+			products: [],
+		};
 	}
 
-	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+	return {
+		pageInfo: res.body.data.collection.products.pageInfo,
+		products: reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products)),
+	};
 }
 
 export async function getCollections(): Promise<Collection[]> {
@@ -392,6 +413,20 @@ export async function getDiscount(): Promise<DiscountNode[]> {
 	});
 
 	return res.body.data.discountNodes.edges.map(edge => edge.node);
+}
+
+export async function getLatestProducts(): Promise<Product[]> {
+	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
+		cache: "no-store",
+		query: getLatestProductsQuery,
+		tags: [TAGS.products],
+	});
+
+	if (!res.body.data.collection) {
+		return [];
+	}
+
+	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
@@ -469,24 +504,32 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 }
 
 export async function getProducts({
+	after,
+	first = 10,
 	query,
 	reverse = true,
 	sortKey,
-	first = 20,
 }: {
+	after?: string;
 	query?: string;
 	reverse?: boolean;
 	sortKey?: string;
 	first?: number;
-}): Promise<Product[]> {
+}): Promise<{
+	pageInfo: ShopifyPageInfo;
+	products: Product[];
+}> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
 		cache: "no-store",
 		query: getProductsQuery,
 		tags: [TAGS.products],
-		variables: { query, reverse, sortKey, first },
+		variables: { after, first, query, reverse, sortKey },
 	});
 
-	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+	return {
+		pageInfo: res.body.data.products.pageInfo,
+		products: reshapeProducts(removeEdgesAndNodes(res.body.data.products)),
+	};
 }
 
 export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {

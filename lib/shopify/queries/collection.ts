@@ -19,9 +19,15 @@ export const getCollectionProductsQuery = /* Graphql */ `
         $handle: String!
         $sortKey: ProductCollectionSortKeys
         $reverse: Boolean
+        $first: Int
+        $after: String
     ) {
         collection(handle: $handle) {
-            products(sortKey: $sortKey, reverse: $reverse, first: 20) {
+            products(sortKey: $sortKey, reverse: $reverse, first: $first, after: $after) {
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
                 edges {
                     node {
                         ...product

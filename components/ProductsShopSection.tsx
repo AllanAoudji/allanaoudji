@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import { DEFAULT_SORT, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
-import Grid from "./Grid";
-import ProductLink from "./ProductLink";
+import ProductsShopSectionInfiniteGrid from "./ProductsShopSectionInfiniteGrid";
 import Product from "@/types/product";
+import ShopifyPageInfo from "@/types/shopifyPageInfo";
+
+const FIRST = 12;
 
 type Props = {
 	handle?: string;
@@ -14,18 +16,23 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	const { sort, q: searchValue } = searchParams;
 	const { sortKey, reverse } = SORTING.find(item => item.slug === sort) || DEFAULT_SORT;
 
-	let products: Product[];
+	let res: {
+		pageInfo: ShopifyPageInfo;
+		products: Product[];
+	} | null;
 	try {
 		if (handle) {
-			products = await getCollectionProducts({
+			res = await getCollectionProducts({
 				collection: handle,
+				first: FIRST,
 				reverse,
 				sortKey,
 			});
 		} else {
-			products = await getProducts({
-				query: typeof searchValue === "string" ? searchValue : undefined,
+			res = await getProducts({
+				first: FIRST,
 				reverse,
+				query: typeof searchValue === "string" ? searchValue : undefined,
 				sortKey,
 			});
 		}
@@ -36,16 +43,20 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		throw new Error("fetch failed");
 	}
 
-	if (!products || !products.length || (!!handle && handle.startsWith("hidden"))) {
+	if (!res || !res.products || !res.products.length || (!!handle && handle.startsWith("hidden"))) {
 		redirect("/collections");
 	}
 
 	return (
-		<Grid>
-			{!!searchValue && !products.length && <p>There are no products that match</p>}
-			{products.map(product => (
-				<ProductLink key={product.id} product={product} />
-			))}
-		</Grid>
+		<ProductsShopSectionInfiniteGrid
+			first={FIRST}
+			initialProducts={res.products}
+			initialCursor={res.pageInfo.endCursor}
+			hasNextPage={res.pageInfo.hasNextPage}
+			handle={handle}
+			sortKey={sortKey}
+			reverse={reverse}
+			searchValue={searchValue}
+		/>
 	);
 }
