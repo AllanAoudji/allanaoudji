@@ -1,3 +1,4 @@
+import { FETCH_WORKS_HOME } from "@/lib/constants";
 import WorksHomeSectionContainer from "./WorksHomeSectionContainer";
 import WorksHomeSectionItem from "./WorksHomeSectionItem";
 import { getWorks } from "@/sanity/lib/queries";
@@ -6,7 +7,7 @@ import { WORKS_QUERYResult } from "@/sanity/types";
 export default async function WorksSection() {
 	let query: WORKS_QUERYResult;
 	try {
-		query = await getWorks(0, 6);
+		query = await getWorks(0, FETCH_WORKS_HOME);
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error;

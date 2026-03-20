@@ -1,14 +1,13 @@
+import { FETCH_WORKS_GALLERY } from "@/lib/constants";
 import WorksGallerySectionContainer from "./WorksGallerySectionContainer";
 import { getWorks } from "@/sanity/lib/queries";
 import { WORKS_QUERYResult } from "@/sanity/types";
-
-const FETCH_SIZE = 5;
 
 export default async function WorksGallerySection() {
 	let query: WORKS_QUERYResult;
 
 	try {
-		query = await getWorks(0, FETCH_SIZE);
+		query = await getWorks(0, FETCH_WORKS_GALLERY);
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error;
@@ -25,12 +24,8 @@ export default async function WorksGallerySection() {
 	}
 
 	return (
-		<div className="grid grid-cols-1 divide-y divide-solid">
-			<WorksGallerySectionContainer
-				initialWorks={query.works}
-				initialTotal={query.total ?? 0}
-				initialFrom={FETCH_SIZE}
-			/>
+		<div className="grid grid-cols-1">
+			<WorksGallerySectionContainer initialWorks={query.works} initialTotal={query.total ?? 0} />
 		</div>
 	);
 }

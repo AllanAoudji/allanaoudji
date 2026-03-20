@@ -8,46 +8,56 @@ export const DEFAULT_SORT: SortFilterItem = {
 	sortKey: "CREATED_AT",
 };
 
+export const FETCH_WORKS_HOME = 6;
+export const FETCH_WORKS_GALLERY = 10;
+export const FETCH_PRODUCTS = 12;
+
 export const FOOT_MENU: Menu[] = [
 	{
+		exact: true,
 		href: "/legal-notices",
 		title: "mentions légales",
-		activeSegment: ["legal-notices"],
 	},
 	{
+		exact: true,
 		href: "/privacy-policy",
 		title: "politique de confidentialité",
-		activeSegment: ["privacy-policy"],
 	},
 	{
+		exact: true,
 		href: "/general-conditions-of-sale",
 		title: "conditions générales de vente",
-		activeSegment: ["general-conditions-of-sale"],
 	},
 ];
 
 export const HEAD_MENU: Menu[] = [
 	{
+		exact: true,
 		href: "/gallery",
 		title: "galerie",
-		activeSegment: ["gallery"],
 	},
 	{
+		exact: false,
 		href: "/collections",
 		title: "boutique",
-		activeSegment: ["collections"],
 	},
 	{
+		exact: true,
 		href: "/about",
 		title: "à propos",
-		activeSegment: ["about"],
 	},
 	{
+		exact: true,
 		href: "/contact",
 		title: "contact",
-		activeSegment: ["contact"],
 	},
 ];
+
+export const HOME_MENU: Menu = {
+	exact: true,
+	href: "/",
+	title: "home",
+};
 
 export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
 

@@ -1,7 +1,7 @@
 interface Menu {
+	exact: boolean;
 	href: string;
 	title: string;
-	activeSegment: string[] | null;
 }
 
 export default Menu;

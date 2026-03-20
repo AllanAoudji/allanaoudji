@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreProducts } from "@/lib/actions/fetchMoreProducts";
+import { FETCH_PRODUCTS } from "@/lib/constants";
 import Grid from "./Grid";
 import ProductLink from "./ProductLink";
 import Product from "@/types/product";
 
 type Props = {
-	first?: number;
 	handle?: string;
 	hasNextPage?: boolean;
 	initialCursor: string | null;
@@ -18,7 +18,6 @@ type Props = {
 };
 
 export default function ProductsShopSectionInfiniteGrid({
-	first = 20,
 	handle,
 	hasNextPage: initialHasNextPage,
 	initialCursor,
@@ -27,6 +26,7 @@ export default function ProductsShopSectionInfiniteGrid({
 	searchValue,
 	sortKey,
 }: Readonly<Props>) {
+	const [isLoading, setIsLoading] = useState(false);
 	const [products, setProducts] = useState<Product[]>(initialProducts);
 
 	const cursorRef = useRef<string | null>(initialCursor ?? null);
@@ -36,7 +36,7 @@ export default function ProductsShopSectionInfiniteGrid({
 	const observerRef = useRef<IntersectionObserver | null>(null);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
-	const [isPending, startTransition] = useTransition();
+	const [, startTransition] = useTransition();
 
 	useEffect(() => {
 		setProducts(initialProducts);
@@ -54,6 +54,7 @@ export default function ProductsShopSectionInfiniteGrid({
 			if (!hasNextPageRef.current || !cursorRef.current || isFetching.current) return;
 
 			isFetching.current = true;
+			setIsLoading(true);
 
 			// 🔑 Couper l'observer immédiatement et synchronement
 			if (sentinelRef.current && observerRef.current) {
@@ -63,7 +64,7 @@ export default function ProductsShopSectionInfiniteGrid({
 			startTransition(() => {
 				fetchMoreProducts({
 					after: cursorRef.current!,
-					first,
+					first: FETCH_PRODUCTS,
 					handle,
 					reverse,
 					searchValue: typeof searchValue === "string" ? searchValue : undefined,
@@ -76,9 +77,12 @@ export default function ProductsShopSectionInfiniteGrid({
 						cursorRef.current = result.pageInfo.endCursor ?? null;
 						hasNextPageRef.current = result.pageInfo.hasNextPage ?? false;
 					})
+					// TODO:
+					// Error handler
 					.catch(console.error)
 					.finally(() => {
 						isFetching.current = false;
+						setIsLoading(false);
 
 						if (hasNextPageRef.current && sentinelRef.current && observerRef.current) {
 							observerRef.current.observe(sentinelRef.current);
@@ -86,7 +90,7 @@ export default function ProductsShopSectionInfiniteGrid({
 					});
 			});
 		};
-	}, [first, handle, reverse, sortKey, searchValue]);
+	}, [handle, reverse, searchValue, sortKey]);
 
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
@@ -119,15 +123,15 @@ export default function ProductsShopSectionInfiniteGrid({
 
 			<div ref={sentinelRef} aria-hidden="true" />
 
-			{isPending && (
-				<div className="flex justify-center py-8">
-					<span className="text-quaternary text-sm">Chargement...</span>
+			{isLoading && (
+				<div className="flex justify-center pt-16">
+					<span className="text-quaternary text-xs">Chargement...</span>
 				</div>
 			)}
 
-			{!hasNextPageRef.current && products.length > 0 && (
-				<p className="text-quaternary/75 py-8 text-center text-sm">Tous les produits sont affichés</p>
-			)}
+			{/* {!hasNextPageRef.current && products.length > 0 && (
+				<p className="text-quaternary/75 pt-16 text-center text-xs">Tous les produits sont affichés</p>
+			)} */}
 		</>
 	);
 }

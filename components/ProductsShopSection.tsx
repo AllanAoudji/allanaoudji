@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation";
-import { DEFAULT_SORT, SORTING } from "@/lib/constants";
+import { DEFAULT_SORT, FETCH_PRODUCTS, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import ProductsShopSectionInfiniteGrid from "./ProductsShopSectionInfiniteGrid";
 import Product from "@/types/product";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
-
-const FIRST = 12;
 
 type Props = {
 	handle?: string;
@@ -24,13 +22,13 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		if (handle) {
 			res = await getCollectionProducts({
 				collection: handle,
-				first: FIRST,
+				first: FETCH_PRODUCTS,
 				reverse,
 				sortKey,
 			});
 		} else {
 			res = await getProducts({
-				first: FIRST,
+				first: FETCH_PRODUCTS,
 				reverse,
 				query: typeof searchValue === "string" ? searchValue : undefined,
 				sortKey,
@@ -49,14 +47,13 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 
 	return (
 		<ProductsShopSectionInfiniteGrid
-			first={FIRST}
-			initialProducts={res.products}
-			initialCursor={res.pageInfo.endCursor}
-			hasNextPage={res.pageInfo.hasNextPage}
 			handle={handle}
-			sortKey={sortKey}
+			hasNextPage={res.pageInfo.hasNextPage}
+			initialCursor={res.pageInfo.endCursor}
+			initialProducts={res.products}
 			reverse={reverse}
 			searchValue={searchValue}
+			sortKey={sortKey}
 		/>
 	);
 }

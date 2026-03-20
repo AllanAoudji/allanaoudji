@@ -1,32 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { useModal } from "@/lib/contexts/modal-context";
 import { cn } from "@/lib/utils";
+import Menu from "@/types/menu";
 
 type Props = {
-	activeSegment?: string[] | null;
 	color?: "dark" | "light";
-	href: string;
+	menu: Menu;
 	title: string;
 	direction?: "column" | "row";
 };
 
 export default function NavBarMenuItem({
-	activeSegment,
 	color = "dark",
-	href,
+	menu,
 	title,
 	direction = "row",
 }: Readonly<Props>) {
-	const isActiveSegment = useSelectedLayoutSegment();
 	const { closeModal } = useModal();
+	const pathname = usePathname();
 
 	const isActive = useMemo(() => {
-		return isActiveSegment && activeSegment?.includes(isActiveSegment);
-	}, [activeSegment, isActiveSegment]);
+		const exact = menu.exact ?? true;
+		return exact ? pathname === menu.href : pathname.startsWith(menu.href);
+	}, [menu, pathname]);
 
 	return (
 		<li
@@ -46,7 +46,7 @@ export default function NavBarMenuItem({
 						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100": !isActive,
 					},
 				)}
-				href={href}
+				href={menu.href}
 				onClick={closeModal}
 			>
 				<span

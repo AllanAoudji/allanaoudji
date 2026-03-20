@@ -9,7 +9,7 @@ type Props = {
 
 export default function WorksGallerySectionContainerItem({ work }: Readonly<Props>) {
 	return (
-		<section className="py-8 first:pt-0 last:pb-0">
+		<section className="pb-16 last-of-type:pb-0">
 			<SubTitle>{work.title}</SubTitle>
 			<WorkText text={work.text} />
 			<WorkImages images={work.gallery} />

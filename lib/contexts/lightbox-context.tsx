@@ -8,7 +8,7 @@ type Props = {
 	children: React.ReactNode;
 };
 type LightBoxContectType = {
-	updateImages: (_images: workGalleryImage[]) => void;
+	appendImages: (_newImages: workGalleryImage[]) => void;
 	resetImages: () => void;
 	setImage: (_id: string) => void;
 };
@@ -16,9 +16,9 @@ type LightBoxContectType = {
 const LightboxContext = createContext<LightBoxContectType | undefined>(undefined);
 
 export function LightboxProvider({ children }: Readonly<Props>) {
-	const [images, setImages] = useState<workGalleryImage[] | null>(null);
 	const [clickedImage, setClickedImage] = useState<workGalleryImage | null>(null);
 	const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+	const [images, setImages] = useState<workGalleryImage[] | null>(null);
 
 	const resetClick = useCallback(() => {
 		setClickedImage(null);
@@ -33,6 +33,9 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		[images, setClickedImage],
 	);
 
+	const appendImages = useCallback((newImages: workGalleryImage[]) => {
+		setImages(prev => (prev ? [...prev, ...newImages] : newImages));
+	}, []);
 	const nextImage = useCallback(() => {
 		if (!images || clickedIndex === null) return;
 		setClickedIndex(prev => (prev !== null ? (prev + 1) % images.length : null));
@@ -42,10 +45,6 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		if (!images || clickedIndex === null) return;
 		setClickedIndex(prev => (prev !== null ? (prev - 1 + images.length) % images.length : null));
 	}, [clickedIndex, images]);
-
-	const updateImages = useCallback((images: workGalleryImage[]) => {
-		setImages(images);
-	}, []);
 
 	const resetImages = useCallback(() => {
 		setImages(null);
@@ -68,8 +67,8 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 	}, [clickedIndex, images]);
 
 	const value = useMemo(
-		() => ({ updateImages, resetImages, setImage }),
-		[setImage, resetImages, updateImages],
+		() => ({ appendImages, resetImages, setImage }),
+		[appendImages, resetImages, setImage],
 	);
 
 	return (
