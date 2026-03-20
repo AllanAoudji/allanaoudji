@@ -1,18 +1,24 @@
 "use server";
 
 import { TAGS } from "../constants";
-import { getCart, removeFromCart } from "../shopify";
+import { removeFromCart } from "../shopify";
 import { revalidateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
-import createCartAndSetCookie from "./createCartAndSetCookie";
 import RemoveActionFromCartActionData from "@/types/RemoveFromCartActionData";
 import ActionReponse from "@/types/actionResponse";
 import CartItem from "@/types/cartItem";
 
 export async function removeFromCartAction(
-	merchandiseId: string,
+	cartItem: CartItem,
 ): Promise<ActionReponse<RemoveActionFromCartActionData>> {
+	if (!cartItem.id) {
+		return {
+			message: "Unknown error occurred while removing item.",
+			type: "error",
+		};
+	}
+
 	let cookieStore: ReadonlyRequestCookies;
 	try {
 		cookieStore = await cookies();
@@ -29,50 +35,10 @@ export async function removeFromCartAction(
 		};
 	}
 
-	let cartId = cookieStore.get("cartId")?.value;
+	const cartId = cookieStore.get("cartId")?.value;
 	if (!cartId) {
-		try {
-			cartId = await createCartAndSetCookie();
-		} catch (error) {
-			if (error instanceof Error) {
-				return {
-					message: error.message,
-					type: "error",
-				};
-			}
-			return {
-				message: "Unknown error occurred while retrieving cart ID from cookies.",
-				type: "error",
-			};
-		}
-	}
-
-	let cartItem: CartItem | undefined;
-	try {
-		const cart = await getCart(cartId);
-		if (!cart) {
-			return {
-				message: "Cart not found.",
-				type: "error",
-			};
-		}
-		cartItem = cart.lines.find(line => line.merchandise.id === merchandiseId);
-
-		if (!cartItem || !cartItem.id) {
-			return {
-				message: "Item not found in cart.",
-				type: "error",
-			};
-		}
-	} catch (error) {
-		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
-		}
 		return {
-			message: "Unknown error occurred while removing item from cart.",
+			message: "Cart not found.",
 			type: "error",
 		};
 	}

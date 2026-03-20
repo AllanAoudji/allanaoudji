@@ -14,8 +14,9 @@ export default function CartSectionItemQuantityDeleteButton({ className, item }:
 	const { isPending, removeItem, resetCartMessage } = useCartActions();
 
 	const handleAction = useCallback(() => {
-		removeItem(item.merchandise.id);
-	}, [item, removeItem]);
+		resetCartMessage();
+		removeItem(item);
+	}, [item, removeItem, resetCartMessage]);
 
 	return (
 		<form action={handleAction} className={className}>
@@ -27,7 +28,6 @@ export default function CartSectionItemQuantityDeleteButton({ className, item }:
 					"cursor-not-allowed": isPending,
 				})}
 				disabled={isPending}
-				onClick={resetCartMessage}
 				type="submit"
 			>
 				<span

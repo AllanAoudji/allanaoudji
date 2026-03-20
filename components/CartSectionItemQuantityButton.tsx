@@ -31,12 +31,13 @@ export default function CartSectionItemQuantityButton({
 	}, [item, type]);
 
 	const handleAction = useCallback(() => {
+		resetCartMessage();
 		if (type === "minus") {
-			decrementItem(item.merchandise.id);
+			decrementItem(item);
 		} else {
-			incrementItem(item.merchandise.id);
+			incrementItem(item);
 		}
-	}, [decrementItem, incrementItem, item, type]);
+	}, [decrementItem, incrementItem, item, resetCartMessage, type]);
 
 	return (
 		<form action={handleAction} className="group">
@@ -49,7 +50,6 @@ export default function CartSectionItemQuantityButton({
 					className,
 				)}
 				disabled={isPending}
-				onClick={resetCartMessage}
 				type="submit"
 			>
 				<div className="flex h-6 w-6 origin-center items-center justify-center transition-transform duration-500 group-hover:rotate-180">
