@@ -6,7 +6,7 @@ import { WORKS_QUERYResult } from "@/sanity/types";
 export default async function WorksSection() {
 	let query: WORKS_QUERYResult;
 	try {
-		query = await getWorks("gallery");
+		query = await getWorks(0, 6);
 	} catch (error) {
 		if (error instanceof Error) {
 			throw error;

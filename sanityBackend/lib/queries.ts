@@ -34,7 +34,8 @@ const CONTACTS_QUERY = defineQuery(`
 
 const WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
-    works[0...$number]{
+    "total": count(works),
+    works[$from...$to]{
       "_id": _key,
       ...(@-> {
         "slug": slug.current,
@@ -98,9 +99,8 @@ export const getContacts = () => {
 	return client.fetch<CONTACTS_QUERYResult>(CONTACTS_QUERY);
 };
 
-export const getWorks = (type: "home" | "gallery") => {
-	const number = type === "home" ? 6 : 10;
-	return client.fetch<WORKS_QUERYResult>(WORKS_QUERY, { number });
+export const getWorks = (from: number, to: number) => {
+	return client.fetch<WORKS_QUERYResult>(WORKS_QUERY, { from, to });
 };
 
 export const getWork = (slug: string) => {
