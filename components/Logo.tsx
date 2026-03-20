@@ -35,9 +35,9 @@ export default function Logo({ className, color = "dark", type = "square" }: Rea
 					className={cn("h-header w-auto py-3.5", {
 						"py-4": type === "large",
 					})}
-					height={type === "square" ? 1419 : 2183}
+					height={762}
 					src={logoPath(type, color)}
-					width={762}
+					width={type === "square" ? 1419 : 2183}
 				/>
 			</Link>
 		</div>

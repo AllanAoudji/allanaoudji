@@ -103,3 +103,15 @@ export function buildGalleryImages(product: Product, variant: ProductVariant | u
 
 	return images;
 }
+
+export async function withMinimumDelay<T>(
+	promise: Promise<T>,
+	minimumDelay: number = 1000,
+): Promise<T> {
+	const [result] = await Promise.all([
+		promise,
+		new Promise<void>(resolve => setTimeout(resolve, minimumDelay)),
+	]);
+
+	return result;
+}
