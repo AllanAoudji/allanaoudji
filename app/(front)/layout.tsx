@@ -41,7 +41,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// infinite loader
 // loading page
 // error handler
 // loading module
