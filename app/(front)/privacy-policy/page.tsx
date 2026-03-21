@@ -1,5 +1,4 @@
-import { formatDate } from "@/lib/utils";
-import PortableTextContent from "@/components/PortableTextContent";
+import LegalPageContainer from "@/components/LegalPageContainer";
 import { getPrivacyPolicy } from "@/sanity/lib/queries";
 
 export default async function PrivacyPolicy() {
@@ -9,12 +8,5 @@ export default async function PrivacyPolicy() {
 		return <p>pas de contenu</p>;
 	}
 
-	return (
-		<>
-			<div className="mb-4 text-sm italic">
-				<p>Dernière mise à jour : {formatDate(result._updatedAt)}</p>
-			</div>
-			<PortableTextContent value={result.privacyPolicy} />
-		</>
-	);
+	return <LegalPageContainer portableText={result.privacyPolicy} updatedAt={result._updatedAt} />;
 }

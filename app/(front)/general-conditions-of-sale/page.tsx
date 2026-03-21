@@ -1,5 +1,4 @@
-import { formatDate } from "@/lib/utils";
-import PortableTextContent from "@/components/PortableTextContent";
+import LegalPageContainer from "@/components/LegalPageContainer";
 import { getGeneralConditionOfSale } from "@/sanity/lib/queries";
 
 export default async function GeneralConditionsOfSale() {
@@ -10,11 +9,6 @@ export default async function GeneralConditionsOfSale() {
 	}
 
 	return (
-		<>
-			<div className="mb-4 text-sm italic">
-				<p>Dernière mise à jour : {formatDate(result._updatedAt)}</p>
-			</div>
-			<PortableTextContent value={result.generalConditionsOfSale} />
-		</>
+		<LegalPageContainer portableText={result.generalConditionsOfSale} updatedAt={result._updatedAt} />
 	);
 }
