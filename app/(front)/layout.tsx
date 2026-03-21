@@ -45,5 +45,5 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // loading page
 // error handler
 // loading module
-// WYSIWYG
 // Accepter les cookies modules
+// Contact page

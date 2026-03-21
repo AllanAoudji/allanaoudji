@@ -1,3 +1,4 @@
+import { EnvelopeIcon, MobileDeviceIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
@@ -5,8 +6,10 @@ export default defineType({
 	title: "Contenu riche",
 	type: "array",
 	of: [
+		// ─── BLOC TEXTE RICHE ──────────────────────────────────────────────────────
 		defineArrayMember({
 			type: "block",
+
 			styles: [
 				{ title: "Normal", value: "normal" },
 				{ title: "Titre H1", value: "h1" },
@@ -14,15 +17,21 @@ export default defineType({
 				{ title: "Titre H3", value: "h3" },
 				{ title: "Citation", value: "blockquote" },
 			],
+
 			lists: [
 				{ title: "Puce", value: "bullet" },
 				{ title: "Numérotée", value: "number" },
 			],
+
 			marks: {
 				decorators: [
-					/* ... inchangé */
+					{ title: "Gras", value: "strong" },
+					{ title: "Italique", value: "em" },
+					{ title: "Souligné", value: "underline" },
+					{ title: "Code", value: "code" },
 				],
 				annotations: [
+					// Lien externe / interne
 					defineArrayMember({
 						name: "link",
 						type: "object",
@@ -43,10 +52,12 @@ export default defineType({
 						],
 					}),
 
+					// Lien téléphone
 					defineArrayMember({
 						name: "linkPhone",
 						type: "object",
 						title: "Téléphone",
+						icon: MobileDeviceIcon,
 						fields: [
 							defineField({
 								name: "phone",
@@ -62,10 +73,12 @@ export default defineType({
 						],
 					}),
 
+					// Lien e-mail
 					defineArrayMember({
 						name: "linkEmail",
 						type: "object",
 						title: "E-mail",
+						icon: EnvelopeIcon,
 						fields: [
 							defineField({
 								name: "email",
@@ -79,6 +92,7 @@ export default defineType({
 			},
 		}),
 
+		// ─── IMAGE ────────────────────────────────────────────────────────────────
 		defineArrayMember({
 			name: "figure",
 			type: "object",
@@ -91,8 +105,16 @@ export default defineType({
 					options: { hotspot: true },
 					validation: Rule => Rule.required(),
 				}),
-				defineField({ name: "alt", type: "string", title: "Texte alternatif" }),
-				defineField({ name: "caption", type: "string", title: "Légende" }),
+				defineField({
+					name: "alt",
+					type: "string",
+					title: "Texte alternatif",
+				}),
+				defineField({
+					name: "caption",
+					type: "string",
+					title: "Légende",
+				}),
 				defineField({
 					name: "float",
 					type: "string",
@@ -110,16 +132,24 @@ export default defineType({
 			],
 			preview: {
 				select: { title: "alt", media: "image" },
-				prepare: ({ title, media }) => ({ title: title ?? "Image sans alt", media }),
+				prepare: ({ title, media }) => ({
+					title: title ?? "Image sans alt",
+					media,
+				}),
 			},
 		}),
 
+		// ─── TABLEAU ──────────────────────────────────────────────────────────────
 		defineArrayMember({
 			name: "table",
 			type: "object",
 			title: "Tableau",
 			fields: [
-				defineField({ name: "caption", type: "string", title: "Titre du tableau" }),
+				defineField({
+					name: "caption",
+					type: "string",
+					title: "Titre du tableau",
+				}),
 				defineField({
 					name: "rows",
 					title: "Lignes",
@@ -155,6 +185,7 @@ export default defineType({
 			],
 		}),
 
+		// ─── ENCADRÉ (CALLOUT) ────────────────────────────────────────────────────
 		defineArrayMember({
 			name: "callout",
 			type: "object",

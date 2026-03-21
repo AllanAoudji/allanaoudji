@@ -321,6 +321,11 @@ export type AllSanitySchemaTypes =
 	| SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: sanityBackend/lib/queries.ts
+// Variable: ABOUT_QUERY
+// Query: *[_type == "settings"][0]{    about  }
+export type ABOUT_QUERYResult = {
+	about: PortableText | null;
+} | null;
 // Variable: BANNET_QUERY
 // Query: *[_type == "settings"][0]{    banner  }
 export type BANNET_QUERYResult = {
@@ -337,6 +342,21 @@ export type CONTACTS_QUERYResult = {
 		url: string;
 		blank: boolean | null;
 	}> | null;
+} | null;
+// Variable: GENERAL_CONDITION_OF_SALE_QUERY
+// Query: *[_type == "settings"][0]{    generalConditionsOfSale  }
+export type GENERAL_CONDITION_OF_SALE_QUERYResult = {
+	generalConditionsOfSale: PortableText | null;
+} | null;
+// Variable: LEGAL_NOTICES_QUERY
+// Query: *[_type == "settings"][0]{    legalNotices  }
+export type LEGAL_NOTICES_QUERYResult = {
+	legalNotices: PortableText | null;
+} | null;
+// Variable: PRIVACY_POLICY_QUERY
+// Query: *[_type == "settings"][0]{    privacyPolicy  }
+export type PRIVACY_POLICY_QUERYResult = {
+	privacyPolicy: PortableText | null;
 } | null;
 // Variable: WORKS_QUERY
 // Query: *[_type == "settings"][0]{    "total": count(works),    works[$from...$to]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
@@ -392,8 +412,12 @@ export type WORK_QUERYResult = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
+		'\n  *[_type == "settings"][0]{\n    about\n  }  \n': ABOUT_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERYResult;
+		'\n  *[_type == "settings"][0]{\n    generalConditionsOfSale\n  }\n': GENERAL_CONDITION_OF_SALE_QUERYResult;
+		'\n  *[_type == "settings"][0]{\n    legalNotices\n  }  \n': LEGAL_NOTICES_QUERYResult;
+		'\n  *[_type == "settings"][0]{\n    privacyPolicy\n  }\n': PRIVACY_POLICY_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERYResult;
 		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERYResult;
 	}
