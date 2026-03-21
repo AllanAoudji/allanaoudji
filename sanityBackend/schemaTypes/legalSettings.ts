@@ -4,6 +4,9 @@ export default defineType({
 	name: "legalSettings",
 	title: "Legal Settings",
 	type: "document",
+	preview: {
+		prepare: () => ({ title: "Legal Settings" }),
+	},
 	fields: [
 		defineField({
 			name: "generalConditionsOfSale",

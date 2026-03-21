@@ -1,9 +1,9 @@
 import BanenrSectionItem from "./BannerSectionItem";
 import { getBanner } from "@/sanity/lib/queries";
-import { BANNET_QUERYResult } from "@/sanity/types";
+import { BANNET_QUERY_RESULT } from "@/sanity/types";
 
 export default async function BannerSection() {
-	let query: BANNET_QUERYResult;
+	let query: BANNET_QUERY_RESULT;
 	try {
 		query = await getBanner();
 	} catch (error) {

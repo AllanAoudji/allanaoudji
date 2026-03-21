@@ -1,8 +1,7 @@
 "use client";
 
 import { PortableText, PortableTextComponents, PortableTextBlock } from "@portabletext/react";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import Image from "next/image";
 import { applyFrenchTypography, cn } from "@/lib/utils";
 import { client } from "@/sanity/lib/client";

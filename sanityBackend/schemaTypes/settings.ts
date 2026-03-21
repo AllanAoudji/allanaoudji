@@ -4,6 +4,9 @@ export default defineType({
 	name: "settings",
 	title: "Settings",
 	type: "document",
+	preview: {
+		prepare: () => ({ title: "Settings" }),
+	},
 	groups: [
 		{
 			name: "ordering",

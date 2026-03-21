@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils";
 import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionItem from "./ContactSectionItem";
 import { getContacts } from "@/sanity/lib/queries";
-import { CONTACTS_QUERYResult } from "@/sanity/types";
+import { CONTACTS_QUERY_RESULT } from "@/sanity/types";
 
 type Props = {
 	className?: string;
 };
 
 export default async function ContactSection({ className }: Readonly<Props>) {
-	let query: CONTACTS_QUERYResult;
+	let query: CONTACTS_QUERY_RESULT;
 	try {
 		query = await getContacts();
 	} catch (error) {

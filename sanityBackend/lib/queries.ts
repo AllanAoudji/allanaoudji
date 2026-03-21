@@ -1,15 +1,15 @@
+import {
+	ABOUT_QUERY_RESULT,
+	BANNET_QUERY_RESULT,
+	CONTACTS_QUERY_RESULT,
+	GENERAL_CONDITION_OF_SALE_QUERY_RESULT,
+	LEGAL_NOTICES_QUERY_RESULT,
+	PRIVACY_POLICY_QUERY_RESULT,
+	WORK_QUERY_RESULT,
+	WORKS_QUERY_RESULT,
+} from "../types";
 import { defineQuery } from "next-sanity";
 import { client } from "./client";
-import {
-	ABOUT_QUERYResult,
-	BANNET_QUERYResult,
-	CONTACTS_QUERYResult,
-	GENERAL_CONDITION_OF_SALE_QUERYResult,
-	LEGAL_NOTICES_QUERYResult,
-	PRIVACY_POLICY_QUERYResult,
-	WORK_QUERYResult,
-	WORKS_QUERYResult,
-} from "@/sanity/types";
 
 /*-----------------------------------
 -- Queries --------------------------
@@ -123,33 +123,33 @@ const WORK_QUERY = defineQuery(`
 -----------------------------------*/
 
 export const getAbout = () => {
-	return client.fetch<ABOUT_QUERYResult>(ABOUT_QUERY);
+	return client.fetch<ABOUT_QUERY_RESULT>(ABOUT_QUERY);
 };
 
 export const getBanner = () => {
-	return client.fetch<BANNET_QUERYResult>(BANNET_QUERY);
+	return client.fetch<BANNET_QUERY_RESULT>(BANNET_QUERY);
 };
 
 export const getContacts = () => {
-	return client.fetch<CONTACTS_QUERYResult>(CONTACTS_QUERY);
+	return client.fetch<CONTACTS_QUERY_RESULT>(CONTACTS_QUERY);
 };
 
 export const getGeneralConditionOfSale = () => {
-	return client.fetch<GENERAL_CONDITION_OF_SALE_QUERYResult>(GENERAL_CONDITION_OF_SALE_QUERY);
+	return client.fetch<GENERAL_CONDITION_OF_SALE_QUERY_RESULT>(GENERAL_CONDITION_OF_SALE_QUERY);
 };
 
 export const getLegalNotices = () => {
-	return client.fetch<LEGAL_NOTICES_QUERYResult>(LEGAL_NOTICES_QUERY);
+	return client.fetch<LEGAL_NOTICES_QUERY_RESULT>(LEGAL_NOTICES_QUERY);
 };
 
 export const getPrivacyPolicy = () => {
-	return client.fetch<PRIVACY_POLICY_QUERYResult>(PRIVACY_POLICY_QUERY);
+	return client.fetch<PRIVACY_POLICY_QUERY_RESULT>(PRIVACY_POLICY_QUERY);
 };
 
 export const getWorks = (from: number, to: number) => {
-	return client.fetch<WORKS_QUERYResult>(WORKS_QUERY, { from, to });
+	return client.fetch<WORKS_QUERY_RESULT>(WORKS_QUERY, { from, to });
 };
 
 export const getWork = (slug: string) => {
-	return client.fetch<WORK_QUERYResult>(WORK_QUERY, { slug });
+	return client.fetch<WORK_QUERY_RESULT>(WORK_QUERY, { slug });
 };
