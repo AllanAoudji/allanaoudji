@@ -11,14 +11,15 @@ type Props = {
 };
 
 export default function WorkSingleContainer({ work }: Readonly<Props>) {
-	const { updateImages, resetImages } = useLightBox();
+	const { appendImages, resetImages } = useLightBox();
 
 	useEffect(() => {
-		updateImages(work.gallery || []);
-		return () => {
-			resetImages();
-		};
-	}, [resetImages, updateImages, work.gallery]);
+		appendImages(work.gallery || []);
+	}, [appendImages, work.gallery]);
+
+	useEffect(() => {
+		return () => resetImages();
+	}, [resetImages]);
 
 	return (
 		<section>

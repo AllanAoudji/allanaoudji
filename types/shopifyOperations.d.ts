@@ -4,6 +4,7 @@ import Connection from "./connection";
 import ShopifyColelction from "./shopifyCollection";
 import { DiscountNode } from "./shopifyDiscount";
 import { ShopifyPage } from "./shopifyPage";
+import ShopifyPageInfo from "./shopifyPageInfo";
 import ShopifyProduct from "./shopifyProduct";
 
 export type ShopifyAddToCartOperation = {
@@ -33,13 +34,15 @@ export type ShopifyCartOperation = {
 export type ShopifyCollectionProductsOperation = {
 	data: {
 		collection: {
-			products: Connection<ShopifyProduct>;
+			products: Connection<ShopifyProduct> & { pageInfo: ShopifyPageInfo };
 		};
 	};
 	variables: {
 		handle: string;
 		reverse?: boolean;
 		sortKey?: string;
+		first?: number;
+		after?: string;
 	};
 };
 
@@ -53,6 +56,14 @@ export type ShopifyCreateCartOperation = {
 	data: {
 		cartCreate: {
 			cart: ShopifyCart;
+		};
+	};
+};
+
+export type ShopifyLatestProductsOperation = {
+	data: {
+		collection: {
+			products: Connection<ShopifyProduct>;
 		};
 	};
 };
@@ -114,13 +125,14 @@ export type ShopifyProductRecommendationsOperation = {
 
 export type ShopifyProductsOperation = {
 	data: {
-		products: Connection<ShopifyProduct>;
+		products: Connection<ShopifyProduct> & { pageInfo: ShopifyPageInfo };
 	};
 	variables: {
 		query?: string;
 		reverse?: boolean;
 		sortKey?: string;
 		first?: number;
+		after?: string;
 	};
 };
 

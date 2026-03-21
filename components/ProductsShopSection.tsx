@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { DEFAULT_SORT, SORTING } from "@/lib/constants";
+import { DEFAULT_SORT, FETCH_PRODUCTS, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
-import Grid from "./Grid";
-import ProductLink from "./ProductLink";
+import ProductsShopSectionInfiniteGrid from "./ProductsShopSectionInfiniteGrid";
 import Product from "@/types/product";
+import ShopifyPageInfo from "@/types/shopifyPageInfo";
 
 type Props = {
 	handle?: string;
@@ -14,18 +14,23 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	const { sort, q: searchValue } = searchParams;
 	const { sortKey, reverse } = SORTING.find(item => item.slug === sort) || DEFAULT_SORT;
 
-	let products: Product[];
+	let res: {
+		pageInfo: ShopifyPageInfo;
+		products: Product[];
+	} | null;
 	try {
 		if (handle) {
-			products = await getCollectionProducts({
+			res = await getCollectionProducts({
 				collection: handle,
+				first: FETCH_PRODUCTS,
 				reverse,
 				sortKey,
 			});
 		} else {
-			products = await getProducts({
-				query: typeof searchValue === "string" ? searchValue : undefined,
+			res = await getProducts({
+				first: FETCH_PRODUCTS,
 				reverse,
+				query: typeof searchValue === "string" ? searchValue : undefined,
 				sortKey,
 			});
 		}
@@ -36,16 +41,19 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		throw new Error("fetch failed");
 	}
 
-	if (!products || !products.length || (!!handle && handle.startsWith("hidden"))) {
+	if (!res || !res.products || !res.products.length || (!!handle && handle.startsWith("hidden"))) {
 		redirect("/collections");
 	}
 
 	return (
-		<Grid>
-			{!!searchValue && !products.length && <p>There are no products that match</p>}
-			{products.map(product => (
-				<ProductLink key={product.id} product={product} />
-			))}
-		</Grid>
+		<ProductsShopSectionInfiniteGrid
+			handle={handle}
+			hasNextPage={res.pageInfo.hasNextPage}
+			initialCursor={res.pageInfo.endCursor}
+			initialProducts={res.products}
+			reverse={reverse}
+			searchValue={searchValue}
+			sortKey={sortKey}
+		/>
 	);
 }

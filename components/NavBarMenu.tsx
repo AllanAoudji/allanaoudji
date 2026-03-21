@@ -1,4 +1,4 @@
-import { HEAD_MENU } from "@/lib/constants";
+import { HEAD_MENU, HOME_MENU } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import NavBarMenuItem from "./NavBarMenuItem";
 
@@ -23,12 +23,11 @@ export default function NavBarMenu({
 				className,
 			)}
 		>
-			{asHome && <NavBarMenuItem color={color} href="/" title="home" direction={direction} />}
+			{asHome && <NavBarMenuItem color={color} menu={HOME_MENU} title="home" direction={direction} />}
 			{HEAD_MENU.map(menu => (
 				<NavBarMenuItem
-					activeSegment={menu.activeSegment}
 					color={color}
-					href={menu.href}
+					menu={menu}
 					key={menu.href}
 					title={menu.title}
 					direction={direction}

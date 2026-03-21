@@ -15,9 +15,34 @@ export const getPopularProductsQuery = /* GraphQL */ `
 	${productFragment}
 `;
 
+export const getLatestProductsQuery = /* GraphQL */ `
+	query getLatestProducts($first: Int = 4) {
+		collection(handle: "hidden_in-stock") {
+			products(first: $first, sortKey: CREATED, reverse: true) {
+				edges {
+					node {
+						...product
+					}
+				}
+			}
+		}
+	}
+	${productFragment}
+`;
+
 export const getProductsQuery = /* GraphQL */ `
-	query getProducts($sortKey: ProductSortKeys, $reverse: Boolean, $query: String, $first: Int) {
-		products(sortKey: $sortKey, reverse: $reverse, query: $query, first: $first) {
+	query getProducts(
+		$sortKey: ProductSortKeys
+		$reverse: Boolean
+		$query: String
+		$first: Int
+		$after: String
+	) {
+		products(sortKey: $sortKey, reverse: $reverse, query: $query, first: $first, after: $after) {
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
 			edges {
 				node {
 					...product

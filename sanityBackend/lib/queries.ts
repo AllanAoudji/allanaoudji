@@ -1,17 +1,27 @@
+import {
+	ABOUT_QUERY_RESULT,
+	BANNET_QUERY_RESULT,
+	CONTACTS_QUERY_RESULT,
+	GENERAL_CONDITION_OF_SALE_QUERY_RESULT,
+	LEGAL_NOTICES_QUERY_RESULT,
+	PRIVACY_POLICY_QUERY_RESULT,
+	WORK_QUERY_RESULT,
+	WORKS_QUERY_RESULT,
+} from "../types";
 import { defineQuery } from "next-sanity";
 import { client } from "./client";
-import {
-	BANNET_QUERYResult,
-	CONTACTS_QUERYResult,
-	WORK_QUERYResult,
-	WORKS_QUERYResult,
-} from "@/sanity/types";
 
 /*-----------------------------------
 -- Queries --------------------------
 -----------------------------------*/
 
-const BANNET_QUERY = defineQuery(`
+const ABOUT_QUERY = defineQuery(/* GraphQL */ `
+  *[_type == "settings"][0]{
+    about
+  }  
+`);
+
+const BANNET_QUERY = defineQuery(/* GraphQL */ `
   *[_type == "settings"][0]{
     banner
   }
@@ -32,9 +42,31 @@ const CONTACTS_QUERY = defineQuery(`
   }
 `);
 
+const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(/* GraphQL */ `
+  *[_type == "legalSettings"][0]{
+    generalConditionsOfSale,
+    _updatedAt
+  }
+`);
+
+const LEGAL_NOTICES_QUERY = defineQuery(/* GraphQL */ `
+  *[_type == "legalSettings"][0]{
+    legalNotices,
+    _updatedAt
+  }
+`);
+
+const PRIVACY_POLICY_QUERY = defineQuery(/* GraphQL */ `
+  *[_type == "legalSettings"][0]{
+    privacyPolicy,
+    _updatedAt
+  }
+`);
+
 const WORKS_QUERY = defineQuery(`
   *[_type == "settings"][0]{
-    works[0...$number]{
+    "total": count(works),
+    works[$from...$to]{
       "_id": _key,
       ...(@-> {
         "slug": slug.current,
@@ -90,19 +122,34 @@ const WORK_QUERY = defineQuery(`
 -- Fetchs ---------------------------
 -----------------------------------*/
 
+export const getAbout = () => {
+	return client.fetch<ABOUT_QUERY_RESULT>(ABOUT_QUERY);
+};
+
 export const getBanner = () => {
-	return client.fetch<BANNET_QUERYResult>(BANNET_QUERY);
+	return client.fetch<BANNET_QUERY_RESULT>(BANNET_QUERY);
 };
 
 export const getContacts = () => {
-	return client.fetch<CONTACTS_QUERYResult>(CONTACTS_QUERY);
+	return client.fetch<CONTACTS_QUERY_RESULT>(CONTACTS_QUERY);
 };
 
-export const getWorks = (type: "home" | "gallery") => {
-	const number = type === "home" ? 6 : 10;
-	return client.fetch<WORKS_QUERYResult>(WORKS_QUERY, { number });
+export const getGeneralConditionOfSale = () => {
+	return client.fetch<GENERAL_CONDITION_OF_SALE_QUERY_RESULT>(GENERAL_CONDITION_OF_SALE_QUERY);
+};
+
+export const getLegalNotices = () => {
+	return client.fetch<LEGAL_NOTICES_QUERY_RESULT>(LEGAL_NOTICES_QUERY);
+};
+
+export const getPrivacyPolicy = () => {
+	return client.fetch<PRIVACY_POLICY_QUERY_RESULT>(PRIVACY_POLICY_QUERY);
+};
+
+export const getWorks = (from: number, to: number) => {
+	return client.fetch<WORKS_QUERY_RESULT>(WORKS_QUERY, { from, to });
 };
 
 export const getWork = (slug: string) => {
-	return client.fetch<WORK_QUERYResult>(WORK_QUERY, { slug });
+	return client.fetch<WORK_QUERY_RESULT>(WORK_QUERY, { slug });
 };

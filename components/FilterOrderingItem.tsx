@@ -33,6 +33,7 @@ export default function FilterOrderingItem({ item }: Readonly<Props>) {
 					},
 				)}
 				href={href}
+				replace={true}
 			>
 				<span
 					className={cn(

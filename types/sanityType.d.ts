@@ -1,11 +1,11 @@
-import { CONTACTS_QUERYResult, WORKS_QUERYResult } from "@/sanity/types";
+import { CONTACTS_QUERY_RESULT, WORKS_QUERY_RESULT } from "@/sanity/types";
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
 
-export type contacts = NonNullable<NonNullable<CONTACTS_QUERYResult>["contacts"]>;
+export type contacts = NonNullable<NonNullable<CONTACTS_QUERY_RESULT>["contacts"]>;
 export type contact = Unpacked<contacts>;
 
-export type works = NonNullable<NonNullable<WORKS_QUERYResult>["works"]>;
+export type works = NonNullable<NonNullable<WORKS_QUERY_RESULT>["works"]>;
 export type work = Unpacked<works>;
 export type workGallery = NonNullable<work["gallery"]>;
 export type workGalleryImage = Unpacked<workGallery>;

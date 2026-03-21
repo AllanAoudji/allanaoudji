@@ -1,6 +1,8 @@
 @import url("https://use.typekit.net/ajn0gbi.css");
 
 @import "tailwindcss";
+@import "./editorial.css";
+
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -13,7 +15,7 @@
 
 	--font-gopher: "gopher";
 
-	--spacing-header: 64px;
+	--spacing-header: 48px;
 }
 
 @layer utilities {
@@ -21,7 +23,7 @@
 		@apply mx-auto max-w-7xl px-4;
 	}
 	.vertical-padding {
-		@apply pt-4 pb-20;
+		@apply pt-6 pb-16;
 	}
 	.CTA {
 		@apply bg-quaternary text-primary border-quaternary hover:bg-primary hover:text-quaternary flex h-10 w-full cursor-pointer items-center justify-center border px-4 tracking-wider uppercase transition-colors;

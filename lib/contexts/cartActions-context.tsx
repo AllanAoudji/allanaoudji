@@ -6,6 +6,7 @@ import updateFromCartAction from "../actions/updateFromCartAction";
 import { createContext, useCallback, useContext, useMemo, useState, useTransition } from "react";
 import { useCart } from "./cart-context";
 import { useModal } from "./modal-context";
+import CartItem from "@/types/cartItem";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
 
@@ -17,11 +18,11 @@ type CartMessage = {
 type CartActionContextType = {
 	addItem: (_variant: ProductVariant, _product: Product, _quantity: number) => void;
 	cartMessage: CartMessage | null;
-	decrementItem: (_merchandiseId: string) => void;
-	incrementItem: (_merchandiseId: string) => void;
+	decrementItem: (_cartItem: CartItem) => void;
+	incrementItem: (_cartItem: CartItem) => void;
 	isPending: boolean;
 	productMessage: CartMessage | null;
-	removeItem: (_merchandiseId: string) => void;
+	removeItem: (_cartItem: CartItem) => void;
 	resetCartMessage: () => void;
 	resetProductMessage: () => void;
 };
@@ -104,16 +105,16 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 	);
 
 	const decrementItem = useCallback(
-		(merchandiseId: string) => {
+		(cartItem: CartItem) => {
 			startTransition(() => {
-				updateCartItem(merchandiseId, "minus");
+				updateCartItem(cartItem.merchandise.id, "minus");
 			});
-			updateFromCartAction(merchandiseId, "minus")
+			updateFromCartAction(cartItem, "minus")
 				.then(res => {
 					startTransition(() => {
 						if (res.type === "warning" || res.type === "error") {
 							setCartMessage({
-								id: merchandiseId,
+								id: cartItem.merchandise.id,
 								message: res.message,
 								type: res.type,
 							});
@@ -126,7 +127,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				.catch(() => {
 					startTransition(() => {
 						setCartMessage({
-							id: merchandiseId,
+							id: cartItem.merchandise.id,
 							message: "unknown error while adding product to cart.",
 							type: "error",
 						});
@@ -137,16 +138,16 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 	);
 
 	const incrementItem = useCallback(
-		(merchandiseId: string) => {
+		(cartItem: CartItem) => {
 			startTransition(() => {
-				updateCartItem(merchandiseId, "plus");
+				updateCartItem(cartItem.merchandise.id, "plus");
 			});
-			updateFromCartAction(merchandiseId, "plus")
+			updateFromCartAction(cartItem, "plus")
 				.then(res => {
 					startTransition(() => {
 						if (res.type === "warning" || res.type === "error") {
 							setCartMessage({
-								id: merchandiseId,
+								id: cartItem.merchandise.id,
 								message: res.message,
 								type: res.type,
 							});
@@ -159,7 +160,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				.catch(() => {
 					startTransition(() => {
 						setCartMessage({
-							id: merchandiseId,
+							id: cartItem.merchandise.id,
 							message: "unknown error while adding product to cart.",
 							type: "error",
 						});
@@ -170,17 +171,17 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 	);
 
 	const removeItem = useCallback(
-		(merchandiseId: string) => {
+		(cartItem: CartItem) => {
 			startTransition(() => {
-				removeCartItem(merchandiseId);
+				removeCartItem(cartItem.merchandise.id);
 			});
 
-			removeFromCartAction(merchandiseId)
+			removeFromCartAction(cartItem)
 				.then(res => {
 					startTransition(() => {
 						if (res.type === "error" || res.type === "warning") {
 							setCartMessage({
-								id: merchandiseId,
+								id: cartItem.merchandise.id,
 								message: res.message,
 								type: res.type,
 							});
@@ -193,7 +194,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				.catch(() => {
 					startTransition(() => {
 						setCartMessage({
-							id: merchandiseId,
+							id: cartItem.merchandise.id,
 							message: "unknown error while adding product to cart.",
 							type: "error",
 						});

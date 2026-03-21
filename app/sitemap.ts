@@ -25,8 +25,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		})),
 	);
 
-	const productsPromise = getProducts({}).then(products =>
-		products.map(product => ({
+	const productsPromise = getProducts({}).then(res =>
+		res.products.map(product => ({
 			url: `${baseUrl}/product/${product.handle}`,
 			lastModified: product.updatedAt,
 		})),

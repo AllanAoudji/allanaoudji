@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Title from "@/components/Title";
 
 type Props = {
@@ -8,7 +9,9 @@ export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>À propos</Title>
-			<section>{children}</section>
+			<Suspense>
+				<section>{children}</section>
+			</Suspense>
 		</div>
 	);
 }

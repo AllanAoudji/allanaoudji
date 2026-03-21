@@ -4,7 +4,7 @@ import FooterMenu from "./FooterMenu";
 
 export default function Footer() {
 	return (
-		<footer className="padding-container pt-32 pb-8 text-sm">
+		<footer className="padding-container pt-20 pb-8 text-sm">
 			<FooterMenu />
 			<Suspense>
 				<FooterCopyright />

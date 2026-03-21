@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 import { getDiscount, getProduct, getProductVariantsInventory } from "@/lib/shopify";
 import { isShopifyError } from "@/lib/type-guards";
 import ProductCart from "@/components/ProductCart";
+import ProductDescription from "@/components/ProductDescription";
 import ProductGallery from "@/components/ProductGallery";
 import ProductPrice from "@/components/ProductPrice";
 import ProductRelated from "@/components/ProductRelated";
-import Prose from "@/components/Prose";
 import Title from "@/components/Title";
 import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
@@ -94,13 +94,16 @@ export default async function Page({ params }: Readonly<Props>) {
 
 	return (
 		<>
-			<section className="grid grid-cols-6 gap-4">
-				<ProductGallery className="col-span-6 md:col-span-3 lg:col-span-4" product={product} />
-				<div className="col-span-6 md:col-span-3 lg:col-span-2">
+			<section className="grid grid-cols-6 gap-8 md:gap-4">
+				<ProductGallery
+					className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-4"
+					product={product}
+				/>
+				<div className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-2">
 					<Title className="mb-0">{product.title}</Title>
 					<ProductPrice product={product} />
 					{!!product.descriptionHtml && (
-						<Prose className="mt-2 text-sm" html={product.descriptionHtml} />
+						<ProductDescription className="mt-10" html={product.descriptionHtml} />
 					)}
 					<ProductCart
 						discountNode={discountNode}

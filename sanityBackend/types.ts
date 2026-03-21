@@ -15,32 +15,142 @@ import "@sanity/client";
  * ---------------------------------------------------------------------------------
  */
 
-// Source: schema.json
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: sanityBackend/extract.json
+export type SanityImageAssetReference = {
+	_ref: string;
+	_type: "reference";
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type FigureImage = {
+	asset?: SanityImageAssetReference;
+	media?: unknown; // Unable to locate the referenced type "media" in schema
+	hotspot?: SanityImageHotspot;
+	crop?: SanityImageCrop;
+	_type: "image";
+};
+
+export type LegalSettings = {
+	_id: string;
+	_type: "legalSettings";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	generalConditionsOfSale?: PortableText;
+	legalNotices?: PortableText;
+	privacyPolicy?: PortableText;
+};
+
+export type PortableText = Array<
+	| {
+			children?: Array<{
+				marks?: Array<string>;
+				text?: string;
+				_type: "span";
+				_key: string;
+			}>;
+			style?: "normal" | "h1" | "h2" | "h3" | "blockquote";
+			listItem?: "bullet" | "number";
+			markDefs?: Array<
+				| {
+						href: string;
+						blank?: boolean;
+						_type: "link";
+						_key: string;
+				  }
+				| {
+						phone: string;
+						_type: "linkPhone";
+						_key: string;
+				  }
+				| {
+						email: string;
+						_type: "linkEmail";
+						_key: string;
+				  }
+			>;
+			level?: number;
+			_type: "block";
+			_key: string;
+	  }
+	| {
+			image: FigureImage;
+			alt?: string;
+			caption?: string;
+			float?: "none" | "left" | "right";
+			_type: "figure";
+			_key: string;
+	  }
+	| {
+			caption?: string;
+			rows?: Array<{
+				isHeader?: boolean;
+				cells?: Array<string>;
+				_type: "row";
+				_key: string;
+			}>;
+			_type: "table";
+			_key: string;
+	  }
+	| {
+			tone?: "info" | "warning" | "danger";
+			text: string;
+			_type: "callout";
+			_key: string;
+	  }
+>;
+
+export type WorkReference = {
+	_ref: string;
+	_type: "reference";
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: "work";
+};
+
+export type ContactReference = {
+	_ref: string;
+	_type: "reference";
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: "contact";
+};
+
 export type Settings = {
 	_id: string;
 	_type: "settings";
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	works?: Array<{
-		_ref: string;
-		_type: "reference";
-		_weak?: boolean;
-		_key: string;
-		[internalGroqTypeReferenceTo]?: "work";
-	}>;
-	contacts?: Array<{
-		_ref: string;
-		_type: "reference";
-		_weak?: boolean;
-		_key: string;
-		[internalGroqTypeReferenceTo]?: "contact";
-	}>;
+	works?: Array<
+		{
+			_key: string;
+		} & WorkReference
+	>;
+	contacts?: Array<
+		{
+			_key: string;
+		} & ContactReference
+	>;
 	banner?: string;
-	about?: string;
-	generalConditionsOfSale?: string;
-	legalNotices?: string;
-	privacyPolicy?: string;
+	about?: PortableText;
+};
+
+export type SanityImageCrop = {
+	_type: "sanity.imageCrop";
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
+};
+
+export type SanityImageHotspot = {
+	_type: "sanity.imageHotspot";
+	x: number;
+	y: number;
+	height: number;
+	width: number;
 };
 
 export type Contact = {
@@ -56,6 +166,19 @@ export type Contact = {
 	blank?: boolean;
 };
 
+export type Slug = {
+	_type: "slug";
+	current: string;
+	source?: string;
+};
+
+export type TagReference = {
+	_ref: string;
+	_type: "reference";
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: "tag";
+};
+
 export type Work = {
 	_id: string;
 	_type: "work";
@@ -65,33 +188,21 @@ export type Work = {
 	title: string;
 	slug: Slug;
 	mainImage: {
-		asset?: {
-			_ref: string;
-			_type: "reference";
-			_weak?: boolean;
-			[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-		};
+		asset?: SanityImageAssetReference;
 		media?: unknown;
 		hotspot?: SanityImageHotspot;
 		crop?: SanityImageCrop;
 		alt?: string;
 		_type: "image";
 	};
-	tags?: Array<{
-		_ref: string;
-		_type: "reference";
-		_weak?: boolean;
-		_key: string;
-		[internalGroqTypeReferenceTo]?: "tag";
-	}>;
+	tags?: Array<
+		{
+			_key: string;
+		} & TagReference
+	>;
 	text?: string;
 	gallery?: Array<{
-		asset?: {
-			_ref: string;
-			_type: "reference";
-			_weak?: boolean;
-			[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-		};
+		asset?: SanityImageAssetReference;
 		media?: unknown;
 		hotspot?: SanityImageHotspot;
 		crop?: SanityImageCrop;
@@ -134,25 +245,21 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
 	_type: "sanity.imageDimensions";
-	height?: number;
-	width?: number;
-	aspectRatio?: number;
+	height: number;
+	width: number;
+	aspectRatio: number;
 };
 
-export type SanityImageHotspot = {
-	_type: "sanity.imageHotspot";
-	x?: number;
-	y?: number;
-	height?: number;
-	width?: number;
-};
-
-export type SanityImageCrop = {
-	_type: "sanity.imageCrop";
-	top?: number;
-	bottom?: number;
-	left?: number;
-	right?: number;
+export type SanityImageMetadata = {
+	_type: "sanity.imageMetadata";
+	location?: Geopoint;
+	dimensions?: SanityImageDimensions;
+	palette?: SanityImagePalette;
+	lqip?: string;
+	blurHash?: string;
+	thumbHash?: string;
+	hasAlpha?: boolean;
+	isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -166,15 +273,22 @@ export type SanityFileAsset = {
 	title?: string;
 	description?: string;
 	altText?: string;
-	sha1hash?: string;
-	extension?: string;
-	mimeType?: string;
-	size?: number;
-	assetId?: string;
+	sha1hash: string;
+	extension: string;
+	mimeType: string;
+	size: number;
+	assetId: string;
 	uploadId?: string;
-	path?: string;
-	url?: string;
+	path: string;
+	url: string;
 	source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+	_type: "sanity.assetSourceData";
+	name?: string;
+	id?: string;
+	url?: string;
 };
 
 export type SanityImageAsset = {
@@ -188,27 +302,16 @@ export type SanityImageAsset = {
 	title?: string;
 	description?: string;
 	altText?: string;
-	sha1hash?: string;
-	extension?: string;
-	mimeType?: string;
-	size?: number;
-	assetId?: string;
+	sha1hash: string;
+	extension: string;
+	mimeType: string;
+	size: number;
+	assetId: string;
 	uploadId?: string;
-	path?: string;
-	url?: string;
+	path: string;
+	url: string;
 	metadata?: SanityImageMetadata;
 	source?: SanityAssetSourceData;
-};
-
-export type SanityImageMetadata = {
-	_type: "sanity.imageMetadata";
-	location?: Geopoint;
-	dimensions?: SanityImageDimensions;
-	palette?: SanityImagePalette;
-	lqip?: string;
-	blurHash?: string;
-	hasAlpha?: boolean;
-	isOpaque?: boolean;
 };
 
 export type Geopoint = {
@@ -218,46 +321,49 @@ export type Geopoint = {
 	alt?: number;
 };
 
-export type Slug = {
-	_type: "slug";
-	current: string;
-	source?: string;
-};
-
-export type SanityAssetSourceData = {
-	_type: "sanity.assetSourceData";
-	name?: string;
-	id?: string;
-	url?: string;
-};
-
 export type AllSanitySchemaTypes =
+	| SanityImageAssetReference
+	| FigureImage
+	| LegalSettings
+	| PortableText
+	| WorkReference
+	| ContactReference
 	| Settings
+	| SanityImageCrop
+	| SanityImageHotspot
 	| Contact
+	| Slug
+	| TagReference
 	| Work
 	| Tag
 	| Markdown
 	| SanityImagePaletteSwatch
 	| SanityImagePalette
 	| SanityImageDimensions
-	| SanityImageHotspot
-	| SanityImageCrop
-	| SanityFileAsset
-	| SanityImageAsset
 	| SanityImageMetadata
-	| Geopoint
-	| Slug
-	| SanityAssetSourceData;
-export declare const internalGroqTypeReferenceTo: unique symbol;
+	| SanityFileAsset
+	| SanityAssetSourceData
+	| SanityImageAsset
+	| Geopoint;
+
+// Source: sanityBackend/lib/queries.ts
+// Variable: ABOUT_QUERY
+// Query: *[_type == "settings"][0]{    about  }
+export type ABOUT_QUERY_RESULT = {
+	about: PortableText | null;
+} | null;
+
 // Source: sanityBackend/lib/queries.ts
 // Variable: BANNET_QUERY
 // Query: *[_type == "settings"][0]{    banner  }
-export type BANNET_QUERYResult = {
+export type BANNET_QUERY_RESULT = {
 	banner: string | null;
 } | null;
+
+// Source: sanityBackend/lib/queries.ts
 // Variable: CONTACTS_QUERY
 // Query: *[_type == "settings"][0]{    contacts[0...10]{      "_id": _key,      ...(@-> {        "slug": slug.current,        text,        title,        url,        blank      })    }  }
-export type CONTACTS_QUERYResult = {
+export type CONTACTS_QUERY_RESULT = {
 	contacts: Array<{
 		_id: string;
 		slug: string;
@@ -267,9 +373,36 @@ export type CONTACTS_QUERYResult = {
 		blank: boolean | null;
 	}> | null;
 } | null;
+
+// Source: sanityBackend/lib/queries.ts
+// Variable: GENERAL_CONDITION_OF_SALE_QUERY
+// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale,    _updatedAt  }
+export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
+	generalConditionsOfSale: PortableText | null;
+	_updatedAt: string;
+} | null;
+
+// Source: sanityBackend/lib/queries.ts
+// Variable: LEGAL_NOTICES_QUERY
+// Query: *[_type == "legalSettings"][0]{    legalNotices,    _updatedAt  }
+export type LEGAL_NOTICES_QUERY_RESULT = {
+	legalNotices: PortableText | null;
+	_updatedAt: string;
+} | null;
+
+// Source: sanityBackend/lib/queries.ts
+// Variable: PRIVACY_POLICY_QUERY
+// Query: *[_type == "legalSettings"][0]{    privacyPolicy,    _updatedAt  }
+export type PRIVACY_POLICY_QUERY_RESULT = {
+	privacyPolicy: PortableText | null;
+	_updatedAt: string;
+} | null;
+
+// Source: sanityBackend/lib/queries.ts
 // Variable: WORKS_QUERY
-// Query: *[_type == "settings"][0]{    works[0...$number]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
-export type WORKS_QUERYResult = {
+// Query: *[_type == "settings"][0]{    "total": count(works),    works[$from...$to]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
+export type WORKS_QUERY_RESULT = {
+	total: number | null;
 	works: Array<{
 		_id: string;
 		slug: string;
@@ -293,9 +426,11 @@ export type WORKS_QUERYResult = {
 		}> | null;
 	}> | null;
 } | null;
+
+// Source: sanityBackend/lib/queries.ts
 // Variable: WORK_QUERY
 // Query: *[_type == "work" && slug.current == $slug][0]{    _id,    "slug": slug.current,    title,    text,    mainImage{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "lqip": asset->metadata.lqip,    },    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
-export type WORK_QUERYResult = {
+export type WORK_QUERY_RESULT = {
 	_id: string;
 	slug: string;
 	title: string;
@@ -320,9 +455,13 @@ export type WORK_QUERYResult = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    works[0...$number]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERYResult;
-		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERYResult;
+		'\n  *[_type == "settings"][0]{\n    about\n  }  \n': ABOUT_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale,\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    legalNotices,\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy,\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERY_RESULT;
+		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}
 }

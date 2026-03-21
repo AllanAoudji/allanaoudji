@@ -4,6 +4,9 @@ export default defineType({
 	name: "settings",
 	title: "Settings",
 	type: "document",
+	preview: {
+		prepare: () => ({ title: "Settings" }),
+	},
 	groups: [
 		{
 			name: "ordering",
@@ -23,7 +26,6 @@ export default defineType({
 			group: "ordering",
 			validation: Rule => Rule.unique(),
 		}),
-
 		defineField({
 			name: "contacts",
 			title: "Contacts ordering",
@@ -41,25 +43,7 @@ export default defineType({
 		defineField({
 			name: "about",
 			title: "À propos",
-			type: "markdown",
-			group: "text",
-		}),
-		defineField({
-			name: "generalConditionsOfSale",
-			title: "Conditions générales de vente",
-			type: "markdown",
-			group: "text",
-		}),
-		defineField({
-			name: "legalNotices",
-			title: "Mentions légales",
-			type: "markdown",
-			group: "text",
-		}),
-		defineField({
-			name: "privacyPolicy",
-			title: "Politique de confidentialité",
-			type: "markdown",
+			type: "portableText",
 			group: "text",
 		}),
 	],
