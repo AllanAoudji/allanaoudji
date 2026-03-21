@@ -16,6 +16,76 @@ import "@sanity/client";
  */
 
 // Source: schema.json
+export type PortableText = Array<
+	| {
+			children?: Array<{
+				marks?: Array<string>;
+				text?: string;
+				_type: "span";
+				_key: string;
+			}>;
+			style?: "normal" | "h1" | "h2" | "h3" | "blockquote";
+			listItem?: "bullet" | "number";
+			markDefs?: Array<
+				| {
+						href: string;
+						blank?: boolean;
+						_type: "link";
+						_key: string;
+				  }
+				| {
+						phone: string;
+						_type: "linkPhone";
+						_key: string;
+				  }
+				| {
+						email: string;
+						_type: "linkEmail";
+						_key: string;
+				  }
+			>;
+			level?: number;
+			_type: "block";
+			_key: string;
+	  }
+	| {
+			image: {
+				asset?: {
+					_ref: string;
+					_type: "reference";
+					_weak?: boolean;
+					[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+				};
+				media?: unknown;
+				hotspot?: SanityImageHotspot;
+				crop?: SanityImageCrop;
+				_type: "image";
+			};
+			alt?: string;
+			caption?: string;
+			float?: "none" | "left" | "right";
+			_type: "figure";
+			_key: string;
+	  }
+	| {
+			caption?: string;
+			rows?: Array<{
+				isHeader?: boolean;
+				cells?: Array<string>;
+				_type: "row";
+				_key: string;
+			}>;
+			_type: "table";
+			_key: string;
+	  }
+	| {
+			tone?: "info" | "warning" | "danger";
+			text: string;
+			_type: "callout";
+			_key: string;
+	  }
+>;
+
 export type Settings = {
 	_id: string;
 	_type: "settings";
@@ -37,10 +107,10 @@ export type Settings = {
 		[internalGroqTypeReferenceTo]?: "contact";
 	}>;
 	banner?: string;
-	about?: string;
-	generalConditionsOfSale?: string;
-	legalNotices?: string;
-	privacyPolicy?: string;
+	about?: PortableText;
+	generalConditionsOfSale?: PortableText;
+	legalNotices?: PortableText;
+	privacyPolicy?: PortableText;
 };
 
 export type Contact = {
@@ -232,6 +302,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+	| PortableText
 	| Settings
 	| Contact
 	| Work
