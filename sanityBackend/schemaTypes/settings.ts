@@ -23,7 +23,6 @@ export default defineType({
 			group: "ordering",
 			validation: Rule => Rule.unique(),
 		}),
-
 		defineField({
 			name: "contacts",
 			title: "Contacts ordering",
@@ -41,24 +40,6 @@ export default defineType({
 		defineField({
 			name: "about",
 			title: "À propos",
-			type: "portableText",
-			group: "text",
-		}),
-		defineField({
-			name: "generalConditionsOfSale",
-			title: "Conditions générales de vente",
-			type: "portableText",
-			group: "text",
-		}),
-		defineField({
-			name: "legalNotices",
-			title: "Mentions légales",
-			type: "portableText",
-			group: "text",
-		}),
-		defineField({
-			name: "privacyPolicy",
-			title: "Politique de confidentialité",
 			type: "portableText",
 			group: "text",
 		}),

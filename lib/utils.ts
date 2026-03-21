@@ -105,6 +105,13 @@ export const ensureStartWith = (url: string, prefix: string): string => {
 	return url;
 };
 
+export const formatDate = (date: string): string =>
+	new Date(date).toLocaleDateString("fr-FR", {
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	});
+
 export function getLineQuantity(cart: Cart, variantId: string): number {
 	const line = cart.lines.find(line => line.merchandise.id === variantId);
 

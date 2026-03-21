@@ -43,20 +43,23 @@ const CONTACTS_QUERY = defineQuery(`
 `);
 
 const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(/* GraphQL */ `
-  *[_type == "settings"][0]{
-    generalConditionsOfSale
+  *[_type == "legalSettings"][0]{
+    generalConditionsOfSale,
+    _updatedAt
   }
 `);
 
 const LEGAL_NOTICES_QUERY = defineQuery(/* GraphQL */ `
-  *[_type == "settings"][0]{
-    legalNotices
-  }  
+  *[_type == "legalSettings"][0]{
+    legalNotices,
+    _updatedAt
+  }
 `);
 
 const PRIVACY_POLICY_QUERY = defineQuery(/* GraphQL */ `
-  *[_type == "settings"][0]{
-    privacyPolicy
+  *[_type == "legalSettings"][0]{
+    privacyPolicy,
+    _updatedAt
   }
 `);
 

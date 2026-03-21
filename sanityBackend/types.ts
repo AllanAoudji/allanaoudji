@@ -16,6 +16,221 @@ import "@sanity/client";
  */
 
 // Source: schema.json
+export type LegalSettings = {
+	_id: string;
+	_type: "legalSettings";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	generalConditionsOfSale?: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "normal" | "h1" | "h2" | "h3" | "blockquote";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "none" | "left" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+		| {
+				tone?: "info" | "warning" | "danger";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+	>;
+	legalNotices?: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "normal" | "h1" | "h2" | "h3" | "blockquote";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "none" | "left" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+		| {
+				tone?: "info" | "warning" | "danger";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+	>;
+	privacyPolicy?: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "normal" | "h1" | "h2" | "h3" | "blockquote";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "none" | "left" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+		| {
+				tone?: "info" | "warning" | "danger";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+	>;
+};
+
 export type PortableText = Array<
 	| {
 			children?: Array<{
@@ -108,9 +323,6 @@ export type Settings = {
 	}>;
 	banner?: string;
 	about?: PortableText;
-	generalConditionsOfSale?: PortableText;
-	legalNotices?: PortableText;
-	privacyPolicy?: PortableText;
 };
 
 export type Contact = {
@@ -302,6 +514,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+	| LegalSettings
 	| PortableText
 	| Settings
 	| Contact
@@ -344,19 +557,226 @@ export type CONTACTS_QUERYResult = {
 	}> | null;
 } | null;
 // Variable: GENERAL_CONDITION_OF_SALE_QUERY
-// Query: *[_type == "settings"][0]{    generalConditionsOfSale  }
+// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale,    _updatedAt  }
 export type GENERAL_CONDITION_OF_SALE_QUERYResult = {
-	generalConditionsOfSale: PortableText | null;
+	generalConditionsOfSale: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
+	_updatedAt: string;
 } | null;
 // Variable: LEGAL_NOTICES_QUERY
-// Query: *[_type == "settings"][0]{    legalNotices  }
+// Query: *[_type == "legalSettings"][0]{    legalNotices,    _updatedAt  }
 export type LEGAL_NOTICES_QUERYResult = {
-	legalNotices: PortableText | null;
+	legalNotices: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
+	_updatedAt: string;
 } | null;
 // Variable: PRIVACY_POLICY_QUERY
-// Query: *[_type == "settings"][0]{    privacyPolicy  }
+// Query: *[_type == "legalSettings"][0]{    privacyPolicy,    _updatedAt  }
 export type PRIVACY_POLICY_QUERYResult = {
-	privacyPolicy: PortableText | null;
+	privacyPolicy: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: {
+						_ref: string;
+						_type: "reference";
+						_weak?: boolean;
+						[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+					};
+					media?: unknown;
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
+	_updatedAt: string;
 } | null;
 // Variable: WORKS_QUERY
 // Query: *[_type == "settings"][0]{    "total": count(works),    works[$from...$to]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
@@ -415,9 +835,9 @@ declare module "@sanity/client" {
 		'\n  *[_type == "settings"][0]{\n    about\n  }  \n': ABOUT_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    generalConditionsOfSale\n  }\n': GENERAL_CONDITION_OF_SALE_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    legalNotices\n  }  \n': LEGAL_NOTICES_QUERYResult;
-		'\n  *[_type == "settings"][0]{\n    privacyPolicy\n  }\n': PRIVACY_POLICY_QUERYResult;
+		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale,\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERYResult;
+		'\n  *[_type == "legalSettings"][0]{\n    legalNotices,\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERYResult;
+		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy,\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERYResult;
 		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERYResult;
 		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERYResult;
 	}
