@@ -35,13 +35,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 										<main className="mt-header mb-auto">{children}</main>
 										<Modals />
+										<Footer />
 									</LightboxProvider>
 								</CartDispenser>
 							</ModalProvider>
 						</LocalShopifyDispenser>
 					</Suspense>
 				</ErrorBoundary>
-				<Footer />
 			</body>
 		</html>
 	);
