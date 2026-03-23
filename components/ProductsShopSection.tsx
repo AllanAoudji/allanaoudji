@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { DEFAULT_SORT, FETCH_PRODUCTS, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import ProductsShopSectionInfiniteGrid from "./ProductsShopSectionInfiniteGrid";
@@ -36,7 +36,7 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 	}
 
 	if (!res || !res.products || !res.products.length || (!!handle && handle.startsWith("hidden"))) {
-		redirect("/collections");
+		notFound();
 	}
 
 	return (

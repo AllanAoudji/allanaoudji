@@ -1,4 +1,4 @@
-import { redirect, RedirectType } from "next/navigation";
+import { notFound } from "next/navigation";
 import Title from "@/components/Title";
 import WorkSingleContainer from "@/components/WorkSingleContainer";
 import { getWork } from "@/sanity/lib/queries";
@@ -9,7 +9,7 @@ export default async function WorkDetail({ params }: { params: Promise<{ workId:
 	const work = await getWork(workId);
 
 	if (!work) {
-		redirect("/gallery", RedirectType.replace);
+		notFound();
 	}
 
 	return (

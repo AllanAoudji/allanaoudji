@@ -7,10 +7,9 @@ import Cart from "@/types/cart";
 export default async function createCartAndSetCookie() {
 	let cart: Cart;
 	try {
-		cart = await createCart();
+		const [createdCart, cookieStore] = await Promise.all([createCart(), cookies()]);
 
-		const cookieStore = await cookies();
-
+		cart = createdCart;
 		cookieStore.set("cartId", cart.id!);
 
 		return cart.id!;
