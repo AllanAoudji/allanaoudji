@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import { ModalProvider } from "@/lib/contexts/modal-context";
@@ -7,6 +8,7 @@ import Footer from "@/components/Footer";
 import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
 import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
+import SectionError from "@/components/SectionError";
 import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
 
@@ -17,24 +19,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en">
+		<html lang="fr">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
-				<Suspense fallback={<SplashScreen />}>
-					<LocalShopifyDispenser>
-						<ModalProvider>
-							<CartDispenser>
-								<LightboxProvider>
-									<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-										<NavBar />
-									</header>
+				<ErrorBoundary errorComponent={SectionError}>
+					<Suspense fallback={<SplashScreen />}>
+						<LocalShopifyDispenser>
+							<ModalProvider>
+								<CartDispenser>
+									<LightboxProvider>
+										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+											<NavBar />
+										</header>
 
-									<main className="pt-header mb-auto">{children}</main>
-									<Modals />
-								</LightboxProvider>
-							</CartDispenser>
-						</ModalProvider>
-					</LocalShopifyDispenser>
-				</Suspense>
+										<main className="pt-header mb-auto">{children}</main>
+										<Modals />
+									</LightboxProvider>
+								</CartDispenser>
+							</ModalProvider>
+						</LocalShopifyDispenser>
+					</Suspense>
+				</ErrorBoundary>
 				<Footer />
 			</body>
 		</html>
@@ -42,8 +46,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// loading page
-// error handler
-// loading module
-// Accepter les cookies modules
 // Contact page

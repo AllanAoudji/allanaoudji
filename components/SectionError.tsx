@@ -1,19 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback } from "react";
-import Title from "@/components/Title";
+import Title from "./Title";
 
 type Props = {
 	error: Error;
 	reset?: () => void;
 };
 
-export default function Error({ error, reset }: Readonly<Props>) {
-	const handleReset = useCallback(() => {
-		reset?.();
-	}, [reset]);
-
+export default function SectionError({ error, reset }: Readonly<Props>) {
 	return (
 		<div>
 			<p className="text-sm tracking-widest uppercase opacity-50">Erreur</p>
@@ -29,18 +23,12 @@ export default function Error({ error, reset }: Readonly<Props>) {
 			<div className="flex gap-4">
 				{reset && (
 					<button
-						onClick={handleReset}
+						onClick={reset}
 						className="border-quaternary text-quaternary hover:bg-quaternary hover:text-primary cursor-pointer border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
 					>
 						Réessayer
 					</button>
 				)}
-				<Link
-					href="/"
-					className="border-quaternary text-quaternary hover:bg-quaternary hover:text-primary border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
-				>
-					Accueil
-				</Link>
 			</div>
 		</div>
 	);

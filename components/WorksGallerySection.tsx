@@ -1,19 +1,9 @@
 import { FETCH_WORKS_GALLERY } from "@/lib/constants";
 import WorksGallerySectionContainer from "./WorksGallerySectionContainer";
 import { getWorks } from "@/sanity/lib/queries";
-import { WORKS_QUERY_RESULT } from "@/sanity/types";
 
 export default async function WorksGallerySection() {
-	let query: WORKS_QUERY_RESULT;
-
-	try {
-		query = await getWorks(0, FETCH_WORKS_GALLERY);
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("fetch failed");
-	}
+	const query = await getWorks(0, FETCH_WORKS_GALLERY);
 
 	if (!query || !query.works || !query.works.length) {
 		return (
