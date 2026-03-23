@@ -18,27 +18,21 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		pageInfo: ShopifyPageInfo;
 		products: Product[];
 	} | null;
-	try {
-		if (handle) {
-			res = await getCollectionProducts({
-				collection: handle,
-				first: FETCH_PRODUCTS,
-				reverse,
-				sortKey,
-			});
-		} else {
-			res = await getProducts({
-				first: FETCH_PRODUCTS,
-				reverse,
-				query: typeof searchValue === "string" ? searchValue : undefined,
-				sortKey,
-			});
-		}
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("fetch failed");
+
+	if (handle) {
+		res = await getCollectionProducts({
+			collection: handle,
+			first: FETCH_PRODUCTS,
+			reverse,
+			sortKey,
+		});
+	} else {
+		res = await getProducts({
+			first: FETCH_PRODUCTS,
+			reverse,
+			query: typeof searchValue === "string" ? searchValue : undefined,
+			sortKey,
+		});
 	}
 
 	if (!res || !res.products || !res.products.length || (!!handle && handle.startsWith("hidden"))) {
