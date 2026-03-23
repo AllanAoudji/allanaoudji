@@ -1,20 +1,14 @@
 import ContactSectionContainer from "./ContactSectionContainer";
 import ContactSectionLoaderItem from "./ContactSectionLoaderItem";
-import Grid from "./Grid";
 
 export default function ContactSectionLoader() {
 	return (
 		<ContactSectionContainer>
-			<Grid>
+			<div className="flex w-80 flex-col pb-6">
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
 				<ContactSectionLoaderItem />
-				<ContactSectionLoaderItem />
-				<ContactSectionLoaderItem />
-				<ContactSectionLoaderItem />
-				<ContactSectionLoaderItem />
-				<ContactSectionLoaderItem />
-			</Grid>
+			</div>
 		</ContactSectionContainer>
 	);
 }

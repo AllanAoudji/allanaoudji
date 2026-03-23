@@ -5,9 +5,9 @@ import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
 import Footer from "@/components/Footer";
 import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
-import LogoLoader from "@/components/LogoLoader";
 import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
+import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	return (
 		<html lang="en">
 			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
-				<Suspense fallback={<LogoLoader />}>
+				<Suspense fallback={<SplashScreen />}>
 					<LocalShopifyDispenser>
 						<ModalProvider>
 							<CartDispenser>
@@ -34,8 +34,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 							</CartDispenser>
 						</ModalProvider>
 					</LocalShopifyDispenser>
-					<Footer />
 				</Suspense>
+				<Footer />
 			</body>
 		</html>
 	);

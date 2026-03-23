@@ -3,13 +3,15 @@ import WorksHomeSectionLoaderItem from "./WorksHomeSectionLoaderItem";
 
 export default function WorksHomeSectionLoader() {
 	return (
-		<WorksHomeSectionContainer>
-			<WorksHomeSectionLoaderItem />
-			<WorksHomeSectionLoaderItem />
-			<WorksHomeSectionLoaderItem />
-			<WorksHomeSectionLoaderItem />
-			<WorksHomeSectionLoaderItem />
-			<WorksHomeSectionLoaderItem />
-		</WorksHomeSectionContainer>
+		<div>
+			<WorksHomeSectionContainer>
+				<WorksHomeSectionLoaderItem />
+				<WorksHomeSectionLoaderItem />
+				<WorksHomeSectionLoaderItem />
+				<WorksHomeSectionLoaderItem />
+				<WorksHomeSectionLoaderItem />
+				<WorksHomeSectionLoaderItem />
+			</WorksHomeSectionContainer>
+		</div>
 	);
 }

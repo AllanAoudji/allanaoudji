@@ -8,7 +8,7 @@ type Props = {
 
 export default function ContactSectionItem({ className, contact }: Readonly<Props>) {
 	return (
-		<li className={cn("flex flex-col", className)}>
+		<li className={cn("flex flex-col pb-4 last-of-type:pb-0", className)}>
 			<h3 className="block text-xl font-bold uppercase">{contact.title}</h3>
 			<a
 				className={cn(
@@ -20,7 +20,7 @@ export default function ContactSectionItem({ className, contact }: Readonly<Prop
 			>
 				<span
 					className={cn(
-						"relative pb-1",
+						"relative pb-0.5",
 						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",

@@ -2,23 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface MarqueeBannerProps {
-	/** The text to scroll */
+type props = {
 	banner: string;
-	/** Pixels per second — constant speed regardless of text length */
-	speed?: number;
-	/** String inserted between each repetition of the banner text */
-	separator?: string;
-	/** Additional className for the outer wrapper */
 	className?: string;
-}
+	speed?: number;
+	separator?: string;
+};
 
 export default function MarqueeBanner({
 	banner,
+	className = "",
 	speed = 80,
 	separator = " ★ ",
-	className = "",
-}: MarqueeBannerProps) {
+}: Readonly<props>) {
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const stripRef = useRef<HTMLSpanElement>(null);
 	const trackRef = useRef<HTMLDivElement>(null);

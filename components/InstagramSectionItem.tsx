@@ -39,7 +39,7 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 					ratio="4/5"
 				/>
 			) : (
-				<div className="bg-secondary border-quaternary aspect-4/5 w-full border-4" />
+				<div className="bg-secondary aspect-4/5 w-full border" />
 			)}
 			<div className="bg-primary text-quaternary flex w-full justify-center gap-4 p-1">
 				<InstagramSectionIcon type="likes" count={!!post ? post.like_count : 0} />

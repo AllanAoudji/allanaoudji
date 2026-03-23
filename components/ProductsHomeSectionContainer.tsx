@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProductsHomeSectionContainer({ children }: Readonly<Props>) {
 	return (
-		<section className="vertical-padding bg-quaternary">
+		<section className="vertical-padding odd:text-quaternary even:bg-quaternary even:text-primary">
 			<div className="padding-container">
 				<SubTitle className="text-primary">Nouveauté de la boutique</SubTitle>
 				<Link className="block" href="/collections">

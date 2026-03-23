@@ -8,6 +8,8 @@ export default function InstagramSectionLoader() {
 			<InstagramSectionItem />
 			<InstagramSectionItem />
 			<InstagramSectionItem />
+			<InstagramSectionItem />
+			<InstagramSectionItem />
 		</InstagramSectionContainer>
 	);
 }

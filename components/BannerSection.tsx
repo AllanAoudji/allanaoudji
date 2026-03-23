@@ -1,21 +1,16 @@
+"use client";
+
+import { use } from "react";
 import BanenrSectionItem from "./BannerSectionItem";
-import { getBanner } from "@/sanity/lib/queries";
 import { BANNET_QUERY_RESULT } from "@/sanity/types";
 
-export default async function BannerSection() {
-	let query: BANNET_QUERY_RESULT;
-	try {
-		query = await getBanner();
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("fetch failed");
-	}
+type Props = {
+	bannerPromise: Promise<BANNET_QUERY_RESULT>;
+};
 
-	if (!query || !query.banner || query.banner === "") {
-		return null;
-	}
+export default function BannerSection({ bannerPromise }: Readonly<Props>) {
+	const query = use(bannerPromise);
+	if (!query || !query.banner || query.banner === "") return null;
 
 	return <BanenrSectionItem banner={query.banner} separator="    ★    " speed={30} />;
 }
