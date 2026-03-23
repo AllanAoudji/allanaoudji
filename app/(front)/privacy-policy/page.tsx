@@ -1,12 +1,15 @@
-import LegalPageContainer from "@/components/LegalPageContainer";
-import { getPrivacyPolicy } from "@/sanity/lib/queries";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
+import LegalNoticesContainer from "@/components/LegalNoticesContainer";
+import SectionError from "@/components/SectionError";
+import SuspenseSanityPage from "@/components/SuspenseSanityPage";
 
 export default async function PrivacyPolicy() {
-	const result = await getPrivacyPolicy();
-
-	if (!result || !result.privacyPolicy) {
-		return <p>pas de contenu</p>;
-	}
-
-	return <LegalPageContainer portableText={result.privacyPolicy} updatedAt={result._updatedAt} />;
+	return (
+		<ErrorBoundary errorComponent={SectionError}>
+			<Suspense fallback={<SuspenseSanityPage />}>
+				<LegalNoticesContainer />
+			</Suspense>
+		</ErrorBoundary>
+	);
 }

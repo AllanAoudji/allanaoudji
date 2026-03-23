@@ -1,14 +1,15 @@
-import LegalPageContainer from "@/components/LegalPageContainer";
-import { getGeneralConditionOfSale } from "@/sanity/lib/queries";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
+import GeneralConditionsOfSaleContainer from "@/components/GeneralConditionsOfSaleContainer";
+import SectionError from "@/components/SectionError";
+import SuspenseSanityPage from "@/components/SuspenseSanityPage";
 
-export default async function GeneralConditionsOfSale() {
-	const result = await getGeneralConditionOfSale();
-
-	if (!result || !result.generalConditionsOfSale) {
-		return <p>pas de contenu</p>;
-	}
-
+export default function GeneralConditionsOfSale() {
 	return (
-		<LegalPageContainer portableText={result.generalConditionsOfSale} updatedAt={result._updatedAt} />
+		<ErrorBoundary errorComponent={SectionError}>
+			<Suspense fallback={<SuspenseSanityPage />}>
+				<GeneralConditionsOfSaleContainer />
+			</Suspense>
+		</ErrorBoundary>
 	);
 }

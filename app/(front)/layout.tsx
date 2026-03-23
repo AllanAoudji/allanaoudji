@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
 import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
+import { ScrollReset } from "@/components/ScrollReset";
 import SectionError from "@/components/SectionError";
 import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
@@ -27,11 +28,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 							<ModalProvider>
 								<CartDispenser>
 									<LightboxProvider>
+										<ScrollReset />
 										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
 											<NavBar />
 										</header>
 
-										<main className="pt-header mb-auto">{children}</main>
+										<main className="mt-header mb-auto">{children}</main>
 										<Modals />
 									</LightboxProvider>
 								</CartDispenser>
@@ -47,3 +49,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 // TODO:
 // Contact page
+// utiliser applyFrenchTypography sur sanity.work.text
+// utiliser des icones pour la lightbox et l'animer
+// Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
+// Empty works/gallery produtcs/sanity pages/cart recommendations
+// Refactor suspense components => Block de composant titre/sou-titre/image horizontal/image vertical/etc
+// retravailler les fallbacks de suspense de textes, pas fan du rendu
+// retravailler les messages de contenus vide => pas de works/pas de produits/page about vide, etc
+// utilisation de liquify image pour les portabletext (about/CGV/etc)

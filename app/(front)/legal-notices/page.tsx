@@ -1,12 +1,15 @@
-import LegalPageContainer from "@/components/LegalPageContainer";
-import { getLegalNotices } from "@/sanity/lib/queries";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
+import LegalNoticesContainer from "@/components/LegalNoticesContainer";
+import SectionError from "@/components/SectionError";
+import SuspenseSanityPage from "@/components/SuspenseSanityPage";
 
-export default async function LegalNotices() {
-	const result = await getLegalNotices();
-
-	if (!result || !result.legalNotices) {
-		return <p>pas de contenu</p>;
-	}
-
-	return <LegalPageContainer portableText={result.legalNotices} updatedAt={result._updatedAt} />;
+export default function LegalNotices() {
+	return (
+		<ErrorBoundary errorComponent={SectionError}>
+			<Suspense fallback={<SuspenseSanityPage />}>
+				<LegalNoticesContainer />
+			</Suspense>
+		</ErrorBoundary>
+	);
 }
