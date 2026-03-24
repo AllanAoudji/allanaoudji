@@ -47,14 +47,14 @@ const convertSize = (size: Size) => {
 const convertType = (type: Type) => {
 	switch (type) {
 		case "h1":
-			return "h-7";
-		case "h2":
 			return "h-6";
+		case "h2":
+			return "h-5";
 		default:
 		case "current":
-			return "h-4.5";
-		case "small":
 			return "h-4";
+		case "small":
+			return "h-3.5";
 	}
 };
 

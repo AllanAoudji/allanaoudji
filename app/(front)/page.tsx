@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import BannerContainer from "@/components/BannerContainer";
-import ContactSection from "@/components/ContactSection";
+import ContactHomeSection from "@/components/ContactHomeSection";
 import GalleryHomeSection from "@/components/GalleryHomeSection";
 import InstagramSection from "@/components/InstagramSection";
 import NullError from "@/components/NullError";
@@ -35,7 +35,7 @@ export default async function RootPage() {
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>
 				<Suspense fallback={<SkeletonContactHome />}>
-					<ContactSection />
+					<ContactHomeSection />
 				</Suspense>
 			</ErrorBoundary>
 		</>

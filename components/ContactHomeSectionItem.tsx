@@ -6,7 +6,7 @@ type Props = {
 	contact: contact;
 };
 
-export default function ContactSectionItem({ className, contact }: Readonly<Props>) {
+export default function ContactHomeSectionItem({ className, contact }: Readonly<Props>) {
 	return (
 		<li className={cn("flex flex-col pb-4 last-of-type:pb-0", className)}>
 			<h3 className="block text-xl font-bold uppercase">{contact.title}</h3>

@@ -6,7 +6,7 @@ type Props = {
 	className?: string;
 };
 
-export default function ContactSectionContainer({ children, className }: Readonly<Props>) {
+export default function ContactHomeSectionContainer({ children, className }: Readonly<Props>) {
 	return (
 		<section
 			className={cn(

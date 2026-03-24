@@ -9,8 +9,8 @@ type Props = {
 export default function SkeletonProductLink({ className }: Readonly<Props>) {
 	return (
 		<div className={cn(className)}>
-			<SkeletonImage className="mb-2.5" ratio="3/4" />
-			<SkeletonText className="mb-0.5" type="current" />
+			<SkeletonImage className="mb-3" ratio="3/4" />
+			<SkeletonText className="mb-1" type="current" />
 			<SkeletonText size={50} type="small" />
 		</div>
 	);

@@ -5,7 +5,7 @@ import SkeletonText from "@/components/SkeletonText";
 export default function GallerySingleLoading() {
 	return (
 		<div>
-			<SkeletonText className="mt-0.5 mb-6.5" size={35} type="h1" />
+			<SkeletonText className="mt-1 mb-7.5" size={35} type="h1" />
 
 			<SkeletonText className="mb-1.5" size={95} />
 			<SkeletonText className="mb-1.5" size={75} />

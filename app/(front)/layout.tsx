@@ -51,12 +51,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // utiliser applyFrenchTypography sur sanity.work.text
 // utiliser des icones pour la lightbox et l'animer
 // Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
-// Empty works/gallery produtcs/sanity pages/cart recommendations
-// Refactor suspense components => Block de composant titre/sou-titre/image horizontal/image vertical/etc
-// retravailler les fallbacks de suspense de textes, pas fan du rendu
-// retravailler les messages de contenus vide => pas de works/pas de produits/page about vide, etc
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
-// normaliser les page
-//  - layout -> errorBoundary/suspense
-//  - page -> await datas
-//  - Container -> UI
+// Retravailler filters
+// Référencements et optimisation shopify
+// Change couleur
+//  - primary => light
+//  - secondary => dark
+//  - tertiary => darker light (utiliser pour imageContainer/skeleton)

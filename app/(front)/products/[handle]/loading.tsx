@@ -25,8 +25,8 @@ export default function ProductSingleLoading() {
 					</div>
 				</div>
 				<div className="col-span-6 md:col-span-3 lg:col-span-2">
-					<SkeletonText className="mt-0.5 mb-0.5" size={85} type="h1" />
-					<SkeletonText className="mb-10" size={35} type="current" />
+					<SkeletonText className="mt-1 mb-1.5" size={85} type="h1" />
+					<SkeletonText className="mb-11" size={35} type="current" />
 
 					<SkeletonText className="mb-2" size={80} type="h2" />
 					<SkeletonText className="mb-2" size={90} type="h2" />
