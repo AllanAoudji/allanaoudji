@@ -2,7 +2,7 @@
 
 import { useCart } from "@/lib/contexts/cart-context";
 import { cn } from "@/lib/utils";
-import CartModalCloseButton from "./CartModalCloseButton";
+import CartHeaderCloseButton from "./CartHeaderCloseButton";
 
 type Props = {
 	className?: string;
@@ -13,7 +13,7 @@ export default function CartHeader({ className }: Readonly<Props>) {
 
 	return (
 		<div className={cn("flex items-baseline justify-between px-4", className)}>
-			<CartModalCloseButton />
+			<CartHeaderCloseButton />
 			<div className="h-header flex items-center justify-center">
 				<h4 className="text-sm font-bold uppercase">
 					Votre panier <span>({cart ? cart.totalQuantity : "0"})</span>

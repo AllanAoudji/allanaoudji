@@ -1,5 +1,5 @@
+import WorksHomeSectionContainer from "./GalleryHomeSectionContainer";
 import SkeletonWorkLink from "./SkeletonWorkLink";
-import WorksHomeSectionContainer from "./WorksHomeSectionContainer";
 
 export default function SkeletonWorksHome() {
 	return (

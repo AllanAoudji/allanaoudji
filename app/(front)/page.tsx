@@ -1,7 +1,8 @@
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import BannerSection from "@/components/BannerSection";
+import BannerContainer from "@/components/BannerContainer";
 import ContactSection from "@/components/ContactSection";
+import GalleryHomeSection from "@/components/GalleryHomeSection";
 import InstagramSection from "@/components/InstagramSection";
 import NullError from "@/components/NullError";
 import ProductsHomeSection from "@/components/ProductsHomeSection";
@@ -9,15 +10,14 @@ import SkeletonContactHome from "@/components/SkeletonContactHome";
 import SkeletonInstagram from "@/components/SkeletonInstagram";
 import SkeletonProductsHome from "@/components/SkeletonProductsHome";
 import SkeletonWorksHome from "@/components/SkeletonWorksHome";
-import WorksHomeSection from "@/components/WorksHomeSection";
 import { getBanner } from "@/sanity/lib/queries";
 
-export default async function Home() {
+export default async function RootPage() {
 	const bannerPromise = getBanner();
 
 	return (
 		<>
-			<BannerSection bannerPromise={bannerPromise} />
+			<BannerContainer bannerPromise={bannerPromise} />
 			<ErrorBoundary errorComponent={NullError}>
 				<Suspense fallback={<SkeletonProductsHome />}>
 					<ProductsHomeSection />
@@ -25,7 +25,7 @@ export default async function Home() {
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>
 				<Suspense fallback={<SkeletonWorksHome />}>
-					<WorksHomeSection />
+					<GalleryHomeSection />
 				</Suspense>
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>

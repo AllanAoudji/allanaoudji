@@ -1,47 +1,33 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback } from "react";
-import Title from "@/components/Title";
+import IssueContainer from "@/components/IssueContainer";
+import IssueLink from "@/components/IssueLink";
+import IssueLinksContainer from "@/components/IssueLinksContainer";
+import IssueResetButton from "@/components/IssueResetButton";
+import SubTitle from "@/components/SubTitle";
 
 type Props = {
 	error: Error;
-	reset?: () => void;
+	reset: () => void;
 };
 
-export default function Error({ error, reset }: Readonly<Props>) {
-	const handleReset = useCallback(() => {
-		reset?.();
-	}, [reset]);
-
+export default function RootError({ error, reset }: Readonly<Props>) {
 	return (
-		<div>
-			<p className="text-sm tracking-widest uppercase opacity-50">Erreur</p>
-			<Title>Quelque chose s&rsquo;est mal passé</Title>
-			<div className="mb-8">
-				<p>Une erreur temporaire est survenue. Réessaie dans quelques instants.</p>
+		<IssueContainer>
+			<p className="text-danger text-sm tracking-widest uppercase opacity-50">Erreur</p>
+			<SubTitle>Quelque chose s&rsquo;est mal passé</SubTitle>
+			<p>Une erreur temporaire est survenue. Réessaie dans quelques instants.</p>
 
-				{process.env.NODE_ENV === "development" && (
-					<p className="font-mono text-xs opacity-40">{error.message}</p>
-				)}
-			</div>
+			{process.env.NODE_ENV === "development" && (
+				<p className="font-mono text-xs opacity-40">{error.message}</p>
+			)}
 
-			<div className="flex gap-4">
-				{reset && (
-					<button
-						onClick={handleReset}
-						className="border-quaternary text-quaternary hover:bg-quaternary hover:text-primary cursor-pointer border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
-					>
-						Réessayer
-					</button>
-				)}
-				<Link
-					href="/"
-					className="border-quaternary text-quaternary hover:bg-quaternary hover:text-primary border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
-				>
-					Accueil
-				</Link>
-			</div>
-		</div>
+			{reset && (
+				<IssueLinksContainer>
+					<IssueResetButton onClick={reset} />
+					<IssueLink href="/">Acceuil</IssueLink>
+				</IssueLinksContainer>
+			)}
+		</IssueContainer>
 	);
 }

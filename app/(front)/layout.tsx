@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import { ModalProvider } from "@/lib/contexts/modal-context";
@@ -9,7 +8,6 @@ import LocalShopifyDispenser from "@/components/LocalShopifyDispenser";
 import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
 import { ScrollReset } from "@/components/ScrollReset";
-import SectionError from "@/components/SectionError";
 import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
 
@@ -22,27 +20,27 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	return (
 		<html lang="fr">
 			<body className="font-gopher bg-primary text-quaternary antialiased">
-				<ErrorBoundary errorComponent={SectionError}>
-					<Suspense fallback={<SplashScreen />}>
-						<ScrollReset />
-						<LocalShopifyDispenser>
-							<ModalProvider>
-								<CartDispenser>
-									<LightboxProvider>
-										<div className="flex min-h-screen flex-col">
-											<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-												<NavBar />
-											</header>
-											<main className="mt-header flex-1">{children}</main>
-											<Modals />
-											<Footer />
-										</div>
-									</LightboxProvider>
-								</CartDispenser>
-							</ModalProvider>
-						</LocalShopifyDispenser>
-					</Suspense>
-				</ErrorBoundary>
+				<Suspense fallback={<SplashScreen />}>
+					<ScrollReset />
+					<LocalShopifyDispenser>
+						<ModalProvider>
+							<CartDispenser>
+								<LightboxProvider>
+									<div className="flex min-h-screen flex-col">
+										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+											<NavBar />
+										</header>
+
+										<main className="mt-header flex-1">{children}</main>
+
+										<Modals />
+										<Footer />
+									</div>
+								</LightboxProvider>
+							</CartDispenser>
+						</ModalProvider>
+					</LocalShopifyDispenser>
+				</Suspense>
 			</body>
 		</html>
 	);

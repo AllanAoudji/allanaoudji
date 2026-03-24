@@ -1,3 +1,3 @@
-type ModalType = "menu" | "filters" | "cart";
+type ModalType = "menu" | "collections-filters" | "cart";
 
 export default ModalType;

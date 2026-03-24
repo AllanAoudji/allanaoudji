@@ -346,7 +346,7 @@ export async function getCollectionProducts({
 	first?: number;
 }): Promise<{
 	pageInfo: ShopifyPageInfo;
-	products: Product[];
+	products: Product[] | null;
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
 		cache: "no-store",
@@ -367,7 +367,7 @@ export async function getCollectionProducts({
 				endCursor: null,
 				hasNextPage: false,
 			},
-			products: [],
+			products: null,
 		};
 	}
 

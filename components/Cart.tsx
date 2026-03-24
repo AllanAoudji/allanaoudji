@@ -1,9 +1,8 @@
 "use client";
 
 import { useCart } from "@/lib/contexts/cart-context";
+import CartContent from "./CartContent";
 import CartEmpty from "./CartEmpty";
-// import { CartEditItemQuantityButton } from "./CartEditItemQuantityButton";
-import CartSection from "./CartSection";
 
 export default function Cart() {
 	const { cart } = useCart();
@@ -12,5 +11,5 @@ export default function Cart() {
 		return <CartEmpty />;
 	}
 
-	return <CartSection cart={cart} />;
+	return <CartContent cart={cart} />;
 }

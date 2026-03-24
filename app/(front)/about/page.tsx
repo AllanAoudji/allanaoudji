@@ -1,15 +1,13 @@
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Suspense } from "react";
-import AboutContainer from "@/components/AboutContainer";
-import SectionError from "@/components/SectionError";
-import SkeletonPortableText from "@/components/SkeletonPortableText";
+import EmptyAbout from "@/components/EmptyAbout";
+import PortableTextContent from "@/components/PortableTextContent";
+import { getAbout } from "@/sanity/lib/queries";
 
-export default async function About() {
-	return (
-		<ErrorBoundary errorComponent={SectionError}>
-			<Suspense fallback={<SkeletonPortableText />}>
-				<AboutContainer />
-			</Suspense>
-		</ErrorBoundary>
-	);
+export default async function AboutPage() {
+	const result = await getAbout();
+
+	if (!result || !result.about) {
+		return <EmptyAbout />;
+	}
+
+	return <PortableTextContent value={result.about} />;
 }

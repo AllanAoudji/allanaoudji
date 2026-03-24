@@ -6,7 +6,7 @@ export default function Footer() {
 	return (
 		<footer className="padding-container pt-20 pb-8 text-sm">
 			<FooterMenu />
-			<Suspense>
+			<Suspense fallback={null}>
 				<FooterCopyright />
 			</Suspense>
 		</footer>

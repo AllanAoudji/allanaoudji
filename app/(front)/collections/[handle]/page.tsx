@@ -1,23 +1,13 @@
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Suspense } from "react";
-import ProductsShopSection from "@/components/ProductsShopSection";
-import SectionError from "@/components/SectionError";
-import SkeletonProductsCollection from "@/components/SkeletonProductsCollection";
+import CollectionsContent from "@/components/CollectionsContent";
 
 type Props = {
 	params: Promise<{ handle: string }>;
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params, searchParams }: Readonly<Props>) {
+export default async function CollectionSinglePage({ params, searchParams }: Readonly<Props>) {
 	const { handle } = await params;
 	const currSearchParams = await searchParams;
 
-	return (
-		<ErrorBoundary errorComponent={SectionError}>
-			<Suspense fallback={<SkeletonProductsCollection />}>
-				<ProductsShopSection searchParams={currSearchParams} handle={handle} />
-			</Suspense>
-		</ErrorBoundary>
-	);
+	return <CollectionsContent searchParams={currSearchParams} handle={handle} />;
 }
