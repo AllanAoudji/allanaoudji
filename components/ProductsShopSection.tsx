@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { DEFAULT_SORT, FETCH_PRODUCTS, SORTING } from "@/lib/constants";
 import { getCollectionProducts, getProducts } from "@/lib/shopify";
+import ProductsShopEmpty from "./ProductsShopEmpty";
 import ProductsShopSectionInfiniteGrid from "./ProductsShopSectionInfiniteGrid";
 import Product from "@/types/product";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
@@ -35,8 +36,12 @@ export default async function ProductsShopSection({ handle, searchParams }: Read
 		});
 	}
 
-	if (!res || !res.products || !res.products.length || (!!handle && handle.startsWith("hidden"))) {
+	if (!!handle && handle.startsWith("hidden")) {
 		notFound();
+	}
+
+	if (!res.products.length) {
+		return <ProductsShopEmpty handle={handle} />;
 	}
 
 	return (

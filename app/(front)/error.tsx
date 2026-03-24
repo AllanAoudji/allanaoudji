@@ -17,7 +17,7 @@ export default function Error({ error, reset }: Readonly<Props>) {
 	return (
 		<div>
 			<p className="text-sm tracking-widest uppercase opacity-50">Erreur</p>
-			<Title>Quelque chose s&apos;est mal passé</Title>
+			<Title>Quelque chose s&rsquo;est mal passé</Title>
 			<div className="mb-8">
 				<p>Une erreur temporaire est survenue. Réessaie dans quelques instants.</p>
 
