@@ -78,7 +78,7 @@ function applyTypography(blocks: PortableTextBlock[]): PortableTextBlock[] {
 
 type FigureBlock = {
 	_type: "figure";
-	image: SanityImageSource;
+	image: SanityImageSource & { width?: number; height?: number };
 	alt?: string;
 	caption?: string;
 };
@@ -168,15 +168,18 @@ const components: PortableTextComponents = {
 	types: {
 		figure: ({ value }: { value: FigureBlock }) => {
 			if (!value.image) return null;
-			const src = urlFor(value.image).width(900).auto("format").url();
+			const w = value.image.width ?? 900;
+			const h = value.image.height ?? 700;
+			const src = urlFor(value.image).width(w).auto("format").url();
 			return (
 				<figure className="editorial-figure">
 					<Image
 						src={src}
 						alt={value.alt ?? ""}
-						width={900}
-						height={700}
+						width={w}
+						height={h}
 						className="h-auto w-full object-cover"
+						style={{ aspectRatio: `${w}/${h}` }}
 					/>
 					{value.caption && <figcaption className="editorial-caption">{value.caption}</figcaption>}
 				</figure>

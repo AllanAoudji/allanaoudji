@@ -1,5 +1,5 @@
 import ImageContainer from "./ImageContainer";
-import InstagramSectionIcon from "./InstagramSectionIcon";
+import InstagramSectionItemIcon from "./InstagramSectionItemIcon";
 import InstagramImage from "@/types/instagramImage";
 
 type Props = {
@@ -39,11 +39,11 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 					ratio="4/5"
 				/>
 			) : (
-				<div className="bg-secondary border-quaternary aspect-4/5 w-full border-4" />
+				<div className="bg-secondary aspect-4/5 w-full border" />
 			)}
 			<div className="bg-primary text-quaternary flex w-full justify-center gap-4 p-1">
-				<InstagramSectionIcon type="likes" count={!!post ? post.like_count : 0} />
-				<InstagramSectionIcon type="comments" count={!!post ? post.comments_count : 0} />
+				<InstagramSectionItemIcon type="likes" count={!!post ? post.like_count : 0} />
+				<InstagramSectionItemIcon type="comments" count={!!post ? post.comments_count : 0} />
 			</div>
 		</div>
 	);

@@ -15,10 +15,20 @@ import { client } from "./client";
 -- Queries --------------------------
 -----------------------------------*/
 
-const ABOUT_QUERY = defineQuery(/* GraphQL */ `
+const ABOUT_QUERY = defineQuery(`
   *[_type == "settings"][0]{
-    about
-  }  
+    about[]{
+      ...,
+      _type == "figure" => {
+        ...,
+        "image": image{
+          ...,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+        }
+      }
+    }
+  }
 `);
 
 const BANNET_QUERY = defineQuery(/* GraphQL */ `
@@ -42,23 +52,53 @@ const CONTACTS_QUERY = defineQuery(`
   }
 `);
 
-const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(/* GraphQL */ `
+const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
   *[_type == "legalSettings"][0]{
-    generalConditionsOfSale,
+    generalConditionsOfSale[]{
+      ...,
+      _type == "figure" => {
+        ...,
+        "image": image{
+          ...,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+        }
+      }
+    },
     _updatedAt
   }
 `);
 
-const LEGAL_NOTICES_QUERY = defineQuery(/* GraphQL */ `
+const LEGAL_NOTICES_QUERY = defineQuery(`
   *[_type == "legalSettings"][0]{
-    legalNotices,
+    legalNotices[]{
+      ...,
+      _type == "figure" => {
+        ...,
+        "image": image{
+          ...,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+        }
+      }
+    },
     _updatedAt
   }
 `);
 
-const PRIVACY_POLICY_QUERY = defineQuery(/* GraphQL */ `
+const PRIVACY_POLICY_QUERY = defineQuery(`
   *[_type == "legalSettings"][0]{
-    privacyPolicy,
+    privacyPolicy[]{
+      ...,
+      _type == "figure" => {
+        ...,
+        "image": image{
+          ...,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+        }
+      }
+    },
     _updatedAt
   }
 `);

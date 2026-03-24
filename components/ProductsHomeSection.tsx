@@ -1,17 +1,12 @@
 import { getLatestProducts } from "@/lib/shopify";
 import ImageContainer from "./ImageContainer";
 import ProductsHomeSectionContainer from "./ProductsHomeSectionContainer";
-import Product from "@/types/product";
 
 export default async function ProductsHomeSection() {
-	let products: Product[];
-	try {
-		products = await getLatestProducts();
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("fetch failed");
+	const products = await getLatestProducts();
+
+	if (!products.length) {
+		return null;
 	}
 
 	return (

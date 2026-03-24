@@ -1,13 +1,13 @@
-import ProductsShopSection from "@/components/ProductsShopSection";
+import CollectionsContent from "@/components/CollectionsContent";
 
 type Props = {
 	params: Promise<{ handle: string }>;
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params, searchParams }: Readonly<Props>) {
+export default async function CollectionSinglePage({ params, searchParams }: Readonly<Props>) {
 	const { handle } = await params;
 	const currSearchParams = await searchParams;
 
-	return <ProductsShopSection searchParams={currSearchParams} handle={handle} />;
+	return <CollectionsContent searchParams={currSearchParams} handle={handle} />;
 }

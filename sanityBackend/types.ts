@@ -348,9 +348,74 @@ export type AllSanitySchemaTypes =
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: ABOUT_QUERY
-// Query: *[_type == "settings"][0]{    about  }
+// Query: *[_type == "settings"][0]{    about[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    }  }
 export type ABOUT_QUERY_RESULT = {
-	about: PortableText | null;
+	about: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: SanityImageAssetReference;
+					media?: unknown; // Unable to locate the referenced type "media" in schema
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+					width: number | null;
+					height: number | null;
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
 } | null;
 
 // Source: sanityBackend/lib/queries.ts
@@ -376,25 +441,220 @@ export type CONTACTS_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: GENERAL_CONDITION_OF_SALE_QUERY
-// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale,    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
 export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
-	generalConditionsOfSale: PortableText | null;
+	generalConditionsOfSale: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: SanityImageAssetReference;
+					media?: unknown; // Unable to locate the referenced type "media" in schema
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+					width: number | null;
+					height: number | null;
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
 	_updatedAt: string;
 } | null;
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: LEGAL_NOTICES_QUERY
-// Query: *[_type == "legalSettings"][0]{    legalNotices,    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    legalNotices[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
 export type LEGAL_NOTICES_QUERY_RESULT = {
-	legalNotices: PortableText | null;
+	legalNotices: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: SanityImageAssetReference;
+					media?: unknown; // Unable to locate the referenced type "media" in schema
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+					width: number | null;
+					height: number | null;
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
 	_updatedAt: string;
 } | null;
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: PRIVACY_POLICY_QUERY
-// Query: *[_type == "legalSettings"][0]{    privacyPolicy,    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    privacyPolicy[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
 export type PRIVACY_POLICY_QUERY_RESULT = {
-	privacyPolicy: PortableText | null;
+	privacyPolicy: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "normal";
+				listItem?: "bullet" | "number";
+				markDefs?: Array<
+					| {
+							href: string;
+							blank?: boolean;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							email: string;
+							_type: "linkEmail";
+							_key: string;
+					  }
+					| {
+							phone: string;
+							_type: "linkPhone";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				tone?: "danger" | "info" | "warning";
+				text: string;
+				_type: "callout";
+				_key: string;
+		  }
+		| {
+				image: {
+					asset?: SanityImageAssetReference;
+					media?: unknown; // Unable to locate the referenced type "media" in schema
+					hotspot?: SanityImageHotspot;
+					crop?: SanityImageCrop;
+					_type: "image";
+					width: number | null;
+					height: number | null;
+				};
+				alt?: string;
+				caption?: string;
+				float?: "left" | "none" | "right";
+				_type: "figure";
+				_key: string;
+		  }
+		| {
+				caption?: string;
+				rows?: Array<{
+					isHeader?: boolean;
+					cells?: Array<string>;
+					_type: "row";
+					_key: string;
+				}>;
+				_type: "table";
+				_key: string;
+		  }
+	> | null;
 	_updatedAt: string;
 } | null;
 
@@ -455,12 +715,12 @@ export type WORK_QUERY_RESULT = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n  *[_type == "settings"][0]{\n    about\n  }  \n': ABOUT_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    about[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    }\n  }\n': ABOUT_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale,\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    legalNotices,\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy,\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    legalNotices[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERY_RESULT;
 		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}

@@ -13,7 +13,7 @@ export default function CartEmpty() {
 			<CartHeader />
 			<div className="flex-1 flex-col gap-4 overflow-y-auto px-4 pb-4">
 				<CartEmptyPopularProducts />
-				<Link className={"CTA mt-12"} href="/collections" onClick={closeModal}>
+				<Link className="CTA mt-12" href="/collections" onClick={closeModal}>
 					Continuez les achats
 				</Link>
 			</div>

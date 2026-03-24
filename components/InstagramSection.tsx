@@ -17,18 +17,14 @@ async function getData(): Promise<InstagramFeeds> {
 }
 
 export default async function InstagramSection() {
-	let data: InstagramFeeds;
-	try {
-		data = await getData();
-	} catch (error) {
-		if (error instanceof Error) {
-			throw error;
-		}
-		throw new Error("fetch failed");
-	}
+	const data = await getData();
 
 	if (data.error) {
 		throw new Error(data.error.message);
+	}
+
+	if (!data.data.length) {
+		return null;
 	}
 
 	return (

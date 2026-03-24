@@ -1,28 +1,29 @@
-import Error from "../../error";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { redirect, RedirectType } from "next/navigation";
-import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import GalleryImages from "@/components/GalleryImages";
+import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
-import WorkSingleContainer from "@/components/WorkSingleContainer";
 import { getWork } from "@/sanity/lib/queries";
 
-export default async function WorkDetail({ params }: { params: Promise<{ workId: string }> }) {
+export default async function GallerySinglePage({
+	params,
+}: {
+	params: Promise<{ workId: string }>;
+}) {
 	const { workId } = await params;
 
 	const work = await getWork(workId);
 
 	if (!work) {
-		redirect("/gallery", RedirectType.replace);
+		notFound();
 	}
 
 	return (
-		<div className="padding-container vertical-padding">
+		<>
 			<Title>{work.title}</Title>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<p>...loading</p>}>
-					<WorkSingleContainer work={work} />
-				</Suspense>
-			</ErrorBoundary>
-		</div>
+			<section>
+				<GalleryText text={work.text} />
+				<GalleryImages images={work.gallery} />
+			</section>
+		</>
 	);
 }

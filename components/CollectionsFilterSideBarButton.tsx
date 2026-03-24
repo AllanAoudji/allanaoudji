@@ -12,7 +12,7 @@ export default function CollectionsFiltersSideBarButton({ className }: Readonly<
 	const { openModal } = useModal();
 
 	const handleClick = useCallback(() => {
-		openModal("filters");
+		openModal("collections-filters");
 	}, [openModal]);
 
 	return (

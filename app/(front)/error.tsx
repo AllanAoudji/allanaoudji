@@ -1,29 +1,33 @@
 "use client";
 
-import { useCallback } from "react";
-import Title from "@/components/Title";
+import IssueContainer from "@/components/IssueContainer";
+import IssueLink from "@/components/IssueLink";
+import IssueLinksContainer from "@/components/IssueLinksContainer";
+import IssueResetButton from "@/components/IssueResetButton";
+import SubTitle from "@/components/SubTitle";
 
 type Props = {
 	error: Error;
-	reset?: () => void;
+	reset: () => void;
 };
 
-export default function Error({ error, reset }: Readonly<Props>) {
-	const clickReset = useCallback(() => {
-		if (reset) {
-			reset();
-		}
-	}, [reset]);
-
+export default function RootError({ error, reset }: Readonly<Props>) {
 	return (
-		<div>
-			<Title>Oh no!</Title>
-			<p>
-				There was an issue with our storefront. This could be a temporary issue, please try your action
-				again.
-			</p>
-			<p>{error.message}</p>
-			<button onClick={clickReset}>Try again</button>
-		</div>
+		<IssueContainer>
+			<p className="text-danger text-sm tracking-widest uppercase opacity-50">Erreur</p>
+			<SubTitle>Quelque chose s&rsquo;est mal passé</SubTitle>
+			<p>Une erreur temporaire est survenue. Réessaie dans quelques instants.</p>
+
+			{process.env.NODE_ENV === "development" && (
+				<p className="font-mono text-xs opacity-40">{error.message}</p>
+			)}
+
+			{reset && (
+				<IssueLinksContainer>
+					<IssueResetButton onClick={reset} />
+					<IssueLink href="/">Acceuil</IssueLink>
+				</IssueLinksContainer>
+			)}
+		</IssueContainer>
 	);
 }

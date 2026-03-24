@@ -1,19 +1,15 @@
-import Error from "../error";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
+import GalleryContent from "@/components/GalleryContent";
+import SkeletonWorks from "@/components/SkeletonWorks";
 import Title from "@/components/Title";
-import WorksGallerySection from "@/components/WorksGallerySection";
-import WorksGallerySectionLoader from "@/components/WorksGallerySectionLoader";
 
-export default function Gallery() {
+export default function GalleryPage() {
 	return (
-		<div className="padding-container vertical-padding">
+		<>
 			<Title>galerie</Title>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<WorksGallerySectionLoader />}>
-					<WorksGallerySection />
-				</Suspense>
-			</ErrorBoundary>
-		</div>
+			<Suspense fallback={<SkeletonWorks />}>
+				<GalleryContent />
+			</Suspense>
+		</>
 	);
 }

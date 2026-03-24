@@ -1,15 +1,14 @@
-import { Suspense } from "react";
 import Title from "@/components/Title";
 
 type Props = {
 	children: React.ReactNode;
 };
 
-export default function Layout({ children }: Readonly<Props>) {
+export default function PrivacyPolicyLayout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>Politique de confidentialité</Title>
-			<Suspense>{children}</Suspense>
+			{children}
 		</div>
 	);
 }

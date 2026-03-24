@@ -1,42 +1,41 @@
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import BannerSection from "@/components/BannerSection";
-import ContactSection from "@/components/ContactSection";
-import ContactSectionLoader from "@/components/ContactSectionLoader";
+import BannerContainer from "@/components/BannerContainer";
+import ContactHomeSection from "@/components/ContactHomeSection";
+import GalleryHomeSection from "@/components/GalleryHomeSection";
 import InstagramSection from "@/components/InstagramSection";
-import InstagramSectionLoader from "@/components/InstagramSectionLoader";
+import NullError from "@/components/NullError";
 import ProductsHomeSection from "@/components/ProductsHomeSection";
-import ProductsHomeSectionLoader from "@/components/ProductsHomeSectionLoader";
-import WorksHomeSection from "@/components/WorksHomeSection";
-import WorksHomeSectionLoader from "@/components/WorksHomeSectionLoader";
-import Error from "./error";
+import SkeletonContactHome from "@/components/SkeletonContactHome";
+import SkeletonInstagram from "@/components/SkeletonInstagram";
+import SkeletonProductsHome from "@/components/SkeletonProductsHome";
+import SkeletonWorksHome from "@/components/SkeletonWorksHome";
+import { getBanner } from "@/sanity/lib/queries";
 
-export default function Home() {
+export default async function RootPage() {
+	const bannerPromise = getBanner();
+
 	return (
 		<>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense>
-					<BannerSection />
-				</Suspense>
-			</ErrorBoundary>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<ProductsHomeSectionLoader />}>
+			<BannerContainer bannerPromise={bannerPromise} />
+			<ErrorBoundary errorComponent={NullError}>
+				<Suspense fallback={<SkeletonProductsHome />}>
 					<ProductsHomeSection />
 				</Suspense>
 			</ErrorBoundary>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<WorksHomeSectionLoader />}>
-					<WorksHomeSection />
+			<ErrorBoundary errorComponent={NullError}>
+				<Suspense fallback={<SkeletonWorksHome />}>
+					<GalleryHomeSection />
 				</Suspense>
 			</ErrorBoundary>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<InstagramSectionLoader />}>
+			<ErrorBoundary errorComponent={NullError}>
+				<Suspense fallback={<SkeletonInstagram />}>
 					<InstagramSection />
 				</Suspense>
 			</ErrorBoundary>
-			<ErrorBoundary errorComponent={Error}>
-				<Suspense fallback={<ContactSectionLoader />}>
-					<ContactSection />
+			<ErrorBoundary errorComponent={NullError}>
+				<Suspense fallback={<SkeletonContactHome />}>
+					<ContactHomeSection />
 				</Suspense>
 			</ErrorBoundary>
 		</>

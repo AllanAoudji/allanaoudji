@@ -2,7 +2,7 @@
 
 import { useModal } from "@/lib/contexts/modal-context";
 import CartModal from "./CartModal";
-import FiltersModal from "./FiltersModal";
+import CollectionsFiltersModal from "./CollectionsFiltersModal";
 import NavBarModal from "./NavBarModal";
 
 export default function Modals() {
@@ -11,7 +11,7 @@ export default function Modals() {
 	return (
 		<>
 			<CartModal onCloseAction={closeModal} open={modal === "cart"} />
-			<FiltersModal onCloseAction={closeModal} open={modal === "filters"} />
+			<CollectionsFiltersModal onCloseAction={closeModal} open={modal === "collections-filters"} />
 			<NavBarModal onCloseAction={closeModal} open={modal === "menu"} />
 		</>
 	);
