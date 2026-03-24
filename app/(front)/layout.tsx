@@ -55,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Retravailler filters
 // Référencements et optimisation shopify
 // Change couleur
+// Update and optimize sanity
 //  - primary => light
 //  - secondary => dark
 //  - tertiary => darker light (utiliser pour imageContainer/skeleton)
