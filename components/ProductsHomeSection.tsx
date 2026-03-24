@@ -5,6 +5,10 @@ import ProductsHomeSectionContainer from "./ProductsHomeSectionContainer";
 export default async function ProductsHomeSection() {
 	const products = await getLatestProducts();
 
+	if (!products.length) {
+		return null;
+	}
+
 	return (
 		<ProductsHomeSectionContainer>
 			{products.map(product => (

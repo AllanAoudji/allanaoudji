@@ -23,8 +23,12 @@ export default async function InstagramSection() {
 		throw new Error(data.error.message);
 	}
 
+	if (!data.data.length) {
+		return null;
+	}
+
 	return (
-		<InstagramSectionContainer className="bg-quaternary text-primary">
+		<InstagramSectionContainer>
 			{data.data.map(post => (
 				<InstagramSectionItem key={post.id} post={post} />
 			))}
