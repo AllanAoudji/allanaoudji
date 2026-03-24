@@ -1,14 +1,14 @@
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import LegalNoticesContainer from "@/components/LegalNoticesContainer";
+import PrivacyPolicyContainer from "@/components/PrivacyPolicyContainer";
 import SectionError from "@/components/SectionError";
-import SuspenseSanityPage from "@/components/SuspenseSanityPage";
+import SkeletonLegalPortableText from "@/components/SkeletonLegalPortableText";
 
 export default async function PrivacyPolicy() {
 	return (
 		<ErrorBoundary errorComponent={SectionError}>
-			<Suspense fallback={<SuspenseSanityPage />}>
-				<LegalNoticesContainer />
+			<Suspense fallback={<SkeletonLegalPortableText />}>
+				<PrivacyPolicyContainer />
 			</Suspense>
 		</ErrorBoundary>
 	);

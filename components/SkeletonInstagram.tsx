@@ -1,7 +1,7 @@
 import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
 
-export default function InstagramSectionLoader() {
+export default function SkeletonInstagram() {
 	return (
 		<InstagramSectionContainer>
 			<InstagramSectionItem />

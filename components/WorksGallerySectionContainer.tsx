@@ -122,10 +122,6 @@ export default function WorksGallerySectionContainer({
 					<span className="text-quaternary/75 text-xs">Chargement...</span>
 				</div>
 			)}
-
-			{/* {!hasNextPageRef.current && works.length > 0 && (
-				<p className="text-quaternary/75 pt-16 text-center text-xs">Tous les projets sont affichés</p>
-			)} */}
 		</>
 	);
 }

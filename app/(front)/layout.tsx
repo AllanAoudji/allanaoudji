@@ -21,21 +21,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="fr">
-			<body className="font-gopher bg-primary text-quaternary flex h-screen flex-col justify-between antialiased">
+			<body className="font-gopher bg-primary text-quaternary antialiased">
 				<ErrorBoundary errorComponent={SectionError}>
 					<Suspense fallback={<SplashScreen />}>
+						<ScrollReset />
 						<LocalShopifyDispenser>
 							<ModalProvider>
 								<CartDispenser>
 									<LightboxProvider>
-										<ScrollReset />
-										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-											<NavBar />
-										</header>
-
-										<main className="mt-header mb-auto">{children}</main>
-										<Modals />
-										<Footer />
+										<div className="flex min-h-screen flex-col">
+											<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+												<NavBar />
+											</header>
+											<main className="mt-header flex-1">{children}</main>
+											<Modals />
+											<Footer />
+										</div>
 									</LightboxProvider>
 								</CartDispenser>
 							</ModalProvider>
@@ -57,3 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // retravailler les fallbacks de suspense de textes, pas fan du rendu
 // retravailler les messages de contenus vide => pas de works/pas de produits/page about vide, etc
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
+// normaliser les page
+//  - layout -> errorBoundary/suspense
+//  - page -> await datas
+//  - Container -> UI

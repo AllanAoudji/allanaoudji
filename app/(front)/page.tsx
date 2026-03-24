@@ -2,14 +2,14 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import BannerSection from "@/components/BannerSection";
 import ContactSection from "@/components/ContactSection";
-import ContactSectionLoader from "@/components/ContactSectionLoader";
 import InstagramSection from "@/components/InstagramSection";
-import InstagramSectionLoader from "@/components/InstagramSectionLoader";
 import NullError from "@/components/NullError";
 import ProductsHomeSection from "@/components/ProductsHomeSection";
-import ProductsHomeSectionLoader from "@/components/ProductsHomeSectionLoader";
+import SkeletonContactHome from "@/components/SkeletonContactHome";
+import SkeletonInstagram from "@/components/SkeletonInstagram";
+import SkeletonProductsHome from "@/components/SkeletonProductsHome";
+import SkeletonWorksHome from "@/components/SkeletonWorksHome";
 import WorksHomeSection from "@/components/WorksHomeSection";
-import WorksHomeSectionLoader from "@/components/WorksHomeSectionLoader";
 import { getBanner } from "@/sanity/lib/queries";
 
 export default async function Home() {
@@ -19,22 +19,22 @@ export default async function Home() {
 		<>
 			<BannerSection bannerPromise={bannerPromise} />
 			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<ProductsHomeSectionLoader />}>
+				<Suspense fallback={<SkeletonProductsHome />}>
 					<ProductsHomeSection />
 				</Suspense>
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<WorksHomeSectionLoader />}>
+				<Suspense fallback={<SkeletonWorksHome />}>
 					<WorksHomeSection />
 				</Suspense>
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<InstagramSectionLoader />}>
+				<Suspense fallback={<SkeletonInstagram />}>
 					<InstagramSection />
 				</Suspense>
 			</ErrorBoundary>
 			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<ContactSectionLoader />}>
+				<Suspense fallback={<SkeletonContactHome />}>
 					<ContactSection />
 				</Suspense>
 			</ErrorBoundary>
