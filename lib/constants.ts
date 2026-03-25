@@ -76,3 +76,40 @@ export const TAGS = {
 
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
 export const DEFAULT_OPTION = "Default Title";
+
+export const SPAM_WORDS_FR = [
+	// Publicité / marketing agressif
+	"casino",
+	"viagra",
+	"porno",
+	"adulte",
+	"sexuel",
+	"prêt",
+	"carte de crédit",
+	"argent facile",
+	"retour garanti",
+	"arnaque",
+	"gagner de l'argent",
+	"cryptomonnaie gratuite",
+	"bitcoin gratuit",
+	"investissement douteux",
+
+	// Liens / phishing
+	"http://",
+	"https://",
+	"www.",
+	".com",
+	".fr",
+	".ru",
+	".xyz",
+	"cliquez ici",
+	"inscrivez-vous maintenant",
+	"achetez maintenant",
+
+	// Contenu évident spam
+	"travail à domicile",
+	"gagner de l'argent rapidement",
+	"service SEO",
+	"trafic web",
+	"revenu passif",
+];

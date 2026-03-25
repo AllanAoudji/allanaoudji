@@ -1,7 +1,9 @@
+import { Redis } from "@upstash/redis";
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import z from "zod";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
 import Product from "@/types/product";
@@ -55,9 +57,79 @@ export function applyFrenchTypography(text: string): string {
 	return t;
 }
 
+export function buildGalleryImages(product: Product, variant: ProductVariant | undefined) {
+	const variantImage = variant?.image ?? null;
+	const featuredImage = product.featuredImage ?? null;
+
+	const galleryImages = product.images ?? [];
+
+	const variantImagesSet = new Set(product.variants.map(v => v.image?.url).filter(Boolean));
+
+	const images = [];
+
+	if (variantImage?.url) {
+		images.push(variantImage);
+	} else if (featuredImage?.url) {
+		images.push(featuredImage);
+	}
+
+	const filteredGallery = galleryImages.filter(img => {
+		if (img.url === featuredImage?.url) return false;
+
+		if (variantImagesSet.has(img.url)) return false;
+
+		return true;
+	});
+
+	images.push(...filteredGallery.slice(0, 3));
+
+	return images;
+}
+
+export const redis = new Redis({
+	url: process.env.UPSTASH_REDIS_REST_URL,
+	token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+export async function checkRateLimit(ip: string) {
+	const key = `contact:${ip}`;
+
+	const count = Number((await redis.get(key)) || 0);
+
+	if (count >= 5) {
+		throw new Error("Trop de messages envoyés. Réessayez plus tard.");
+	}
+
+	await redis.incr(key);
+	await redis.expire(key, 60);
+}
+
 export const cn = (...inputs: ClassValue[]): string => {
 	return twMerge(clsx(inputs));
 };
+
+export const contactFormSchema = z.object({
+	firstName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	lastName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	email: z.string().email("Email invalide"),
+	subject: z
+		.string()
+		.min(3, "Doit contenir au moins 3 caractères")
+		.max(120, "Ne peut pas dépasser 120 caractères"),
+	message: z
+		.string()
+		.min(10, "Doit contenir au moins 10 caractères")
+		.max(2000, "Ne peut pas dépasser 2000 caractères"),
+	website: z.string().optional(),
+});
+
+export type ContactFormFields = keyof typeof contactFormSchema.shape;
 
 export function convertCurrencyCode(currencyCode: string): string {
 	switch (currencyCode) {
@@ -128,35 +200,6 @@ export function getProductDefaultVariant(product: Product): string | undefined {
 	return new URLSearchParams(
 		variants[0].selectedOptions.map(option => [option.name.toLocaleLowerCase(), option.value]),
 	).toString();
-}
-
-export function buildGalleryImages(product: Product, variant: ProductVariant | undefined) {
-	const variantImage = variant?.image ?? null;
-	const featuredImage = product.featuredImage ?? null;
-
-	const galleryImages = product.images ?? [];
-
-	const variantImagesSet = new Set(product.variants.map(v => v.image?.url).filter(Boolean));
-
-	const images = [];
-
-	if (variantImage?.url) {
-		images.push(variantImage);
-	} else if (featuredImage?.url) {
-		images.push(featuredImage);
-	}
-
-	const filteredGallery = galleryImages.filter(img => {
-		if (img.url === featuredImage?.url) return false;
-
-		if (variantImagesSet.has(img.url)) return false;
-
-		return true;
-	});
-
-	images.push(...filteredGallery.slice(0, 3));
-
-	return images;
 }
 
 export async function withMinimumDelay<T>(
