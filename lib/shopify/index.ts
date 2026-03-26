@@ -279,15 +279,16 @@ export async function addToCart(
 	variantId: string,
 	quantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
-	const cartBeforeMutation = await getCart(cartId);
+	const [cartBeforeMutation, res] = await Promise.all([
+		getCart(cartId),
+		shopifyFetch<ShopifyAddToCartOperation>({
+			cache: "no-cache",
+			query: addToCartMutation,
+			variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
+		}),
+	]);
 
 	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
-
-	const res = await shopifyFetch<ShopifyAddToCartOperation>({
-		cache: "no-cache",
-		query: addToCartMutation,
-		variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
-	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesAdd.cart);
 
@@ -566,17 +567,18 @@ export async function updateCart(
 	variantId: string,
 	quantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
-	const cartBeforeMutation = await getCart(cartId);
+	const [cartBeforeMutation, res] = await Promise.all([
+		getCart(cartId),
+		shopifyFetch<ShopifyUpdateCartOperation>({
+			query: editCartItemMutation,
+			cache: "no-store",
+			variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
+		}),
+	]);
 
 	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
 
 	const decremente = previousQuantity > quantity;
-
-	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
-		query: editCartItemMutation,
-		cache: "no-store",
-		variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
-	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesUpdate.cart);
 	const newQuantity = getLineQuantity(updatedCart, variantId);
