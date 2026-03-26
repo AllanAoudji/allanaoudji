@@ -47,15 +47,24 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// Contact page
+// ----- Styling -----
 // utiliser applyFrenchTypography sur sanity.work.text
 // utiliser des icones pour la lightbox et l'animer
 // Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
 // Retravailler filters
-// Référencements et optimisation shopify
-// Update and optimize sanity
 // Change couleur
 //  - primary => light
 //  - secondary => dark
 //  - tertiary => darker light (utiliser pour imageContainer/skeleton)
+// Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
+
+// ----- Sanity optimization -----
+// Update and optimize sanity
+
+// ----- Shopify optimizations -----
+// Référencements et optimisation shopify
+
+// ----- Editorial -----
+// Utiliser le tutoiement
+// Point à la fin des phrases, espace insécable, etc.

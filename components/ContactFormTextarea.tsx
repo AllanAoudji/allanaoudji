@@ -2,23 +2,23 @@ import { useState } from "react";
 import { cn, contactFormSchema } from "@/lib/utils";
 
 type Props = {
+	className?: string;
+	error?: string;
 	id: keyof typeof contactFormSchema.shape;
 	placeholder: string;
-	title: string;
-	error?: string;
-	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
 	onValueChange?: (_value: string) => void; // <-- nouveau
-	className?: string;
+	title: string;
+	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
 };
 
 export default function ContactFormTextAra({
+	className,
+	error,
 	id,
+	onValueChange,
 	placeholder,
 	title,
-	error,
 	validateField,
-	onValueChange,
-	className,
 }: Readonly<Props>) {
 	const [showError, setShowError] = useState(false);
 
@@ -37,26 +37,26 @@ export default function ContactFormTextAra({
 	return (
 		<div className={cn(className)}>
 			<label
-				htmlFor={id}
 				className={cn("mb-0.5 block text-xs font-bold tracking-wider uppercase", {
 					"text-danger": showError && error,
 				})}
+				htmlFor={id}
 			>
 				{title}
 			</label>
 			<textarea
+				aria-describedby={error ? `${id}-error` : undefined}
+				aria-invalid={!!(showError && error)}
+				className="border-quaternary focus:ring-quaternary block min-h-40 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
 				id={id}
 				name={id}
-				placeholder={placeholder}
 				onBlur={e => handleBlur(e.target.value)}
 				onChange={e => handleChange(e.target.value)}
-				aria-invalid={!!(showError && error)}
-				aria-describedby={error ? `${id}-error` : undefined}
-				className="border-quaternary focus:ring-quaternary block min-h-32 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
+				placeholder={placeholder}
 			/>
 			<div className="mt-0.5 min-h-5">
-				{showError && error && (
-					<p id={`${id}-error`} className="text-danger text-right text-sm tracking-tighter">
+				{error && showError && (
+					<p className="text-danger text-right text-sm tracking-tighter" id={`${id}-error`}>
 						{error}
 					</p>
 				)}

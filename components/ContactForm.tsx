@@ -18,12 +18,12 @@ type Props = {
 
 export default function ContactForm({ className }: Readonly<Props>) {
 	const [callbackMessage, setCallbackMessage] = useState<{
-		type: "success" | "error";
 		message: string;
+		type: "success" | "error";
 	} | null>(null);
 	const [errors, setErrors] = useState<FormErrors>({});
-	const [values, setValues] = useState<Record<string, string>>({});
 	const [isDisabled, setIsDisabled] = useState(true);
+	const [values, setValues] = useState<Record<string, string>>({});
 
 	// Validation d’un champ unique
 	const validateField = (name: keyof typeof contactFormSchema.shape, value: string) => {
@@ -41,18 +41,6 @@ export default function ContactForm({ className }: Readonly<Props>) {
 
 		return isValid;
 	};
-
-	// Mettre à jour le disabled du bouton
-	useEffect(() => {
-		const hasErrors = Object.values(errors).some(Boolean);
-		const hasEmpty = ["firstName", "lastName", "email", "subject", "message"].some(
-			key => !values[key] || values[key].trim() === "",
-		);
-
-		const nextDisabled = hasErrors || hasEmpty;
-
-		setIsDisabled(prev => (prev === nextDisabled ? prev : nextDisabled));
-	}, [errors, values]);
 
 	const handleSubmit = async (formData: FormData) => {
 		const data = Object.fromEntries(formData.entries());
@@ -83,6 +71,18 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		}
 	};
 
+	// Mettre à jour le disabled du bouton
+	useEffect(() => {
+		const hasErrors = Object.values(errors).some(Boolean);
+		const hasEmpty = ["firstName", "lastName", "email", "subject", "message"].some(
+			key => !values[key] || values[key].trim() === "",
+		);
+
+		const nextDisabled = hasErrors || hasEmpty;
+
+		setIsDisabled(prev => (prev === nextDisabled ? prev : nextDisabled));
+	}, [errors, values]);
+
 	useEffect(() => {
 		return () => {
 			setCallbackMessage(null);
@@ -90,57 +90,57 @@ export default function ContactForm({ className }: Readonly<Props>) {
 	}, []);
 
 	return (
-		<div className={cn("max-w-2xl", className)}>
+		<div className={cn("w-full max-w-xl", className)}>
 			<Form action={handleSubmit}>
-				<input name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+				<input autoComplete="off" className="hidden" name="website" tabIndex={-1} />
 
-				<div className="grid gap-0 sm:grid-cols-2 sm:gap-4">
+				<div className="grid gap-0 lg:grid-cols-2 lg:gap-4">
 					<ContactFormInput
+						error={errors.firstName}
 						id="firstName"
+						onValueChange={val => setValues(prev => ({ ...prev, firstName: val }))}
 						placeholder="Ton prénom"
 						title="Prénom"
 						validateField={validateField}
-						error={errors.firstName}
-						onValueChange={val => setValues(prev => ({ ...prev, firstName: val }))}
 					/>
 
 					<ContactFormInput
+						error={errors.lastName}
 						id="lastName"
+						onValueChange={val => setValues(prev => ({ ...prev, lastName: val }))}
 						placeholder="Ton nom"
 						title="Nom"
 						validateField={validateField}
-						error={errors.lastName}
-						onValueChange={val => setValues(prev => ({ ...prev, lastName: val }))}
 					/>
 				</div>
 
 				<ContactFormInput
+					error={errors.email}
 					id="email"
+					onValueChange={val => setValues(prev => ({ ...prev, email: val }))}
 					placeholder="Ton email"
 					title="Email"
 					validateField={validateField}
-					error={errors.email}
 					type="email"
-					onValueChange={val => setValues(prev => ({ ...prev, email: val }))}
 				/>
 
 				<ContactFormInput
+					error={errors.subject}
 					id="subject"
+					onValueChange={val => setValues(prev => ({ ...prev, subject: val }))}
 					placeholder="Sujet"
 					title="Sujet"
 					validateField={validateField}
-					error={errors.subject}
-					onValueChange={val => setValues(prev => ({ ...prev, subject: val }))}
 				/>
 
 				<ContactFormTextAra
 					className="mb-2"
+					error={errors.message}
 					id="message"
+					onValueChange={val => setValues(prev => ({ ...prev, message: val }))}
 					placeholder="Ton message..."
 					title="Message"
 					validateField={validateField}
-					error={errors.message}
-					onValueChange={val => setValues(prev => ({ ...prev, message: val }))}
 				/>
 
 				<ContactFormSubmitButton disabled={isDisabled} />

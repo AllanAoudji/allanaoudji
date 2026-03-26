@@ -1,3 +1,5 @@
+import ContactContainer from "@/components/ContactContainer";
+
 export default function Contact() {
-	return <p>lorem ipsum dolor sit amet</p>;
+	return <ContactContainer />;
 }
