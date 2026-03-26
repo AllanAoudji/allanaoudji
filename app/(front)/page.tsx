@@ -6,13 +6,12 @@ import GalleryHomeSection from "@/components/GalleryHomeSection";
 import InstagramSection from "@/components/InstagramSection";
 import NullError from "@/components/NullError";
 import ProductsHomeSection from "@/components/ProductsHomeSection";
-import SkeletonContactHome from "@/components/SkeletonContactHome";
 import SkeletonInstagram from "@/components/SkeletonInstagram";
 import SkeletonProductsHome from "@/components/SkeletonProductsHome";
 import SkeletonWorksHome from "@/components/SkeletonWorksHome";
 import { getBanner } from "@/sanity/lib/queries";
 
-export default async function RootPage() {
+export default function RootPage() {
 	const bannerPromise = getBanner();
 
 	return (
@@ -33,11 +32,7 @@ export default async function RootPage() {
 					<InstagramSection />
 				</Suspense>
 			</ErrorBoundary>
-			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<SkeletonContactHome />}>
-					<ContactHomeSection />
-				</Suspense>
-			</ErrorBoundary>
+			<ContactHomeSection />
 		</>
 	);
 }

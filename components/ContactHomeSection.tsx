@@ -1,21 +1,13 @@
-import ContactHomeSectionContainer from "./ContactHomeSectionContainer";
-import ContactHomeSectionItem from "./ContactHomeSectionItem";
-import { getContacts } from "@/sanity/lib/queries";
+import ContactContainer from "./ContactContainer";
+import SubTitle from "./SubTitle";
 
-export default async function ContactHomeSection() {
-	const query = await getContacts();
-
-	if (!query || !query.contacts || query.contacts.length === 0) {
-		return null;
-	}
-
+export default function ContactHomeSection() {
 	return (
-		<ContactHomeSectionContainer>
-			<ul className="flex w-min flex-col">
-				{query.contacts.map(contact => (
-					<ContactHomeSectionItem key={contact._id} contact={contact} className={"last-of-type:pb-6"} />
-				))}
-			</ul>
-		</ContactHomeSectionContainer>
+		<section className={"vertical-padding odd:text-quaternary even:bg-quaternary even:text-primary"}>
+			<div className="padding-container">
+				<SubTitle className="pt-12">Contact</SubTitle>
+				<ContactContainer />
+			</div>
+		</section>
 	);
 }
