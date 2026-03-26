@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { cache, Suspense } from "react";
 import { CartProvider } from "@/lib/contexts/cart-context";
-import { CartActionsProvider } from "@/lib/contexts/cartActions-context";
 import { getCart } from "@/lib/shopify";
+import CartDispenserErrorBoundary from "./CartDispenserErrorBoundary";
 
 type Props = {
 	children: React.ReactNode;
@@ -17,10 +17,10 @@ export default async function CartDispenser({ children }: Readonly<Props>) {
 	const cart = getCartCached(cartId);
 
 	return (
-		<Suspense fallback={null}>
-			<CartProvider cartPromise={cart}>
-				<CartActionsProvider>{children}</CartActionsProvider>
-			</CartProvider>
-		</Suspense>
+		<CartDispenserErrorBoundary>
+			<Suspense fallback={null}>
+				<CartProvider cartPromise={cart}>{children}</CartProvider>
+			</Suspense>
+		</CartDispenserErrorBoundary>
 	);
 }

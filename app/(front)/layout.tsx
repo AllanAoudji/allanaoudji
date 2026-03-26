@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { CartActionsProvider } from "@/lib/contexts/cartActions-context";
 import { LightboxProvider } from "@/lib/contexts/lightbox-context";
 import { ModalProvider } from "@/lib/contexts/modal-context";
 import CartDispenser from "@/components/CartDispenser";
@@ -23,22 +24,24 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 				<Suspense fallback={<SplashScreen />}>
 					<ScrollReset />
 					<LocalShopifyDispenser>
-						<ModalProvider>
-							<CartDispenser>
-								<LightboxProvider>
-									<div className="flex min-h-screen flex-col">
-										<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-											<NavBar />
-										</header>
+						<CartDispenser>
+							<div className="flex min-h-screen flex-col">
+								<ModalProvider>
+									<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+										<NavBar />
+									</header>
 
-										<main className="mt-header flex-1">{children}</main>
+									<CartActionsProvider>
+										<LightboxProvider>
+											<main className="mt-header flex-1">{children}</main>
+										</LightboxProvider>
 
 										<Modals />
-										<Footer />
-									</div>
-								</LightboxProvider>
-							</CartDispenser>
-						</ModalProvider>
+									</CartActionsProvider>
+								</ModalProvider>
+								<Footer />
+							</div>
+						</CartDispenser>
 					</LocalShopifyDispenser>
 				</Suspense>
 			</body>
@@ -59,11 +62,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 //  - tertiary => darker light (utiliser pour imageContainer/skeleton)
 // Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
 
-// ----- Sanity optimization -----
+// ----- Sanity/Shopify optimization -----
 // Update and optimize sanity
-
-// ----- Shopify optimizations -----
-// Référencements et optimisation shopify
+// Référencements
+// Optimisation shopify
 
 // ----- Editorial -----
 // Utiliser le tutoiement

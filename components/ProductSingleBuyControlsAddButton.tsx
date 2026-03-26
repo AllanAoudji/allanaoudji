@@ -30,18 +30,19 @@ export default function ProductSingleBuyControlsAddButton({
 	const disable = !product.availableForSale || isPending || !selectedVariantId;
 
 	return (
-		<form action={cartAction} className={cn(className)}>
-			<button
-				className={cn("CTA", {
-					"bg-quaternary/50 cursor-not-allowed!": !product.availableForSale || !selectedVariantId,
-					"cursor-progress!": isPending,
-				})}
-				disabled={disable}
-				onClick={resetProductMessage}
-				type="submit"
-			>
-				{buttonMessage}
-			</button>
-		</form>
+		<button
+			className={cn("CTA", className, {
+				"bg-quaternary/50 cursor-not-allowed!": !product.availableForSale || !selectedVariantId,
+				"cursor-progress!": isPending,
+			})}
+			disabled={disable}
+			onClick={() => {
+				resetProductMessage();
+				cartAction();
+			}}
+			type="button"
+		>
+			{buttonMessage}
+		</button>
 	);
 }

@@ -13,6 +13,7 @@ import UpdateCartItemAction from "@/types/updateCartItemAction";
 export async function addToCartAction(
 	variantId: string,
 	quantity: number,
+	previousQuantity: number,
 ): Promise<ActionReponse<UpdateCartItemAction>> {
 	let cookieStore: ReadonlyRequestCookies;
 	try {
@@ -61,7 +62,7 @@ export async function addToCartAction(
 		};
 	};
 	try {
-		res = await addToCart(cartId, variantId, finalQuantity);
+		res = await addToCart(cartId, variantId, finalQuantity, previousQuantity);
 	} catch (error) {
 		if (error instanceof Error) {
 			return {

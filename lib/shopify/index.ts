@@ -278,23 +278,24 @@ export async function addToCart(
 	cartId: string,
 	variantId: string,
 	quantity: number,
+	previousQuantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
-	const [cartBeforeMutation, res] = await Promise.all([
-		getCart(cartId),
-		shopifyFetch<ShopifyAddToCartOperation>({
-			cache: "no-cache",
-			query: addToCartMutation,
-			variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
-		}),
-	]);
-
-	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
+	const res = await shopifyFetch<ShopifyAddToCartOperation>({
+		cache: "no-store",
+		query: addToCartMutation,
+		variables: {
+			cartId,
+			lines: [{ merchandiseId: variantId, quantity }],
+		},
+	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesAdd.cart);
 
-	const newQuantity = getLineQuantity(updatedCart, variantId);
+	const line = updatedCart.lines.find(line => line.merchandise.id === variantId);
 
-	const actuallyAdded = newQuantity - previousQuantity;
+	const newQuantity = line?.quantity ?? 0;
+
+	const actuallyAdded = Math.max(0, newQuantity - previousQuantity);
 
 	return {
 		data: {

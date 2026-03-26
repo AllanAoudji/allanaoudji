@@ -2,7 +2,7 @@
 
 import { TAGS } from "../constants";
 import { removeFromCart } from "../shopify";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import RemoveActionFromCartActionData from "@/types/RemoveFromCartActionData";
@@ -46,6 +46,7 @@ export async function removeFromCartAction(
 	try {
 		await removeFromCart(cartId, [cartItem.id]);
 	} catch (error) {
+		console.error("removeFromCart error:", error);
 		if (error instanceof Error) {
 			return {
 				message: error.message,
@@ -58,7 +59,7 @@ export async function removeFromCartAction(
 		};
 	}
 
-	revalidateTag(TAGS.cart, { expire: 0 });
+	updateTag(TAGS.cart);
 
 	return {
 		data: {
