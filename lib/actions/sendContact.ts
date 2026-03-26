@@ -6,14 +6,7 @@ import { headers } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";
 
-type ContactFormFields =
-	| "firstName"
-	| "lastName"
-	| "email"
-	| "subject"
-	| "message"
-	| "website"
-	| "turnstileToken";
+type ContactFormFields = "firstName" | "lastName" | "email" | "subject" | "message" | "website";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -24,7 +17,6 @@ const schema = z.object({
 	subject: z.string().min(3).max(120),
 	message: z.string().min(10).max(2000),
 	website: z.string().optional(),
-	turnstileToken: z.string().min(1),
 });
 
 function getFormValue<T extends string>(formData: FormData, key: T): string {
@@ -45,9 +37,10 @@ export default async function sendContact(formData: FormData) {
 		subject: getFormValue<ContactFormFields>(formData, "subject"),
 		message: getFormValue<ContactFormFields>(formData, "message"),
 		website: getFormValue<ContactFormFields>(formData, "website"),
-		turnstileToken: getFormValue<ContactFormFields>(formData, "turnstileToken"),
 	};
+	console.log({ data });
 	const parsed = schema.safeParse(data);
+	console.log({ parsed });
 
 	if (!parsed.success) {
 		throw new Error("Formulaire invalide");
@@ -64,6 +57,7 @@ export default async function sendContact(formData: FormData) {
 	if (SPAM_WORDS_FR.some(w => (data.message as string).toLowerCase().includes(w))) {
 		throw new Error("Message refusé");
 	}
+	console.log("prepare to send email");
 	await resend.emails.send({
 		from: process.env.FROM_EMAIL,
 		to: process.env.CONTACT_EMAIL,
@@ -106,4 +100,5 @@ Site : allanaoudji.com
   </div>
   `,
 	});
+	console.log("email send");
 }

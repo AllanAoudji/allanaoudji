@@ -54,8 +54,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
 // Retravailler filters
 // Référencements et optimisation shopify
-// Change couleur
 // Update and optimize sanity
+// Change couleur
 //  - primary => light
 //  - secondary => dark
 //  - tertiary => darker light (utiliser pour imageContainer/skeleton)

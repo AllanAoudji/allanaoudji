@@ -7,7 +7,7 @@ type Props = {
 	title: string;
 	error?: string;
 	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
-	onValueChange?: (_value: string) => void; // <-- nouveau
+	onValueChange?: (_value: string) => void;
 	type?: string;
 	className?: string;
 };

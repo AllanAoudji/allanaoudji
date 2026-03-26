@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import sendContact from "@/lib/actions/sendContact";
 import { cn, contactFormSchema } from "@/lib/utils";
+import ContactFormCallbackMessage from "./ContactFormCallbackMessage";
 import ContactFormInput from "./ContactFormInput";
 import ContactFormSubmitButton from "./ContactFormSubmitButton";
 import ContactFormTextAra from "./ContactFormTextarea";
@@ -16,7 +17,10 @@ type Props = {
 };
 
 export default function ContactForm({ className }: Readonly<Props>) {
-	const [success, setSuccess] = useState(false);
+	const [callbackMessage, setCallbackMessage] = useState<{
+		type: "success" | "error";
+		message: string;
+	} | null>(null);
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [values, setValues] = useState<Record<string, string>>({});
 	const [isDisabled, setIsDisabled] = useState(true);
@@ -35,8 +39,6 @@ export default function ContactForm({ className }: Readonly<Props>) {
 			}
 		}
 
-		// Mettre à jour la valeur dans le parent pour le bouton
-		setValues(prev => ({ ...prev, [name]: value }));
 		return isValid;
 	};
 
@@ -46,7 +48,10 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		const hasEmpty = ["firstName", "lastName", "email", "subject", "message"].some(
 			key => !values[key] || values[key].trim() === "",
 		);
-		setIsDisabled(hasErrors || hasEmpty);
+
+		const nextDisabled = hasErrors || hasEmpty;
+
+		setIsDisabled(prev => (prev === nextDisabled ? prev : nextDisabled));
 	}, [errors, values]);
 
 	const handleSubmit = async (formData: FormData) => {
@@ -65,19 +70,31 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		setErrors({});
 		try {
 			await sendContact(formData);
-			setSuccess(true);
+			setCallbackMessage({
+				message: "Merci, ton message a été envoyé !",
+				type: "success",
+			});
 			setValues({}); // reset values
 		} catch (err) {
-			alert(err instanceof Error ? err.message : "Erreur lors de l’envoi");
+			setCallbackMessage({
+				message: err instanceof Error ? err.message : "Erreur lors de l’envoi",
+				type: "error",
+			});
 		}
 	};
 
+	useEffect(() => {
+		return () => {
+			setCallbackMessage(null);
+		};
+	}, []);
+
 	return (
-		<div className={cn(className)}>
+		<div className={cn("max-w-2xl", className)}>
 			<Form action={handleSubmit}>
 				<input name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
-				<div className="grid gap-2 md:grid-cols-2 md:gap-4">
+				<div className="grid gap-0 sm:grid-cols-2 sm:gap-4">
 					<ContactFormInput
 						id="firstName"
 						placeholder="Ton prénom"
@@ -117,7 +134,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 				/>
 
 				<ContactFormTextAra
-					className="mb-4"
+					className="mb-2"
 					id="message"
 					placeholder="Ton message..."
 					title="Message"
@@ -128,8 +145,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 
 				<ContactFormSubmitButton disabled={isDisabled} />
 			</Form>
-
-			{success && <p className="mt-3 text-green-600">Merci, votre message a été envoyé !</p>}
+			<ContactFormCallbackMessage callbackMessage={callbackMessage} className="mt-2" />
 		</div>
 	);
 }
