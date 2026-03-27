@@ -29,7 +29,7 @@ export default function ProductSingleBuyControlsCallbackMessage({
 				<IconExclamationMark
 					className={cn({
 						"text-primary": productMessage.type === "error",
-						"text-quaternary": productMessage.type === "warning",
+						"text-secondary": productMessage.type === "warning",
 					})}
 					size={20}
 				/>

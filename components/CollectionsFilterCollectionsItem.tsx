@@ -39,7 +39,7 @@ export default function CollectionsFilterCollectionsItem({ item }: Readonly<Prop
 					className={cn(
 						"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
 						"relative pb-0.5",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",
 						{

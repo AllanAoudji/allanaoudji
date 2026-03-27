@@ -111,7 +111,7 @@ export default function GalleryContentInfiniteScroll({
 
 			{isLoading && (
 				<div className="flex justify-center pt-16">
-					<span className="text-quaternary/75 text-xs">Chargement...</span>
+					<span className="text-quaternary text-xs">Chargement...</span>
 				</div>
 			)}
 		</>

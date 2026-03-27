@@ -128,10 +128,6 @@ export default function CollectionsContentInfiniteScroll({
 					<span className="text-quaternary text-xs">Chargement...</span>
 				</div>
 			)}
-
-			{/* {!hasNextPageRef.current && products.length > 0 && (
-				<p className="text-quaternary/75 pt-16 text-center text-xs">Tous les produits sont affichés</p>
-			)} */}
 		</>
 	);
 }

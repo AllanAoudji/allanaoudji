@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="fr_FR">
-			<body className="font-gopher bg-primary text-quaternary antialiased">
+			<body className="font-gopher bg-primary text-secondary antialiased">
 				<Suspense fallback={<SplashScreen />}>
 					<ScrollReset />
 					<LocalShopifyDispenser>

@@ -50,13 +50,13 @@ export default function ImageContainer({
 	}, [image]);
 
 	if (!normalized?.url) {
-		return <div className={cn(getAspectRatioClass(ratio), "bg-secondary w-full")} />;
+		return <div className={cn(getAspectRatioClass(ratio), "bg-tertiary w-full")} />;
 	}
 
 	return (
 		<div
 			className={cn(
-				"bg-secondary relative w-full overflow-hidden",
+				"bg-quaternary relative w-full overflow-hidden",
 				getAspectRatioClass(ratio),
 				className,
 			)}

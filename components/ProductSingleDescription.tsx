@@ -92,7 +92,7 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					const colorValue = colorMatch[1].trim().toLowerCase();
 					const isBlack = ["#000", "#000000", "black", "rgb(0,0,0)"].includes(colorValue);
 					if (isBlack) {
-						return <span className="text-quaternary">{domToReact(children as DOMNode[], options)}</span>;
+						return <span className="text-secondary">{domToReact(children as DOMNode[], options)}</span>;
 					}
 					return undefined;
 				}

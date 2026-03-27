@@ -21,7 +21,7 @@ export default function ContactLinksItem({ className, contact }: Readonly<Props>
 				<span
 					className={cn(
 						"relative pb-0.5",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",
 					)}

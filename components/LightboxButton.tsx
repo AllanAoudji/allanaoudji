@@ -11,7 +11,7 @@ export default function LightBoxButton({ className, onClick, text }: Readonly<Pr
 	return (
 		<div
 			className={cn(
-				"bg-secondary/75 absolute z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full",
+				"bg-tertiary/75 absolute z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full",
 				className,
 			)}
 			onClick={onClick}

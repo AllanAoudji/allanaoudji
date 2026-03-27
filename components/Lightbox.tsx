@@ -56,7 +56,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 
 	return (
 		<div
-			className="bg-secondary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
+			className="bg-tertiary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
 			onClick={handleClick}
 		>
 			<LightBoxButton className="right-5" text="X" />

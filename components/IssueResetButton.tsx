@@ -7,7 +7,7 @@ type Props = {
 export default function IssueResetButton({ onClick }: Readonly<Props>) {
 	return (
 		<button
-			className="hover:bg-quaternary hover:text-primary border-quaternary border px-12 py-2 text-center text-xs tracking-widest uppercase transition-colors"
+			className="hover:bg-secondary hover:text-primary border-secondary border px-12 py-2 text-center text-xs tracking-widest uppercase transition-colors"
 			onClick={onClick}
 		>
 			Réessayer

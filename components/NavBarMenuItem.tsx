@@ -36,7 +36,7 @@ export default function NavBarMenuItem({
 		>
 			<Link
 				className={cn(
-					"text-quaternary text-md flex items-center py-0.5 font-bold uppercase",
+					"text-secondary text-md flex items-center py-0.5 font-bold uppercase",
 					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
 					{
 						"h-header px-2 py-0": direction === "row",
@@ -52,7 +52,7 @@ export default function NavBarMenuItem({
 				<span
 					className={cn(
 						"relative transition-opacity duration-300",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						{
 							"py-1 text-sm": direction === "row",

@@ -38,7 +38,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 	}
 
 	return (
-		<div className={cn("border-quaternary flex", className)}>
+		<div className={cn("border-secondary flex", className)}>
 			<button
 				className={cn(
 					"flex items-center justify-center border-t border-b border-l",
@@ -56,10 +56,10 @@ export default function ProductSingleBuyControlsQuantityButtons({
 			</button>
 			<input
 				className={cn(
-					"border-quaternary [appearance:textfield] border-t border-b text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+					"border-secondary [appearance:textfield] border-t border-b text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 					`h-${size} w-${size}`,
 					{
-						"text-quaternary/50": isPending || !variant || !variant.availableForSale,
+						"text-secondary/50": isPending || !variant || !variant.availableForSale,
 					},
 				)}
 				onBlur={onBlur}

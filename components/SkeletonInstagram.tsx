@@ -3,7 +3,7 @@ import InstagramSectionItem from "./InstagramSectionItem";
 
 export default function SkeletonInstagram() {
 	return (
-		<InstagramSectionContainer className="bg-quaternary text-primary">
+		<InstagramSectionContainer className="bg-secondary text-primary">
 			<InstagramSectionItem />
 			<InstagramSectionItem />
 			<InstagramSectionItem />

@@ -85,8 +85,8 @@ export default function ProductSingleBuyControlsVariantSelector({
 										disabled={!isAvailableForSale}
 										onClick={handleClick}
 										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
-										className={cn("border-quaternary font-sm rounded-full border-2 px-3", {
-											"bg-quaternary text-primary": isActive,
+										className={cn("border-secondary font-sm rounded-full border-2 px-3", {
+											"bg-secondary text-primary": isActive,
 											"line-through opacity-50": !isAvailableForSale,
 										})}
 										formAction={() => {

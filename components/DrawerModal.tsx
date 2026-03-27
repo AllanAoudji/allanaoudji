@@ -50,7 +50,7 @@ export default function DrawerModal({
 					{/* overlay */}
 					<motion.div
 						animate={{ opacity: 1 }}
-						className="bg-secondary/25 fixed inset-0 z-40 backdrop-blur-md"
+						className="bg-tertiary/25 fixed inset-0 z-40 backdrop-blur-md"
 						exit={{ opacity: 0 }}
 						initial={{ opacity: 0 }}
 						onClick={onCloseAction}
