@@ -69,7 +69,7 @@ export default function ImageContainer({
 				placeholder={normalized.blur ? "blur" : "empty"}
 				blurDataURL={normalized.blur ?? undefined}
 				className={cn("object-cover", {
-					"cursor-pointer transition-transform duration-300 hover:scale-105": !!onClick,
+					"cursor-pointer transition-transform duration-500 hover:scale-105": !!onClick,
 				})}
 				sizes="(max-width: 768px) 100vw, 50vw" // 🔥 important pour perf
 				onClick={onClick}
