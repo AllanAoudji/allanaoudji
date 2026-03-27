@@ -28,7 +28,7 @@ export default function CollectionsFilterCollectionsItem({ item }: Readonly<Prop
 			<Link href={href} onClick={closeModal} replace={true}>
 				<div className="relative overflow-hidden">
 					<ImageContainer
-						className={cn("scale-110 transition-transform duration-500 group-hover:scale-100", {
+						className={cn("scale-[103%] transition-transform duration-500 group-hover:scale-100", {
 							"scale-100!": isActive,
 						})}
 						image={item.image || DEFAULT_COLLECTION_IMAGE}

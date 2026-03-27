@@ -45,7 +45,7 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 							image={image}
 							onClick={() => handleClick(image._id)}
 							ratio="3/4"
-							className="cursor-pointer transition-transform duration-500 hover:scale-105"
+							className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
 						/>
 					</div>
 				))}
