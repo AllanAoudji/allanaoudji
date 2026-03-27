@@ -21,7 +21,7 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 			onClick={onClick}
 		>
 			<div
-				className={cn("relative mb-1.5", {
+				className={cn("relative mb-0.5", {
 					"bg-gray-300": !product.availableForSale,
 				})}
 			>

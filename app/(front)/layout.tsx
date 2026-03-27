@@ -63,9 +63,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// ----- Styling -----
-// Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
-
 // ----- Sanity/Shopify optimization -----
 // Update and optimize sanity
 // Référencements sanity
@@ -73,3 +70,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // ----- Editorial -----
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
+// favicon
