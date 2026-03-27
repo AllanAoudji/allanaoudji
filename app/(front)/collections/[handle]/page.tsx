@@ -1,6 +1,11 @@
 import { Metadata } from "next";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
 import { getCollection } from "@/lib/shopify";
 import CollectionsContent from "@/components/CollectionsContent";
+import CollectionsNavBar from "@/components/CollectionsNavBar";
+import SectionError from "@/components/SectionError";
+import SkeletonCollections from "@/components/SkeletonCollections";
 
 type MetadataProps = {
 	params: Promise<{ handle: string }>;
@@ -38,5 +43,14 @@ export default async function CollectionSinglePage({ params, searchParams }: Rea
 	const { handle } = await params;
 	const currSearchParams = await searchParams;
 
-	return <CollectionsContent searchParams={currSearchParams} handle={handle} />;
+	return (
+		<>
+			<CollectionsNavBar handle={handle} />
+			<ErrorBoundary errorComponent={SectionError}>
+				<Suspense fallback={<SkeletonCollections />}>
+					<CollectionsContent searchParams={currSearchParams} handle={handle} />
+				</Suspense>
+			</ErrorBoundary>
+		</>
+	);
 }

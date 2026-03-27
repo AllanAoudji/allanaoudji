@@ -61,7 +61,7 @@ const convertType = (type: Type) => {
 export default function SkeletonText({ className, size = 100, type = "current" }: Readonly<Props>) {
 	return (
 		<div
-			className={cn("bg-quaternary rounded-md", convertSize(size), convertType(type), className)}
+			className={cn("bg-quaternary rounded-sm", convertSize(size), convertType(type), className)}
 		/>
 	);
 }
