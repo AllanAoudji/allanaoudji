@@ -13,7 +13,7 @@ type Props = {
 	priority?: boolean;
 	ratio: AspectRatio;
 	className?: string;
-	onClick?: MouseEventHandler<HTMLImageElement>;
+	onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 const getAspectRatioClass = (ratio: AspectRatio) => {
@@ -38,7 +38,6 @@ export default function ImageContainer({
 	className,
 	onClick,
 }: Readonly<Props>) {
-	// 🔥 Normalisation des données (clé du problème)
 	const normalized = useMemo(() => {
 		if (!image) return null;
 
@@ -53,19 +52,33 @@ export default function ImageContainer({
 		return <div className={cn(getAspectRatioClass(ratio), "bg-tertiary w-full")} />;
 	}
 
-	return (
+	const content = (
 		<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
 			<Image
 				src={normalized.url}
 				alt={normalized.alt ?? "image"}
-				fill // 🔥 clé du layout stable
+				fill
 				priority={priority}
 				placeholder={normalized.blur ? "blur" : "empty"}
 				blurDataURL={normalized.blur ?? undefined}
 				className="object-cover"
-				sizes="(max-width: 768px) 100vw, 50vw" // 🔥 important pour perf
-				onClick={onClick}
+				sizes="(max-width: 768px) 100vw, 50vw"
 			/>
 		</div>
 	);
+
+	if (onClick) {
+		return (
+			<button
+				type="button"
+				onClick={onClick}
+				className="w-full cursor-pointer"
+				aria-label={normalized.alt ?? "Voir l'image"}
+			>
+				{content}
+			</button>
+		);
+	}
+
+	return content;
 }

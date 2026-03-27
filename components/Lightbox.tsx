@@ -37,7 +37,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 	);
 
 	const handleClose = useCallback(
-		(e: MouseEvent<HTMLDivElement>) => {
+		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
 			resetClick();
 		},
@@ -45,7 +45,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 	);
 
 	const handleNextClick = useCallback(
-		(e: MouseEvent<HTMLDivElement>) => {
+		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
 			nextImage?.();
 		},
@@ -53,7 +53,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 	);
 
 	const handlePrevClick = useCallback(
-		(e: MouseEvent<HTMLDivElement>) => {
+		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
 			prevImage?.();
 		},
@@ -105,10 +105,16 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 						role="dialog"
 						transition={transition}
 					>
-						<LightBoxButton className="top-5 right-5" icon={IconX} onClick={handleClose} />
+						<LightBoxButton
+							aria-label="Fermer"
+							className="top-5 right-5"
+							icon={IconX}
+							onClick={handleClose}
+						/>
 
 						{!!nextImage && (
 							<LightBoxButton
+								aria-label="Image suivante"
 								className="top-1/2 right-5 -translate-y-1/2"
 								icon={IconChevronRight}
 								onClick={handleNextClick}
@@ -116,6 +122,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 						)}
 						{!!prevImage && (
 							<LightBoxButton
+								aria-label="Image précédente"
 								className="top-1/2 left-5 -translate-y-1/2"
 								icon={IconChevronLeft}
 								onClick={handlePrevClick}
