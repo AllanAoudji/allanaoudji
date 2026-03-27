@@ -11,11 +11,12 @@ type CartAction =
 			quantity: number;
 			realCartLineId?: string;
 	  }
-	| { type: "UPDATE_CART_LINE_ID"; variantId: string; realCartLineId: string }
+	| { type: "UPDATE_CART_LINE"; variantId: string; realCartLineId: string; realQuantity: number }
 	| { type: "ROLLBACK_ADD"; previousLines: CartItem[] }
 	| { type: "REMOVE_ITEM"; merchandiseId: string }
 	| { type: "ROLLBACK_REMOVE"; previousLines: CartItem[] }
 	| { type: "UPDATE_ITEM"; merchandiseId: string; updateType: UpdateCartType }
-	| { type: "ROLLBACK_UPDATE"; previousLines: CartItem[] };
+	| { type: "ROLLBACK_UPDATE"; previousLines: CartItem[] }
+	| { type: "SYNC_CART"; cart: import("./cart").default };
 
 export default CartAction;

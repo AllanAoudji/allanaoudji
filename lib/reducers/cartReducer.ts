@@ -21,12 +21,27 @@ export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | 
 	if (!cart) return cart;
 
 	switch (action.type) {
-		case "UPDATE_CART_LINE_ID": {
+		case "UPDATE_CART_LINE": {
+			const updatedLine = (line: CartItem): CartItem => ({
+				...line,
+				id: action.realCartLineId,
+				quantity: action.realQuantity,
+				cost: {
+					totalAmount: {
+						amount: (
+							(Number(line.cost.totalAmount.amount) / line.quantity) *
+							action.realQuantity
+						).toFixed(2),
+						currencyCode: line.cost.totalAmount.currencyCode,
+					},
+				},
+			});
+			const updatedLines = cart.lines.map(line =>
+				line.merchandise.id === action.variantId ? updatedLine(line) : line,
+			);
 			return {
 				...cart,
-				lines: cart.lines.map(line =>
-					line.merchandise.id === action.variantId ? { ...line, id: action.realCartLineId } : line,
-				),
+				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
 			};
 		}
 		case "ROLLBACK_ADD": {

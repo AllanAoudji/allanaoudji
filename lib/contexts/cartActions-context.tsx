@@ -68,14 +68,34 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					// remplace l'id local par le vrai id Shopify
 					if (res.data?.cartItem?.id) {
 						dispatch({
-							type: "UPDATE_CART_LINE_ID",
+							type: "UPDATE_CART_LINE",
 							variantId: variant.id,
 							realCartLineId: res.data.cartItem.id,
+							realQuantity: res.data.cartItem.quantity,
 						});
 					}
 					openModal("cart");
 					resetCartMessage();
 					resetProductMessage();
+				} else if (res.type === "warning") {
+					if (res.data.quantityAdded === 0) {
+						dispatch({ type: "ROLLBACK_ADD", previousLines });
+						setProductMessage({ id: variant.id, message: res.message, type: res.type });
+					} else if (res.data.cartItem?.id) {
+						console.log("warning", res.data);
+						openModal("cart");
+						dispatch({
+							type: "UPDATE_CART_LINE",
+							variantId: variant.id,
+							realCartLineId: res.data.cartItem.id,
+							realQuantity: res.data.cartItem.quantity,
+						});
+						setCartMessage({
+							id: res.data.cartItem.merchandise.id,
+							message: res.message,
+							type: res.type,
+						});
+					}
 				} else {
 					dispatch({ type: "ROLLBACK_ADD", previousLines });
 					setProductMessage({ id: variant.id, message: res.message, type: res.type });
