@@ -1,9 +1,10 @@
 "use client";
 
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
+import { FocusTrap } from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
@@ -17,106 +18,153 @@ type Props = {
 	resetClick: () => void;
 };
 
-const ease = [0.25, 0.1, 0.25, 1] as const;
+// Transition partagée pour éviter la duplication
+const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
 
 export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
 	const [isLoaded, setIsLoaded] = useState(false);
-	const isVisible = !!image && !!image.height && !!image.width && !!image.url;
 
-	const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		resetClick();
-	};
-	const handleNextClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		nextImage?.();
-	};
-	const handlePrevClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		prevImage?.();
-	};
+	const imgRef = useRef<HTMLImageElement>(null);
+
+	const isVisible = !!image;
+
+	const handleClick = useCallback(
+		(e: MouseEvent<HTMLDivElement>) => {
+			e.stopPropagation();
+			resetClick();
+		},
+		[resetClick],
+	);
+
+	const handleClose = useCallback(
+		(e: MouseEvent<HTMLDivElement>) => {
+			e.stopPropagation();
+			resetClick();
+		},
+		[resetClick],
+	);
+
+	const handleNextClick = useCallback(
+		(e: MouseEvent<HTMLDivElement>) => {
+			e.stopPropagation();
+			nextImage?.();
+		},
+		[nextImage],
+	);
+
+	const handlePrevClick = useCallback(
+		(e: MouseEvent<HTMLDivElement>) => {
+			e.stopPropagation();
+			prevImage?.();
+		},
+		[prevImage],
+	);
 
 	useEscape(resetClick);
 	useLeftArrow(() => prevImage?.());
 	useRightArrow(() => nextImage?.());
 
 	useEffect(() => {
-		document.documentElement.style.overflow = isVisible ? "hidden" : "";
+		setIsLoaded(false);
+		if (imgRef.current?.complete) {
+			setIsLoaded(true);
+		}
+	}, [image?._id]);
+
+	useEffect(() => {
+		if (!isVisible) return;
+		const prev = document.documentElement.style.overflow;
+		document.documentElement.style.overflow = "hidden";
 		return () => {
-			document.documentElement.style.overflow = "";
+			document.documentElement.style.overflow = prev;
 		};
 	}, [isVisible]);
 
 	return (
 		<AnimatePresence>
 			{isVisible && (
-				<motion.div
-					key="lightbox"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					exit={{ opacity: 0 }}
-					transition={{ duration: 0.4, ease }}
-					className="bg-tertiary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
-					onClick={handleClick}
+				<FocusTrap
+					active={isVisible}
+					focusTrapOptions={{
+						escapeDeactivates: false,
+						returnFocusOnDeactivate: true,
+						allowOutsideClick: true,
+						// Évite l'erreur si le premier tabbable n'est pas encore rendu
+						fallbackFocus: () => document.body,
+					}}
 				>
-					{/* Boutons */}
-					<LightBoxButton className="top-5 right-5" icon={IconX} />
-					{!!nextImage && (
-						<LightBoxButton
-							onClick={handleNextClick}
-							className="top-1/2 right-5 -translate-y-1/2"
-							icon={IconChevronRight}
-						/>
-					)}
-					{!!prevImage && (
-						<LightBoxButton
-							onClick={handlePrevClick}
-							className="top-1/2 left-5 -translate-y-1/2"
-							icon={IconChevronLeft}
-						/>
-					)}
-
-					{/* Image + placeholder */}
 					<motion.div
-						className="flex h-full w-full items-center justify-center"
-						initial={{ opacity: 0, y: 16, scale: 0.97 }}
-						animate={{ opacity: 1, y: 0, scale: 1 }}
-						exit={{ opacity: 0, y: 8, scale: 0.98 }}
-						transition={{ duration: 0.4, ease }}
+						animate={{ opacity: 1 }}
+						aria-label="Image en plein écran"
+						aria-modal="true"
+						className="bg-tertiary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
+						exit={{ opacity: 0 }}
+						initial={{ opacity: 0 }}
+						key="lightbox"
+						onClick={handleClick}
+						role="dialog"
+						transition={transition}
 					>
-						<div
-							className="relative"
-							style={{
-								aspectRatio: `${image.width} / ${image.height}`,
-								maxWidth: "100%",
-								maxHeight: "100%",
-								width: "100%",
-								height: "100%",
-							}}
-						>
-							<AnimatePresence>
-								{!isLoaded && (
-									<motion.div
-										key="placeholder"
-										className="bg-quaternary/80 absolute inset-0"
-										initial={{ opacity: 1 }}
-										exit={{ opacity: 0 }}
-										transition={{ duration: 0.3 }}
-									/>
-								)}
-							</AnimatePresence>
+						<LightBoxButton className="top-5 right-5" icon={IconX} onClick={handleClose} />
 
-							<Image
-								key={image._id}
-								alt={image.alt || "image"}
-								src={image.url}
-								fill
-								className="object-contain drop-shadow-md"
-								onLoad={() => setIsLoaded(true)}
+						{!!nextImage && (
+							<LightBoxButton
+								className="top-1/2 right-5 -translate-y-1/2"
+								icon={IconChevronRight}
+								onClick={handleNextClick}
 							/>
-						</div>
+						)}
+						{!!prevImage && (
+							<LightBoxButton
+								className="top-1/2 left-5 -translate-y-1/2"
+								icon={IconChevronLeft}
+								onClick={handlePrevClick}
+							/>
+						)}
+
+						{/* Image + placeholder */}
+						<motion.div
+							animate={{ opacity: 1, y: 0, scale: 1 }}
+							className="flex h-full w-full items-center justify-center"
+							exit={{ opacity: 0, y: 8, scale: 0.98 }}
+							initial={{ opacity: 0, y: 16, scale: 0.97 }}
+							transition={transition}
+						>
+							<div
+								className="relative"
+								style={{
+									aspectRatio: `${image.width} / ${image.height}`,
+									height: "auto",
+									maxWidth: "calc(100dvw - 4rem)",
+									maxHeight: "calc(100dvh - 4rem)",
+									width: `min(calc(100dvw - 4rem), calc((100dvh - 4rem) * ${image.width} / ${image.height}))`,
+								}}
+							>
+								<AnimatePresence>
+									{!isLoaded && (
+										<motion.div
+											className="bg-quaternary absolute inset-0"
+											exit={{ opacity: 0 }}
+											initial={{ opacity: 1 }}
+											key="placeholder"
+											transition={{ duration: 0.3 }}
+										/>
+									)}
+								</AnimatePresence>
+
+								<Image
+									alt={image.alt || "image"}
+									className="object-contain drop-shadow-md"
+									fill
+									key={image._id}
+									onLoad={() => setIsLoaded(true)}
+									ref={imgRef}
+									src={image.url}
+								/>
+							</div>
+						</motion.div>
 					</motion.div>
-				</motion.div>
+				</FocusTrap>
 			)}
 		</AnimatePresence>
 	);
