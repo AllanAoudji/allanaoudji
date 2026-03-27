@@ -64,7 +64,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 // TODO:
 // ----- Styling -----
-// utilisation de liquify image pour les portabletext (about/CGV/etc)
 // Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
 
 // ----- Sanity/Shopify optimization -----

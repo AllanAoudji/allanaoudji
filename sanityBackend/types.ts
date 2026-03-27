@@ -348,7 +348,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: ABOUT_QUERY
-// Query: *[_type == "settings"][0]{    about[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    }  }
+// Query: *[_type == "settings"][0]{    about[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    }  }
 export type ABOUT_QUERY_RESULT = {
 	about: Array<
 		| {
@@ -397,6 +397,7 @@ export type ABOUT_QUERY_RESULT = {
 					_type: "image";
 					width: number | null;
 					height: number | null;
+					lqip: string | null;
 				};
 				alt?: string;
 				caption?: string;
@@ -441,7 +442,7 @@ export type CONTACTS_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: GENERAL_CONDITION_OF_SALE_QUERY
-// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
 	generalConditionsOfSale: Array<
 		| {
@@ -490,6 +491,7 @@ export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
 					_type: "image";
 					width: number | null;
 					height: number | null;
+					lqip: string | null;
 				};
 				alt?: string;
 				caption?: string;
@@ -514,7 +516,7 @@ export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: LEGAL_NOTICES_QUERY
-// Query: *[_type == "legalSettings"][0]{    legalNotices[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    legalNotices[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type LEGAL_NOTICES_QUERY_RESULT = {
 	legalNotices: Array<
 		| {
@@ -563,6 +565,7 @@ export type LEGAL_NOTICES_QUERY_RESULT = {
 					_type: "image";
 					width: number | null;
 					height: number | null;
+					lqip: string | null;
 				};
 				alt?: string;
 				caption?: string;
@@ -587,7 +590,7 @@ export type LEGAL_NOTICES_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: PRIVACY_POLICY_QUERY
-// Query: *[_type == "legalSettings"][0]{    privacyPolicy[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,        }      }    },    _updatedAt  }
+// Query: *[_type == "legalSettings"][0]{    privacyPolicy[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type PRIVACY_POLICY_QUERY_RESULT = {
 	privacyPolicy: Array<
 		| {
@@ -636,6 +639,7 @@ export type PRIVACY_POLICY_QUERY_RESULT = {
 					_type: "image";
 					width: number | null;
 					height: number | null;
+					lqip: string | null;
 				};
 				alt?: string;
 				caption?: string;
@@ -715,12 +719,12 @@ export type WORK_QUERY_RESULT = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n  *[_type == "settings"][0]{\n    about[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    }\n  }\n': ABOUT_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    about[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    }\n  }\n': ABOUT_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    legalNotices[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    legalNotices[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
+		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERY_RESULT;
 		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}

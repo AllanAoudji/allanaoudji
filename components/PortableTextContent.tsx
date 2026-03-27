@@ -78,7 +78,11 @@ function applyTypography(blocks: PortableTextBlock[]): PortableTextBlock[] {
 
 type FigureBlock = {
 	_type: "figure";
-	image: SanityImageSource & { width?: number; height?: number };
+	image: SanityImageSource & {
+		width?: number;
+		height?: number;
+		lqip?: string;
+	};
 	alt?: string;
 	caption?: string;
 };
@@ -171,16 +175,21 @@ const components: PortableTextComponents = {
 			const w = value.image.width ?? 900;
 			const h = value.image.height ?? 700;
 			const src = urlFor(value.image).width(w).auto("format").url();
+			const lqip = value.image.lqip;
+
 			return (
 				<figure className="editorial-figure">
-					<Image
-						src={src}
-						alt={value.alt ?? ""}
-						width={w}
-						height={h}
-						className="h-auto w-full object-cover"
-						style={{ aspectRatio: `${w}/${h}` }}
-					/>
+					<div className="bg-quaternary relative w-full" style={{ aspectRatio: `${w}/${h}` }}>
+						<Image
+							src={src}
+							alt={value.alt ?? ""}
+							fill
+							className="h-auto object-cover"
+							sizes="(max-width: 768px) 100vw, 70vw"
+							placeholder={lqip ? "blur" : "empty"}
+							blurDataURL={lqip ?? undefined}
+						/>
+					</div>
 					{value.caption && <figcaption className="editorial-caption">{value.caption}</figcaption>}
 				</figure>
 			);
