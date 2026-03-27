@@ -64,8 +64,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 // TODO:
 // ----- Styling -----
-// utiliser applyFrenchTypography sur sanity.work.text
-// utiliser des icones pour la lightbox et l'animer
 // Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
 // Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)

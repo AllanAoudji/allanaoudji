@@ -1,13 +1,14 @@
+import { IconProps } from "@tabler/icons-react";
 import { MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
 	className?: string;
 	onClick?: MouseEventHandler<HTMLDivElement>;
-	text: string;
+	icon: React.ComponentType<IconProps>;
 };
 
-export default function LightBoxButton({ className, onClick, text }: Readonly<Props>) {
+export default function LightBoxButton({ className, onClick, icon: Icon }: Readonly<Props>) {
 	return (
 		<div
 			className={cn(
@@ -16,7 +17,7 @@ export default function LightBoxButton({ className, onClick, text }: Readonly<Pr
 			)}
 			onClick={onClick}
 		>
-			{text}
+			<Icon className="text-secondary" />
 		</div>
 	);
 }

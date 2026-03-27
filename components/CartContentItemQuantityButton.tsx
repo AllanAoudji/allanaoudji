@@ -40,8 +40,8 @@ export default function CartContentItemQuantityButton({
 			aria-label={type === "plus" ? "Increase item quantity" : "Reduce item quantity"}
 			className={cn("group", { "opacity-50": isCartPending }, className)}
 			disabled={isCartPending}
-			onClick={handleAction} // ← onClick sur button, plus de form
-			type="button" // ← type="button"
+			onClick={handleAction}
+			type="button"
 		>
 			<div
 				className={cn(
