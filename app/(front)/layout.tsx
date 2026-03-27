@@ -68,7 +68,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // utiliser des icones pour la lightbox et l'animer
 // Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
-// Retravailler filters
 // Change couleur
 //  - primary => light
 //  - secondary => dark
