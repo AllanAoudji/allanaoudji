@@ -2,7 +2,10 @@
 
 import { Component, type ReactNode } from "react";
 
-type Props = { children: ReactNode };
+type Props = {
+	children: ReactNode;
+	onError?: () => void;
+};
 type State = { hasError: boolean };
 
 export default class CartDispenserErrorBoundary extends Component<Props, State> {
@@ -12,8 +15,11 @@ export default class CartDispenserErrorBoundary extends Component<Props, State> 
 		return { hasError: true };
 	}
 
+	componentDidCatch() {
+		this.props.onError?.(); // ← notifie CartClientWrapper
+	}
+
 	render() {
-		// En cas d'erreur, on rend les children sans CartProvider
 		return this.props.children;
 	}
 }

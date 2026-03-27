@@ -18,7 +18,7 @@ export default function CartContentItemQuantityButton({
 	item,
 	type,
 }: Readonly<Props>) {
-	const { decrementItem, incrementItem, isPending, resetCartMessage } = useCartActions();
+	const { decrementItem, incrementItem, isCartPending, resetCartMessage } = useCartActions();
 
 	const iconType = useMemo(() => {
 		if (type === "plus") return "plus";
@@ -38,8 +38,8 @@ export default function CartContentItemQuantityButton({
 	return (
 		<button
 			aria-label={type === "plus" ? "Increase item quantity" : "Reduce item quantity"}
-			className={cn("group", { "opacity-50": isPending }, className)}
-			disabled={isPending}
+			className={cn("group", { "opacity-50": isCartPending }, className)}
+			disabled={isCartPending}
 			onClick={handleAction} // ← onClick sur button, plus de form
 			type="button" // ← type="button"
 		>
@@ -47,7 +47,7 @@ export default function CartContentItemQuantityButton({
 				className={cn(
 					"flex h-6 w-6 origin-center items-center justify-center transition-transform duration-500",
 					{
-						"group-hover:rotate-180": !isPending,
+						"group-hover:rotate-180": !isCartPending,
 					},
 				)}
 			>

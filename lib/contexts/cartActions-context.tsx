@@ -5,6 +5,7 @@ import { removeFromCartAction } from "../actions/removeFromCartAction";
 import updateFromCartAction from "../actions/updateFromCartAction";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useCart } from "./cart-context";
+import { useCartRecovery } from "./cartRecovery-context";
 import { useModal } from "./modal-context";
 import CartItem from "@/types/cartItem";
 import Product from "@/types/product";
@@ -21,7 +22,8 @@ type CartActionContextType = {
 	cartMessage: CartMessage | null;
 	decrementItem: (_cartItem: CartItem) => void;
 	incrementItem: (_cartItem: CartItem) => void;
-	isPending: boolean;
+	isCartPending: boolean;
+	isProductPending: boolean;
 	productMessage: CartMessage | null;
 	removeItem: (_cartItem: CartItem) => void;
 	resetCartMessage: () => void;
@@ -37,10 +39,12 @@ const CartActionsContext = createContext<CartActionContextType | undefined>(unde
 export function CartActionsProvider({ children }: Readonly<Props>) {
 	const { addCartItem, cart, dispatch, removeCartItem, updateCartItem } = useCart();
 	const { openModal } = useModal();
+	const recovery = useCartRecovery();
 
 	const [cartMessage, setCartMessage] = useState<CartMessage | null>(null);
 	const [productMessage, setProductMessage] = useState<CartMessage | null>(null);
-	const [isPending, setIsPending] = useState(false);
+	const [isCartPending, setIsCartPending] = useState(false);
+	const [isProductPending, setIsProductPending] = useState(false);
 
 	const isPendingRef = useRef(false);
 
@@ -52,10 +56,13 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			if (isPendingRef.current) return;
 
 			isPendingRef.current = true;
-			setIsPending(true);
+			setIsProductPending(true);
 
-			const previousLines = structuredClone(cart?.lines ?? []);
-			addCartItem(product, variant, quantity); // optimistic immédiat
+			const previousLines =
+				typeof structuredClone !== "undefined"
+					? structuredClone(cart?.lines ?? [])
+					: JSON.parse(JSON.stringify(cart?.lines ?? []));
+			addCartItem(product, variant, quantity);
 
 			try {
 				const res = await addToCartAction(
@@ -65,7 +72,6 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				);
 
 				if (res.type === "success") {
-					// remplace l'id local par le vrai id Shopify
 					if (res.data?.cartItem?.id) {
 						dispatch({
 							type: "UPDATE_CART_LINE",
@@ -73,6 +79,9 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 							realCartLineId: res.data.cartItem.id,
 							realQuantity: res.data.cartItem.quantity,
 						});
+					}
+					if (res.data?.newCartId) {
+						recovery?.onCartCreated(res.data.newCartId);
 					}
 					openModal("cart");
 					resetCartMessage();
@@ -82,7 +91,6 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						dispatch({ type: "ROLLBACK_ADD", previousLines });
 						setProductMessage({ id: variant.id, message: res.message, type: res.type });
 					} else if (res.data.cartItem?.id) {
-						console.log("warning", res.data);
 						openModal("cart");
 						dispatch({
 							type: "UPDATE_CART_LINE",
@@ -109,10 +117,10 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				});
 			} finally {
 				isPendingRef.current = false;
-				setIsPending(false);
+				setIsProductPending(false);
 			}
 		},
-		[addCartItem, cart, dispatch, openModal, resetCartMessage, resetProductMessage],
+		[addCartItem, cart, dispatch, openModal, resetCartMessage, resetProductMessage, recovery],
 	);
 
 	const decrementItem = useCallback(
@@ -120,9 +128,12 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			if (isPendingRef.current) return;
 
 			isPendingRef.current = true;
-			setIsPending(true);
+			setIsCartPending(true);
 
-			const previousLines = structuredClone(cart?.lines ?? []);
+			const previousLines =
+				typeof structuredClone !== "undefined"
+					? structuredClone(cart?.lines ?? [])
+					: JSON.parse(JSON.stringify(cart?.lines ?? []));
 			updateCartItem(cartItem.merchandise.id, "minus");
 
 			try {
@@ -133,7 +144,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					resetProductMessage();
 				} else {
 					dispatch({ type: "ROLLBACK_UPDATE", previousLines });
-					setCartMessage({ id: cartItem.merchandise.id, message: res.message, type: res.type });
+					setCartMessage({
+						id: cartItem.merchandise.id,
+						message: res.message,
+						type: res.type,
+					});
 				}
 			} catch {
 				dispatch({ type: "ROLLBACK_UPDATE", previousLines });
@@ -144,7 +159,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				});
 			} finally {
 				isPendingRef.current = false;
-				setIsPending(false);
+				setIsCartPending(false);
 			}
 		},
 		[cart, dispatch, updateCartItem, resetCartMessage, resetProductMessage],
@@ -155,9 +170,12 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			if (isPendingRef.current) return;
 
 			isPendingRef.current = true;
-			setIsPending(true);
+			setIsCartPending(true);
 
-			const previousLines = structuredClone(cart?.lines ?? []);
+			const previousLines =
+				typeof structuredClone !== "undefined"
+					? structuredClone(cart?.lines ?? [])
+					: JSON.parse(JSON.stringify(cart?.lines ?? []));
 			updateCartItem(cartItem.merchandise.id, "plus");
 
 			try {
@@ -168,7 +186,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					resetProductMessage();
 				} else {
 					dispatch({ type: "ROLLBACK_UPDATE", previousLines });
-					setCartMessage({ id: cartItem.merchandise.id, message: res.message, type: res.type });
+					setCartMessage({
+						id: cartItem.merchandise.id,
+						message: res.message,
+						type: res.type,
+					});
 				}
 			} catch {
 				dispatch({ type: "ROLLBACK_UPDATE", previousLines });
@@ -179,7 +201,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				});
 			} finally {
 				isPendingRef.current = false;
-				setIsPending(false);
+				setIsCartPending(false);
 			}
 		},
 		[cart, dispatch, updateCartItem, resetCartMessage, resetProductMessage],
@@ -190,9 +212,12 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			if (isPendingRef.current) return;
 
 			isPendingRef.current = true;
-			setIsPending(true);
+			setIsCartPending(true);
 
-			const previousLines = structuredClone(cart?.lines ?? []);
+			const previousLines =
+				typeof structuredClone !== "undefined"
+					? structuredClone(cart?.lines ?? [])
+					: JSON.parse(JSON.stringify(cart?.lines ?? []));
 			removeCartItem(cartItem.merchandise.id);
 
 			try {
@@ -203,7 +228,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					resetProductMessage();
 				} else {
 					dispatch({ type: "ROLLBACK_REMOVE", previousLines });
-					setCartMessage({ id: cartItem.merchandise.id, message: res.message, type: res.type });
+					setCartMessage({
+						id: cartItem.merchandise.id,
+						message: res.message,
+						type: res.type,
+					});
 				}
 			} catch {
 				dispatch({ type: "ROLLBACK_REMOVE", previousLines });
@@ -214,7 +243,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 				});
 			} finally {
 				isPendingRef.current = false;
-				setIsPending(false);
+				setIsCartPending(false);
 			}
 		},
 		[cart, dispatch, removeCartItem, resetCartMessage, resetProductMessage],
@@ -226,7 +255,8 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			cartMessage,
 			decrementItem,
 			incrementItem,
-			isPending,
+			isCartPending,
+			isProductPending,
 			productMessage,
 			removeItem,
 			resetCartMessage,
@@ -237,7 +267,8 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			cartMessage,
 			decrementItem,
 			incrementItem,
-			isPending,
+			isCartPending,
+			isProductPending,
 			productMessage,
 			removeItem,
 			resetCartMessage,

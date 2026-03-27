@@ -38,9 +38,7 @@ export default async function sendContact(formData: FormData) {
 		message: getFormValue<ContactFormFields>(formData, "message"),
 		website: getFormValue<ContactFormFields>(formData, "website"),
 	};
-	console.log({ data });
 	const parsed = schema.safeParse(data);
-	console.log({ parsed });
 
 	if (!parsed.success) {
 		throw new Error("Formulaire invalide");
@@ -57,7 +55,6 @@ export default async function sendContact(formData: FormData) {
 	if (SPAM_WORDS_FR.some(w => (data.message as string).toLowerCase().includes(w))) {
 		throw new Error("Message refusé");
 	}
-	console.log("prepare to send email");
 	await resend.emails.send({
 		from: process.env.FROM_EMAIL,
 		to: process.env.CONTACT_EMAIL,
@@ -100,5 +97,4 @@ Site : allanaoudji.com
   </div>
   `,
 	});
-	console.log("email send");
 }

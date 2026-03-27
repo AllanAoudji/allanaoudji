@@ -21,35 +21,10 @@ export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | 
 	if (!cart) return cart;
 
 	switch (action.type) {
-		case "UPDATE_CART_LINE": {
-			const updatedLine = (line: CartItem): CartItem => ({
-				...line,
-				id: action.realCartLineId,
-				quantity: action.realQuantity,
-				cost: {
-					totalAmount: {
-						amount: (
-							(Number(line.cost.totalAmount.amount) / line.quantity) *
-							action.realQuantity
-						).toFixed(2),
-						currencyCode: line.cost.totalAmount.currencyCode,
-					},
-				},
-			});
-			const updatedLines = cart.lines.map(line =>
-				line.merchandise.id === action.variantId ? updatedLine(line) : line,
-			);
-			return {
-				...cart,
-				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
-			};
+		case "SYNC_CART": {
+			return action.cart;
 		}
-		case "ROLLBACK_ADD": {
-			return {
-				...cart,
-				...recalcCart(action.previousLines, cart.cost.totalAmount.currencyCode),
-			};
-		}
+
 		case "ADD_ITEM": {
 			const { product, variant, quantity, realCartLineId } = action;
 			const existingItem = cart.lines.find(line => line.merchandise.id === variant.id);
@@ -89,19 +64,44 @@ export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | 
 			};
 		}
 
-		case "REMOVE_ITEM": {
-			const updatedLines = cart.lines.filter(line => line.merchandise.id !== action.merchandiseId);
+		case "UPDATE_CART_LINE": {
+			const updatedLine = (line: CartItem): CartItem => ({
+				...line,
+				id: action.realCartLineId,
+				quantity: action.realQuantity,
+				cost: {
+					totalAmount: {
+						amount: (
+							(Number(line.cost.totalAmount.amount) / line.quantity) *
+							action.realQuantity
+						).toFixed(2),
+						currencyCode: line.cost.totalAmount.currencyCode,
+					},
+				},
+			});
+			const updatedLines = cart.lines.map(line =>
+				line.merchandise.id === action.variantId ? updatedLine(line) : line,
+			);
 			return {
 				...cart,
 				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
 			};
 		}
 
+		case "ROLLBACK_ADD":
 		case "ROLLBACK_REMOVE":
 		case "ROLLBACK_UPDATE": {
 			return {
 				...cart,
 				...recalcCart(action.previousLines, cart.cost.totalAmount.currencyCode),
+			};
+		}
+
+		case "REMOVE_ITEM": {
+			const updatedLines = cart.lines.filter(line => line.merchandise.id !== action.merchandiseId);
+			return {
+				...cart,
+				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
 			};
 		}
 
@@ -128,6 +128,7 @@ export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | 
 				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
 			};
 		}
+
 		default:
 			return cart;
 	}

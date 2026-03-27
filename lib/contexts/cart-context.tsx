@@ -1,7 +1,8 @@
 "use client";
 
 import { cartReducer } from "../reducers/cartReducer";
-import { createContext, use, useCallback, useContext, useMemo, useReducer } from "react";
+import { getCart } from "../shopify";
+import { createContext, use, useCallback, useContext, useEffect, useMemo, useReducer } from "react";
 import Cart from "@/types/cart";
 import CartAction from "@/types/cartAction";
 import Product from "@/types/product";
@@ -23,20 +24,37 @@ type CartContextCart = {
 
 type Props = {
 	children: React.ReactNode;
+	cartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
 };
 
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
-// cart-context.tsx
-export function CartProvider({ children, cartPromise }: Readonly<Props>) {
+export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>) {
 	const initialCart = use(cartPromise);
 	const [cart, dispatch] = useReducer(cartReducer, initialCart);
+
+	useEffect(() => {
+		if (!cartId) return;
+
+		const sync = async () => {
+			if (document.visibilityState !== "visible") return;
+			try {
+				const freshCart = await getCart(cartId);
+				if (freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
+			} catch {
+				// sync silencieuse — on ne crash pas si elle échoue
+			}
+		};
+
+		document.addEventListener("visibilitychange", sync);
+		return () => document.removeEventListener("visibilitychange", sync);
+	}, [cartId]);
 
 	const addCartItem = useCallback(
 		(product: Product, variant: ProductVariant, quantity: number, realCartLineId?: string) =>
 			dispatch({ type: "ADD_ITEM", product, variant, quantity, realCartLineId }),
-		[], // ← plus de dépendance sur cart
+		[],
 	);
 
 	const removeCartItem = useCallback(
@@ -51,7 +69,7 @@ export function CartProvider({ children, cartPromise }: Readonly<Props>) {
 	);
 
 	const value = useMemo(
-		() => ({ addCartItem, dispatch, cart, removeCartItem, updateCartItem }),
+		() => ({ addCartItem, cart, dispatch, removeCartItem, updateCartItem }),
 		[addCartItem, cart, removeCartItem, updateCartItem],
 	);
 

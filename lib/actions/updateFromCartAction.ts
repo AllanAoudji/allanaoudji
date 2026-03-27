@@ -2,7 +2,7 @@
 
 import { TAGS } from "../constants";
 import { removeFromCart, updateCart } from "../shopify";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import ActionReponse from "@/types/actionResponse";
@@ -57,7 +57,7 @@ export default async function updateFromCartAction(
 		const quantity = type === "minus" ? cartItem.quantity - 1 : cartItem.quantity + 1;
 		if (quantity <= 0) {
 			await removeFromCart(cartId, [cartItem.id]);
-			revalidateTag(TAGS.cart, { expire: 0 });
+			updateTag(TAGS.cart);
 			return {
 				data: {
 					cartItem,
@@ -79,7 +79,7 @@ export default async function updateFromCartAction(
 		};
 	}
 
-	revalidateTag(TAGS.cart, { expire: 0 });
+	updateTag(TAGS.cart);
 
 	const data = {
 		cartItem: res.data.cart.lines.find(line => line.merchandise.id === cartItem.merchandise.id),

@@ -1,3 +1,4 @@
+import Cart from "./cart";
 import CartItem from "./cartItem";
 import Product from "./product";
 import ProductVariant from "./productVariant";
@@ -13,10 +14,10 @@ type CartAction =
 	  }
 	| { type: "UPDATE_CART_LINE"; variantId: string; realCartLineId: string; realQuantity: number }
 	| { type: "ROLLBACK_ADD"; previousLines: CartItem[] }
-	| { type: "REMOVE_ITEM"; merchandiseId: string }
 	| { type: "ROLLBACK_REMOVE"; previousLines: CartItem[] }
-	| { type: "UPDATE_ITEM"; merchandiseId: string; updateType: UpdateCartType }
 	| { type: "ROLLBACK_UPDATE"; previousLines: CartItem[] }
-	| { type: "SYNC_CART"; cart: import("./cart").default };
+	| { type: "REMOVE_ITEM"; merchandiseId: string }
+	| { type: "UPDATE_ITEM"; merchandiseId: string; updateType: UpdateCartType }
+	| { type: "SYNC_CART"; cart: Cart };
 
 export default CartAction;

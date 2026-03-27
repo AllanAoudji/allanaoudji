@@ -32,7 +32,7 @@ export default function ProductSingleBuyControls({
 	const { variants } = product;
 
 	const { state } = useProduct();
-	const { addItem, isPending, resetProductMessage } = useCartActions();
+	const { addItem, resetProductMessage } = useCartActions();
 
 	const { finalVariant, finalVariantInventory } = useProductSingleSelectedVariant({
 		state,
@@ -85,7 +85,6 @@ export default function ProductSingleBuyControls({
 			<ProductSingleBuyControlsStock className="mt-8 mb-1" variant={finalVariant} />
 			<div className="flex flex-col gap-2">
 				<ProductSingleBuyControlsQuantityButtons
-					isPending={isPending}
 					decrement={decrementQuantity}
 					disableDecrement={disableDecrementQuantity}
 					disableIncrement={disableIncrementQuantity}
@@ -98,7 +97,6 @@ export default function ProductSingleBuyControls({
 				<ProductSingleBuyControlsAddButton
 					className="grow"
 					cartAction={cartAction}
-					isPending={isPending}
 					product={product}
 					selectedVariantId={finalVariant?.id}
 				/>
