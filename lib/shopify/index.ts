@@ -1,4 +1,9 @@
-import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
+import {
+	DEFAULT_COLLECTION_IMAGE,
+	HIDDEN_PRODUCT_TAG,
+	SHOPIFY_GRAPHQL_API_ENDPOINT,
+	TAGS,
+} from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartWith, getLineQuantity } from "../utils";
 import {
@@ -412,7 +417,7 @@ export async function getCollections(): Promise<Collection[]> {
 			},
 			path: "/collections",
 			updatedAt: "",
-			image: null,
+			image: DEFAULT_COLLECTION_IMAGE,
 		},
 		...reshapeCollections(shopifyCollections).filter(
 			collection => !collection.handle.startsWith("hidden"),
