@@ -15,7 +15,7 @@ export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
 					<ImageContainer
 						image={work.mainImage}
 						ratio="4/3"
-						className="animation scale-100 transition-all duration-300 group-hover:scale-105"
+						className="animation scale-110 transition-all duration-500 group-hover:scale-100"
 					/>
 				</div>
 			)}

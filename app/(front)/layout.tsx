@@ -68,10 +68,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // utiliser des icones pour la lightbox et l'animer
 // Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
 // utilisation de liquify image pour les portabletext (about/CGV/etc)
-// Change couleur
-//  - primary => light
-//  - secondary => dark
-//  - tertiary => darker light (utiliser pour imageContainer/skeleton)
 // Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
 
 // ----- Sanity/Shopify optimization -----
