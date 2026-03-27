@@ -24,6 +24,7 @@ type LightBoxContextType = {
 	appendImages: (_newImages: workGalleryImage[] | shopifyImage[]) => void;
 	resetImages: () => void;
 	setImage: (_id: string) => void;
+	updateImages: (_newImages: workGalleryImage[] | shopifyImage[]) => void;
 };
 
 const LightboxContext = createContext<LightBoxContextType | undefined>(undefined);
@@ -51,6 +52,13 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 			"_id" in img ? normalizeSanityImage(img) : normalizeShopifyImage(img),
 		);
 		setImages(prev => (prev ? [...prev, ...normalized] : normalized));
+	}, []);
+
+	const updateImages = useCallback((newImages: workGalleryImage[] | shopifyImage[]) => {
+		const normalized: LightboxImage[] = newImages.map(img =>
+			"_id" in img ? normalizeSanityImage(img) : normalizeShopifyImage(img),
+		);
+		setImages(normalized);
 	}, []);
 
 	const nextImage = useCallback(() => {
@@ -84,8 +92,8 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 	}, [clickedImage]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const value = useMemo(
-		() => ({ appendImages, resetImages, setImage }),
-		[appendImages, resetImages, setImage],
+		() => ({ appendImages, resetImages, setImage, updateImages }),
+		[appendImages, resetImages, setImage, updateImages],
 	);
 
 	return (

@@ -15,7 +15,7 @@ type Props = {
 export default function ProductSingleGallery({ className, product }: Readonly<Props>) {
 	const { variants } = product;
 
-	const { setImage, resetImages, appendImages } = useLightBox();
+	const { setImage, resetImages, updateImages } = useLightBox();
 	const { state } = useProduct();
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -44,8 +44,8 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 	useEffect(() => () => setActiveIndex(0), []);
 
 	useEffect(() => {
-		appendImages(images || []);
-	}, [appendImages, images]);
+		updateImages(images || []);
+	}, [updateImages, images]);
 
 	useEffect(() => {
 		return () => resetImages();
