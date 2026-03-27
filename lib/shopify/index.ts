@@ -567,23 +567,20 @@ export async function updateCart(
 	lineId: string,
 	variantId: string,
 	quantity: number,
+	previousQuantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
-	const [cartBeforeMutation, res] = await Promise.all([
-		getCart(cartId),
-		shopifyFetch<ShopifyUpdateCartOperation>({
-			query: editCartItemMutation,
-			cache: "no-store",
-			variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
-		}),
-	]);
-
-	const previousQuantity = cartBeforeMutation ? getLineQuantity(cartBeforeMutation, variantId) : 0;
-
-	const decremente = previousQuantity > quantity;
+	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
+		query: editCartItemMutation,
+		cache: "no-store",
+		variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
+	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesUpdate.cart);
+
 	const newQuantity = getLineQuantity(updatedCart, variantId);
 	const actuallyAdded = newQuantity - previousQuantity;
+
+	const decremente = previousQuantity > quantity;
 
 	return {
 		data: {

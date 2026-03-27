@@ -106,7 +106,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			updateCartItem(cartItem.merchandise.id, "minus");
 
 			try {
-				const res = await updateFromCartAction(cartItem, "minus");
+				const res = await updateFromCartAction(cartItem, cartItem.quantity, "minus");
 
 				if (res.type === "success") {
 					resetCartMessage();
@@ -141,7 +141,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			updateCartItem(cartItem.merchandise.id, "plus");
 
 			try {
-				const res = await updateFromCartAction(cartItem, "plus");
+				const res = await updateFromCartAction(cartItem, cartItem.quantity, "plus");
 
 				if (res.type === "success") {
 					resetCartMessage();

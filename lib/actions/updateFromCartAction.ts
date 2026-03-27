@@ -12,6 +12,7 @@ import UpdateCartItemAction from "@/types/updateCartItemAction";
 
 export default async function updateFromCartAction(
 	cartItem: CartItem,
+	previousQuantity: number,
 	type: "plus" | "minus",
 ): Promise<ActionReponse<UpdateCartItemAction>> {
 	if (!cartItem.id) {
@@ -64,7 +65,7 @@ export default async function updateFromCartAction(
 				type: "success",
 			};
 		}
-		res = await updateCart(cartId, cartItem.id, cartItem.merchandise.id, quantity);
+		res = await updateCart(cartId, cartItem.id, cartItem.merchandise.id, quantity, previousQuantity);
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
