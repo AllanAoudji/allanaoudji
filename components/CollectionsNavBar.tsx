@@ -14,6 +14,8 @@ export default function CollectionsNavBar({ handle }: Readonly<Props>) {
 
 	const collectionIsMissing = !!handle && !collection;
 
+	if (collections.length <= 1) return null;
+
 	return (
 		<div
 			className={cn("mb-2 flex items-baseline justify-between", {
