@@ -8,20 +8,26 @@ type Args = {
 };
 
 const useProductSingleQuantity = ({ variants, finalVariantInventory }: Args) => {
-	const [quantity, setQuantity] = useState<number | string>(1);
+	const [quantity, setQuantity] = useState<number | "">(1);
 
-	const disableDecrementQuantity =
-		(!finalVariantInventory && variants.length > 1) ||
-		typeof quantity !== "number" ||
-		(typeof quantity === "number" && quantity <= 1);
+	const disableDecrementQuantity = useMemo(() => {
+		return (
+			(!finalVariantInventory && variants.length > 1) ||
+			typeof quantity !== "number" ||
+			(typeof quantity === "number" && quantity <= 1)
+		);
+	}, [quantity, finalVariantInventory, variants]);
 
-	const disableIncrementQuantity =
-		(!finalVariantInventory && variants.length > 1) ||
-		typeof quantity !== "number" ||
-		(!!finalVariantInventory &&
-			finalVariantInventory.inventoryTracked &&
-			typeof quantity === "number" &&
-			quantity >= finalVariantInventory.inventoryQuantity);
+	const disableIncrementQuantity = useMemo(() => {
+		return (
+			(!finalVariantInventory && variants.length > 1) ||
+			typeof quantity !== "number" ||
+			(!!finalVariantInventory &&
+				finalVariantInventory.inventoryTracked &&
+				typeof quantity === "number" &&
+				quantity >= finalVariantInventory.inventoryQuantity)
+		);
+	}, [finalVariantInventory, quantity, variants]);
 
 	const finalQuantity = useMemo(() => {
 		if (typeof quantity === "number") {
@@ -46,7 +52,7 @@ const useProductSingleQuantity = ({ variants, finalVariantInventory }: Args) => 
 				}
 				return finalVariantInventory.inventoryQuantity;
 			}
-			return 0;
+			return 1;
 		});
 	}, [finalVariantInventory]);
 
@@ -126,6 +132,7 @@ const useProductSingleQuantity = ({ variants, finalVariantInventory }: Args) => 
 		onBlurQuantity,
 		onChangeQuantity,
 		resetQuantity,
+		quantity,
 	};
 };
 

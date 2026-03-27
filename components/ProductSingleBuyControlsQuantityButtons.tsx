@@ -65,7 +65,6 @@ export default function ProductSingleBuyControlsQuantityButtons({
 				onBlur={onBlur}
 				onChange={onChange}
 				disabled={isPending}
-				type="number"
 				value={quantity}
 			/>
 			<button
