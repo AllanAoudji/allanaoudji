@@ -1,6 +1,15 @@
 import collectionFragment from "../fragments/collection";
 import productFragment from "../fragments/product";
 
+export const getCollectionQuery = /* Graphql */ `
+    query getCollection($handle: String!) {
+        collection(handle: $handle) {
+            ...collection
+        }
+    }
+    ${collectionFragment}
+`;
+
 export const getCollectionsQuery = /* Graphql */ `
     query getCollections {
         collections(first: 250, sortKey: TITLE) {

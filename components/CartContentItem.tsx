@@ -22,7 +22,7 @@ type Props = {
 
 export default function CartContentItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
-	const { isPending } = useCartActions();
+	const { isCartPending } = useCartActions();
 
 	const image = useMemo(
 		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
@@ -61,7 +61,7 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 								<CartContentItemQuantityButton className="cursor-pointer pr-1" item={item} type="minus" />
 								<div
 									className={cn("w-6 text-center font-bold", {
-										"opacity-50": isPending,
+										"opacity-50": isCartPending,
 									})}
 								>
 									<p>{item.quantity}</p>

@@ -2,23 +2,21 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { DEFAULT_COLLECTION_IMAGE } from "@/lib/constants";
 import { useModal } from "@/lib/contexts/modal-context";
 import { cn } from "@/lib/utils";
+import ImageContainer from "./ImageContainer";
 import Collection from "@/types/collection";
 
 type Props = {
-	direction?: "column" | "row";
 	item: Collection;
 };
 
-export default function CollectionsFilterCollectionsItem({
-	direction = "row",
-	item,
-}: Readonly<Props>) {
+export default function CollectionsFilterCollectionsItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
-	const active = pathName === item.path;
+	const isActive = pathName === item.path;
 	const newParams = new URLSearchParams(searchParams.toString());
 
 	newParams.delete("q");
@@ -26,41 +24,32 @@ export default function CollectionsFilterCollectionsItem({
 	const href = `${item.path}?${newParams.toString()}`;
 
 	return (
-		<li
-			className={cn("block text-sm", {
-				"w-full": direction === "column",
-			})}
-		>
-			<Link
-				className={cn(
-					"flex items-center py-0.5 text-xs uppercase",
-					"group-hover:[&_span]:opacity-25 hover:[&_span]:opacity-100!",
-					{
-						"group-hover:[&_span]:after:origin-right group-hover:[&_span]:after:scale-x-0 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
-							active,
-						"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100": !active,
-						"h-10 px-2": direction === "row",
-						"pl-auto py-1 pr-12": direction === "column",
-					},
-				)}
-				href={href}
-				onClick={closeModal}
-				replace={true}
-			>
-				<span
+		<li className={cn("group block text-sm")}>
+			<Link href={href} onClick={closeModal} replace={true}>
+				<div className="relative overflow-hidden">
+					<ImageContainer
+						className={cn("scale-110 transition-transform duration-500 group-hover:scale-100", {
+							"scale-100!": isActive,
+						})}
+						image={item.image || DEFAULT_COLLECTION_IMAGE}
+						ratio="4/3"
+					/>
+				</div>
+				<h3
 					className={cn(
-						"relative py-1 transition-opacity duration-300",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
+						"relative pb-0.5",
+						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
+						"after:origin-right after:scale-x-0",
 						{
-							"after:origin-left after:scale-x-100": active,
-							"after:origin-right after:scale-x-0": !active,
-							"py-0.5": direction === "column",
+							"after:origin-left after:scale-x-100": isActive,
+							"after:origin-right after:scale-x-0": !isActive,
 						},
 					)}
 				>
 					{item.title}
-				</span>
+				</h3>
 			</Link>
 		</li>
 	);

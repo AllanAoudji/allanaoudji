@@ -1,6 +1,6 @@
-import ShopifyColelction from "./shopifyCollection";
+import ShopifyCollection from "./shopifyCollection";
 
-type Collection = ShopifyColelction & {
+type Collection = ShopifyCollection & {
 	path: string;
 };
 

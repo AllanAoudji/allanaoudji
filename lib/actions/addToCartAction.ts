@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import createCartAndSetCookie from "@/lib/actions/createCartAndSetCookie";
@@ -13,33 +13,27 @@ import UpdateCartItemAction from "@/types/updateCartItemAction";
 export async function addToCartAction(
 	variantId: string,
 	quantity: number,
+	previousQuantity: number,
 ): Promise<ActionReponse<UpdateCartItemAction>> {
 	let cookieStore: ReadonlyRequestCookies;
 	try {
 		cookieStore = await cookies();
 	} catch (error) {
 		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
+			return { message: error.message, type: "error" };
 		}
-		return {
-			message: "Unknown error occurred while retrieving cookies.",
-			type: "error",
-		};
+		return { message: "Unknown error occurred while retrieving cookies.", type: "error" };
 	}
 
 	let cartId = cookieStore.get("cartId")?.value;
+	let newCartId: string | undefined;
 	if (!cartId) {
 		try {
-			cartId = await createCartAndSetCookie();
+			newCartId = await createCartAndSetCookie();
+			cartId = newCartId;
 		} catch (error) {
 			if (error instanceof Error) {
-				return {
-					message: error.message,
-					type: "error",
-				};
+				return { message: error.message, type: "error" };
 			}
 			return {
 				message: "Unknown error occurred while retrieving cart ID from cookies.",
@@ -55,43 +49,28 @@ export async function addToCartAction(
 
 	let res: {
 		warning?: string;
-		data: {
-			cart: Cart;
-			quantityAdded: number;
-		};
+		data: { cart: Cart; quantityAdded: number };
 	};
 	try {
-		res = await addToCart(cartId, variantId, finalQuantity);
+		res = await addToCart(cartId, variantId, finalQuantity, previousQuantity);
 	} catch (error) {
 		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
+			return { message: error.message, type: "error" };
 		}
-		return {
-			message: "Unknown error occurred while adding item to cart.",
-			type: "error",
-		};
+		return { message: "Unknown error occurred while adding item to cart.", type: "error" };
 	}
 
-	revalidateTag(TAGS.cart, { expire: 0 });
+	updateTag(TAGS.cart);
 
 	const data = {
 		cartItem: res.data.cart.lines.find(line => line.merchandise.id === variantId),
 		quantityAdded: res.data.quantityAdded,
+		newCartId,
 	};
 
-	if (!!res.warning) {
-		return {
-			data,
-			message: res.warning,
-			type: "warning",
-		};
+	if (res.warning) {
+		return { data, message: res.warning, type: "warning" };
 	}
 
-	return {
-		data,
-		type: "success",
-	};
+	return { data, type: "success" };
 }

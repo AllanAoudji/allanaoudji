@@ -1,7 +1,22 @@
+import { Metadata } from "next";
 import CollectionsContent from "@/components/CollectionsContent";
 
 type Props = {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export const metadata: Metadata = {
+	title: "Collections",
+	description: "Découvrez toutes les collections.",
+	openGraph: {
+		title: "Collections",
+		description: "Découvrez toutes les collections.",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
+		type: "website",
+	},
+	alternates: {
+		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
+	},
 };
 
 export default async function CollectionsPage({ searchParams }: Props) {

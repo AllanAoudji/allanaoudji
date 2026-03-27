@@ -1,3 +1,4 @@
+import SEO from "./seo";
 import shopifyImage from "./shopifyImage";
 
 type ShopifyCollection = {

@@ -1,5 +1,4 @@
-import CollectionsFilter from "@/components/CollectionsFilter";
-import CollectionsFiltersSideBarButton from "@/components/CollectionsFilterSideBarButton";
+import CollectionsFilterModalButton from "@/components/CollectionsFilterModalButton";
 import Title from "@/components/Title";
 
 type Props = {
@@ -10,8 +9,7 @@ export default function CollectionsLayout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>boutique</Title>
-			<CollectionsFiltersSideBarButton className="mb-4 sm:hidden" />
-			<CollectionsFilter className="mb-4 hidden sm:block" type="collections" />
+			<CollectionsFilterModalButton className="-mt-2 mb-2" />
 			{children}
 		</div>
 	);
