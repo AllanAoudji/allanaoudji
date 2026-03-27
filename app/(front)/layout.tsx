@@ -75,3 +75,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // ----- Boutique logic -----
 // Avoir un moyen de enable/disable la boutique
 // Et configurer le shop avec surement les frais de ports à afficher quelque part
+// Ajouter
+// const threshold = process.env.NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD;
+
+// export default function FreeShippingBanner() {
+//   return <p>Livraison gratuite à partir de {threshold} €</p>;
+// }
