@@ -71,3 +71,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
 // favicon
+
+// ----- Boutique logic -----
+// Avoir un moyen de enable/disable la boutique
+// Et configurer le shop avec surement les frais de ports à afficher quelque part
