@@ -10,7 +10,7 @@ export default function CollectionsFilterModalHeader() {
 		<div className={"flex items-baseline justify-between px-4"}>
 			<button
 				className={cn(
-					"text-quaternary h-header cursor-pointer pr-4 text-sm font-bold uppercase",
+					"text-secondary h-header cursor-pointer pr-4 text-sm font-bold uppercase",
 					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
 				)}
 				onClick={closeModal}
@@ -18,7 +18,7 @@ export default function CollectionsFilterModalHeader() {
 				<span
 					className={cn(
 						"relative py-1 transition-opacity duration-300",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",
 					)}

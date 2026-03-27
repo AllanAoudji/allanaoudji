@@ -4,7 +4,7 @@ import SkeletonText from "./SkeletonText";
 export default function SkeletonLegalPortableText() {
 	return (
 		<div>
-			<SkeletonText className="mt-0.5 mb-5" size={30} type="current" />
+			<SkeletonText className="mt-1 mb-4" size={30} type="current" />
 			<SkeletonPortableText />
 		</div>
 	);

@@ -25,6 +25,7 @@ const ABOUT_QUERY = defineQuery(`
           ...,
           "width": asset->metadata.dimensions.width,
           "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
         }
       }
     }
@@ -62,6 +63,7 @@ const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
           ...,
           "width": asset->metadata.dimensions.width,
           "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
         }
       }
     },
@@ -79,6 +81,7 @@ const LEGAL_NOTICES_QUERY = defineQuery(`
           ...,
           "width": asset->metadata.dimensions.width,
           "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
         }
       }
     },
@@ -96,6 +99,7 @@ const PRIVACY_POLICY_QUERY = defineQuery(`
           ...,
           "width": asset->metadata.dimensions.width,
           "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
         }
       }
     },

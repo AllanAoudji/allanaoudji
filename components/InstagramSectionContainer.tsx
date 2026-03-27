@@ -11,7 +11,7 @@ export default function InstagramSectionContainer({ children, className }: Reado
 	return (
 		<section
 			className={cn(
-				"vertical-padding odd:text-quaternary even:bg-quaternary even:text-primary",
+				"vertical-padding odd:text-secondary even:bg-secondary even:text-primary",
 				className,
 			)}
 		>

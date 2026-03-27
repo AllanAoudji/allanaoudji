@@ -24,14 +24,14 @@ export default function CollectionsFilterModalButton({ className }: Readonly<Pro
 			<button
 				onClick={handleClick}
 				className={cn(
-					"text-quaternary cursor-pointer py-2 pl-4 text-sm font-bold tracking-wide uppercase",
+					"text-secondary cursor-pointer py-1 pl-4 text-sm font-bold tracking-wide uppercase",
 					"hover:[&_span]:after:origin-right hover:[&_span]:after:scale-x-0",
 				)}
 			>
 				<span
 					className={cn(
 						"relative py-0.5 transition-opacity duration-300",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-left after:scale-x-100",
 					)}

@@ -29,7 +29,7 @@ export default function ProductSingleBuyControlsAddButton({
 	return (
 		<button
 			className={cn("CTA", className, {
-				"bg-quaternary/75! text-primary! cursor-not-allowed!":
+				"bg-secondary/75! text-primary! cursor-not-allowed!":
 					!product.availableForSale || !variant || !variant.availableForSale || isCartPending,
 				"cursor-progress!": isProductPending,
 			})}

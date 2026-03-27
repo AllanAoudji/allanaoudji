@@ -1,5 +1,6 @@
 "use client";
 
+import { FocusTrap } from "focus-trap-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ReactNode, useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
@@ -50,28 +51,37 @@ export default function DrawerModal({
 					{/* overlay */}
 					<motion.div
 						animate={{ opacity: 1 }}
-						className="bg-secondary/25 fixed inset-0 z-40 backdrop-blur-md"
+						className="bg-tertiary/25 fixed inset-0 z-40 backdrop-blur-md"
 						exit={{ opacity: 0 }}
 						initial={{ opacity: 0 }}
 						onClick={onCloseAction}
 					/>
 
 					{/* drawer */}
-					<motion.div
-						animate={{ x: 0 }}
-						className={cn(`bg-primary fixed top-0 z-50 h-full w-fit shadow-xl`, {
-							"left-0": !isRight,
-							"right-0": isRight,
-						})}
-						exit={{ x: isRight ? "100%" : "-100%" }}
-						initial={{ x: isRight ? "100%" : "-100%" }}
-						transition={{
-							duration: 0.32,
-							ease: [0.32, 0.72, 0, 1],
+					<FocusTrap
+						focusTrapOptions={{
+							escapeDeactivates: false,
+							returnFocusOnDeactivate: true,
+							allowOutsideClick: true,
+							fallbackFocus: () => document.body,
 						}}
 					>
-						<div className={cn("overflow-y-auto", className)}>{children}</div>
-					</motion.div>
+						<motion.div
+							animate={{ x: 0 }}
+							className={cn(`bg-primary fixed top-0 z-50 h-full w-fit shadow-xl`, {
+								"left-0": !isRight,
+								"right-0": isRight,
+							})}
+							exit={{ x: isRight ? "100%" : "-100%" }}
+							initial={{ x: isRight ? "100%" : "-100%" }}
+							transition={{
+								duration: 0.32,
+								ease: [0.32, 0.72, 0, 1],
+							}}
+						>
+							<div className={cn("overflow-y-auto", className)}>{children}</div>
+						</motion.div>
+					</FocusTrap>
 				</>
 			)}
 		</AnimatePresence>

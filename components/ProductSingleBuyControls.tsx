@@ -48,6 +48,7 @@ export default function ProductSingleBuyControls({
 		incrementQuantity,
 		onBlurQuantity,
 		onChangeQuantity,
+		quantity,
 		resetQuantity,
 	} = useProductSingleQuantity({ variants, finalVariantInventory });
 
@@ -91,7 +92,7 @@ export default function ProductSingleBuyControls({
 					increment={incrementQuantity}
 					onBlur={onBlurQuantity}
 					onChange={onChangeQuantity}
-					quantity={finalQuantity}
+					quantity={quantity}
 					variant={finalVariant}
 				/>
 				<ProductSingleBuyControlsAddButton

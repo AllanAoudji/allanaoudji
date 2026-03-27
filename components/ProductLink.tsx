@@ -21,7 +21,7 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 			onClick={onClick}
 		>
 			<div
-				className={cn("relative mb-1.5", {
+				className={cn("relative mb-0.5", {
 					"bg-gray-300": !product.availableForSale,
 				})}
 			>
@@ -57,7 +57,7 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 						"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
 						"relative",
 						"group-hover:after:origin-left group-hover:after:scale-x-100",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",
 					)}

@@ -47,7 +47,7 @@ export default function ContactFormTextAra({
 			<textarea
 				aria-describedby={error ? `${id}-error` : undefined}
 				aria-invalid={!!(showError && error)}
-				className="border-quaternary focus:ring-quaternary block min-h-40 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
+				className="bordersecondary focus:ringsecondary block min-h-40 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
 				id={id}
 				name={id}
 				onBlur={e => handleBlur(e.target.value)}

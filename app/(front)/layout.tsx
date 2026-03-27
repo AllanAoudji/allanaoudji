@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="fr_FR">
-			<body className="font-gopher bg-primary text-quaternary antialiased">
+			<body className="font-gopher bg-primary text-secondary antialiased">
 				<Suspense fallback={<SplashScreen />}>
 					<ScrollReset />
 					<LocalShopifyDispenser>
@@ -63,17 +63,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// ----- Styling -----
-// utiliser applyFrenchTypography sur sanity.work.text
-// utiliser des icones pour la lightbox et l'animer
-// Utiliser une icone à la place du chargement d'infinite scroll pour gallery et products
-// utilisation de liquify image pour les portabletext (about/CGV/etc)
-// Change couleur
-//  - primary => light
-//  - secondary => dark
-//  - tertiary => darker light (utiliser pour imageContainer/skeleton)
-// Galery/GalerySingle => Skeleton Title/Substitle, légèrement trop "haut" (de 0.5/1 point)
-
 // ----- Sanity/Shopify optimization -----
 // Update and optimize sanity
 // Référencements sanity
@@ -81,3 +70,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // ----- Editorial -----
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
+// favicon
+
+// ----- Boutique logic -----
+// Avoir un moyen de enable/disable la boutique
+// Et configurer le shop avec surement les frais de ports à afficher quelque part
+// Ajouter
+// const threshold = process.env.NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD;
+
+// export default function FreeShippingBanner() {
+//   return <p>Livraison gratuite à partir de {threshold} €</p>;
+// }

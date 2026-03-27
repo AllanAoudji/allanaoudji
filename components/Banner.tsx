@@ -137,7 +137,7 @@ export default function Banner({
 	return (
 		<div
 			ref={viewportRef}
-			className={`bg-secondary relative w-full overflow-hidden text-xl ${className}`}
+			className={`bg-tertiary relative w-full overflow-hidden text-xl ${className}`}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
 		>

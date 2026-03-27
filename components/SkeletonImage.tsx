@@ -19,5 +19,5 @@ const convertRatio = (ratio: Ratio) => {
 };
 
 export default function SkeletonImage({ className, ratio = "1/1" }: Readonly<Props>) {
-	return <div className={cn("bg-secondary", convertRatio(ratio), className)} />;
+	return <div className={cn("bg-quaternary", convertRatio(ratio), className)} />;
 }

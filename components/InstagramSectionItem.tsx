@@ -39,9 +39,9 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 					ratio="4/5"
 				/>
 			) : (
-				<div className="bg-secondary aspect-4/5 w-full border" />
+				<div className="bg-tertiary aspect-4/5 w-full border" />
 			)}
-			<div className="bg-primary text-quaternary flex w-full justify-center gap-4 p-1">
+			<div className="bg-primary text-secondary flex w-full justify-center gap-4 p-1">
 				<InstagramSectionItemIcon type="likes" count={!!post ? post.like_count : 0} />
 				<InstagramSectionItemIcon type="comments" count={!!post ? post.comments_count : 0} />
 			</div>

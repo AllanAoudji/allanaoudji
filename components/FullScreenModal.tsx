@@ -1,5 +1,6 @@
 "use client";
 
+import { FocusTrap } from "focus-trap-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
@@ -41,18 +42,27 @@ export default function FullscreenModal({
 	return (
 		<AnimatePresence>
 			{open && (
-				<motion.div
-					className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
-					initial={{ x: "-100%" }}
-					animate={{ x: 0 }}
-					exit={{ x: "-100%" }}
-					transition={{
-						duration: 0.32,
-						ease: [0.32, 0.72, 0, 1],
+				<FocusTrap
+					focusTrapOptions={{
+						escapeDeactivates: false,
+						returnFocusOnDeactivate: true,
+						allowOutsideClick: true,
+						fallbackFocus: () => document.body,
 					}}
 				>
-					<div className={cn("vertical-padding h-full overflow-y-auto", className)}>{children}</div>
-				</motion.div>
+					<motion.div
+						className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
+						initial={{ x: "-100%" }}
+						animate={{ x: 0 }}
+						exit={{ x: "-100%" }}
+						transition={{
+							duration: 0.32,
+							ease: [0.32, 0.72, 0, 1],
+						}}
+					>
+						<div className={cn("vertical-padding h-full overflow-y-auto", className)}>{children}</div>
+					</motion.div>
+				</FocusTrap>
 			)}
 		</AnimatePresence>
 	);

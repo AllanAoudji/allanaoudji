@@ -1,88 +1,178 @@
 "use client";
 
+import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
+import { FocusTrap } from "focus-trap-react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { MouseEvent, useEffect } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
 import LightBoxButton from "./LightboxButton";
-import { workGalleryImage } from "@/types/sanityType";
+import LightboxImage from "@/types/lightboxImage";
 
 type Props = {
-	image: workGalleryImage | null;
+	image: LightboxImage | null;
 	nextImage?: () => void;
 	prevImage?: () => void;
 	resetClick: () => void;
 };
 
-export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
-	const handleClick = (e: MouseEvent<HTMLInputElement>) => {
-		e.stopPropagation();
-		resetClick();
-	};
-	const hancleNextClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		if (nextImage) nextImage();
-	};
-	const handlePrevClick = (e: MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
-		if (prevImage) prevImage();
-	};
+// Transition partagée pour éviter la duplication
+const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
 
-	useEscape(() => {
-		resetClick();
-	});
-	useLeftArrow(() => {
-		if (prevImage) prevImage();
-	});
-	useRightArrow(() => {
-		if (nextImage) nextImage();
-	});
+export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	const imgRef = useRef<HTMLImageElement>(null);
+
+	const isVisible = !!image;
+
+	const handleClick = useCallback(
+		(e: MouseEvent<HTMLDivElement>) => {
+			e.stopPropagation();
+			resetClick();
+		},
+		[resetClick],
+	);
+
+	const handleClose = useCallback(
+		(e: MouseEvent<HTMLButtonElement>) => {
+			e.stopPropagation();
+			resetClick();
+		},
+		[resetClick],
+	);
+
+	const handleNextClick = useCallback(
+		(e: MouseEvent<HTMLButtonElement>) => {
+			e.stopPropagation();
+			nextImage?.();
+		},
+		[nextImage],
+	);
+
+	const handlePrevClick = useCallback(
+		(e: MouseEvent<HTMLButtonElement>) => {
+			e.stopPropagation();
+			prevImage?.();
+		},
+		[prevImage],
+	);
+
+	useEscape(resetClick);
+	useLeftArrow(() => prevImage?.());
+	useRightArrow(() => nextImage?.());
 
 	useEffect(() => {
-		if (!image || !image.height || !image.width || !image.url) {
-			document.documentElement.style.overflow = "";
-		} else {
-			document.documentElement.style.overflow = "hidden";
+		setIsLoaded(false);
+		if (imgRef.current?.complete) {
+			setIsLoaded(true);
 		}
-		return () => {
-			document.documentElement.style.overflow = "";
-		};
-	}, [image]);
+	}, [image?._id]);
 
-	if (!image || !image.height || !image.width || !image.url) {
-		return null;
-	}
+	useEffect(() => {
+		if (!isVisible) return;
+		const prev = document.documentElement.style.overflow;
+		document.documentElement.style.overflow = "hidden";
+		return () => {
+			document.documentElement.style.overflow = prev;
+		};
+	}, [isVisible]);
 
 	return (
-		<div
-			className="bg-secondary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
-			onClick={handleClick}
-		>
-			<LightBoxButton className="right-5" text="X" />
-			{!!nextImage && (
-				<LightBoxButton
-					onClick={hancleNextClick}
-					className="top-1/2 right-5 -translate-y-1/2"
-					text=">"
-				/>
+		<AnimatePresence>
+			{isVisible && (
+				<FocusTrap
+					active={isVisible}
+					focusTrapOptions={{
+						escapeDeactivates: false,
+						returnFocusOnDeactivate: true,
+						allowOutsideClick: true,
+						// Évite l'erreur si le premier tabbable n'est pas encore rendu
+						fallbackFocus: () => document.body,
+					}}
+				>
+					<motion.div
+						animate={{ opacity: 1 }}
+						aria-label="Image en plein écran"
+						aria-modal="true"
+						className="bg-tertiary/25 fixed inset-0 z-40 overscroll-contain p-8 backdrop-blur-md"
+						exit={{ opacity: 0 }}
+						initial={{ opacity: 0 }}
+						key="lightbox"
+						onClick={handleClick}
+						role="dialog"
+						transition={transition}
+					>
+						<LightBoxButton
+							aria-label="Fermer"
+							className="top-5 right-5"
+							icon={IconX}
+							onClick={handleClose}
+						/>
+
+						{!!nextImage && (
+							<LightBoxButton
+								aria-label="Image suivante"
+								className="top-1/2 right-5 -translate-y-1/2"
+								icon={IconChevronRight}
+								onClick={handleNextClick}
+							/>
+						)}
+						{!!prevImage && (
+							<LightBoxButton
+								aria-label="Image précédente"
+								className="top-1/2 left-5 -translate-y-1/2"
+								icon={IconChevronLeft}
+								onClick={handlePrevClick}
+							/>
+						)}
+
+						{/* Image + placeholder */}
+						<motion.div
+							animate={{ opacity: 1, y: 0, scale: 1 }}
+							className="flex h-full w-full items-center justify-center"
+							exit={{ opacity: 0, y: 8, scale: 0.98 }}
+							initial={{ opacity: 0, y: 16, scale: 0.97 }}
+							transition={transition}
+						>
+							<div
+								className="relative"
+								style={{
+									aspectRatio: `${image.width} / ${image.height}`,
+									height: "auto",
+									maxWidth: "calc(100dvw - 4rem)",
+									maxHeight: "calc(100dvh - 4rem)",
+									width: `min(calc(100dvw - 4rem), calc((100dvh - 4rem) * ${image.width} / ${image.height}))`,
+								}}
+							>
+								<AnimatePresence>
+									{!isLoaded && (
+										<motion.div
+											className="bg-quaternary absolute inset-0"
+											exit={{ opacity: 0 }}
+											initial={{ opacity: 1 }}
+											key="placeholder"
+											transition={{ duration: 0.3 }}
+										/>
+									)}
+								</AnimatePresence>
+
+								<Image
+									alt={image.alt || "image"}
+									className="object-contain drop-shadow-md"
+									fill
+									key={image._id}
+									onLoad={() => setIsLoaded(true)}
+									ref={imgRef}
+									src={image.url}
+								/>
+							</div>
+						</motion.div>
+					</motion.div>
+				</FocusTrap>
 			)}
-			{!!prevImage && (
-				<LightBoxButton
-					onClick={handlePrevClick}
-					className="top-1/2 left-5 -translate-y-1/2"
-					text="<"
-				/>
-			)}
-			<div id="link" className="relative h-full w-full overflow-hidden">
-				<Image
-					alt={image.alt || "image"}
-					src={image.url}
-					fill={true}
-					className="drop-shadow-md"
-					objectFit="contain"
-				/>
-			</div>
-		</div>
+		</AnimatePresence>
 	);
 }

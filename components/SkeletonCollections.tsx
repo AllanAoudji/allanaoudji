@@ -1,7 +1,7 @@
-import Grid from "@/components/Grid";
-import SkeletonProductLink from "@/components/SkeletonProductLink";
+import Grid from "./Grid";
+import SkeletonProductLink from "./SkeletonProductLink";
 
-export default function CollectionsLoading() {
+export default function SkeletonCollections() {
 	return (
 		<Grid>
 			<SkeletonProductLink />

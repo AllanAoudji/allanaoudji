@@ -32,7 +32,7 @@ export default function CartContentItemDeleteButton({ className, item }: Readonl
 		>
 			<span
 				className={cn({
-					"after:bg-quaternary after:ease relative py-0.5 transition duration-700 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:transition after:duration-700 after:will-change-transform":
+					"after:bg-secondary after:ease relative py-0.5 transition duration-700 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:transition after:duration-700 after:will-change-transform":
 						!isCartPending,
 				})}
 			>

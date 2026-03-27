@@ -31,7 +31,7 @@ export default function CartContenItemCallbackMessage({ className, item }: Reado
 				<IconExclamationMark
 					className={cn({
 						"text-primary": cartMessage.type === "error",
-						"text-quaternary": cartMessage.type === "warning",
+						"text-secondary": cartMessage.type === "warning",
 					})}
 					size={20}
 				/>

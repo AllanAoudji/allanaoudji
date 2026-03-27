@@ -38,7 +38,7 @@ export default function CollectionsFilterOrderingItem({ item }: Readonly<Props>)
 				<span
 					className={cn(
 						"relative transition-opacity duration-300",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						{
 							"after:origin-left after:scale-x-100": active,

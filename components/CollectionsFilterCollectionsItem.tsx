@@ -28,28 +28,30 @@ export default function CollectionsFilterCollectionsItem({ item }: Readonly<Prop
 			<Link href={href} onClick={closeModal} replace={true}>
 				<div className="relative overflow-hidden">
 					<ImageContainer
-						className={cn("scale-110 transition-transform duration-500 group-hover:scale-100", {
+						className={cn("scale-[103%] transition-transform duration-500 group-hover:scale-100", {
 							"scale-100!": isActive,
 						})}
 						image={item.image || DEFAULT_COLLECTION_IMAGE}
 						ratio="4/3"
 					/>
 				</div>
-				<h3
-					className={cn(
-						"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
-						"relative pb-0.5",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
-						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
-						"after:origin-right after:scale-x-0",
-						{
-							"after:origin-left after:scale-x-100": isActive,
-							"after:origin-right after:scale-x-0": !isActive,
-						},
-					)}
-				>
-					{item.title}
-				</h3>
+				<div>
+					<h3
+						className={cn(
+							"inline overflow-hidden text-xs font-bold whitespace-nowrap uppercase",
+							"relative pb-0.5",
+							"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
+							"after:ease after:transition-transform after:duration-700 after:will-change-transform",
+							"after:origin-right after:scale-x-0",
+							{
+								"after:origin-left after:scale-x-100": isActive,
+								"after:origin-right after:scale-x-0": !isActive,
+							},
+						)}
+					>
+						{item.title}
+					</h3>
+				</div>
 			</Link>
 		</li>
 	);

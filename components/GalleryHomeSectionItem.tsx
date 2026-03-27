@@ -15,7 +15,7 @@ export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
 					<ImageContainer
 						image={work.mainImage}
 						ratio="4/3"
-						className="animation scale-100 transition-all duration-300 group-hover:scale-105"
+						className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
 					/>
 				</div>
 			)}
@@ -25,7 +25,7 @@ export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
 						"overflow-hidden text-ellipsis whitespace-nowrap uppercase",
 						"relative",
 						"group-hover:after:origin-left group-hover:after:scale-x-100",
-						"after:bg-quaternary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
+						"after:bg-secondary after:absolute after:bottom-0 after:left-0 after:h-px after:w-full",
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-right after:scale-x-0",
 					)}
