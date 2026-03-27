@@ -33,7 +33,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 
 	const isPending = isCartPending || isProductPending;
 
-	if (!variant?.availableForSale) {
+	if (variant && !variant.availableForSale) {
 		return null;
 	}
 
@@ -49,7 +49,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 			>
 				<QuantityIcon
 					className={cn({
-						"opacity-50": disableDecrement || isPending,
+						"opacity-50": disableDecrement || isPending || !variant || !variant.availableForSale,
 					})}
 					type="minus"
 				/>
@@ -59,7 +59,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 					"border-quaternary [appearance:textfield] border-t border-b text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 					`h-${size} w-${size}`,
 					{
-						"text-quaternary/50": isPending,
+						"text-quaternary/50": isPending || !variant || !variant.availableForSale,
 					},
 				)}
 				onBlur={onBlur}
@@ -73,12 +73,12 @@ export default function ProductSingleBuyControlsQuantityButtons({
 					"flex items-center justify-center border-t border-r border-b",
 					`h-${size} w-${size}`,
 				)}
-				disabled={disableIncrement || isPending}
+				disabled={disableIncrement || isPending || !variant || !variant.availableForSale}
 				onClick={increment}
 			>
 				<QuantityIcon
 					className={cn({
-						"opacity-50": disableIncrement || isPending,
+						"opacity-50": disableIncrement || isPending || !variant || !variant.availableForSale,
 					})}
 					type="plus"
 				/>

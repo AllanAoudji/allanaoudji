@@ -8,7 +8,11 @@ import {
 	removeFromCartMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
-import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
+import {
+	getCollectionProductsQuery,
+	getCollectionQuery,
+	getCollectionsQuery,
+} from "./queries/collection";
 import { getDiscountsQuery } from "./queries/discount";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
@@ -33,6 +37,7 @@ import ShopifyMenu from "@/types/shopifyMenu";
 import {
 	ShopifyAddToCartOperation,
 	ShopifyCartOperation,
+	ShopifyCollectionOperation,
 	ShopifyCollectionProductsOperation,
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
@@ -329,6 +334,18 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 	}
 
 	return reshapeCart(res.body.data.cart);
+}
+
+export async function getCollection(handle: string): Promise<Collection | undefined> {
+	const res = await shopifyFetch<ShopifyCollectionOperation>({
+		cache: "no-store",
+		query: getCollectionQuery,
+		tags: [TAGS.collections],
+		variables: { handle },
+	});
+	if (!res.body.data.collection) return undefined;
+
+	return reshapeCollection(res.body.data.collection);
 }
 
 export async function getCollectionProducts({

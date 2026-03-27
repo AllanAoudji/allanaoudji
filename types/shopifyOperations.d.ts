@@ -1,7 +1,7 @@
 import ShopifyCart from "./ShopifyCart";
 import ShopifyVariantInventory from "./ShopifyVariantInventory";
 import Connection from "./connection";
-import ShopifyColelction from "./shopifyCollection";
+import ShopifyCollection from "./shopifyCollection";
 import { DiscountNode } from "./shopifyDiscount";
 import { ShopifyPage } from "./shopifyPage";
 import ShopifyPageInfo from "./shopifyPageInfo";
@@ -31,6 +31,15 @@ export type ShopifyCartOperation = {
 	};
 };
 
+export type ShopifyCollectionOperation = {
+	data: {
+		collection: ShopifyCollection | null;
+	};
+	variables: {
+		handle: string;
+	};
+};
+
 export type ShopifyCollectionProductsOperation = {
 	data: {
 		collection: {
@@ -48,7 +57,7 @@ export type ShopifyCollectionProductsOperation = {
 
 export type ShopifyCollectionsOperation = {
 	data: {
-		collections: Connection<ShopifyColelction>;
+		collections: Connection<ShopifyCollection>;
 	};
 };
 

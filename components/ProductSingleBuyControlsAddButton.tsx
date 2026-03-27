@@ -3,23 +3,22 @@
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { cn } from "@/lib/utils";
 import Product from "@/types/product";
+import ProductVariant from "@/types/productVariant";
 
 type Props = {
 	cartAction: () => void;
 	className?: string;
 	product: Product;
-	selectedVariantId?: string;
+	variant: ProductVariant | undefined;
 };
 
 export default function ProductSingleBuyControlsAddButton({
 	cartAction,
 	className,
 	product,
-	selectedVariantId,
+	variant,
 }: Readonly<Props>) {
 	const { resetProductMessage, isCartPending, isProductPending } = useCartActions();
-
-	const isPending = isCartPending || isProductPending;
 
 	const buttonMessage = isProductPending
 		? "Ajout en cours..."
@@ -27,16 +26,20 @@ export default function ProductSingleBuyControlsAddButton({
 			? "Ajouter au panier"
 			: "Out of stock";
 
-	const disable = !product.availableForSale || isPending || !selectedVariantId;
-
 	return (
 		<button
 			className={cn("CTA", className, {
-				"bg-quaternary/50 cursor-not-allowed!": !product.availableForSale || !selectedVariantId,
+				"bg-quaternary/75! text-primary! cursor-not-allowed!":
+					!product.availableForSale || !variant || !variant.availableForSale || isCartPending,
 				"cursor-progress!": isProductPending,
-				"bg-quaternary/50 cursor-not-allowed": isCartPending,
 			})}
-			disabled={disable}
+			disabled={
+				!product.availableForSale ||
+				isCartPending ||
+				isProductPending ||
+				!variant ||
+				!variant.availableForSale
+			}
 			onClick={() => {
 				resetProductMessage();
 				cartAction();

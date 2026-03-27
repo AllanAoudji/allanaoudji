@@ -98,7 +98,7 @@ export default function ProductSingleBuyControls({
 					className="grow"
 					cartAction={cartAction}
 					product={product}
-					selectedVariantId={finalVariant?.id}
+					variant={finalVariant}
 				/>
 			</div>
 			<ProductSingleBuyControlsCallbackMessage className="mt-2" finalVariant={finalVariant} />

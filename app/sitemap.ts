@@ -1,44 +1,28 @@
-import { MetadataRoute } from "next";
-import { getCollections, getProducts } from "@/lib/shopify";
+// app/sitemap.ts
+import { getProducts, getCollections } from "@/lib/shopify";
 
-type Route = {
-	url: string;
-	lastModified: string;
-};
+export default async function sitemap() {
+	const base = process.env.NEXT_PUBLIC_SITE_URL;
 
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-	? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-	: "http://localhost:3000";
+	const { products } = await getProducts({ first: 250 });
+	const collections = await getCollections();
 
-export const dynamic = "force-dynamic";
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const routesMap = [""].map(route => ({
-		url: `${baseUrl}${route}`,
-		lastModified: new Date().toISOString(),
+	const productUrls = products.map(p => ({
+		url: `${base}/products/${p.handle}`,
+		lastModified: p.updatedAt,
 	}));
 
-	const collectionsPromise = getCollections().then(collections =>
-		collections.map(collection => ({
-			url: `${baseUrl}${collection.path}`,
-			lastModified: collection.updatedAt,
-		})),
-	);
+	const collectionUrls = collections
+		.filter(c => c.handle)
+		.map(c => ({
+			url: `${base}/collections/${c.handle}`,
+			lastModified: c.updatedAt,
+		}));
 
-	const productsPromise = getProducts({}).then(res =>
-		res.products.map(product => ({
-			url: `${baseUrl}/product/${product.handle}`,
-			lastModified: product.updatedAt,
-		})),
-	);
-
-	let fetchedRoutes: Route[] = [];
-
-	try {
-		fetchedRoutes = (await Promise.all([collectionsPromise, productsPromise])).flat();
-	} catch (error) {
-		throw JSON.stringify(error, null, 2);
-	}
-
-	return [...routesMap, ...fetchedRoutes];
+	return [
+		{ url: base, lastModified: new Date() },
+		{ url: `${base}/collections`, lastModified: new Date() },
+		...collectionUrls,
+		...productUrls,
+	];
 }

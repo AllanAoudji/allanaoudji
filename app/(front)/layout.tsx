@@ -13,13 +13,26 @@ import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-	title: "Allan Aoudji",
-	description: "Allan Aoudji | graphiste & illustrateur",
+	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL),
+	title: {
+		default: "Allan Aoudji",
+		template: "%s | Allan Aoudji",
+	},
+	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
+	openGraph: {
+		siteName: "Allan Aoudji",
+		locale: "fr_FR",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		creator: "@AllanAoudji",
+	},
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="fr">
+		<html lang="fr_FR">
 			<body className="font-gopher bg-primary text-quaternary antialiased">
 				<Suspense fallback={<SplashScreen />}>
 					<ScrollReset />
@@ -64,8 +77,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 // ----- Sanity/Shopify optimization -----
 // Update and optimize sanity
-// Référencements
-// Optimisation shopify
+// Référencements sanity
 
 // ----- Editorial -----
 // Utiliser le tutoiement

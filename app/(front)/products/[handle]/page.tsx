@@ -1,24 +1,89 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { getProduct, getProductVariantsInventory } from "@/lib/shopify";
+import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControls from "@/components/ProductSingleBuyControls";
 import ProductSingleDescription from "@/components/ProductSingleDescription";
 import ProductSingleGallery from "@/components/ProductSingleGallery";
 import ProductSingleRelated from "@/components/ProductSingleRelated";
 import Title from "@/components/Title";
+import shopifyImage from "@/types/shopifyImage";
 
 type Props = {
 	params: Promise<{ handle: string }>;
 };
 
+const getProductCached = cache(getProduct);
+
+export async function generateMetadata({ params }: Readonly<Props>): Promise<Metadata> {
+	const { handle } = await params;
+	const product = await getProductCached(handle);
+
+	if (!product) return {};
+
+	const { title, description, featuredImage } = product;
+	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
+
+	const generateFeatureImage = (featuredImage: shopifyImage | undefined) => {
+		if (!featuredImage) return [];
+		return [
+			{
+				url: featuredImage.url,
+				width: featuredImage.width,
+				height: featuredImage.height,
+				alt: featuredImage.altText ?? title,
+			},
+		];
+	};
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			url,
+			type: "website",
+			images: generateFeatureImage(featuredImage),
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+			images: featuredImage ? [featuredImage.url] : [],
+		},
+		alternates: {
+			canonical: url,
+		},
+	};
+}
+
 export default async function ProductSinglePage({ params }: Readonly<Props>) {
 	const { handle } = await params;
 
-	const product = await getProduct(handle);
+	const product = await getProductCached(handle);
 
 	if (!product) {
 		notFound();
 	}
+
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		name: product.title,
+		description: product.description,
+		image: product.featuredImage?.url,
+		offers: {
+			"@type": "Offer",
+			price: product.priceRange.minVariantPrice.amount,
+			priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+			availability: product.availableForSale
+				? "https://schema.org/InStock"
+				: "https://schema.org/OutOfStock",
+		},
+	};
 
 	const variantsInventory = await getProductVariantsInventory(product.id);
 
@@ -39,6 +104,10 @@ export default async function ProductSinglePage({ params }: Readonly<Props>) {
 				</div>
 			</section>
 			<ProductSingleRelated id={product.id} />
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			/>
 		</>
 	);
 }
