@@ -8,8 +8,8 @@ export default function InfiniteSpinner({ isLoading }: Readonly<Props>) {
 	if (!isLoading) return null;
 
 	return (
-		<div className="flex justify-center pt-8">
-			<IconLoader2 className="text-quaternary animate-spin" />
+		<div className="flex justify-center pt-12">
+			<IconLoader2 size={32} className="text-quaternary animate-spin" />
 		</div>
 	);
 }
