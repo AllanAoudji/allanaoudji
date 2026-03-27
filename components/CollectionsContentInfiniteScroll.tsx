@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreProducts } from "@/lib/actions/fetchMoreProducts";
 import { FETCH_PRODUCTS } from "@/lib/constants";
 import Grid from "./Grid";
+import InfiniteSpinner from "./InfiniteSpinner";
 import ProductLink from "./ProductLink";
 import Product from "@/types/product";
 
@@ -123,11 +124,7 @@ export default function CollectionsContentInfiniteScroll({
 
 			<div ref={sentinelRef} aria-hidden="true" />
 
-			{isLoading && (
-				<div className="flex justify-center pt-16">
-					<span className="text-quaternary text-xs">Chargement...</span>
-				</div>
-			)}
+			<InfiniteSpinner isLoading={isLoading} />
 		</>
 	);
 }

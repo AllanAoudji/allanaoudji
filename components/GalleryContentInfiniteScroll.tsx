@@ -5,6 +5,7 @@ import { fetchMoreWorks } from "@/lib/actions/fetchMoreWorks";
 import { FETCH_WORKS_GALLERY } from "@/lib/constants";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
 import GalleryContentInfiniteScrollItem from "./GalleryContentInfiniteScrollItem";
+import InfiniteSpinner from "./InfiniteSpinner";
 import { works } from "@/types/sanityType";
 
 const FETCH_SIZE = 1;
@@ -109,11 +110,7 @@ export default function GalleryContentInfiniteScroll({
 
 			<div ref={sentinelRef} aria-hidden="true" />
 
-			{isLoading && (
-				<div className="flex justify-center pt-16">
-					<span className="text-quaternary text-xs">Chargement...</span>
-				</div>
-			)}
+			<InfiniteSpinner isLoading={isLoading} />
 		</>
 	);
 }
