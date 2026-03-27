@@ -40,12 +40,14 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 		<>
 			<Grid>
 				{images.map(image => (
-					<ImageContainer
-						image={image}
-						key={image._id}
-						onClick={() => handleClick(image._id)}
-						ratio="3/4"
-					/>
+					<div key={image._id} className="overflow-hidden">
+						<ImageContainer
+							image={image}
+							onClick={() => handleClick(image._id)}
+							ratio="3/4"
+							className="cursor-pointer transition-transform duration-500 hover:scale-105"
+						/>
+					</div>
 				))}
 			</Grid>
 		</>

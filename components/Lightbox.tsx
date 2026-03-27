@@ -6,10 +6,10 @@ import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
 import LightBoxButton from "./LightboxButton";
-import { workGalleryImage } from "@/types/sanityType";
+import LightboxImage from "@/types/lightboxImage";
 
 type Props = {
-	image: workGalleryImage | null;
+	image: LightboxImage | null;
 	nextImage?: () => void;
 	prevImage?: () => void;
 	resetClick: () => void;
@@ -76,7 +76,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 			)}
 			<div id="link" className="relative h-full w-full overflow-hidden">
 				<Image
-					alt={image.alt || "image"}
+					alt={image._id || "image"}
 					src={image.url}
 					fill={true}
 					className="drop-shadow-md"

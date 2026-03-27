@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
+import { useLightBox } from "@/lib/contexts/lightbox-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { buildGalleryImages, cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
@@ -14,6 +15,7 @@ type Props = {
 export default function ProductSingleGallery({ className, product }: Readonly<Props>) {
 	const { variants } = product;
 
+	const { setImage, resetImages, appendImages } = useLightBox();
 	const { state } = useProduct();
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -28,11 +30,26 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 		return buildGalleryImages(product, variant);
 	}, [product, variant]);
 
+	const handleClick = useCallback(
+		(id: string) => {
+			setImage(id);
+		},
+		[setImage],
+	);
+
 	useEffect(() => {
 		setActiveIndex(0);
 	}, [variant?.id]);
 
 	useEffect(() => () => setActiveIndex(0), []);
+
+	useEffect(() => {
+		appendImages(images || []);
+	}, [appendImages, images]);
+
+	useEffect(() => {
+		return () => resetImages();
+	}, [resetImages]);
 
 	if (!images.length) return null;
 
@@ -47,7 +64,12 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 					>
 						{images.map(image => (
 							<div key={image.id} className="w-full shrink-0">
-								<ImageContainer image={image} ratio="3/4" />
+								<ImageContainer
+									className="cursor-pointer"
+									image={image}
+									onClick={() => handleClick(image.id)}
+									ratio="3/4"
+								/>
 							</div>
 						))}
 					</div>
@@ -74,7 +96,13 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 			{/* 💻 DESKTOP GRID */}
 			<div className="hidden grid-cols-2 gap-2 lg:grid">
 				{images.map(image => (
-					<ImageContainer key={image.url} image={image} ratio="3/4" />
+					<ImageContainer
+						className="cursor-pointer"
+						key={image.url}
+						image={image}
+						onClick={() => handleClick(image.id)}
+						ratio="3/4"
+					/>
 				))}
 			</div>
 		</div>

@@ -54,13 +54,7 @@ export default function ImageContainer({
 	}
 
 	return (
-		<div
-			className={cn(
-				"bg-quaternary relative w-full overflow-hidden",
-				getAspectRatioClass(ratio),
-				className,
-			)}
-		>
+		<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
 			<Image
 				src={normalized.url}
 				alt={normalized.alt ?? "image"}
@@ -68,9 +62,7 @@ export default function ImageContainer({
 				priority={priority}
 				placeholder={normalized.blur ? "blur" : "empty"}
 				blurDataURL={normalized.blur ?? undefined}
-				className={cn("object-cover", {
-					"cursor-pointer transition-transform duration-500 hover:scale-105": !!onClick,
-				})}
+				className="object-cover"
 				sizes="(max-width: 768px) 100vw, 50vw" // 🔥 important pour perf
 				onClick={onClick}
 			/>
