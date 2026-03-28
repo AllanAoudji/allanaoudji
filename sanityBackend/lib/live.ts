@@ -1,5 +1,5 @@
-import { serverToken } from "../env";
-import { defineLive } from "next-sanity";
+import { serverToken } from "../env.server";
+import { defineLive } from "next-sanity/live";
 import "server-only";
 import { client } from "./client";
 

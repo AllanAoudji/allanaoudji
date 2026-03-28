@@ -11,18 +11,18 @@ export default async function GallerySinglePage({
 }) {
 	const { workId } = await params;
 
-	const work = await getWork(workId);
+	const result = await getWork(workId);
 
-	if (!work) {
+	if (!result || !result.data) {
 		notFound();
 	}
 
 	return (
 		<>
-			<Title>{work.title}</Title>
+			<Title>{result.data.title}</Title>
 			<section>
-				<GalleryText text={work.text} />
-				<GalleryImages images={work.gallery} />
+				<GalleryText text={result.data.text} />
+				<GalleryImages images={result.data.gallery} />
 			</section>
 		</>
 	);

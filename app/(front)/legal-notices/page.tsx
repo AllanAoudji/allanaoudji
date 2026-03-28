@@ -5,9 +5,11 @@ import { getLegalNotices } from "@/sanity/lib/queries";
 export default async function LegalNoticesPage() {
 	const result = await getLegalNotices();
 
-	if (!result || !result.legalNotices) {
+	if (!result || !result.data || !result.data.legalNotices) {
 		return <EmptyLegalNotices />;
 	}
 
-	return <LegalPageContainer portableText={result.legalNotices} updatedAt={result._updatedAt} />;
+	return (
+		<LegalPageContainer portableText={result.data.legalNotices} updatedAt={result.data._updatedAt} />
+	);
 }

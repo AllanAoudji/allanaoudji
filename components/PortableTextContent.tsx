@@ -1,14 +1,14 @@
 "use client";
 
 import { PortableText, PortableTextComponents, PortableTextBlock } from "@portabletext/react";
-import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
+import { createImageUrlBuilder, SanityImageSource } from "@sanity/image-url";
 import Image from "next/image";
 import { applyFrenchTypography, cn } from "@/lib/utils";
-import { client } from "@/sanity/lib/client";
+import { dataset, projectId } from "@/sanity/env.public";
 
 // ─── IMAGE URL BUILDER ────────────────────────────────────────────────────────
 
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder({ projectId, dataset });
 
 function urlFor(source: SanityImageSource) {
 	return builder.image(source);

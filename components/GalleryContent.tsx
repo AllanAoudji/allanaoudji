@@ -4,11 +4,16 @@ import GalleryContentInfiniteScroll from "./GalleryContentInfiniteScroll";
 import { getWorks } from "@/sanity/lib/queries";
 
 export default async function GalleryContent() {
-	const query = await getWorks(0, FETCH_WORKS_GALLERY);
+	const result = await getWorks(0, FETCH_WORKS_GALLERY);
 
-	if (!query || !query.works || !query.works.length) {
+	if (!result || !result.data || !result.data.works || !result.data.works.length) {
 		return <EmptyGallery />;
 	}
 
-	return <GalleryContentInfiniteScroll initialWorks={query.works} initialTotal={query.total ?? 0} />;
+	return (
+		<GalleryContentInfiniteScroll
+			initialWorks={result.data.works}
+			initialTotal={result.data.total ?? 0}
+		/>
+	);
 }

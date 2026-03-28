@@ -11,6 +11,7 @@ import NavBar from "@/components/NavBar";
 import { ScrollReset } from "@/components/ScrollReset";
 import SplashScreen from "@/components/SplashScreen";
 import "@/app/globals.css";
+import { SanityLive } from "@/sanity/lib/live";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL),
@@ -46,7 +47,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 									<CartActionsProvider>
 										<LightboxProvider>
-											<main className="mt-header flex-1">{children}</main>
+											<main className="mt-header flex-1">
+												{children}
+												<SanityLive />
+											</main>
 										</LightboxProvider>
 
 										<Modals />

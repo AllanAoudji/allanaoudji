@@ -57,6 +57,14 @@ export function applyFrenchTypography(text: string): string {
 	return t;
 }
 
+export function assertValue<T>(v: T | undefined, errorMessage: string): T {
+	if (v === undefined) {
+		throw new Error(errorMessage);
+	}
+
+	return v;
+}
+
 export function buildGalleryImages(product: Product, variant: ProductVariant | undefined) {
 	const variantImage = variant?.image ?? null;
 	const featuredImage = product.featuredImage ?? null;

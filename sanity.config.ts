@@ -8,7 +8,7 @@ import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { markdownSchema } from "sanity-plugin-markdown/next";
 import { structureTool } from "sanity/structure";
-import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { apiVersion, dataset, projectId } from "@/sanity/env.public";
 import { schema, singletonTypes } from "@/sanity/schemaTypes";
 import { structure } from "@/sanity/structure";
 

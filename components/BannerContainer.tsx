@@ -5,12 +5,14 @@ import Banner from "./Banner";
 import { BANNET_QUERY_RESULT } from "@/sanity/types";
 
 type Props = {
-	bannerPromise: Promise<BANNET_QUERY_RESULT>;
+	bannerPromise: Promise<{
+		data: BANNET_QUERY_RESULT;
+	}>;
 };
 
 export default function BannerContainer({ bannerPromise }: Readonly<Props>) {
 	const query = use(bannerPromise);
-	if (!query || !query.banner || query.banner === "") return null;
+	if (!query || !query.data || !query.data.banner || query.data.banner === "") return null;
 
-	return <Banner banner={query.banner} separator="    ★    " speed={30} />;
+	return <Banner banner={query.data.banner} separator="    ★    " speed={30} />;
 }

@@ -64,11 +64,12 @@ export default function GalleryContentInfiniteScroll({
 			startTransition(() => {
 				fetchMoreWorks({ from, to })
 					.then(result => {
-						if (!result || !result.works?.length) return;
+						const data = result.data;
+						if (!data || !data.works?.length) return;
 
-						setWorks(prev => [...prev, ...(result.works ?? [])]);
+						setWorks(prev => [...prev, ...(data.works ?? [])]);
 						fromRef.current = to;
-						hasNextPageRef.current = to < (result.total ?? 0);
+						hasNextPageRef.current = to < (data.total ?? 0);
 					})
 					.catch(console.error)
 					.finally(() => {
