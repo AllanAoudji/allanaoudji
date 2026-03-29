@@ -10,6 +10,7 @@ import Modals from "@/components/Modals";
 import NavBar from "@/components/NavBar";
 import { ScrollReset } from "@/components/ScrollReset";
 import SplashScreen from "@/components/SplashScreen";
+import StudioBar from "@/components/StudioBar";
 import "@/app/globals.css";
 import { SanityLive } from "@/studio/lib/live";
 
@@ -53,6 +54,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 										<LightboxProvider>
 											<main className="mt-header flex-1">
 												{children}
+												<Suspense fallback={null}>
+													<StudioBar />
+												</Suspense>
 												<SanityLive />
 											</main>
 										</LightboxProvider>

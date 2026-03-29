@@ -50,6 +50,9 @@ const nextConfig: NextConfig = {
 	},
 	cacheComponents: true,
 	images: {
+		unoptimized: process.env.NODE_ENV === "development",
+		dangerouslyAllowSVG: false,
+		minimumCacheTTL: 60 * 60 * 24 * 7,
 		remotePatterns: [
 			{
 				protocol: "https",

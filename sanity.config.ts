@@ -9,6 +9,7 @@ import { defineConfig } from "sanity";
 import { markdownSchema } from "sanity-plugin-markdown/next";
 import { media } from "sanity-plugin-media";
 import { structureTool } from "sanity/structure";
+import StudioNavbar from "@/studio/components/studioNavbar";
 import { apiVersion, dataset, projectId } from "@/studio/env.public";
 import { schema, singletonTypes } from "@/studio/schemaTypes";
 import { structure } from "@/studio/structure";
@@ -36,5 +37,10 @@ export default defineConfig({
 			singletonTypes.has(context.schemaType)
 				? input.filter(({ action }) => action && singletonActions.has(action))
 				: input,
+	},
+	studio: {
+		components: {
+			navbar: StudioNavbar,
+		},
 	},
 });
