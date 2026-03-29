@@ -72,7 +72,7 @@ export default function ImageContainer({
 			<button
 				type="button"
 				onClick={onClick}
-				className="w-full cursor-pointer"
+				className="block w-full cursor-pointer"
 				aria-label={normalized.alt ?? "Voir l'image"}
 			>
 				{content}
