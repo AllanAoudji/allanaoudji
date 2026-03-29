@@ -121,12 +121,21 @@ const WORKS_QUERY = defineQuery(`
   }
 `);
 
+export const WORKS_SITEMAP_QUERY = defineQuery(`
+  *[_type == "work" && (hidden == false || !defined(hidden))]{
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
 const WORK_QUERY = defineQuery(`
   *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{
     _id,
+    _updatedAt,
     "slug": slug.current,
     title,
     text,
+    seo,
     mainImage{
       alt,
       "url": asset->url,
@@ -180,4 +189,8 @@ export const getWorks = (from: number, to: number) => {
 
 export const getWork = (slug: string) => {
 	return sanityFetch({ query: WORK_QUERY, params: { slug } });
+};
+
+export const getWorksSiteMap = () => {
+	return sanityFetch({ query: WORKS_SITEMAP_QUERY });
 };

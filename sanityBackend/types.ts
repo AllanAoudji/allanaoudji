@@ -73,6 +73,10 @@ export type Work = {
 		_type: "image";
 		_key: string;
 	}>;
+	seo?: {
+		title?: string;
+		description?: string;
+	};
 };
 
 export type SanityImageCrop = {
@@ -705,13 +709,26 @@ export type WORKS_QUERY_RESULT = {
 };
 
 // Source: sanityBackend/lib/queries.ts
+// Variable: WORKS_SITEMAP_QUERY
+// Query: *[_type == "work" && (hidden == false || !defined(hidden))]{    "slug": slug.current,    _updatedAt  }
+export type WORKS_SITEMAP_QUERY_RESULT = Array<{
+	slug: string;
+	_updatedAt: string;
+}>;
+
+// Source: sanityBackend/lib/queries.ts
 // Variable: WORK_QUERY
-// Query: *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{    _id,    "slug": slug.current,    title,    text,    mainImage{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "lqip": asset->metadata.lqip,    },    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
+// Query: *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{    _id,    _updatedAt,    "slug": slug.current,    title,    text,    seo,    mainImage{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "lqip": asset->metadata.lqip,    },    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
 export type WORK_QUERY_RESULT = {
 	_id: string;
+	_updatedAt: string;
 	slug: string;
 	title: string;
 	text: string | null;
+	seo: {
+		title?: string;
+		description?: string;
+	} | null;
 	mainImage: {
 		alt: string | null;
 		url: string | null;
@@ -739,6 +756,7 @@ declare module "@sanity/client" {
 		'\n  *[_type == "legalNotices"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
 		'\n  *[_type == "privacyPolicy"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
 		'\n  {\n    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),\n    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{\n      _id,\n      "slug": slug.current,\n      title,\n      text,\n      mainImage{\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "lqip": asset->metadata.lqip,\n      },\n      "gallery": gallery[]{\n        "_id": _key,\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "blurHash": asset->metadata.blurHash,\n        "lqip": asset->metadata.lqip,\n      }\n    }\n  }\n': WORKS_QUERY_RESULT;
-		'\n  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
+		'\n  *[_type == "work" && (hidden == false || !defined(hidden))]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': WORKS_SITEMAP_QUERY_RESULT;
+		'\n  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{\n    _id,\n    _updatedAt,\n    "slug": slug.current,\n    title,\n    text,\n    seo,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}
 }

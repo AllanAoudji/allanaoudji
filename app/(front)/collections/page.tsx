@@ -14,10 +14,18 @@ export const metadata: Metadata = {
 	title: "Collections",
 	description: "Découvrez toutes les collections.",
 	openGraph: {
-		title: "Collections",
+		title: "Collections | Allan Aoudji",
 		description: "Découvrez toutes les collections.",
 		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
 		type: "website",
+		images: [
+			{
+				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/default-collection.png`,
+				width: 810,
+				height: 1200,
+				alt: "Collections Allan Aoudji",
+			},
+		],
 	},
 	alternates: {
 		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,

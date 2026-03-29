@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
+import { DEFAULT_COLLECTION_IMAGE } from "@/lib/constants";
 import { getCollection } from "@/lib/shopify";
 import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
@@ -10,6 +11,7 @@ import SkeletonCollections from "@/components/SkeletonCollections";
 type MetadataProps = {
 	params: Promise<{ handle: string }>;
 };
+
 type Props = {
 	params: Promise<{ handle: string }>;
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,7 +21,10 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 	const { handle } = await params;
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
 	const collection = await getCollection(handle);
+
 	if (!collection) return {};
+
+	const image = collection.image ?? DEFAULT_COLLECTION_IMAGE;
 
 	return {
 		title: collection.seo?.title ?? collection.title,
@@ -29,9 +34,14 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 			description: collection.seo?.description ?? collection.description,
 			url,
 			type: "website",
-			images: collection.image
-				? [{ url: collection.image.url, alt: collection.image.altText ?? collection.title }]
-				: [],
+			images: [
+				{
+					url: image.url,
+					width: image.width,
+					height: image.height,
+					alt: image.altText ?? collection.title,
+				},
+			],
 		},
 		alternates: {
 			canonical: url,

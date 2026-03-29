@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 
 	const { title, description, featuredImage } = product;
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
+	const variantUrl = `${url}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
 
 	const generateFeatureImage = (featuredImage: shopifyImage | undefined) => {
 		if (!featuredImage) return [];
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 			images: featuredImage ? [featuredImage.url] : [],
 		},
 		alternates: {
-			canonical: url,
+			canonical: variantUrl,
 		},
 	};
 }

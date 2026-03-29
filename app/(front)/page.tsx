@@ -13,7 +13,6 @@ import { getBanner } from "@/studio/lib/queries";
 
 export default function RootPage() {
 	const bannerPromise = getBanner();
-
 	return (
 		<>
 			<BannerContainer bannerPromise={bannerPromise} />

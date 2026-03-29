@@ -96,5 +96,26 @@ export default defineType({
 				layout: "list",
 			},
 		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "object",
+			fields: [
+				defineField({
+					name: "title",
+					title: "Titre SEO",
+					type: "string",
+					description: "Laissez vide pour utiliser le titre du work",
+					validation: Rule => Rule.max(60),
+				}),
+				defineField({
+					name: "description",
+					title: "Description",
+					type: "text",
+					rows: 3,
+					validation: Rule => Rule.max(160),
+				}),
+			],
+		}),
 	],
 });

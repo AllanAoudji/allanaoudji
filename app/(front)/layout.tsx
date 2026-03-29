@@ -14,7 +14,10 @@ import "@/app/globals.css";
 import { SanityLive } from "@/studio/lib/live";
 
 export const metadata: Metadata = {
-	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL),
+	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+	alternates: {
+		canonical: process.env.NEXT_PUBLIC_SITE_URL,
+	},
 	title: {
 		default: "Allan Aoudji",
 		template: "%s | Allan Aoudji",
@@ -24,6 +27,7 @@ export const metadata: Metadata = {
 		siteName: "Allan Aoudji",
 		locale: "fr_FR",
 		type: "website",
+		images: [{ url: "/og-default.jpg", width: 1200, height: 630 }], // ← image par défaut
 	},
 	twitter: {
 		card: "summary_large_image",
@@ -67,10 +71,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 
 // TODO:
-// ----- Sanity/Shopify optimization -----
-// Update and optimize sanity
-// Référencements sanity
-
 // ----- Editorial -----
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
@@ -85,3 +85,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // export default function FreeShippingBanner() {
 //   return <p>Livraison gratuite à partir de {threshold} €</p>;
 // }
+
+// Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
+// Quand le site est en ligne
+// Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
+// Vérification du rendu — utilisez opengraph.xyz pour tester que vos OG images s'affichent correctement sur les réseaux sociaux.
