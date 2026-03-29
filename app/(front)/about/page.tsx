@@ -5,9 +5,11 @@ import { getAbout } from "@/studio/lib/queries";
 export default async function AboutPage() {
 	const result = await getAbout();
 
-	if (!result || !result.data || !result.data.about) {
+	console.log("about result", result);
+
+	if (!result || !result.data || !result.data.content) {
 		return <EmptyAbout />;
 	}
 
-	return <PortableTextContent value={result.data.about} />;
+	return <PortableTextContent value={result.data.content} />;
 }

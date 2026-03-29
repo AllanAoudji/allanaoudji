@@ -5,11 +5,11 @@ import { getLegalNotices } from "@/studio/lib/queries";
 export default async function LegalNoticesPage() {
 	const result = await getLegalNotices();
 
-	if (!result || !result.data || !result.data.legalNotices) {
+	if (!result || !result.data || !result.data.content) {
 		return <EmptyLegalNotices />;
 	}
 
 	return (
-		<LegalPageContainer portableText={result.data.legalNotices} updatedAt={result.data._updatedAt} />
+		<LegalPageContainer portableText={result.data.content} updatedAt={result.data._updatedAt} />
 	);
 }

@@ -33,15 +33,96 @@ export type FigureImage = {
 	_type: "image";
 };
 
-export type LegalSettings = {
+export type TagReference = {
+	_ref: string;
+	_type: "reference";
+	_weak?: boolean;
+	[internalGroqTypeReferenceTo]?: "tag";
+};
+
+export type Work = {
 	_id: string;
-	_type: "legalSettings";
+	_type: "work";
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	generalConditionsOfSale?: PortableText;
-	legalNotices?: PortableText;
-	privacyPolicy?: PortableText;
+	orderRank?: string;
+	title: string;
+	slug: Slug;
+	mainImage: {
+		asset?: SanityImageAssetReference;
+		media?: unknown;
+		hotspot?: SanityImageHotspot;
+		crop?: SanityImageCrop;
+		alt?: string;
+		_type: "image";
+	};
+	tags?: Array<
+		{
+			_key: string;
+		} & TagReference
+	>;
+	hidden?: boolean;
+	text?: string;
+	gallery?: Array<{
+		asset?: SanityImageAssetReference;
+		media?: unknown;
+		hotspot?: SanityImageHotspot;
+		crop?: SanityImageCrop;
+		alt?: string;
+		_type: "image";
+		_key: string;
+	}>;
+};
+
+export type SanityImageCrop = {
+	_type: "sanity.imageCrop";
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
+};
+
+export type SanityImageHotspot = {
+	_type: "sanity.imageHotspot";
+	x: number;
+	y: number;
+	height: number;
+	width: number;
+};
+
+export type Slug = {
+	_type: "slug";
+	current: string;
+	source?: string;
+};
+
+export type Tag = {
+	_id: string;
+	_type: "tag";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	name: string;
+	slug: Slug;
+};
+
+export type Settings = {
+	_id: string;
+	_type: "settings";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	banner?: string;
+};
+
+export type PrivacyPolicy = {
+	_id: string;
+	_type: "privacyPolicy";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	content?: PortableText;
 };
 
 export type PortableText = Array<
@@ -103,54 +184,22 @@ export type PortableText = Array<
 	  }
 >;
 
-export type WorkReference = {
-	_ref: string;
-	_type: "reference";
-	_weak?: boolean;
-	[internalGroqTypeReferenceTo]?: "work";
-};
-
-export type ContactReference = {
-	_ref: string;
-	_type: "reference";
-	_weak?: boolean;
-	[internalGroqTypeReferenceTo]?: "contact";
-};
-
-export type Settings = {
+export type LegalNotices = {
 	_id: string;
-	_type: "settings";
+	_type: "legalNotices";
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	works?: Array<
-		{
-			_key: string;
-		} & WorkReference
-	>;
-	contacts?: Array<
-		{
-			_key: string;
-		} & ContactReference
-	>;
-	banner?: string;
-	about?: PortableText;
+	content?: PortableText;
 };
 
-export type SanityImageCrop = {
-	_type: "sanity.imageCrop";
-	top: number;
-	bottom: number;
-	left: number;
-	right: number;
-};
-
-export type SanityImageHotspot = {
-	_type: "sanity.imageHotspot";
-	x: number;
-	y: number;
-	height: number;
-	width: number;
+export type GeneralConditionsOfSale = {
+	_id: string;
+	_type: "generalConditionsOfSale";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	content?: PortableText;
 };
 
 export type Contact = {
@@ -168,62 +217,13 @@ export type Contact = {
 	blank?: boolean;
 };
 
-export type Slug = {
-	_type: "slug";
-	current: string;
-	source?: string;
-};
-
-export type TagReference = {
-	_ref: string;
-	_type: "reference";
-	_weak?: boolean;
-	[internalGroqTypeReferenceTo]?: "tag";
-};
-
-export type Work = {
+export type About = {
 	_id: string;
-	_type: "work";
+	_type: "about";
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
-	orderRank?: string;
-	title: string;
-	slug: Slug;
-	mainImage: {
-		asset?: SanityImageAssetReference;
-		media?: unknown;
-		hotspot?: SanityImageHotspot;
-		crop?: SanityImageCrop;
-		alt?: string;
-		_type: "image";
-	};
-	tags?: Array<
-		{
-			_key: string;
-		} & TagReference
-	>;
-	hidden?: boolean;
-	text?: string;
-	gallery?: Array<{
-		asset?: SanityImageAssetReference;
-		media?: unknown;
-		hotspot?: SanityImageHotspot;
-		crop?: SanityImageCrop;
-		alt?: string;
-		_type: "image";
-		_key: string;
-	}>;
-};
-
-export type Tag = {
-	_id: string;
-	_type: "tag";
-	_createdAt: string;
-	_updatedAt: string;
-	_rev: string;
-	name: string;
-	slug: Slug;
+	content?: PortableText;
 };
 
 export type Markdown = string;
@@ -328,18 +328,19 @@ export type Geopoint = {
 export type AllSanitySchemaTypes =
 	| SanityImageAssetReference
 	| FigureImage
-	| LegalSettings
-	| PortableText
-	| WorkReference
-	| ContactReference
-	| Settings
-	| SanityImageCrop
-	| SanityImageHotspot
-	| Contact
-	| Slug
 	| TagReference
 	| Work
+	| SanityImageCrop
+	| SanityImageHotspot
+	| Slug
 	| Tag
+	| Settings
+	| PrivacyPolicy
+	| PortableText
+	| LegalNotices
+	| GeneralConditionsOfSale
+	| Contact
+	| About
 	| Markdown
 	| SanityImagePaletteSwatch
 	| SanityImagePalette
@@ -352,9 +353,9 @@ export type AllSanitySchemaTypes =
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: ABOUT_QUERY
-// Query: *[_type == "settings"][0]{    about[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    }  }
+// Query: *[_type == "about"][0]{    content[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },  }
 export type ABOUT_QUERY_RESULT = {
-	about: Array<
+	content: Array<
 		| {
 				children?: Array<{
 					marks?: Array<string>;
@@ -444,9 +445,9 @@ export type CONTACTS_QUERY_RESULT = Array<{
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: GENERAL_CONDITION_OF_SALE_QUERY
-// Query: *[_type == "legalSettings"][0]{    generalConditionsOfSale[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
+// Query: *[_type == "generalConditionsOfSale"][0]{    content[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
-	generalConditionsOfSale: Array<
+	content: Array<
 		| {
 				children?: Array<{
 					marks?: Array<string>;
@@ -518,9 +519,9 @@ export type GENERAL_CONDITION_OF_SALE_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: LEGAL_NOTICES_QUERY
-// Query: *[_type == "legalSettings"][0]{    legalNotices[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
+// Query: *[_type == "legalNotices"][0]{    content[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type LEGAL_NOTICES_QUERY_RESULT = {
-	legalNotices: Array<
+	content: Array<
 		| {
 				children?: Array<{
 					marks?: Array<string>;
@@ -592,9 +593,9 @@ export type LEGAL_NOTICES_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: PRIVACY_POLICY_QUERY
-// Query: *[_type == "legalSettings"][0]{    privacyPolicy[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
+// Query: *[_type == "privacyPolicy"][0]{    content[]{      ...,      _type == "figure" => {        ...,        "image": image{          ...,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip        }      }    },    _updatedAt  }
 export type PRIVACY_POLICY_QUERY_RESULT = {
-	privacyPolicy: Array<
+	content: Array<
 		| {
 				children?: Array<{
 					marks?: Array<string>;
@@ -721,12 +722,12 @@ export type WORK_QUERY_RESULT = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n  *[_type == "settings"][0]{\n    about[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    }\n  }\n': ABOUT_QUERY_RESULT;
+		'\n  *[_type == "about"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n  }\n': ABOUT_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
 		'\n  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{\n    _id,\n    "slug": slug.current,\n    text,\n    title,\n    url,\n    blank\n  }\n': CONTACTS_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    legalNotices[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
-		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
+		'\n  *[_type == "generalConditionsOfSale"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
+		'\n  *[_type == "legalNotices"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
+		'\n  *[_type == "privacyPolicy"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
 		'\n  {\n    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),\n    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{\n      _id,\n      "slug": slug.current,\n      title,\n      text,\n      mainImage{\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "lqip": asset->metadata.lqip,\n      },\n      "gallery": gallery[]{\n        "_id": _key,\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "blurHash": asset->metadata.blurHash,\n        "lqip": asset->metadata.lqip,\n      }\n    }\n  }\n': WORKS_QUERY_RESULT;
 		'\n  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}

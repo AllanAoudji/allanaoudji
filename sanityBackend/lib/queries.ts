@@ -6,8 +6,8 @@ import { sanityFetch } from "./live";
 -----------------------------------*/
 
 const ABOUT_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    about[]{
+  *[_type == "about"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -18,7 +18,7 @@ const ABOUT_QUERY = defineQuery(`
           "lqip": asset->metadata.lqip
         }
       }
-    }
+    },
   }
 `);
 
@@ -40,8 +40,8 @@ const CONTACTS_QUERY = defineQuery(`
 `);
 
 const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    generalConditionsOfSale[]{
+  *[_type == "generalConditionsOfSale"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -58,8 +58,8 @@ const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
 `);
 
 const LEGAL_NOTICES_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    legalNotices[]{
+  *[_type == "legalNotices"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -76,8 +76,8 @@ const LEGAL_NOTICES_QUERY = defineQuery(`
 `);
 
 const PRIVACY_POLICY_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    privacyPolicy[]{
+  *[_type == "privacyPolicy"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,

@@ -1,17 +1,17 @@
 import { defineField, defineType } from "sanity";
 
 export default defineType({
-	name: "settings",
-	title: "Settings",
+	name: "about",
+	title: "À propos",
 	type: "document",
 	preview: {
-		prepare: () => ({ title: "Settings" }),
+		prepare: () => ({ title: "À propos" }),
 	},
 	fields: [
 		defineField({
-			name: "banner",
-			title: "Message de bandeau",
-			type: "string",
+			name: "content",
+			title: "Contenu",
+			type: "portableText",
 		}),
 	],
 });
