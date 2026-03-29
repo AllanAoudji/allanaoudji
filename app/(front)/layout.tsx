@@ -87,6 +87,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // }
 // revalidate
 // Avoir un moyen de enable/disable la boutique
+// Banner est considérer comme une section, ce qui veut dire que le BG des sections est mal alterné
+// si home section contact est secondary, les couleurs du form doivent être alternés
 
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
