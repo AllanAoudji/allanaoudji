@@ -7,17 +7,12 @@
  * https://github.com/sanity-io/next-sanity
  */
 import { NextStudio } from "next-sanity/studio";
-import { redirect } from "next/navigation";
 import config from "@/sanity.config";
+
+// export const dynamic = "force-static";
 
 export { metadata, viewport } from "next-sanity/studio";
 
-export default async function StudioPage({ params }: { params: Promise<{ tool?: string[] }> }) {
-	const { tool } = await params;
-
-	if (!tool || tool.length === 0) {
-		redirect("/studio/structure");
-	}
-
+export default function StudioPage() {
 	return <NextStudio config={config} />;
 }

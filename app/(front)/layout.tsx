@@ -78,7 +78,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // ----- Editorial -----
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
-// favicon
+// Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
+
+// ----- Shopify -----
+// export default function FreeShippingBanner() {
+//   return <p>Livraison gratuite à partir de {threshold} €</p>;
+// }
+// revalidate
 
 // ----- Boutique logic -----
 // Avoir un moyen de enable/disable la boutique
@@ -86,11 +92,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Ajouter
 // const threshold = process.env.NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD;
 
-// export default function FreeShippingBanner() {
-//   return <p>Livraison gratuite à partir de {threshold} €</p>;
-// }
-
-// Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
 // Vérification du rendu — utilisez opengraph.xyz pour tester que vos OG images s'affichent correctement sur les réseaux sociaux.
