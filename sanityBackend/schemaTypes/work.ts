@@ -1,13 +1,22 @@
-import { getExtension, getImageDimensions } from "@sanity/asset-utils";
+import { validateImageRatio } from "../lib/validateImageRatio";
 import { DocumentIcon } from "@sanity/icons";
-import { defineField, defineType, ImageValue } from "sanity";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
+import { defineField, defineType } from "sanity";
 
 export default defineType({
 	name: "work",
+	orderings: [orderRankOrdering],
 	title: "Work",
 	type: "document",
 	icon: DocumentIcon,
 	fields: [
+		orderRankField({ type: "work" }),
+		defineField({
+			name: "hidden",
+			title: "Masquer dans le portfolio",
+			type: "boolean",
+			initialValue: false,
+		}),
 		defineField({
 			name: "title",
 			title: "Title",
@@ -22,39 +31,21 @@ export default defineType({
 			options: {
 				source: "title",
 				maxLength: 96,
+				slugify: input =>
+					input
+						.toLowerCase()
+						.normalize("NFD")
+						.replace(/[\u0300-\u036f]/g, "") // supprime les accents
+						.replace(/[^a-z0-9]+/g, "-")
+						.replace(/(^-|-$)/g, ""),
 			},
 		}),
 		defineField({
 			name: "mainImage",
 			title: "Main image",
 			type: "image",
-			description: "jpg or png file, 1200 x 810 pixel (4/3 ratio)",
-			validation: rule => [
-				rule.required(),
-				rule.custom(value => {
-					if (!value) {
-						return true;
-					}
-
-					if (!value.asset) {
-						return "Something went wrong";
-					}
-
-					const filetype = getExtension(value.asset._ref);
-
-					if (filetype !== "jpg" && filetype !== "png") {
-						return "Image must be a JPG or PNG";
-					}
-
-					const { width, height } = getImageDimensions(value.asset._ref);
-
-					if (width != 1080 || height != 810) {
-						return "Image must be 1200x810 pixels";
-					}
-
-					return true;
-				}),
-			],
+			description: "jpg or png file, 4/3 ratio, at least 800 pixels wide",
+			validation: rule => [rule.required(), rule.custom(validateImageRatio(4 / 3, 800))],
 			options: {
 				hotspot: true,
 			},
@@ -87,32 +78,8 @@ export default defineType({
 					name: "image",
 					type: "image",
 					title: "Image",
-					description: "jpg or png file, 1080 x 1440 pixel (3/4 ratio)",
-					validation: rule => [
-						rule.custom<ImageValue>(value => {
-							if (!value) {
-								return true;
-							}
-
-							if (!value.asset) {
-								return "Something went wrong";
-							}
-
-							const filetype = getExtension(value.asset._ref);
-
-							if (filetype !== "jpg" && filetype !== "png") {
-								return "Image must be a JPG or PNG";
-							}
-
-							const { width, height } = getImageDimensions(value.asset._ref);
-
-							if (width != 1080 || height != 1440) {
-								return "Image must be 1080 x 1440 pixels";
-							}
-
-							return true;
-						}),
-					],
+					description: "jpg or png file, 3/4 ratio, at least 800 pixels wide",
+					validation: rule => [rule.custom(validateImageRatio(3 / 4, 800))],
 					options: {
 						hotspot: true,
 					},
@@ -128,6 +95,27 @@ export default defineType({
 			options: {
 				layout: "list",
 			},
+		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "object",
+			fields: [
+				defineField({
+					name: "title",
+					title: "Titre SEO",
+					type: "string",
+					description: "Laissez vide pour utiliser le titre du work",
+					validation: Rule => Rule.max(60),
+				}),
+				defineField({
+					name: "description",
+					title: "Description",
+					type: "text",
+					rows: 3,
+					validation: Rule => Rule.max(160),
+				}),
+			],
 		}),
 	],
 });

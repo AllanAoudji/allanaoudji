@@ -24,7 +24,7 @@
 			"@/app/*": ["app/*"],
 			"@/lib/*": ["lib/*"],
 			"@/types/*": ["types/*"],
-			"@/sanity/*": ["sanityBackend/*"],
+			"@/studio/*": ["sanityBackend/*"],
 			"@/*": ["./*"]
 		}
 	},

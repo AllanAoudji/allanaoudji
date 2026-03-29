@@ -1,28 +1,48 @@
 // app/sitemap.ts
+import type { MetadataRoute } from "next";
 import { getProducts, getCollections } from "@/lib/shopify";
+import { sanityFetch } from "@/studio/lib/live";
+import { WORKS_SITEMAP_QUERY } from "@/studio/lib/queries";
 
-export default async function sitemap() {
-	const base = process.env.NEXT_PUBLIC_SITE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
-	const { products } = await getProducts({ first: 250 });
-	const collections = await getCollections();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+	const [{ products }, collections, { data: works }] = await Promise.all([
+		getProducts({ first: 250 }),
+		getCollections(),
+		sanityFetch({ query: WORKS_SITEMAP_QUERY }),
+	]);
 
 	const productUrls = products.map(p => ({
-		url: `${base}/products/${p.handle}`,
+		url: `${BASE_URL}/products/${p.handle}`,
 		lastModified: p.updatedAt,
+		changeFrequency: "weekly" as const,
+		priority: 0.7,
 	}));
 
 	const collectionUrls = collections
 		.filter(c => c.handle)
 		.map(c => ({
-			url: `${base}/collections/${c.handle}`,
+			url: `${BASE_URL}/collections/${c.handle}`,
 			lastModified: c.updatedAt,
+			changeFrequency: "weekly" as const,
+			priority: 0.6,
 		}));
 
+	const workUrls = (works ?? []).map(work => ({
+		url: `${BASE_URL}/works/${work.slug}`,
+		lastModified: new Date(work._updatedAt),
+		changeFrequency: "monthly" as const,
+		priority: 0.8,
+	}));
+
 	return [
-		{ url: base, lastModified: new Date() },
-		{ url: `${base}/collections`, lastModified: new Date() },
+		{ url: BASE_URL, changeFrequency: "weekly", priority: 1 },
+		{ url: `${BASE_URL}/collections`, changeFrequency: "weekly", priority: 0.6 },
+		{ url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
+		{ url: `${BASE_URL}/legal`, changeFrequency: "yearly", priority: 0.3 },
 		...collectionUrls,
 		...productUrls,
+		...workUrls,
 	];
 }

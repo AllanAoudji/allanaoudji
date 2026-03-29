@@ -6,8 +6,6 @@ import CollectionsFilterCollectionsItem from "./CollectionsFilterCollectionsItem
 export default function CollectionsFilterCollections() {
 	const { collections } = useLocalShopify();
 
-	console.log(collections);
-
 	if (collections.length <= 1) return null;
 
 	return (

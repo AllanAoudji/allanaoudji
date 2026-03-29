@@ -1,24 +1,48 @@
 import type { NextConfig } from "next";
 
+const sanityCSP = [
+	"default-src 'self'",
+	"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com",
+	"connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://core.sanity-cdn.com https://registry.npmjs.org",
+	"style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com",
+	"font-src 'self' https://core.sanity-cdn.com",
+	"img-src 'self' data: https: blob:",
+	"frame-src 'self'",
+	"worker-src 'self' blob:",
+].join("; ");
+
+const frontCSP = [
+	"default-src 'self'",
+	"script-src 'self' 'unsafe-inline'",
+	"frame-src 'self'",
+	"child-src 'self'",
+	"worker-src 'self' blob:",
+	"connect-src 'self' https://use.typekit.net https://p.typekit.net",
+	"style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
+	"font-src 'self' https://use.typekit.net https://p.typekit.net",
+	"img-src 'self' data: https:",
+].join("; ");
+
 const nextConfig: NextConfig = {
 	async headers() {
 		return [
+			// CSP permissive pour le studio
 			{
-				source: "/(.*)",
+				source: "/studio(.*)",
 				headers: [
 					{
 						key: "Content-Security-Policy",
-						value: [
-							"default-src 'self'",
-							"script-src 'self' 'unsafe-inline'",
-							"frame-src 'self'",
-							"child-src 'self'",
-							"worker-src 'self' blob:",
-							"connect-src 'self' https://use.typekit.net https://p.typekit.net",
-							"style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
-							"font-src 'self' https://use.typekit.net https://p.typekit.net",
-							"img-src 'self' data: https:",
-						].join("; "),
+						value: sanityCSP,
+					},
+				],
+			},
+			// CSP stricte pour le reste du site
+			{
+				source: "/((?!studio).*)",
+				headers: [
+					{
+						key: "Content-Security-Policy",
+						value: frontCSP,
 					},
 				],
 			},
@@ -26,6 +50,9 @@ const nextConfig: NextConfig = {
 	},
 	cacheComponents: true,
 	images: {
+		unoptimized: process.env.NODE_ENV === "development",
+		dangerouslyAllowSVG: false,
+		minimumCacheTTL: 60 * 60 * 24 * 7,
 		remotePatterns: [
 			{
 				protocol: "https",

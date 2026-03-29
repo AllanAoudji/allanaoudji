@@ -9,11 +9,10 @@ import ProductsHomeSection from "@/components/ProductsHomeSection";
 import SkeletonInstagram from "@/components/SkeletonInstagram";
 import SkeletonProductsHome from "@/components/SkeletonProductsHome";
 import SkeletonWorksHome from "@/components/SkeletonWorksHome";
-import { getBanner } from "@/sanity/lib/queries";
+import { getBanner } from "@/studio/lib/queries";
 
 export default function RootPage() {
 	const bannerPromise = getBanner();
-
 	return (
 		<>
 			<BannerContainer bannerPromise={bannerPromise} />

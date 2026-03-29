@@ -1,23 +1,13 @@
-import {
-	ABOUT_QUERY_RESULT,
-	BANNET_QUERY_RESULT,
-	CONTACTS_QUERY_RESULT,
-	GENERAL_CONDITION_OF_SALE_QUERY_RESULT,
-	LEGAL_NOTICES_QUERY_RESULT,
-	PRIVACY_POLICY_QUERY_RESULT,
-	WORK_QUERY_RESULT,
-	WORKS_QUERY_RESULT,
-} from "../types";
 import { defineQuery } from "next-sanity";
-import { client } from "./client";
+import { sanityFetch } from "./live";
 
 /*-----------------------------------
 -- Queries --------------------------
 -----------------------------------*/
 
 const ABOUT_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    about[]{
+  *[_type == "about"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -28,34 +18,30 @@ const ABOUT_QUERY = defineQuery(`
           "lqip": asset->metadata.lqip
         }
       }
-    }
+    },
   }
 `);
 
-const BANNET_QUERY = defineQuery(/* GraphQL */ `
+const BANNET_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     banner
   }
 `);
 
 const CONTACTS_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    contacts[0...10]{
-      "_id": _key,
-      ...(@-> {
-        "slug": slug.current,
-        text,
-        title,
-        url,
-        blank
-      })
-    }
+  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{
+    _id,
+    "slug": slug.current,
+    text,
+    title,
+    url,
+    blank
   }
 `);
 
 const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    generalConditionsOfSale[]{
+  *[_type == "generalConditionsOfSale"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -72,8 +58,8 @@ const GENERAL_CONDITION_OF_SALE_QUERY = defineQuery(`
 `);
 
 const LEGAL_NOTICES_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    legalNotices[]{
+  *[_type == "legalNotices"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -90,8 +76,8 @@ const LEGAL_NOTICES_QUERY = defineQuery(`
 `);
 
 const PRIVACY_POLICY_QUERY = defineQuery(`
-  *[_type == "legalSettings"][0]{
-    privacyPolicy[]{
+  *[_type == "privacyPolicy"][0]{
+    content[]{
       ...,
       _type == "figure" => {
         ...,
@@ -108,41 +94,48 @@ const PRIVACY_POLICY_QUERY = defineQuery(`
 `);
 
 const WORKS_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    "total": count(works),
-    works[$from...$to]{
-      "_id": _key,
-      ...(@-> {
-        "slug": slug.current,
-        title,
-        text,
-        mainImage{
-          alt,
-          "url": asset->url,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "lqip": asset->metadata.lqip,
-        },
-        "gallery": gallery[]{
-          alt,
-          "url": asset->url,
-          "_id": _key,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "blurHash": asset->metadata.blurHash,
-          "lqip": asset->metadata.lqip,
-        }
-      })
+  {
+    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),
+    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{
+      _id,
+      "slug": slug.current,
+      title,
+      text,
+      mainImage{
+        alt,
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        "lqip": asset->metadata.lqip,
+      },
+      "gallery": gallery[]{
+        "_id": _key,
+        alt,
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        "blurHash": asset->metadata.blurHash,
+        "lqip": asset->metadata.lqip,
+      }
     }
   }
 `);
 
+export const WORKS_SITEMAP_QUERY = defineQuery(`
+  *[_type == "work" && (hidden == false || !defined(hidden))]{
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
 const WORK_QUERY = defineQuery(`
-  *[_type == "work" && slug.current == $slug][0]{
+  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{
     _id,
+    _updatedAt,
     "slug": slug.current,
     title,
     text,
+    seo,
     mainImage{
       alt,
       "url": asset->url,
@@ -167,33 +160,37 @@ const WORK_QUERY = defineQuery(`
 -----------------------------------*/
 
 export const getAbout = () => {
-	return client.fetch<ABOUT_QUERY_RESULT>(ABOUT_QUERY);
+	return sanityFetch({ query: ABOUT_QUERY });
 };
 
 export const getBanner = () => {
-	return client.fetch<BANNET_QUERY_RESULT>(BANNET_QUERY);
+	return sanityFetch({ query: BANNET_QUERY });
 };
 
 export const getContacts = () => {
-	return client.fetch<CONTACTS_QUERY_RESULT>(CONTACTS_QUERY);
+	return sanityFetch({ query: CONTACTS_QUERY });
 };
 
 export const getGeneralConditionOfSale = () => {
-	return client.fetch<GENERAL_CONDITION_OF_SALE_QUERY_RESULT>(GENERAL_CONDITION_OF_SALE_QUERY);
+	return sanityFetch({ query: GENERAL_CONDITION_OF_SALE_QUERY });
 };
 
 export const getLegalNotices = () => {
-	return client.fetch<LEGAL_NOTICES_QUERY_RESULT>(LEGAL_NOTICES_QUERY);
+	return sanityFetch({ query: LEGAL_NOTICES_QUERY });
 };
 
 export const getPrivacyPolicy = () => {
-	return client.fetch<PRIVACY_POLICY_QUERY_RESULT>(PRIVACY_POLICY_QUERY);
+	return sanityFetch({ query: PRIVACY_POLICY_QUERY });
 };
 
 export const getWorks = (from: number, to: number) => {
-	return client.fetch<WORKS_QUERY_RESULT>(WORKS_QUERY, { from, to });
+	return sanityFetch({ query: WORKS_QUERY, params: { from, to } });
 };
 
 export const getWork = (slug: string) => {
-	return client.fetch<WORK_QUERY_RESULT>(WORK_QUERY, { slug });
+	return sanityFetch({ query: WORK_QUERY, params: { slug } });
+};
+
+export const getWorksSiteMap = () => {
+	return sanityFetch({ query: WORKS_SITEMAP_QUERY });
 };
