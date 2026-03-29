@@ -22,24 +22,20 @@ const ABOUT_QUERY = defineQuery(`
   }
 `);
 
-const BANNET_QUERY = defineQuery(/* GraphQL */ `
+const BANNET_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     banner
   }
 `);
 
 const CONTACTS_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    contacts[0...10]{
-      "_id": _key,
-      ...(@-> {
-        "slug": slug.current,
-        text,
-        title,
-        url,
-        blank
-      })
-    }
+  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{
+    _id,
+    "slug": slug.current,
+    text,
+    title,
+    url,
+    blank
   }
 `);
 
@@ -98,37 +94,35 @@ const PRIVACY_POLICY_QUERY = defineQuery(`
 `);
 
 const WORKS_QUERY = defineQuery(`
-  *[_type == "settings"][0]{
-    "total": count(works),
-    works[$from...$to]{
-      "_id": _key,
-      ...(@-> {
-        "slug": slug.current,
-        title,
-        text,
-        mainImage{
-          alt,
-          "url": asset->url,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "lqip": asset->metadata.lqip,
-        },
-        "gallery": gallery[]{
-          alt,
-          "url": asset->url,
-          "_id": _key,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "blurHash": asset->metadata.blurHash,
-          "lqip": asset->metadata.lqip,
-        }
-      })
+  {
+    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),
+    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{
+      _id,
+      "slug": slug.current,
+      title,
+      text,
+      mainImage{
+        alt,
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        "lqip": asset->metadata.lqip,
+      },
+      "gallery": gallery[]{
+        "_id": _key,
+        alt,
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        "blurHash": asset->metadata.blurHash,
+        "lqip": asset->metadata.lqip,
+      }
     }
   }
 `);
 
 const WORK_QUERY = defineQuery(`
-  *[_type == "work" && slug.current == $slug][0]{
+  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{
     _id,
     "slug": slug.current,
     title,

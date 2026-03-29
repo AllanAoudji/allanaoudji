@@ -4,7 +4,7 @@ import { PortableText, PortableTextComponents, PortableTextBlock } from "@portab
 import { createImageUrlBuilder, SanityImageSource } from "@sanity/image-url";
 import Image from "next/image";
 import { applyFrenchTypography, cn } from "@/lib/utils";
-import { dataset, projectId } from "@/sanity/env.public";
+import { dataset, projectId } from "@/studio/env.public";
 
 // ─── IMAGE URL BUILDER ────────────────────────────────────────────────────────
 

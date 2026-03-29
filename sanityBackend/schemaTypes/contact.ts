@@ -1,12 +1,15 @@
 import { EnvelopeIcon } from "@sanity/icons";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
 export default defineType({
 	name: "contact",
+	orderings: [orderRankOrdering],
 	title: "Contacts",
 	type: "document",
 	icon: EnvelopeIcon,
 	fields: [
+		orderRankField({ type: "work" }),
 		defineField({
 			name: "title",
 			title: "Title",
@@ -22,6 +25,12 @@ export default defineType({
 				source: "title",
 				maxLength: 96,
 			},
+		}),
+		defineField({
+			name: "hidden",
+			title: "Masquer dans le portfolio",
+			type: "boolean",
+			initialValue: false,
 		}),
 		defineField({
 			name: "url",

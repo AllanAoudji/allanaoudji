@@ -1,6 +1,6 @@
 import EmptyLegalNotices from "@/components/EmptyLegalNotices";
 import LegalPageContainer from "@/components/LegalPageContainer";
-import { getLegalNotices } from "@/sanity/lib/queries";
+import { getLegalNotices } from "@/studio/lib/queries";
 
 export default async function LegalNoticesPage() {
 	const result = await getLegalNotices();

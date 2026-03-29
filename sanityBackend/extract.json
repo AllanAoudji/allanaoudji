@@ -855,6 +855,13 @@
           "type": "string"
         }
       },
+      "orderRank": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "title": {
         "type": "objectAttribute",
         "value": {
@@ -869,6 +876,13 @@
           "name": "slug"
         },
         "optional": false
+      },
+      "hidden": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
       },
       "url": {
         "type": "objectAttribute",
@@ -988,6 +1002,13 @@
           "type": "string"
         }
       },
+      "orderRank": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "title": {
         "type": "objectAttribute",
         "value": {
@@ -1076,6 +1097,13 @@
               "name": "tag.reference"
             }
           }
+        },
+        "optional": true
+      },
+      "hidden": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
         },
         "optional": true
       },

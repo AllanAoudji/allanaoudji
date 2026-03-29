@@ -1,6 +1,6 @@
 import EmptyAbout from "@/components/EmptyAbout";
 import PortableTextContent from "@/components/PortableTextContent";
-import { getAbout } from "@/sanity/lib/queries";
+import { getAbout } from "@/studio/lib/queries";
 
 export default async function AboutPage() {
 	const result = await getAbout();

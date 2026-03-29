@@ -8,8 +8,6 @@ import GalleryContentInfiniteScrollItem from "./GalleryContentInfiniteScrollItem
 import InfiniteSpinner from "./InfiniteSpinner";
 import { works } from "@/types/sanityType";
 
-const FETCH_SIZE = 1;
-
 type Props = {
 	initialTotal: number;
 	initialWorks: works;
@@ -59,7 +57,7 @@ export default function GalleryContentInfiniteScroll({
 			}
 
 			const from = fromRef.current;
-			const to = from + FETCH_SIZE;
+			const to = from + FETCH_WORKS_GALLERY;
 
 			startTransition(() => {
 				fetchMoreWorks({ from, to })

@@ -159,8 +159,10 @@ export type Contact = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
+	orderRank?: string;
 	title: string;
 	slug: Slug;
+	hidden?: boolean;
 	url: string;
 	text?: string;
 	blank?: boolean;
@@ -185,6 +187,7 @@ export type Work = {
 	_createdAt: string;
 	_updatedAt: string;
 	_rev: string;
+	orderRank?: string;
 	title: string;
 	slug: Slug;
 	mainImage: {
@@ -200,6 +203,7 @@ export type Work = {
 			_key: string;
 		} & TagReference
 	>;
+	hidden?: boolean;
 	text?: string;
 	gallery?: Array<{
 		asset?: SanityImageAssetReference;
@@ -428,17 +432,15 @@ export type BANNET_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: CONTACTS_QUERY
-// Query: *[_type == "settings"][0]{    contacts[0...10]{      "_id": _key,      ...(@-> {        "slug": slug.current,        text,        title,        url,        blank      })    }  }
-export type CONTACTS_QUERY_RESULT = {
-	contacts: Array<{
-		_id: string;
-		slug: string;
-		text: string | null;
-		title: string;
-		url: string;
-		blank: boolean | null;
-	}> | null;
-} | null;
+// Query: *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{    _id,    "slug": slug.current,    text,    title,    url,    blank  }
+export type CONTACTS_QUERY_RESULT = Array<{
+	_id: string;
+	slug: string;
+	text: string | null;
+	title: string;
+	url: string;
+	blank: boolean | null;
+}>;
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: GENERAL_CONDITION_OF_SALE_QUERY
@@ -664,9 +666,9 @@ export type PRIVACY_POLICY_QUERY_RESULT = {
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: WORKS_QUERY
-// Query: *[_type == "settings"][0]{    "total": count(works),    works[$from...$to]{      "_id": _key,      ...(@-> {        "slug": slug.current,        title,        text,        mainImage{          alt,          "url": asset->url,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "lqip": asset->metadata.lqip,        },        "gallery": gallery[]{          alt,          "url": asset->url,          "_id": _key,          "width": asset->metadata.dimensions.width,          "height": asset->metadata.dimensions.height,          "blurHash": asset->metadata.blurHash,          "lqip": asset->metadata.lqip,        }      })    }  }
+// Query: {    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{      _id,      "slug": slug.current,      title,      text,      mainImage{        alt,        "url": asset->url,        "width": asset->metadata.dimensions.width,        "height": asset->metadata.dimensions.height,        "lqip": asset->metadata.lqip,      },      "gallery": gallery[]{        "_id": _key,        alt,        "url": asset->url,        "width": asset->metadata.dimensions.width,        "height": asset->metadata.dimensions.height,        "blurHash": asset->metadata.blurHash,        "lqip": asset->metadata.lqip,      }    }  }
 export type WORKS_QUERY_RESULT = {
-	total: number | null;
+	total: number;
 	works: Array<{
 		_id: string;
 		slug: string;
@@ -680,20 +682,20 @@ export type WORKS_QUERY_RESULT = {
 			lqip: string | null;
 		};
 		gallery: Array<{
+			_id: string;
 			alt: string | null;
 			url: string | null;
-			_id: string;
 			width: number | null;
 			height: number | null;
 			blurHash: string | null;
 			lqip: string | null;
 		}> | null;
-	}> | null;
-} | null;
+	}>;
+};
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: WORK_QUERY
-// Query: *[_type == "work" && slug.current == $slug][0]{    _id,    "slug": slug.current,    title,    text,    mainImage{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "lqip": asset->metadata.lqip,    },    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
+// Query: *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{    _id,    "slug": slug.current,    title,    text,    mainImage{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "lqip": asset->metadata.lqip,    },    "gallery": gallery[]{      alt,      "url": asset->url,      "_id": _key,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    }  }
 export type WORK_QUERY_RESULT = {
 	_id: string;
 	slug: string;
@@ -721,11 +723,11 @@ declare module "@sanity/client" {
 	interface SanityQueries {
 		'\n  *[_type == "settings"][0]{\n    about[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    }\n  }\n': ABOUT_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
-		'\n  *[_type == "settings"][0]{\n    contacts[0...10]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        text,\n        title,\n        url,\n        blank\n      })\n    }\n  }\n': CONTACTS_QUERY_RESULT;
+		'\n  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{\n    _id,\n    "slug": slug.current,\n    text,\n    title,\n    url,\n    blank\n  }\n': CONTACTS_QUERY_RESULT;
 		'\n  *[_type == "legalSettings"][0]{\n    generalConditionsOfSale[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
 		'\n  *[_type == "legalSettings"][0]{\n    legalNotices[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;
 		'\n  *[_type == "legalSettings"][0]{\n    privacyPolicy[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': PRIVACY_POLICY_QUERY_RESULT;
-		'\n  *[_type == "settings"][0]{\n    "total": count(works),\n    works[$from...$to]{\n      "_id": _key,\n      ...(@-> {\n        "slug": slug.current,\n        title,\n        text,\n        mainImage{\n          alt,\n          "url": asset->url,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip,\n        },\n        "gallery": gallery[]{\n          alt,\n          "url": asset->url,\n          "_id": _key,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "blurHash": asset->metadata.blurHash,\n          "lqip": asset->metadata.lqip,\n        }\n      })\n    }\n  }\n': WORKS_QUERY_RESULT;
-		'\n  *[_type == "work" && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
+		'\n  {\n    "total": count(*[_type == "work" && (hidden == false || !defined(hidden))]),\n    "works": *[_type == "work" && (hidden == false || !defined(hidden))] | order(orderRank) [$from...$to]{\n      _id,\n      "slug": slug.current,\n      title,\n      text,\n      mainImage{\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "lqip": asset->metadata.lqip,\n      },\n      "gallery": gallery[]{\n        "_id": _key,\n        alt,\n        "url": asset->url,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height,\n        "blurHash": asset->metadata.blurHash,\n        "lqip": asset->metadata.lqip,\n      }\n    }\n  }\n': WORKS_QUERY_RESULT;
+		'\n  *[_type == "work" && (hidden == false || !defined(hidden)) && slug.current == $slug][0]{\n    _id,\n    "slug": slug.current,\n    title,\n    text,\n    mainImage{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "lqip": asset->metadata.lqip,\n    },\n    "gallery": gallery[]{\n      alt,\n      "url": asset->url,\n      "_id": _key,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    }\n  }  \n': WORK_QUERY_RESULT;
 	}
 }

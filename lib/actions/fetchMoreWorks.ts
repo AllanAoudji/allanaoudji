@@ -1,6 +1,6 @@
 "use server";
 
-import { getWorks } from "@/sanity/lib/queries";
+import { getWorks } from "@/studio/lib/queries";
 
 export async function fetchMoreWorks({ from, to }: { from: number; to: number }) {
 	return getWorks(from, to);

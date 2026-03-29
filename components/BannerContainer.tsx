@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import Banner from "./Banner";
-import { BANNET_QUERY_RESULT } from "@/sanity/types";
+import { BANNET_QUERY_RESULT } from "@/studio/types";
 
 type Props = {
 	bannerPromise: Promise<{

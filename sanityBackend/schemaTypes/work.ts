@@ -1,13 +1,16 @@
 import { getExtension, getImageDimensions } from "@sanity/asset-utils";
 import { DocumentIcon } from "@sanity/icons";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { defineField, defineType, ImageValue } from "sanity";
 
 export default defineType({
 	name: "work",
+	orderings: [orderRankOrdering],
 	title: "Work",
 	type: "document",
 	icon: DocumentIcon,
 	fields: [
+		orderRankField({ type: "work" }),
 		defineField({
 			name: "title",
 			title: "Title",
@@ -72,6 +75,12 @@ export default defineType({
 			type: "array",
 			of: [{ type: "reference", to: { type: "tag" } }],
 			validation: Rule => Rule.unique(),
+		}),
+		defineField({
+			name: "hidden",
+			title: "Masquer dans le portfolio",
+			type: "boolean",
+			initialValue: false,
 		}),
 		defineField({
 			name: "text",

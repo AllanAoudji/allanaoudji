@@ -1,4 +1,4 @@
-import { CONTACTS_QUERY_RESULT, WORKS_QUERY_RESULT } from "@/sanity/types";
+import { CONTACTS_QUERY_RESULT, WORKS_QUERY_RESULT } from "@/studio/types";
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
 

@@ -1,6 +1,6 @@
 import EmptyGeneralConditionsOfSale from "@/components/EmptyGeneralConditionsOfSale";
 import LegalPageContainer from "@/components/LegalPageContainer";
-import { getGeneralConditionOfSale } from "@/sanity/lib/queries";
+import { getGeneralConditionOfSale } from "@/studio/lib/queries";
 
 export default async function GeneralConditionsOfSalePage() {
 	const result = await getGeneralConditionOfSale();
