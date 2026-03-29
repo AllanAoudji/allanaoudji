@@ -10,7 +10,7 @@ import {
 } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import { StructureResolver } from "sanity/structure";
-import singletonListItem from "@/studio/utils/singletonListItem";
+import singletonListItem from "./lib/singletonListItem";
 
 export const structure: StructureResolver = (S, context) =>
 	S.list()
