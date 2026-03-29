@@ -53,17 +53,19 @@ export default function ImageContainer({
 	}
 
 	const content = (
-		<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
-			<Image
-				src={normalized.url}
-				alt={normalized.alt ?? "image"}
-				fill
-				priority={priority}
-				placeholder={normalized.blur ? "blur" : "empty"}
-				blurDataURL={normalized.blur ?? undefined}
-				className="object-cover"
-				sizes="(max-width: 768px) 100vw, 50vw"
-			/>
+		<div className="overflow-hidden">
+			<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
+				<Image
+					src={normalized.url}
+					alt={normalized.alt ?? "image"}
+					fill
+					priority={priority}
+					placeholder={normalized.blur ? "blur" : "empty"}
+					blurDataURL={normalized.blur ?? undefined}
+					className="object-cover"
+					sizes="(max-width: 768px) 100vw, 50vw"
+				/>
+			</div>
 		</div>
 	);
 
