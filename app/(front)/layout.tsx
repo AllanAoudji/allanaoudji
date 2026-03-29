@@ -79,18 +79,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Utiliser le tutoiement
 // Point à la fin des phrases, espace insécable, etc.
 // Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
+// default-collection.png
 
 // ----- Shopify -----
 // export default function FreeShippingBanner() {
 //   return <p>Livraison gratuite à partir de {threshold} €</p>;
 // }
 // revalidate
-
-// ----- Boutique logic -----
 // Avoir un moyen de enable/disable la boutique
-// Et configurer le shop avec surement les frais de ports à afficher quelque part
-// Ajouter
-// const threshold = process.env.NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD;
 
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
