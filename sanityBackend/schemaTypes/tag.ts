@@ -18,8 +18,15 @@ export default defineType({
 			title: "Slug",
 			type: "slug",
 			options: {
-				source: "name",
+				source: "title",
 				maxLength: 96,
+				slugify: input =>
+					input
+						.toLowerCase()
+						.normalize("NFD")
+						.replace(/[\u0300-\u036f]/g, "") // supprime les accents
+						.replace(/[^a-z0-9]+/g, "-")
+						.replace(/(^-|-$)/g, ""),
 			},
 			validation: Rule => Rule.required(),
 		}),

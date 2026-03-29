@@ -12,6 +12,12 @@ export default defineType({
 	fields: [
 		orderRankField({ type: "work" }),
 		defineField({
+			name: "hidden",
+			title: "Masquer dans le portfolio",
+			type: "boolean",
+			initialValue: false,
+		}),
+		defineField({
 			name: "title",
 			title: "Title",
 			type: "string",
@@ -25,6 +31,13 @@ export default defineType({
 			options: {
 				source: "title",
 				maxLength: 96,
+				slugify: input =>
+					input
+						.toLowerCase()
+						.normalize("NFD")
+						.replace(/[\u0300-\u036f]/g, "") // supprime les accents
+						.replace(/[^a-z0-9]+/g, "-")
+						.replace(/(^-|-$)/g, ""),
 			},
 		}),
 		defineField({
@@ -75,12 +88,6 @@ export default defineType({
 			type: "array",
 			of: [{ type: "reference", to: { type: "tag" } }],
 			validation: Rule => Rule.unique(),
-		}),
-		defineField({
-			name: "hidden",
-			title: "Masquer dans le portfolio",
-			type: "boolean",
-			initialValue: false,
 		}),
 		defineField({
 			name: "text",

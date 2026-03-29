@@ -47,6 +47,7 @@ export type Work = {
 	_updatedAt: string;
 	_rev: string;
 	orderRank?: string;
+	hidden?: boolean;
 	title: string;
 	slug: Slug;
 	mainImage: {
@@ -62,7 +63,6 @@ export type Work = {
 			_key: string;
 		} & TagReference
 	>;
-	hidden?: boolean;
 	text?: string;
 	gallery?: Array<{
 		asset?: SanityImageAssetReference;
@@ -209,9 +209,9 @@ export type Contact = {
 	_updatedAt: string;
 	_rev: string;
 	orderRank?: string;
+	hidden?: boolean;
 	title: string;
 	slug: Slug;
-	hidden?: boolean;
 	url: string;
 	text?: string;
 	blank?: boolean;
