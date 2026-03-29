@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const sanityCSP = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com",
-	"connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://core.sanity-cdn.com https://registry.npmjs.org",
-	"style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com",
-	"font-src 'self' https://core.sanity-cdn.com",
+	"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com https://sanity-cdn.com",
+	"connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://core.sanity-cdn.com https://sanity-cdn.com https://registry.npmjs.org",
+	"style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
+	"font-src 'self' https://core.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
 	"img-src 'self' data: https: blob:",
 	"frame-src 'self'",
 	"worker-src 'self' blob:",
@@ -13,11 +15,11 @@ const sanityCSP = [
 
 const frontCSP = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline'",
+	`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
 	"frame-src 'self'",
 	"child-src 'self'",
 	"worker-src 'self' blob:",
-	"connect-src 'self' https://use.typekit.net https://p.typekit.net",
+	"connect-src 'self' https://use.typekit.net https://p.typekit.net https://*.api.sanity.io",
 	"style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
 	"font-src 'self' https://use.typekit.net https://p.typekit.net",
 	"img-src 'self' data: https:",

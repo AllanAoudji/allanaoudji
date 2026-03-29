@@ -1,20 +1,36 @@
-// components/StudioBar.tsx
+"use client";
+
+import { createClient } from "@sanity/client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-async function isLoggedInSanity(): Promise<boolean> {
-	try {
-		const res = await fetch(
-			`https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/users/me`,
-			{ credentials: "include", cache: "no-store" },
-		);
-		return res.ok;
-	} catch {
-		return false;
-	}
-}
+const client = createClient({
+	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+	apiVersion: "2021-06-07",
+	useCdn: false,
+	withCredentials: true, // envoie les cookies de session Sanity
+});
 
-export default async function StudioBar() {
-	const loggedIn = await isLoggedInSanity();
+export default function StudioBar() {
+	const [loggedIn, setLoggedIn] = useState(false);
+
+	useEffect(() => {
+		async function check() {
+			try {
+				const user = await client.request({ uri: "/users/me" });
+				// Si connecté, Sanity retourne un objet avec un vrai id
+				setLoggedIn(!!user?.id && user.id !== "me");
+			} catch {
+				setLoggedIn(false);
+			}
+		}
+
+		check();
+		const interval = setInterval(check, 10_000);
+		return () => clearInterval(interval);
+	}, []);
+
 	if (!loggedIn) return null;
 
 	return (

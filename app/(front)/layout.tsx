@@ -95,3 +95,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
 // Vérification du rendu — utilisez opengraph.xyz pour tester que vos OG images s'affichent correctement sur les réseaux sociaux.
+// Ajouter le domaine dans les CORS de Sanity pour éviter les problèmes d'authentification côté client.

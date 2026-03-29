@@ -1,7 +1,7 @@
 "use server";
 
 import { SPAM_WORDS_FR } from "../constants";
-import { checkRateLimit } from "../utils";
+import { checkRateLimit } from "../redis";
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";

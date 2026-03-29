@@ -101,11 +101,13 @@ export default function ContactForm({ className }: Readonly<Props>) {
 						onValueChange={val => setValues(prev => ({ ...prev, firstName: val }))}
 						placeholder="Ton prénom"
 						title="Prénom"
+						autoComplete="given-name"
 						validateField={validateField}
 					/>
 
 					<ContactFormInput
 						error={errors.lastName}
+						autoComplete="family-name"
 						id="lastName"
 						onValueChange={val => setValues(prev => ({ ...prev, lastName: val }))}
 						placeholder="Ton nom"
@@ -116,6 +118,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 
 				<ContactFormInput
 					error={errors.email}
+					autoComplete="email"
 					id="email"
 					onValueChange={val => setValues(prev => ({ ...prev, email: val }))}
 					placeholder="Ton email"
@@ -131,6 +134,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 					placeholder="Sujet"
 					title="Sujet"
 					validateField={validateField}
+					autoComplete="off"
 				/>
 
 				<ContactFormTextAra

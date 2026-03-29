@@ -47,6 +47,7 @@ export default function ContactFormTextAra({
 			<textarea
 				aria-describedby={error ? `${id}-error` : undefined}
 				aria-invalid={!!(showError && error)}
+				autoComplete="off"
 				className="bordersecondary focus:ringsecondary block min-h-40 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
 				id={id}
 				name={id}
