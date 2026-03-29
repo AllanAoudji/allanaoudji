@@ -7,6 +7,7 @@
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { markdownSchema } from "sanity-plugin-markdown/next";
+import { media } from "sanity-plugin-media";
 import { structureTool } from "sanity/structure";
 import { apiVersion, dataset, projectId } from "@/studio/env.public";
 import { schema, singletonTypes } from "@/studio/schemaTypes";
@@ -21,6 +22,7 @@ export default defineConfig({
 	// Add and edit the content schema in the './sanity/schemaTypes' folder
 	schema,
 	plugins: [
+		media(),
 		structureTool({ structure }),
 		// Vision is for querying with GROQ from inside the Studio
 		// https://www.sanity.io/docs/the-vision-plugin
