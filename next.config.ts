@@ -48,6 +48,15 @@ const nextConfig: NextConfig = {
 			},
 		];
 	},
+	async redirects() {
+		return [
+			{
+				source: "/products",
+				destination: "/collections",
+				permanent: true, // 308 — meilleur pour le SEO
+			},
+		];
+	},
 	cacheComponents: true,
 	images: {
 		unoptimized: process.env.NODE_ENV === "development",
