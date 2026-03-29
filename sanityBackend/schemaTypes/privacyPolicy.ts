@@ -1,6 +1,7 @@
-import { defineField, defineType } from "sanity";
+import { singletonType } from "../lib/singletonType";
+import { defineField } from "sanity";
 
-export default defineType({
+export default singletonType({
 	name: "privacyPolicy",
 	title: "Politique de confidentialité",
 	type: "document",

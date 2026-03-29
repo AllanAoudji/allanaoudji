@@ -9,7 +9,13 @@ import settings from "./settings";
 import tag from "./tag";
 import work from "./work";
 
-export const singletonTypes = new Set(["settings"]);
+export const singletonTypes = new Set([
+	"settings",
+	"about",
+	"generalConditionsOfSale",
+	"legalNotices",
+	"privacyPolicy",
+]);
 
 export const schema: SchemaPluginOptions = {
 	types: [
