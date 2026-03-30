@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { useCartActions } from "@/lib/contexts/cartActions-context";
 import { useModal } from "@/lib/contexts/modal-context";
@@ -44,12 +44,6 @@ function getCartItemPricing(item: CartItem) {
 export default function CartContentItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
 	const { isCartPending } = useCartActions();
-
-	useEffect(() => {
-		if (!item.discountAllocations?.length) return;
-		console.log("totalAmount:", item.cost.totalAmount.amount);
-		console.log("discountAllocations:", item.discountAllocations);
-	}, [item]);
 
 	const image = useMemo(
 		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
