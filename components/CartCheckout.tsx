@@ -16,8 +16,6 @@ export default function CartCheckout({ className = "" }: Readonly<Props>) {
 	const [message, formAction] = useActionState(redirectToCheckout, null);
 	const { pending } = useFormStatus();
 
-	console.log(isEnabled);
-
 	const checkoutMessage = () => {
 		if (pending) {
 			return "Processing...";

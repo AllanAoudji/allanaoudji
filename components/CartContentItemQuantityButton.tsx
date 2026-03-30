@@ -48,6 +48,7 @@ export default function CartContentItemQuantityButton({
 					"flex h-6 w-6 origin-center items-center justify-center transition-transform duration-500",
 					{
 						"group-hover:rotate-180": !isCartPending,
+						"cursor-progress": isCartPending,
 					},
 				)}
 			>

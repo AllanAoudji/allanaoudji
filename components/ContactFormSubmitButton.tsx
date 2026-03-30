@@ -24,6 +24,7 @@ export default function ContactFormSubmitButton({ className, disabled }: Readonl
 				{
 					"hover:bg-primary hover:text-secondary cursor-pointer": !disabled,
 					"cursor-progress": pending,
+					"cursor-not-allowed": disabled,
 					"bg-secondary/75": disabled,
 				},
 				className,

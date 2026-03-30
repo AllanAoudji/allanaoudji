@@ -88,8 +88,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // revalidate
 
 // ----- Divers -----
-// Ajouter cursor error sur product single quantity button
-// Changer la date footer 2026 - 2026
 // Avec la fermeture du lightbox, le scroll est placer vers l'image cliqué si elle n'est pas dans la viewport.
 
 // Quand le site est en ligne
