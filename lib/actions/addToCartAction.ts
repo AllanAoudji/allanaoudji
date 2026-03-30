@@ -27,6 +27,7 @@ export async function addToCartAction(
 
 	let cartId = cookieStore.get("cartId")?.value;
 	let newCartId: string | undefined;
+
 	if (!cartId) {
 		try {
 			newCartId = await createCartAndSetCookie();

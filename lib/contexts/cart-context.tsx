@@ -2,7 +2,15 @@
 
 import { cartReducer } from "../reducers/cartReducer";
 import { getCart } from "../shopify";
-import { createContext, use, useCallback, useContext, useEffect, useMemo, useReducer } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useReducer,
+	useRef,
+} from "react";
 import Cart from "@/types/cart";
 import CartAction from "@/types/cartAction";
 import Product from "@/types/product";
@@ -31,9 +39,24 @@ type Props = {
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
 export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>) {
-	const initialCart = use(cartPromise);
-	const [cart, dispatch] = useReducer(cartReducer, initialCart);
+	const [cart, dispatch] = useReducer(cartReducer, undefined);
+	const syncedPromiseRef = useRef<Promise<Cart | undefined> | null>(null);
 
+	// Synchronise quand cartPromise change (initialisation + onCartCreated)
+	useEffect(() => {
+		if (syncedPromiseRef.current === cartPromise) return; // déjà synced
+		syncedPromiseRef.current = cartPromise;
+
+		let cancelled = false;
+		cartPromise.then(freshCart => {
+			if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [cartPromise]);
+
+	// Resync au retour sur l'onglet
 	useEffect(() => {
 		if (!cartId) return;
 
@@ -43,7 +66,7 @@ export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>)
 				const freshCart = await getCart(cartId);
 				if (freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
 			} catch {
-				// sync silencieuse — on ne crash pas si elle échoue
+				// sync silencieuse
 			}
 		};
 

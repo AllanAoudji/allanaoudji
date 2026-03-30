@@ -40,7 +40,6 @@ export default function ProductLink({ className, product, onClick }: Readonly<Pr
 							"opacity-50": !product.availableForSale,
 						})}
 						image={product.images[1]}
-						priority={true}
 						ratio="3/4"
 					/>
 				)}

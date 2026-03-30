@@ -41,33 +41,33 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="fr_FR">
 			<body className="font-gopher bg-primary text-secondary antialiased">
 				<Suspense fallback={<SplashScreen />}>
-					<ScrollReset />
 					<LocalShopifyDispenser>
 						<CartDispenser>
-							<div className="flex min-h-screen flex-col">
-								<ModalProvider>
-									<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+							<ModalProvider>
+								<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+									<Suspense fallback={null}>
 										<NavBar />
-									</header>
-
-									<CartActionsProvider>
-										<LightboxProvider>
-											<main className="mt-header flex-1">
-												{children}
-												<Suspense fallback={null}>
-													<StudioBar />
-												</Suspense>
-												<SanityLive />
-											</main>
-										</LightboxProvider>
-
-										<Modals />
-									</CartActionsProvider>
-								</ModalProvider>
-								<Footer />
-							</div>
+									</Suspense>
+								</header>
+								<CartActionsProvider>
+									<LightboxProvider>
+										<main className="mt-header flex-1">
+											{children}
+											<Suspense fallback={null}>
+												<StudioBar />
+											</Suspense>
+											<SanityLive />
+										</main>
+									</LightboxProvider>
+									<Modals />
+								</CartActionsProvider>
+							</ModalProvider>
+							<Footer />
 						</CartDispenser>
 					</LocalShopifyDispenser>
+				</Suspense>
+				<Suspense fallback={null}>
+					<ScrollReset />
 				</Suspense>
 			</body>
 		</html>
@@ -91,6 +91,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Avoir un moyen de enable/disable la boutique
 // Banner est considérer comme une section, ce qui veut dire que le BG des sections est mal alterné
 // si home section contact est secondary, les couleurs du form doivent être alternés
+// Sanity Work, image de preview du back ne fonctionne pas.
+// Indiquer aussi si hidden === true
+// focus:ring-secondary global
+// Ajouter cursor error sur product single quantity button
+// Changer la date footer 2026 - 2026
+// Avec la fermeture du lightbox, le scroll est placer vers l'image cliqué si elle n'est pas dans la viewport.
 
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.

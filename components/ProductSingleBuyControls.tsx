@@ -6,6 +6,7 @@ import { useProduct } from "@/lib/contexts/product-context";
 import useProductSingleQuantity from "@/lib/hooks/useProductSingleQuantity";
 import useProductSingleSelectedVariant from "@/lib/hooks/useProductSingleSelectedVariant";
 import { cn } from "@/lib/utils";
+import CartDisabled from "./CartDisabled";
 import ProductSingleBuyControlsAddButton from "./ProductSingleBuyControlsAddButton";
 import ProductSingleBuyControlsCallbackMessage from "./ProductSingleBuyControlsCallbackMessage";
 import ProductSingleBuyControlsInventory from "./ProductSingleBuyControlsInventory";
@@ -83,6 +84,7 @@ export default function ProductSingleBuyControls({
 				options={product.options}
 				variants={product.variants}
 			/>
+			<CartDisabled className="mt-8" />
 			<ProductSingleBuyControlsStock className="mt-8 mb-1" variant={finalVariant} />
 			<div className="flex flex-col gap-2">
 				<ProductSingleBuyControlsQuantityButtons

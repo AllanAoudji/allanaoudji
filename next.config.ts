@@ -2,49 +2,79 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
-const sanityCSP = [
+const csp = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com https://sanity-cdn.com",
-	"connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://core.sanity-cdn.com https://sanity-cdn.com https://registry.npmjs.org",
-	"style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
-	"font-src 'self' https://core.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
-	"img-src 'self' data: https: blob:",
-	"frame-src 'self'",
-	"worker-src 'self' blob:",
-].join("; ");
 
-const frontCSP = [
-	"default-src 'self'",
-	`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-	"frame-src 'self'",
-	"child-src 'self'",
+	// scripts
+	`script-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://sanity-cdn.com${
+		isDev ? " 'unsafe-eval'" : ""
+	}`,
+
+	// APIs / fetch
+	[
+		"connect-src",
+		"'self'",
+		"https://*.api.sanity.io",
+		"wss://*.api.sanity.io",
+		"https://cdn.sanity.io",
+		"https://core.sanity-cdn.com",
+		"https://sanity-cdn.com",
+		"https://cdn.shopify.com",
+		"https://*.myshopify.com",
+		"https://use.typekit.net",
+		"https://p.typekit.net",
+	].join(" "),
+
+	// styles
+	[
+		"style-src",
+		"'self'",
+		"'unsafe-inline'",
+		"https://use.typekit.net",
+		"https://p.typekit.net",
+	].join(" "),
+
+	// fonts
+	["font-src", "'self'", "https://use.typekit.net", "https://p.typekit.net"].join(" "),
+
+	// images
+	[
+		"img-src",
+		"'self'",
+		"data:",
+		"blob:",
+		"https:",
+		"https://cdn.sanity.io",
+		"https://cdn.shopify.com",
+		"https://*.cdninstagram.com",
+	].join(" "),
+
+	// frames (Sanity preview important)
+	["frame-src", "'self'", "https://*.sanity.io"].join(" "),
+
 	"worker-src 'self' blob:",
-	"connect-src 'self' https://use.typekit.net https://p.typekit.net https://*.api.sanity.io",
-	"style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
-	"font-src 'self' https://use.typekit.net https://p.typekit.net",
-	"img-src 'self' data: https:",
+	"child-src 'self'",
+
+	// sécurité forte
+	"object-src 'none'",
+	"base-uri 'self'",
+	"form-action 'self'",
+	"frame-ancestors 'self'",
+
+	// amélioration sécurité HTTPS
+	"upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {
+	reactStrictMode: false,
 	async headers() {
 		return [
-			// CSP permissive pour le studio
 			{
-				source: "/studio(.*)",
+				source: "/(.*)",
 				headers: [
 					{
 						key: "Content-Security-Policy",
-						value: sanityCSP,
-					},
-				],
-			},
-			// CSP stricte pour le reste du site
-			{
-				source: "/((?!studio).*)",
-				headers: [
-					{
-						key: "Content-Security-Policy",
-						value: frontCSP,
+						value: csp,
 					},
 				],
 			},

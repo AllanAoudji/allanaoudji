@@ -18,7 +18,57 @@ function recalcCart(lines: CartItem[], currency: string) {
 }
 
 export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | undefined {
-	if (!cart) return cart;
+	if (!cart) {
+		if (action.type === "ADD_ITEM") {
+			const { product, variant, quantity, realCartLineId } = action;
+			const newItem: CartItem = {
+				id: realCartLineId ?? `cartitem-${variant.id}-${Date.now()}`,
+				quantity,
+				cost: {
+					totalAmount: {
+						amount: (Number(variant.price.amount) * quantity).toFixed(2),
+						currencyCode: variant.price.currencyCode,
+					},
+				},
+				merchandise: {
+					id: variant.id,
+					title: variant.title,
+					selectedOptions: variant.selectedOptions,
+					image: variant.image,
+					product: {
+						id: product.id,
+						title: product.title,
+						handle: product.handle,
+						priceRange: product.priceRange,
+						featuredImage: product.featuredImage,
+					},
+				},
+			};
+
+			const lines = [newItem];
+			return {
+				id: undefined,
+				checkoutUrl: "",
+				totalQuantity: quantity,
+				lines,
+				cost: {
+					subtotalAmount: {
+						amount: newItem.cost.totalAmount.amount,
+						currencyCode: variant.price.currencyCode,
+					},
+					totalAmount: {
+						amount: newItem.cost.totalAmount.amount,
+						currencyCode: variant.price.currencyCode,
+					},
+					totalTaxAmount: { amount: "0.00", currencyCode: variant.price.currencyCode },
+				},
+			};
+		}
+		if (action.type === "SYNC_CART") {
+			return action.cart;
+		}
+		return cart; // les autres actions sur un cart undefined → rien à faire
+	}
 
 	switch (action.type) {
 		case "SYNC_CART": {

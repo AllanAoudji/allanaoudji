@@ -11,7 +11,7 @@ export default function CartContent({ cart }: Readonly<Props>) {
 	return (
 		<div className="flex h-screen flex-col">
 			<CartHeader />
-			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-8">
+			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pt-4 pb-8">
 				{cart.lines
 					.sort((a, b) => a.merchandise.product.title.localeCompare(b.merchandise.product.title))
 					.map(line => (

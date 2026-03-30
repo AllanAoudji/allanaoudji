@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { redirectToCheckout } from "@/lib/actions/redirectToCheckout";
+import { useShopStatus } from "@/lib/hooks/useShopStatus";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -10,23 +11,38 @@ type Props = {
 };
 
 export default function CartCheckout({ className = "" }: Readonly<Props>) {
+	const { isEnabled } = useShopStatus();
+
 	const [message, formAction] = useActionState(redirectToCheckout, null);
 	const { pending } = useFormStatus();
 
+	console.log(isEnabled);
+
+	const checkoutMessage = () => {
+		if (pending) {
+			return "Processing...";
+		}
+		if (!isEnabled) {
+			return "Boutique temporairement indisponible";
+		}
+		return "Procéder au paiement";
+	};
+
 	return (
-		<form action={formAction} className={cn("bg-red-400", className)}>
+		<form action={formAction} className={cn(className)}>
 			<button
 				className={cn(
 					"CTA",
 
 					{
-						"cursor-not-allowed": pending,
+						"cursor-progress!": pending,
+						"bg-secondary/75! text-primary! cursor-not-allowed!": !isEnabled,
 					},
 				)}
-				disabled={pending}
+				disabled={pending || !isEnabled}
 				type="submit"
 			>
-				{pending ? "Processing..." : "Procéder au paiement"}
+				{checkoutMessage()}
 			</button>
 			<p aria-label="polite" role="status">
 				{message}
