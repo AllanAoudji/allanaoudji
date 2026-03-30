@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreProducts } from "@/lib/actions/fetchMoreProducts";
 import { FETCH_PRODUCTS } from "@/lib/constants";
-import Grid from "./Grid";
 import InfiniteSpinner from "./InfiniteSpinner";
 import ProductLink from "./ProductLink";
 import Product from "@/types/product";
@@ -118,11 +117,11 @@ export default function CollectionsContentInfiniteScroll({
 
 	return (
 		<>
-			<Grid>
+			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 				{products.map(product => (
 					<ProductLink key={product.id} product={product} />
 				))}
-			</Grid>
+			</div>
 
 			<div ref={sentinelRef} aria-hidden="true" />
 

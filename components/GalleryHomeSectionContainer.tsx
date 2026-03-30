@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Grid from "./Grid";
 import SubTitle from "./SubTitle";
 
 type Props = {
@@ -12,7 +11,7 @@ export default function GalleryHomeSectionContainer({ children, className }: Rea
 		<section className={cn("vertical-padding", className)}>
 			<div className="padding-container">
 				<SubTitle className="">Découvrire mon travail</SubTitle>
-				<Grid type="large">{children}</Grid>
+				<div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
 			</div>
 		</section>
 	);

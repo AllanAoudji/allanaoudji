@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Grid from "./Grid";
 import SubTitle from "./SubTitle";
 
 type Props = {
@@ -13,7 +12,7 @@ export default function InstagramSectionContainer({ children, className }: Reado
 			<div className="padding-container">
 				<SubTitle>Instagram</SubTitle>
 				<a className="block" href="https://www.instagram.com/allanaoudji/" target="_blank">
-					<Grid type="smallest">{children}</Grid>
+					<div className="grid grid-cols-3 gap-4 md:grid-cols-6">{children}</div>
 				</a>
 			</div>
 		</section>

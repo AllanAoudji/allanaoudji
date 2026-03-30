@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
-import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
 import { workGallery } from "@/types/sanityType";
 
@@ -38,7 +37,7 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 
 	return (
 		<>
-			<Grid>
+			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 				{images.map(image => (
 					<ImageContainer
 						image={image}
@@ -48,7 +47,7 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 						className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
 					/>
 				))}
-			</Grid>
+			</div>
 		</>
 	);
 }

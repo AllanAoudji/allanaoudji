@@ -1,9 +1,8 @@
-import Grid from "./Grid";
 import SkeletonProductLink from "./SkeletonProductLink";
 
 export default function SkeletonCollections() {
 	return (
-		<Grid>
+		<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 			<SkeletonProductLink />
 			<SkeletonProductLink />
 			<SkeletonProductLink />
@@ -16,6 +15,6 @@ export default function SkeletonCollections() {
 			<SkeletonProductLink />
 			<SkeletonProductLink />
 			<SkeletonProductLink />
-		</Grid>
+		</div>
 	);
 }
