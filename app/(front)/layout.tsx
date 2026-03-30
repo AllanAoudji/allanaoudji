@@ -88,10 +88,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // revalidate
 
 // ----- Divers -----
-// si home section contact est secondary, les couleurs du form doivent être alternés
-// Sanity Work, image de preview du back ne fonctionne pas.
-// Indiquer aussi si hidden === true
-// focus:ring-secondary global
 // Ajouter cursor error sur product single quantity button
 // Changer la date footer 2026 - 2026
 // Avec la fermeture du lightbox, le scroll est placer vers l'image cliqué si elle n'est pas dans la viewport.
