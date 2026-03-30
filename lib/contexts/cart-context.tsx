@@ -15,6 +15,7 @@ import Cart from "@/types/cart";
 import CartAction from "@/types/cartAction";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
+import { DiscountNode } from "@/types/shopifyDiscount";
 import UpdateCartType from "@/types/updateCartType";
 
 type CartContextCart = {
@@ -34,17 +35,22 @@ type Props = {
 	children: React.ReactNode;
 	cartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
+	discountNodes: DiscountNode[];
 };
 
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
-export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>) {
-	const [cart, dispatch] = useReducer(cartReducer, undefined);
+export function CartProvider({ children, cartId, cartPromise, discountNodes }: Readonly<Props>) {
+	const reducer = useCallback(
+		(cart: Cart | undefined, action: CartAction) => cartReducer(cart, action, discountNodes),
+		[discountNodes],
+	);
+
+	const [cart, dispatch] = useReducer(reducer, undefined);
 	const syncedPromiseRef = useRef<Promise<Cart | undefined> | null>(null);
 
-	// Synchronise quand cartPromise change (initialisation + onCartCreated)
 	useEffect(() => {
-		if (syncedPromiseRef.current === cartPromise) return; // déjà synced
+		if (syncedPromiseRef.current === cartPromise) return;
 		syncedPromiseRef.current = cartPromise;
 
 		let cancelled = false;
@@ -56,7 +62,6 @@ export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>)
 		};
 	}, [cartPromise]);
 
-	// Resync au retour sur l'onglet
 	useEffect(() => {
 		if (!cartId) return;
 

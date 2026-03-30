@@ -6,17 +6,20 @@ import { CartRecoveryProvider } from "@/lib/contexts/cartRecovery-context";
 import { getCart } from "@/lib/shopify";
 import CartDispenserErrorBoundary from "./CartDispenserErrorBoundary";
 import Cart from "@/types/cart";
+import { DiscountNode } from "@/types/shopifyDiscount";
 
 type Props = {
 	children: React.ReactNode;
 	initialCartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
+	discountNodes: DiscountNode[];
 };
 
 export default function CartClientWrapper({
 	children,
 	initialCartId,
 	cartPromise,
+	discountNodes,
 }: Readonly<Props>) {
 	const [currentCartPromise, setCurrentCartPromise] = useState(cartPromise);
 	const [currentCartId, setCurrentCartId] = useState(initialCartId);
@@ -35,7 +38,11 @@ export default function CartClientWrapper({
 	return (
 		<CartDispenserErrorBoundary onError={() => setHasError(true)}>
 			<Suspense fallback={null}>
-				<CartProvider cartPromise={currentCartPromise} cartId={currentCartId}>
+				<CartProvider
+					cartPromise={currentCartPromise}
+					cartId={currentCartId}
+					discountNodes={discountNodes}
+				>
 					{children}
 				</CartProvider>
 			</Suspense>

@@ -10,6 +10,10 @@ type CartProduct = {
 		minVariantPrice: Money;
 	};
 	title: string;
+	collections: {
+		id: string;
+		title: string;
+	}[];
 };
 
 export default CartProduct;

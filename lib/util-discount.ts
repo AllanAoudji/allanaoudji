@@ -54,11 +54,10 @@ function isProductCovered(
 function applyDiscount(price: number, value: DiscountValue): number {
 	switch (value.__typename) {
 		case "DiscountPercentage":
-			return Math.max(0, parseFloat((price * (1 - value.percentage)).toFixed(2)));
+			return Math.max(0, Math.round(price * (1 - value.percentage) * 100) / 100);
 		case "DiscountAmount":
-			return Math.max(0, parseFloat((price - parseFloat(value.amount.amount)).toFixed(2)));
+			return Math.max(0, Math.round((price - parseFloat(value.amount.amount)) * 100) / 100);
 		case "DiscountFreeShipping":
-			// Ne touche pas au prix produit
 			return price;
 	}
 }
