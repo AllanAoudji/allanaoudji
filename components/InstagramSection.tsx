@@ -2,6 +2,10 @@ import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
 import InstagramFeeds from "@/types/instagramFeed";
 
+type Props = {
+	className?: string;
+};
+
 const ROOT = "https://graph.instagram.com/";
 const END_POINT = "/me/media";
 const FIELDS =
@@ -16,7 +20,7 @@ async function getData(): Promise<InstagramFeeds> {
 	return await res.json();
 }
 
-export default async function InstagramSection() {
+export default async function InstagramSection({ className }: Readonly<Props>) {
 	const data = await getData();
 
 	if (data.error) {
@@ -28,7 +32,7 @@ export default async function InstagramSection() {
 	}
 
 	return (
-		<InstagramSectionContainer>
+		<InstagramSectionContainer className={className}>
 			{data.data.map(post => (
 				<InstagramSectionItem key={post.id} post={post} />
 			))}

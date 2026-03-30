@@ -9,12 +9,7 @@ type Props = {
 
 export default function GalleryHomeSectionContainer({ children, className }: Readonly<Props>) {
 	return (
-		<section
-			className={cn(
-				"vertical-padding odd:text-secondary even:bg-secondary even:text-primary",
-				className,
-			)}
-		>
+		<section className={cn("vertical-padding", className)}>
 			<div className="padding-container">
 				<SubTitle className="">Découvrire mon travail</SubTitle>
 				<Grid type="large">{children}</Grid>

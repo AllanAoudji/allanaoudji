@@ -2,7 +2,11 @@ import { getLatestProducts } from "@/lib/shopify";
 import ImageContainer from "./ImageContainer";
 import ProductsHomeSectionContainer from "./ProductsHomeSectionContainer";
 
-export default async function ProductsHomeSection() {
+type Props = {
+	className?: string;
+};
+
+export default async function ProductsHomeSection({ className }: Readonly<Props>) {
 	const products = await getLatestProducts();
 
 	if (!products.length) {
@@ -10,7 +14,7 @@ export default async function ProductsHomeSection() {
 	}
 
 	return (
-		<ProductsHomeSectionContainer>
+		<ProductsHomeSectionContainer className={className}>
 			{products.map(product => (
 				<ImageContainer
 					image={product.featuredImage}

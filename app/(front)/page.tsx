@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import BannerContainer from "@/components/BannerContainer";
 import ContactHomeSection from "@/components/ContactHomeSection";
 import GalleryHomeSection from "@/components/GalleryHomeSection";
+import HomeSections from "@/components/HomeSections";
 import InstagramSection from "@/components/InstagramSection";
 import NullError from "@/components/NullError";
 import ProductsHomeSection from "@/components/ProductsHomeSection";
@@ -16,22 +17,24 @@ export default function RootPage() {
 	return (
 		<>
 			<BannerContainer bannerPromise={bannerPromise} />
-			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<SkeletonProductsHome />}>
-					<ProductsHomeSection />
-				</Suspense>
-			</ErrorBoundary>
-			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<SkeletonWorksHome />}>
-					<GalleryHomeSection />
-				</Suspense>
-			</ErrorBoundary>
-			<ErrorBoundary errorComponent={NullError}>
-				<Suspense fallback={<SkeletonInstagram />}>
-					<InstagramSection />
-				</Suspense>
-			</ErrorBoundary>
-			<ContactHomeSection />
+			<HomeSections>
+				<ErrorBoundary errorComponent={NullError}>
+					<Suspense fallback={<SkeletonProductsHome />}>
+						<ProductsHomeSection />
+					</Suspense>
+				</ErrorBoundary>
+				<ErrorBoundary errorComponent={NullError}>
+					<Suspense fallback={<SkeletonWorksHome />}>
+						<GalleryHomeSection />
+					</Suspense>
+				</ErrorBoundary>
+				<ErrorBoundary errorComponent={NullError}>
+					<Suspense fallback={<SkeletonInstagram />}>
+						<InstagramSection />
+					</Suspense>
+				</ErrorBoundary>
+				<ContactHomeSection />
+			</HomeSections>
 		</>
 	);
 }

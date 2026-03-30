@@ -10,12 +10,7 @@ type Props = {
 
 export default function ProductsHomeSectionContainer({ children, className }: Readonly<Props>) {
 	return (
-		<section
-			className={cn(
-				"vertical-padding odd:text-secondary even:bg-secondary even:text-primary",
-				className,
-			)}
-		>
+		<section className={cn("vertical-padding", className)}>
 			<div className="padding-container">
 				<SubTitle className="text-primary">Nouveauté de la boutique</SubTitle>
 				<Link className="block" href="/collections">

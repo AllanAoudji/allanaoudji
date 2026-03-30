@@ -20,7 +20,7 @@ export default function ContactFormSubmitButton({ className, disabled }: Readonl
 			type="submit"
 			disabled={pending || disabled}
 			className={cn(
-				"bg-secondary text-primary border-secondary w-full border px-4 py-2 tracking-wide uppercase transition",
+				"bg-secondary text-primary w-full border border-inherit px-4 py-2 tracking-wide uppercase transition",
 				{
 					"hover:bg-primary hover:text-secondary cursor-pointer": !disabled,
 					"cursor-progress": pending,

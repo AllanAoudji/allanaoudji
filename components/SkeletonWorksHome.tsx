@@ -1,9 +1,13 @@
 import WorksHomeSectionContainer from "./GalleryHomeSectionContainer";
 import SkeletonWorkLink from "./SkeletonWorkLink";
 
-export default function SkeletonWorksHome() {
+type Props = {
+	className?: string;
+};
+
+export default function SkeletonWorksHome({ className }: Readonly<Props>) {
 	return (
-		<WorksHomeSectionContainer>
+		<WorksHomeSectionContainer className={className}>
 			<SkeletonWorkLink />
 			<SkeletonWorkLink />
 			<SkeletonWorkLink />

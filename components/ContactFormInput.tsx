@@ -59,7 +59,7 @@ export default function ContactFormInput({
 				aria-invalid={!!(showError && error)}
 				aria-describedby={error ? `${id}-error` : undefined}
 				autoComplete={autoComplete}
-				className="border-secondary focus:ring-secondary w-full border px-2 py-2 transition focus:ring-2 focus:outline-none"
+				className="w-full border border-inherit px-2 py-2 transition focus:ring-2 focus:ring-inherit focus:outline-none"
 			/>
 			<div className="mt-0.5 min-h-5">
 				{showError && error && (
