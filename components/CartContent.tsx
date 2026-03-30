@@ -18,7 +18,7 @@ export default function CartContent({ cart }: Readonly<Props>) {
 						<CartContentItem item={line} key={line.id} />
 					))}
 			</div>
-			<CartContentSummary cart={cart} className="px-4 pt-2 pb-4" />
+			<CartContentSummary cart={cart} className="px-4 pt-4 pb-4" />
 		</div>
 	);
 }

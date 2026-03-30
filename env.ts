@@ -5,6 +5,8 @@ const envVariables = z.object({
 	DATABASE_URL: z.string(),
 	FROM_EMAIL: z.string(),
 	INSTAGRAM_ACCESS_TOKEN: z.string(),
+	NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD: z.string(),
+	NEXT_PUBLIC_FREE_SHIPPING_CURRENCY: z.string(),
 	NEXT_PUBLIC_SANITY_API_VERSION: z.string(),
 	NEXT_PUBLIC_SANITY_DATASET: z.string(),
 	NEXT_PUBLIC_SANITY_PROJECT_ID: z.string(),

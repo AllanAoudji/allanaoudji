@@ -20,6 +20,27 @@ type Props = {
 	item: CartItem;
 };
 
+function getCartItemPricing(item: CartItem) {
+	const totalAmount = item.cost.totalAmount;
+	const currencyCode = totalAmount.currencyCode;
+
+	const totalDiscounted = (item.discountAllocations ?? []).reduce(
+		(sum, alloc) => sum + parseFloat(alloc.discountedAmount.amount),
+		0,
+	);
+
+	if (totalDiscounted === 0) {
+		return { original: totalAmount, discounted: null };
+	}
+
+	const discountedAmount = (parseFloat(totalAmount.amount) - totalDiscounted).toFixed(2);
+
+	return {
+		original: totalAmount,
+		discounted: { amount: discountedAmount, currencyCode },
+	};
+}
+
 export default function CartContentItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
 	const { isCartPending } = useCartActions();
@@ -28,6 +49,8 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
 		[item],
 	);
+
+	const { original, discounted } = getCartItemPricing(item);
 
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
 	item.merchandise.selectedOptions.forEach(({ name, value }) => {
@@ -75,7 +98,16 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 						</div>
 					</div>
 					<div className="flex flex-col items-end justify-between pb-1">
-						<Price className="text-sm" price={item.cost.totalAmount} />
+						<div className="flex flex-col items-end">
+							{discounted && <Price className="text-sm font-bold" price={discounted} />}
+							<Price
+								className={cn("text-sm", {
+									"line-through opacity-50": discounted,
+									"font-bold": !discounted,
+								})}
+								price={original}
+							/>
+						</div>
 						<CartContentItemDeleteButton className="text-sm" item={item} />
 					</div>
 				</div>

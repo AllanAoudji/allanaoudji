@@ -17,7 +17,11 @@ export type DiscountAmount = {
 	};
 };
 
-export type DiscountValue = DiscountPercentage | DiscountAmount;
+export type DiscountFreeShipping = {
+	__typename: "DiscountFreeShipping";
+};
+
+export type DiscountValue = DiscountPercentage | DiscountAmount | DiscountFreeShipping;
 
 // ---------------------------------------------------------------------------
 // Entités liées aux produits
@@ -92,6 +96,18 @@ export type CombinesWith = {
 };
 
 // ---------------------------------------------------------------------------
+// Minimum requirement
+// ---------------------------------------------------------------------------
+
+export type DiscountMinimumRequirementSubtotal = {
+	__typename: "DiscountMinimumSubtotal";
+	greaterThanOrEqualToSubtotal: {
+		amount: string;
+		currencyCode: string;
+	};
+};
+
+// ---------------------------------------------------------------------------
 // Types de remises
 // ---------------------------------------------------------------------------
 
@@ -116,7 +132,31 @@ export type DiscountAutomaticBasic = {
 	customerGets: CustomerGets;
 };
 
-export type Discount = DiscountCodeBasic | DiscountAutomaticBasic;
+export type DiscountCodeFreeShipping = {
+	__typename: "DiscountCodeFreeShipping";
+	title: string;
+	startsAt: string;
+	endsAt: string | null;
+	combinesWith: CombinesWith;
+	maximumShippingPrice: { amount: string } | null;
+	minimumRequirement?: DiscountMinimumRequirementSubtotal | null;
+};
+
+export type DiscountAutomaticFreeShipping = {
+	__typename: "DiscountAutomaticFreeShipping";
+	title: string;
+	startsAt: string;
+	endsAt: string | null;
+	combinesWith: CombinesWith;
+	maximumShippingPrice: { amount: string } | null;
+	minimumRequirement?: DiscountMinimumRequirementSubtotal | null;
+};
+
+export type Discount =
+	| DiscountCodeBasic
+	| DiscountAutomaticBasic
+	| DiscountCodeFreeShipping
+	| DiscountAutomaticFreeShipping;
 
 // ---------------------------------------------------------------------------
 // Nœud principal retourné par la query

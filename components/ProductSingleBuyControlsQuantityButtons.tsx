@@ -41,7 +41,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 		<div className={cn("border-secondary flex", className)}>
 			<button
 				className={cn(
-					"cursor-pending! flex items-center justify-center border-t border-b border-l",
+					"flex cursor-pointer items-center justify-center border-t border-b border-l",
 					`h-${size} w-${size}`,
 					{
 						"cursor-not-allowed": disableDecrement || !variant || !variant.availableForSale,
@@ -75,7 +75,7 @@ export default function ProductSingleBuyControlsQuantityButtons({
 			/>
 			<button
 				className={cn(
-					"flex items-center justify-center border-t border-r border-b",
+					"flex cursor-pointer items-center justify-center border-t border-r border-b",
 					`h-${size} w-${size}`,
 					{
 						"cursor-not-allowed": disableIncrement || !variant || !variant.availableForSale,

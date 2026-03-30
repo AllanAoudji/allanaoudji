@@ -49,6 +49,7 @@ export function cartReducer(cart: Cart | undefined, action: CartAction): Cart | 
 			return {
 				id: undefined,
 				checkoutUrl: "",
+				discountCodes: [],
 				totalQuantity: quantity,
 				lines,
 				cost: {

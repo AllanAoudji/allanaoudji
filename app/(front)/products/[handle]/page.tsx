@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { getProduct, getProductVariantsInventory } from "@/lib/shopify";
 import { getProductDefaultVariant } from "@/lib/utils";
+import CartDisabled from "@/components/CartDisabled";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControls from "@/components/ProductSingleBuyControls";
 import ProductSingleDescription from "@/components/ProductSingleDescription";
@@ -98,6 +99,7 @@ export default async function ProductSinglePage({ params }: Readonly<Props>) {
 				<div className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-2">
 					<Title className="mb-0">{product.title}</Title>
 					<ProductPrice product={product} />
+					<CartDisabled className="mt-2" />
 					{!!product.descriptionHtml && (
 						<ProductSingleDescription className="mt-10" html={product.descriptionHtml} />
 					)}

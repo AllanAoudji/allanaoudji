@@ -45,9 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 						<CartDispenser>
 							<ModalProvider>
 								<header className="bg-primary fixed start-0 top-0 z-20 w-full">
-									<Suspense fallback={null}>
-										<NavBar />
-									</Suspense>
+									<NavBar />
 								</header>
 								<CartActionsProvider>
 									<LightboxProvider>
@@ -82,13 +80,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // default-collection.png
 
 // ----- Shopify -----
-// export default function FreeShippingBanner() {
-//   return <p>Livraison gratuite à partir de {threshold} €</p>;
-// }
 // revalidate
 
 // ----- Divers -----
-// Avec la fermeture du lightbox, le scroll est placer vers l'image cliqué si elle n'est pas dans la viewport.
+// Page FreeDelivery avec Sanity.
 
 // Quand le site est en ligne
 // Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.

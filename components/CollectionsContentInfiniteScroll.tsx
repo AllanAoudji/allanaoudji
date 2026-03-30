@@ -40,15 +40,17 @@ export default function CollectionsContentInfiniteScroll({
 	const [, startTransition] = useTransition();
 
 	useEffect(() => {
-		setProducts(initialProducts);
-		cursorRef.current = initialCursor ?? null;
-		hasNextPageRef.current = initialHasNextPage ?? false;
-		isFetching.current = false;
+		if (products.length === 0) {
+			setProducts(initialProducts);
+			cursorRef.current = initialCursor ?? null;
+			hasNextPageRef.current = initialHasNextPage ?? false;
+			isFetching.current = false;
 
-		if (hasNextPageRef.current && observerRef.current && sentinelRef.current) {
-			observerRef.current.observe(sentinelRef.current);
+			if (hasNextPageRef.current && observerRef.current && sentinelRef.current) {
+				observerRef.current.observe(sentinelRef.current);
+			}
 		}
-	}, [initialCursor, initialHasNextPage, initialProducts]);
+	}, [initialCursor, initialHasNextPage, initialProducts, products]);
 
 	useEffect(() => {
 		loadMore.current = () => {

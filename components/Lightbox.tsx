@@ -89,8 +89,15 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 						escapeDeactivates: false,
 						returnFocusOnDeactivate: true,
 						allowOutsideClick: true,
-						// Évite l'erreur si le premier tabbable n'est pas encore rendu
 						fallbackFocus: () => document.body,
+						// Peut-être instable
+						setReturnFocus: el => {
+							if (el instanceof HTMLElement) {
+								el.focus({ preventScroll: true });
+							}
+							// Retourner false dit à FocusTrap de ne pas gérer lui-même le focus
+							return false;
+						},
 					}}
 				>
 					<motion.div

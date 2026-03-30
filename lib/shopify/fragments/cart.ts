@@ -4,6 +4,10 @@ const cartFragment = /* GraphQL */ `
 	fragment cart on Cart {
 		id
 		checkoutUrl
+		discountCodes {
+			code
+			applicable
+		}
 		cost {
 			subtotalAmount {
 				amount
@@ -27,6 +31,34 @@ const cartFragment = /* GraphQL */ `
 						totalAmount {
 							amount
 							currencyCode
+						}
+						amountPerQuantity {
+							amount
+							currencyCode
+						}
+						compareAtAmountPerQuantity {
+							amount
+							currencyCode
+						}
+					}
+					discountAllocations {
+						discountedAmount {
+							amount
+							currencyCode
+						}
+						... on CartAutomaticDiscountAllocation {
+							title
+							discountedAmount {
+								amount
+								currencyCode
+							}
+						}
+						... on CartCodeDiscountAllocation {
+							code
+							discountedAmount {
+								amount
+								currencyCode
+							}
 						}
 					}
 					merchandise {
