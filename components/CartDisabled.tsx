@@ -16,8 +16,8 @@ export default function CartDisabled({ className }: Readonly<Props>) {
 
 	return (
 		<div className={cn(className)}>
-			<div className={"border-danger border-2 p-4"}>
-				<p className="text-danger text-sm font-bold">🛍️ Boutique temporairement indisponible</p>
+			<div className={"border-danger border px-8 py-2 text-center"}>
+				<p className="text-danger uppercase">🛍️ Boutique temporairement indisponible</p>
 				<p className="text-xs">Les commandes rouvriront bientôt.</p>
 			</div>
 		</div>
