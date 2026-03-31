@@ -1,4 +1,3 @@
-import Grid from "./Grid";
 import SkeletonImage from "./SkeletonImage";
 import SkeletonText from "./SkeletonText";
 
@@ -13,7 +12,7 @@ export default function SkeletonWorks() {
 			<SkeletonText className="mb-1.5" />
 			<SkeletonText className="mb-1.5" size={80} />
 			<SkeletonText className="mb-4" size={55} />
-			<Grid>
+			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 				<SkeletonImage ratio="3/4" />
 				<SkeletonImage ratio="3/4" />
 				<SkeletonImage ratio="3/4" />
@@ -26,7 +25,7 @@ export default function SkeletonWorks() {
 				<SkeletonImage ratio="3/4" />
 				<SkeletonImage ratio="3/4" />
 				<SkeletonImage ratio="3/4" />
-			</Grid>
+			</div>
 		</div>
 	);
 }

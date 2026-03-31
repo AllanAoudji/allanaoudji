@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
-import createCartAndSetCookie from "@/lib/actions/createCartAndSetCookie";
+import { useCallback } from "react";
 import { useCart } from "@/lib/contexts/cart-context";
 import { useModal } from "@/lib/contexts/modal-context";
 import { cn } from "@/lib/utils";
@@ -19,16 +18,9 @@ export default function NavBarCartModalButton({ className, color = "dark" }: Rea
 		openModal("cart");
 	}, [openModal]);
 
-	useEffect(() => {
-		if (!cart) {
-			createCartAndSetCookie();
-		}
-	}, [cart]);
-
 	return (
 		<div className={cn("h-header flex items-center justify-end", className)}>
 			<button
-				onClick={handleClick}
 				className={cn(
 					"text-secondary h-header cursor-pointer pl-4 text-sm font-bold uppercase",
 					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
@@ -36,6 +28,7 @@ export default function NavBarCartModalButton({ className, color = "dark" }: Rea
 						"text-primary": color === "light",
 					},
 				)}
+				onClick={handleClick}
 			>
 				<span
 					className={cn(

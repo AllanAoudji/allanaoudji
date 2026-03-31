@@ -5,18 +5,18 @@ import SkeletonWorks from "@/components/SkeletonWorks";
 import Title from "@/components/Title";
 
 export const metadata: Metadata = {
-	title: "Galerie",
-	description:
-		"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
-	openGraph: {
-		title: "Galerie | Allan Aoudji",
-		description:
-			"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
-		type: "website",
-	},
 	alternates: {
 		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery`,
 	},
+	description:
+		"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
+	openGraph: {
+		description:
+			"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
+		title: "Galerie | Allan Aoudji",
+		type: "website",
+	},
+	title: "Galerie",
 };
 
 export default function GalleryPage() {

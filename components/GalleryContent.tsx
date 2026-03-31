@@ -12,8 +12,8 @@ export default async function GalleryContent() {
 
 	return (
 		<GalleryContentInfiniteScroll
-			initialWorks={result.data.works}
 			initialTotal={result.data.total ?? 0}
+			initialWorks={result.data.works}
 		/>
 	);
 }

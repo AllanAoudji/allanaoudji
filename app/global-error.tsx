@@ -17,8 +17,8 @@ export default function GlobalError({ reset }: { reset: () => void }) {
 						<p className="font-mono text-xs opacity-30">global-error</p>
 					)}
 					<button
-						onClick={reset}
 						className="border-secondary hover:bg-secondary hover:text-quaternary mt-4 cursor-pointer border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
+						onClick={reset}
 					>
 						Réessayer
 					</button>

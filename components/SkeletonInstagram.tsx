@@ -1,9 +1,13 @@
 import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
 
-export default function SkeletonInstagram() {
+type Props = {
+	className?: string;
+};
+
+export default function SkeletonInstagram({ className }: Readonly<Props>) {
 	return (
-		<InstagramSectionContainer className="bg-secondary text-primary">
+		<InstagramSectionContainer className={className}>
 			<InstagramSectionItem />
 			<InstagramSectionItem />
 			<InstagramSectionItem />

@@ -6,19 +6,14 @@ import Image from "next/image";
 import { applyFrenchTypography, cn } from "@/lib/utils";
 import { dataset, projectId } from "@/studio/env.public";
 
-// ─── IMAGE URL BUILDER ────────────────────────────────────────────────────────
-
 const builder = createImageUrlBuilder({ projectId, dataset });
 
 function urlFor(source: SanityImageSource) {
 	return builder.image(source);
 }
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-
 const LINK_MARK_TYPES = new Set(["link", "linkPhone", "linkEmail"]);
 
-/* Retourne true si le bloc est un <p> vide */
 function isEmptyBlock(block: PortableTextBlock): boolean {
 	if (block._type !== "block") return false;
 	if (!block.children?.length) return true;
@@ -27,7 +22,6 @@ function isEmptyBlock(block: PortableTextBlock): boolean {
 	);
 }
 
-/* Déduplique les annotations de type lien — priorité : linkEmail > linkPhone > link */
 function deduplicateLinkMarks(blocks: PortableTextBlock[]): PortableTextBlock[] {
 	return blocks.map(block => {
 		if (block._type !== "block" || !block.children) return block;
@@ -60,7 +54,6 @@ function deduplicateLinkMarks(blocks: PortableTextBlock[]): PortableTextBlock[] 
 	});
 }
 
-/* Applique la typographie française sur tous les spans texte */
 function applyTypography(blocks: PortableTextBlock[]): PortableTextBlock[] {
 	return blocks.map(block => {
 		if (block._type !== "block" || !block.children) return block;
@@ -74,23 +67,21 @@ function applyTypography(blocks: PortableTextBlock[]): PortableTextBlock[] {
 	});
 }
 
-// ─── TYPES ────────────────────────────────────────────────────────────────────
-
 type FigureBlock = {
 	_type: "figure";
-	image: SanityImageSource & {
-		width?: number;
-		height?: number;
-		lqip?: string;
-	};
 	alt?: string;
 	caption?: string;
+	image: SanityImageSource & {
+		height?: number;
+		lqip?: string;
+		width?: number;
+	};
 };
 
 type TableRow = {
 	_key: string;
-	isHeader?: boolean;
 	cells: string[];
+	isHeader?: boolean;
 };
 
 type TableBlock = {
@@ -101,16 +92,14 @@ type TableBlock = {
 
 type CalloutBlock = {
 	_type: "callout";
-	tone?: "info" | "warning" | "danger";
 	text: string;
+	tone?: "info" | "warning" | "danger";
 };
 
 type Props = {
 	className?: string;
 	value: unknown[];
 };
-
-// ─── COMPONENTS ───────────────────────────────────────────────────────────────
 
 const components: PortableTextComponents = {
 	hardBreak: () => (
@@ -147,23 +136,23 @@ const components: PortableTextComponents = {
 
 		link: ({ value, children }) => (
 			<a
-				href={value?.href}
-				target={value?.blank ? "_blank" : undefined}
-				rel={value?.blank ? "noopener noreferrer" : undefined}
 				className="editorial-link"
+				href={value?.href}
+				rel={value?.blank ? "noopener noreferrer" : undefined}
+				target={value?.blank ? "_blank" : undefined}
 			>
 				{children}
 			</a>
 		),
 
 		linkPhone: ({ value, children }) => (
-			<a href={`tel:${value?.phone}`} className="editorial-link">
+			<a className="editorial-link" href={`tel:${value?.phone}`}>
 				{children}
 			</a>
 		),
 
 		linkEmail: ({ value, children }) => (
-			<a href={`mailto:${value?.email}`} className="editorial-link">
+			<a className="editorial-link" href={`mailto:${value?.email}`}>
 				{children}
 			</a>
 		),
@@ -181,13 +170,13 @@ const components: PortableTextComponents = {
 				<figure className="editorial-figure">
 					<div className="bg-quaternary relative w-full" style={{ aspectRatio: `${w}/${h}` }}>
 						<Image
-							src={src}
 							alt={value.alt ?? ""}
-							fill
-							className="h-auto object-cover"
-							sizes="(max-width: 768px) 100vw, 70vw"
-							placeholder={lqip ? "blur" : "empty"}
 							blurDataURL={lqip ?? undefined}
+							className="h-auto object-cover"
+							fill
+							placeholder={lqip ? "blur" : "empty"}
+							sizes="(max-width: 768px) 100vw, 70vw"
+							src={src}
 						/>
 					</div>
 					{value.caption && <figcaption className="editorial-caption">{value.caption}</figcaption>}
@@ -230,8 +219,6 @@ const components: PortableTextComponents = {
 	},
 };
 
-// ─── COMPOSANT ────────────────────────────────────────────────────────────────
-
 export default function PortableTextContent({ className, value }: Readonly<Props>) {
 	if (!value?.length) return null;
 
@@ -243,7 +230,7 @@ export default function PortableTextContent({ className, value }: Readonly<Props
 
 	return (
 		<div className={cn("editorial-root editorial-columns", className)}>
-			<PortableText value={processed as never} components={components} />
+			<PortableText components={components} value={processed as never} />
 		</div>
 	);
 }

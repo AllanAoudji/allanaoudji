@@ -10,8 +10,8 @@ type Props = {
 
 export default function CollectionsNavBar({ handle }: Readonly<Props>) {
 	const { collections } = useLocalShopify();
-	const collection = collections.find(c => c.handle === handle);
 
+	const collection = collections.find(c => c.handle === handle);
 	const collectionIsMissing = !!handle && !collection;
 
 	if (collections.length <= 1) return null;

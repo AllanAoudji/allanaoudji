@@ -24,7 +24,7 @@ export default function CartContentItemDeleteButton({ className, item }: Readonl
 			className={cn("uppercase opacity-50 transition", className, {
 				"hover:text-danger hover:[&_span]:after:bg-danger cursor-pointer opacity-100 duration-700 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
 					!isCartPending,
-				"cursor-not-allowed": isCartPending,
+				"cursor-progress": isCartPending,
 			})}
 			disabled={isCartPending}
 			onClick={handleAction}

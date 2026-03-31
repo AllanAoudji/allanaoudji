@@ -3,17 +3,17 @@
 import Image from "next/image";
 import { MouseEventHandler, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { workGalleryImage, workMainImage } from "@/types/sanityType";
+import { WorkGalleryImage, WorkMainImage } from "@/types/sanityType";
 import shopifyImage from "@/types/shopifyImage";
 
 type AspectRatio = "4/3" | "3/4" | "4/5" | "1/1";
 
 type Props = {
-	image: workGalleryImage | shopifyImage | workMainImage;
-	priority?: boolean;
-	ratio: AspectRatio;
 	className?: string;
+	image: WorkGalleryImage | shopifyImage | WorkMainImage;
+	priority?: boolean;
 	onClick?: MouseEventHandler<HTMLButtonElement>;
+	ratio: AspectRatio;
 };
 
 const getAspectRatioClass = (ratio: AspectRatio) => {
@@ -32,19 +32,19 @@ const getAspectRatioClass = (ratio: AspectRatio) => {
 };
 
 export default function ImageContainer({
+	className,
 	image,
+	onClick,
 	priority = false,
 	ratio,
-	className,
-	onClick,
 }: Readonly<Props>) {
 	const normalized = useMemo(() => {
 		if (!image) return null;
 
 		return {
-			url: "url" in image ? image.url : null,
 			alt: "alt" in image ? image.alt : "altText" in image ? image.altText : null,
 			blur: "lqip" in image ? image.lqip : null,
+			url: "url" in image ? image.url : null,
 		};
 	}, [image]);
 
@@ -53,27 +53,29 @@ export default function ImageContainer({
 	}
 
 	const content = (
-		<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
-			<Image
-				src={normalized.url}
-				alt={normalized.alt ?? "image"}
-				fill
-				priority={priority}
-				placeholder={normalized.blur ? "blur" : "empty"}
-				blurDataURL={normalized.blur ?? undefined}
-				className="object-cover"
-				sizes="(max-width: 768px) 100vw, 50vw"
-			/>
+		<div className="overflow-hidden">
+			<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
+				<Image
+					alt={normalized.alt ?? "image"}
+					blurDataURL={normalized.blur ?? undefined}
+					className="object-cover"
+					fill
+					placeholder={normalized.blur ? "blur" : "empty"}
+					priority={priority}
+					sizes="(max-width: 768px) 100vw, 50vw"
+					src={normalized.url}
+				/>
+			</div>
 		</div>
 	);
 
 	if (onClick) {
 		return (
 			<button
-				type="button"
-				onClick={onClick}
-				className="w-full cursor-pointer"
 				aria-label={normalized.alt ?? "Voir l'image"}
+				className="block w-full cursor-pointer"
+				onClick={onClick}
+				type="button"
 			>
 				{content}
 			</button>

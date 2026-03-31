@@ -80,11 +80,12 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 					<div className="mt-2 grid grid-cols-4 gap-2">
 						{images.map((image, index) => (
 							<button
-								key={image.id}
-								onClick={() => setActiveIndex(index)}
+								aria-label="Voir l'image en grand"
 								className={cn("transition", {
 									"cursor-pointer opacity-30": activeIndex !== index,
 								})}
+								key={image.id}
+								onClick={() => setActiveIndex(index)}
 							>
 								<ImageContainer image={image} ratio="4/3" />
 							</button>
@@ -98,8 +99,8 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 				{images.map(image => (
 					<ImageContainer
 						className="cursor-pointer"
-						key={image.url}
 						image={image}
+						key={image.url}
 						onClick={() => handleClick(image.id)}
 						ratio="3/4"
 					/>

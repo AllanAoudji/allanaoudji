@@ -1,34 +1,43 @@
+import crypto from "crypto";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import "server-only";
 import { TAGS } from "@/lib/constants";
 
+const ok = () => NextResponse.json({ status: 200 });
+
+async function verifyHmac(req: NextRequest, body: string): Promise<boolean> {
+	const hmacHeader = (await headers()).get("x-shopify-hmac-sha256");
+	if (!hmacHeader || !process.env.SHOPIFY_WEBHOOK_SECRET) return false;
+
+	const digest = crypto
+		.createHmac("sha256", process.env.SHOPIFY_WEBHOOK_SECRET)
+		.update(body, "utf8")
+		.digest("base64");
+
+	return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(hmacHeader));
+}
+
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
-	// We always need to respond with a 200 status code to shopify,
-	// otherwise it will continue to retry the request.
+	const body = await req.text();
+
+	const isValid = await verifyHmac(req, body);
+	if (!isValid) return ok();
+
+	const topic = (await headers()).get("x-shopify-topic") ?? "unknown";
 
 	const collectionWebhooks = ["collections/create", "collections/delete", "collections/update"];
 	const productWebhooks = ["products/create", "products/delete", "products/update"];
-	const topic = (await headers()).get("x-shopify-topic") || "unkown";
-	const secret = req.nextUrl.searchParams.get("secret");
-	const isCollectionUpdate = collectionWebhooks.includes(topic);
-	const isProductUpdate = productWebhooks.includes(topic);
+	const discountWebhooks = ["discounts/create", "discounts/update", "discounts/delete"];
 
-	if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
-		return NextResponse.json({ status: 200 });
-	}
-
-	if (!isCollectionUpdate && !isProductUpdate) {
-		return NextResponse.json({ status: 200 });
-	}
-
-	if (isCollectionUpdate) {
+	if (collectionWebhooks.includes(topic)) {
 		revalidateTag(TAGS.collections, { expire: 0 });
-	}
-
-	if (isProductUpdate) {
+	} else if (productWebhooks.includes(topic)) {
 		revalidateTag(TAGS.products, { expire: 0 });
+	} else if (discountWebhooks.includes(topic)) {
+		revalidateTag(TAGS.discounts, { expire: 0 });
 	}
 
-	return NextResponse.json({ status: 200, revalidate: true, now: Date.now() });
+	return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
 }

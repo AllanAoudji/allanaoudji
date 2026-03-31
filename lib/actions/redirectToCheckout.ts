@@ -8,6 +8,7 @@ import Cart from "@/types/cart";
 export async function redirectToCheckout() {
 	let cartId: string | undefined;
 	let cart: Cart | undefined;
+
 	try {
 		cartId = (await cookies()).get("cartId")?.value;
 	} catch (error) {

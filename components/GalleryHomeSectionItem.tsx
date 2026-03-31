@@ -1,21 +1,21 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
-import { work } from "@/types/sanityType";
+import { Work } from "@/types/sanityType";
 
 type Props = {
-	work: work;
+	work: Work;
 };
 
 export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
 	return (
-		<Link key={work._id} href={`/gallery/${work.slug}`} className="group block">
+		<Link className="group block" href={`/gallery/${work.slug}`} key={work._id}>
 			{!!work.mainImage && (
 				<div className="mb-1.5 overflow-hidden">
 					<ImageContainer
+						className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
 						image={work.mainImage}
 						ratio="4/3"
-						className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
 					/>
 				</div>
 			)}

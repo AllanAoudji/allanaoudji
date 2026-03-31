@@ -14,11 +14,12 @@ type Props = {
 
 export default function CollectionsFilterCollectionsItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
+
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
+
 	const isActive = pathName === item.path;
 	const newParams = new URLSearchParams(searchParams.toString());
-
 	newParams.delete("q");
 
 	const href = `${item.path}?${newParams.toString()}`;

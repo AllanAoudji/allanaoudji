@@ -9,7 +9,7 @@ export default function InfiniteSpinner({ isLoading }: Readonly<Props>) {
 
 	return (
 		<div className="flex justify-center pt-8">
-			<IconLoader2 size={32} className="text-tertiary animate-spin" />
+			<IconLoader2 className="text-tertiary animate-spin" size={32} />
 		</div>
 	);
 }

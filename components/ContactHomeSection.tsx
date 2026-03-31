@@ -1,9 +1,14 @@
+import { cn } from "@/lib/utils";
 import ContactContainer from "./ContactContainer";
 import SubTitle from "./SubTitle";
 
-export default function ContactHomeSection() {
+type Props = {
+	className?: string;
+};
+
+export default function ContactHomeSection({ className }: Readonly<Props>) {
 	return (
-		<section className={"vertical-padding odd:text-secondary even:bg-secondary even:text-primary"}>
+		<section className={cn("vertical-padding", className)}>
 			<div className="padding-container">
 				<SubTitle className="pt-12">Contact</SubTitle>
 				<ContactContainer />

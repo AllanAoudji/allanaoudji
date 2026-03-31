@@ -10,25 +10,24 @@ import { cn, convertMediaQuery } from "@/lib/utils";
 import MediaQuery from "@/types/MediaQuery";
 
 type Props = {
-	open: boolean;
-	onCloseAction: () => void;
 	children: React.ReactNode;
 	className?: string;
 	closeOn?: MediaQuery;
+	onCloseAction: () => void;
+	open: boolean;
 };
 export default function FullscreenModal({
-	open,
-	onCloseAction,
 	children,
 	className,
 	closeOn,
+	onCloseAction,
+	open,
 }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
-
-	const prevWidth = useRef(width);
-
 	useBodyScrollLock(open);
 	useEscape(onCloseAction);
+
+	const prevWidth = useRef(width);
 
 	useEffect(() => {
 		if (prevWidth.current === width) return;
@@ -44,17 +43,17 @@ export default function FullscreenModal({
 			{open && (
 				<FocusTrap
 					focusTrapOptions={{
-						escapeDeactivates: false,
-						returnFocusOnDeactivate: true,
 						allowOutsideClick: true,
+						escapeDeactivates: false,
 						fallbackFocus: () => document.body,
+						returnFocusOnDeactivate: true,
 					}}
 				>
 					<motion.div
-						className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
-						initial={{ x: "-100%" }}
 						animate={{ x: 0 }}
+						className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
 						exit={{ x: "-100%" }}
+						initial={{ x: "-100%" }}
 						transition={{
 							duration: 0.32,
 							ease: [0.32, 0.72, 0, 1],

@@ -8,9 +8,9 @@ type Props = {
 
 export default function Price({ className, price }: Readonly<Props>) {
 	return (
-		<p className={cn(className)}>
+		<span className={cn(className)}>
 			{parseFloat(price.amount).toFixed(2)}
 			{convertCurrencyCode(price.currencyCode)}
-		</p>
+		</span>
 	);
 }

@@ -2,11 +2,20 @@
 
 import { cartReducer } from "../reducers/cartReducer";
 import { getCart } from "../shopify";
-import { createContext, use, useCallback, useContext, useEffect, useMemo, useReducer } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useReducer,
+	useRef,
+} from "react";
 import Cart from "@/types/cart";
 import CartAction from "@/types/cartAction";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
+import { DiscountNode } from "@/types/shopifyDiscount";
 import UpdateCartType from "@/types/updateCartType";
 
 type CartContextCart = {
@@ -23,32 +32,53 @@ type CartContextCart = {
 };
 
 type Props = {
-	children: React.ReactNode;
 	cartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
+	children: React.ReactNode;
+	discountNodes: DiscountNode[];
 };
 
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
-export function CartProvider({ children, cartId, cartPromise }: Readonly<Props>) {
-	const initialCart = use(cartPromise);
-	const [cart, dispatch] = useReducer(cartReducer, initialCart);
+export function CartProvider({ cartId, cartPromise, children, discountNodes }: Readonly<Props>) {
+	const reducer = useCallback(
+		(cart: Cart | undefined, action: CartAction) => cartReducer(cart, action, discountNodes),
+		[discountNodes],
+	);
+
+	const [cart, dispatch] = useReducer(reducer, undefined);
+	const syncedPromiseRef = useRef<Promise<Cart | undefined> | null>(null);
+
+	useEffect(() => {
+		if (syncedPromiseRef.current === cartPromise) return;
+		syncedPromiseRef.current = cartPromise;
+
+		let cancelled = false;
+		cartPromise.then(freshCart => {
+			if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [cartPromise]);
 
 	useEffect(() => {
 		if (!cartId) return;
+		let cancelled = false;
 
 		const sync = async () => {
 			if (document.visibilityState !== "visible") return;
 			try {
 				const freshCart = await getCart(cartId);
-				if (freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
-			} catch {
-				// sync silencieuse — on ne crash pas si elle échoue
-			}
+				if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
+			} catch {}
 		};
 
 		document.addEventListener("visibilitychange", sync);
-		return () => document.removeEventListener("visibilitychange", sync);
+		return () => {
+			cancelled = true;
+			document.removeEventListener("visibilitychange", sync);
+		};
 	}, [cartId]);
 
 	const addCartItem = useCallback(

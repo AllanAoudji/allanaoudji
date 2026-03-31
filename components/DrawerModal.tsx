@@ -27,13 +27,12 @@ export default function DrawerModal({
 	position = "right",
 }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
+	useEscape(onCloseAction);
+	useBodyScrollLock(open);
 
 	const prevWidth = useRef(width);
 
 	const isRight = position === "right";
-
-	useEscape(onCloseAction);
-	useBodyScrollLock(open);
 
 	useEffect(() => {
 		if (prevWidth.current === width) return;
@@ -60,10 +59,10 @@ export default function DrawerModal({
 					{/* drawer */}
 					<FocusTrap
 						focusTrapOptions={{
-							escapeDeactivates: false,
-							returnFocusOnDeactivate: true,
 							allowOutsideClick: true,
+							escapeDeactivates: false,
 							fallbackFocus: () => document.body,
+							returnFocusOnDeactivate: true,
 						}}
 					>
 						<motion.div

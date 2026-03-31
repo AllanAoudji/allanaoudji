@@ -4,15 +4,15 @@ import LegalPageContainer from "@/components/LegalPageContainer";
 import { getGeneralConditionOfSale } from "@/studio/lib/queries";
 
 export const metadata: Metadata = {
-	title: "Conditions générales de vente",
+	alternates: {
+		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/conditions-generales-de-vente`,
+	},
 	description: "Conditions générales de vente d'Allan Aoudji.",
 	openGraph: {
 		title: "Conditions générales de vente | Allan Aoudji",
 		type: "website",
 	},
-	alternates: {
-		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/conditions-generales-de-vente`,
-	},
+	title: "Conditions générales de vente",
 };
 
 export default async function GeneralConditionsOfSalePage() {

@@ -1,4 +1,3 @@
-// about.ts
 import { singletonType } from "../lib/singletonType";
 import { defineField } from "sanity";
 

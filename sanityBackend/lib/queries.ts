@@ -22,7 +22,7 @@ const ABOUT_QUERY = defineQuery(`
   }
 `);
 
-const BANNET_QUERY = defineQuery(`
+const BANNER_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     banner
   }
@@ -91,6 +91,24 @@ const PRIVACY_POLICY_QUERY = defineQuery(`
     },
     _updatedAt
   }
+`);
+
+const SHIPPING_POLICY_QUERY = defineQuery(`
+  *[_type == "shippingPolicy"][0]{
+    content[]{
+      ...,
+      _type == "figure" => {
+        ...,
+        "image": image{
+          ...,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
+        }
+      }
+    },
+    _updatedAt
+  }  
 `);
 
 const WORKS_QUERY = defineQuery(`
@@ -164,7 +182,7 @@ export const getAbout = () => {
 };
 
 export const getBanner = () => {
-	return sanityFetch({ query: BANNET_QUERY });
+	return sanityFetch({ query: BANNER_QUERY });
 };
 
 export const getContacts = () => {
@@ -181,6 +199,10 @@ export const getLegalNotices = () => {
 
 export const getPrivacyPolicy = () => {
 	return sanityFetch({ query: PRIVACY_POLICY_QUERY });
+};
+
+export const getShippingPolicy = () => {
+	return sanityFetch({ query: SHIPPING_POLICY_QUERY });
 };
 
 export const getWorks = (from: number, to: number) => {

@@ -7,7 +7,7 @@ export default function CollectionsFilterModalHeader() {
 	const { closeModal } = useModal();
 
 	return (
-		<div className={"flex items-baseline justify-between px-4"}>
+		<div className="flex items-baseline justify-between px-4">
 			<button
 				className={cn(
 					"text-secondary h-header cursor-pointer pr-4 text-sm font-bold uppercase",

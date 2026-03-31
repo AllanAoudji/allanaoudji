@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreProducts } from "@/lib/actions/fetchMoreProducts";
 import { FETCH_PRODUCTS } from "@/lib/constants";
-import Grid from "./Grid";
 import InfiniteSpinner from "./InfiniteSpinner";
 import ProductLink from "./ProductLink";
 import Product from "@/types/product";
@@ -40,15 +39,17 @@ export default function CollectionsContentInfiniteScroll({
 	const [, startTransition] = useTransition();
 
 	useEffect(() => {
-		setProducts(initialProducts);
-		cursorRef.current = initialCursor ?? null;
-		hasNextPageRef.current = initialHasNextPage ?? false;
-		isFetching.current = false;
+		if (products.length === 0) {
+			setProducts(initialProducts);
+			cursorRef.current = initialCursor ?? null;
+			hasNextPageRef.current = initialHasNextPage ?? false;
+			isFetching.current = false;
 
-		if (hasNextPageRef.current && observerRef.current && sentinelRef.current) {
-			observerRef.current.observe(sentinelRef.current);
+			if (hasNextPageRef.current && observerRef.current && sentinelRef.current) {
+				observerRef.current.observe(sentinelRef.current);
+			}
 		}
-	}, [initialCursor, initialHasNextPage, initialProducts]);
+	}, [initialCursor, initialHasNextPage, initialProducts, products]);
 
 	useEffect(() => {
 		loadMore.current = () => {
@@ -57,7 +58,6 @@ export default function CollectionsContentInfiniteScroll({
 			isFetching.current = true;
 			setIsLoading(true);
 
-			// 🔑 Couper l'observer immédiatement et synchronement
 			if (sentinelRef.current && observerRef.current) {
 				observerRef.current.unobserve(sentinelRef.current);
 			}
@@ -78,8 +78,6 @@ export default function CollectionsContentInfiniteScroll({
 						cursorRef.current = result.pageInfo.endCursor ?? null;
 						hasNextPageRef.current = result.pageInfo.hasNextPage ?? false;
 					})
-					// TODO:
-					// Error handler
 					.catch(console.error)
 					.finally(() => {
 						isFetching.current = false;
@@ -116,13 +114,13 @@ export default function CollectionsContentInfiniteScroll({
 
 	return (
 		<>
-			<Grid>
+			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 				{products.map(product => (
 					<ProductLink key={product.id} product={product} />
 				))}
-			</Grid>
+			</div>
 
-			<div ref={sentinelRef} aria-hidden="true" />
+			<div aria-hidden="true" ref={sentinelRef} />
 
 			<InfiniteSpinner isLoading={isLoading} />
 		</>

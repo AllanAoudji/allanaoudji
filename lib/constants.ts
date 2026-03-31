@@ -18,7 +18,7 @@ export const DEFAULT_SORT: SortFilterItem = {
 };
 
 export const FETCH_WORKS_HOME = 6;
-export const FETCH_WORKS_GALLERY = 10;
+export const FETCH_WORKS_GALLERY = 4;
 export const FETCH_PRODUCTS = 12;
 
 export const FOOT_MENU: Menu[] = [
@@ -36,6 +36,11 @@ export const FOOT_MENU: Menu[] = [
 		exact: true,
 		href: "/general-conditions-of-sale",
 		title: "conditions générales de vente",
+	},
+	{
+		exact: true,
+		href: "/shipping-policy",
+		title: "politique d'expédition",
 	},
 ];
 
@@ -68,7 +73,7 @@ export const HOME_MENU: Menu = {
 	title: "home",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_SHOPIFY_API_VERSION}/graphql.json`;
 
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,
@@ -81,6 +86,7 @@ export const TAGS = {
 	collections: "collections",
 	products: "produits",
 	cart: "cart",
+	discounts: "discounts",
 };
 
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";

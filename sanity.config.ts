@@ -12,7 +12,7 @@ import { structure } from "@/studio/structure";
 
 const isDev = process.env.NODE_ENV === "development";
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
-const toolOrder = ["structure", "releases", "media"];
+const toolOrder = ["structure", "media"];
 
 export default defineConfig({
 	basePath: "/studio",
@@ -28,6 +28,7 @@ export default defineConfig({
 	tools: prev =>
 		prev
 			.filter(tool => {
+				if (tool.name === "releases") return false;
 				if (!isDev && tool.name === "vision") return false;
 				return true;
 			})

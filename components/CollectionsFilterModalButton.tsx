@@ -22,11 +22,11 @@ export default function CollectionsFilterModalButton({ className }: Readonly<Pro
 	return (
 		<div className={cn("flex justify-end", className)}>
 			<button
-				onClick={handleClick}
 				className={cn(
 					"text-secondary cursor-pointer py-1 pl-4 text-sm font-bold tracking-wide uppercase",
 					"hover:[&_span]:after:origin-right hover:[&_span]:after:scale-x-0",
 				)}
+				onClick={handleClick}
 			>
 				<span
 					className={cn(

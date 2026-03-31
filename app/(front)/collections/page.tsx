@@ -11,25 +11,25 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-	title: "Collections",
-	description: "Découvrez toutes les collections.",
-	openGraph: {
-		title: "Collections | Allan Aoudji",
-		description: "Découvrez toutes les collections.",
-		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
-		type: "website",
-		images: [
-			{
-				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/default-collection.png`,
-				width: 810,
-				height: 1200,
-				alt: "Collections Allan Aoudji",
-			},
-		],
-	},
 	alternates: {
 		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
 	},
+	description: "Découvrez toutes les collections.",
+	openGraph: {
+		description: "Découvrez toutes les collections.",
+		images: [
+			{
+				alt: "Collections Allan Aoudji",
+				height: 1200,
+				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/default-collection.png`,
+				width: 810,
+			},
+		],
+		title: "Collections | Allan Aoudji",
+		type: "website",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
+	},
+	title: "Collections",
 };
 
 export default async function CollectionsPage({ searchParams }: Props) {

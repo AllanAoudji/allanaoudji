@@ -9,5 +9,4 @@ export const projectId = assertValue(
 	process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
 	"Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID",
 );
-// not used in client.ts, but can be used in other places if needed
 export const useCdn = process.env.NEXT_PUBLIC_SANITY_USE_CDN !== "false";

@@ -14,7 +14,7 @@ export default function ProductSingleBuyControlsCallbackMessage({
 }: Readonly<Props>) {
 	const { productMessage } = useCartActions();
 
-	if (!productMessage || !finalVariant || productMessage.id !== finalVariant.id) {
+	if (!finalVariant || !productMessage || productMessage.id !== finalVariant.id) {
 		return null;
 	}
 

@@ -4,24 +4,24 @@ import { withMinimumDelay } from "../utils";
 import { getProducts, getCollectionProducts } from "@/lib/shopify";
 
 export async function fetchMoreProducts({
+	after,
 	first = 20,
 	handle,
+	searchValue,
 	sortKey,
 	reverse,
-	searchValue,
-	after,
 }: {
+	after?: string;
 	first?: number;
 	handle?: string;
+	searchValue?: string;
 	sortKey: string;
 	reverse: boolean;
-	searchValue?: string;
-	after?: string;
 }) {
 	const result = await withMinimumDelay(
 		handle
-			? getCollectionProducts({ collection: handle, reverse, sortKey, after, first })
-			: getProducts({ query: searchValue, reverse, sortKey, after, first }),
+			? getCollectionProducts({ after, collection: handle, first, reverse, sortKey })
+			: getProducts({ after, first, query: searchValue, reverse, sortKey }),
 		1000,
 	);
 

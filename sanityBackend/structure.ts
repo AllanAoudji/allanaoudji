@@ -73,6 +73,7 @@ export const structure: StructureResolver = (S, context) =>
 							),
 							singletonListItem(S, "legalNotices", "Mentions légales", BillIcon),
 							singletonListItem(S, "privacyPolicy", "Politique de confidentialité", LockIcon),
+							singletonListItem(S, "shippingPolicy", "Politique d’expédition", DocumentTextIcon),
 						]),
 				),
 

@@ -11,7 +11,7 @@ export default async function ContactLinks() {
 	return (
 		<ul className="flex w-min flex-col">
 			{result.data.map(contact => (
-				<ContactLinksItem key={contact._id} contact={contact} className={"last-of-type:pb-6"} />
+				<ContactLinksItem className={"last-of-type:pb-6"} contact={contact} key={contact._id} />
 			))}
 		</ul>
 	);

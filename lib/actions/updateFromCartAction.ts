@@ -47,11 +47,11 @@ export default async function updateFromCartAction(
 	}
 
 	let res: {
-		warning?: string;
 		data: {
 			cart: Cart;
 			quantityAdded: number;
 		};
+		warning?: string;
 	};
 	try {
 		const quantity = type === "minus" ? cartItem.quantity - 1 : cartItem.quantity + 1;
@@ -86,7 +86,7 @@ export default async function updateFromCartAction(
 		quantityAdded: res.data.quantityAdded,
 	};
 
-	if (!!res.warning) {
+	if (res.warning) {
 		return {
 			data,
 			message: res.warning,

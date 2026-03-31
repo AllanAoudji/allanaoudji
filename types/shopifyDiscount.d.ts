@@ -1,9 +1,5 @@
 import type Edge from "@/types/Edge";
 
-// ---------------------------------------------------------------------------
-// Valeurs de réduction
-// ---------------------------------------------------------------------------
-
 export type DiscountPercentage = {
 	__typename: "DiscountPercentage";
 	percentage: number;
@@ -17,11 +13,11 @@ export type DiscountAmount = {
 	};
 };
 
-export type DiscountValue = DiscountPercentage | DiscountAmount;
+export type DiscountFreeShipping = {
+	__typename: "DiscountFreeShipping";
+};
 
-// ---------------------------------------------------------------------------
-// Entités liées aux produits
-// ---------------------------------------------------------------------------
+export type DiscountValue = DiscountPercentage | DiscountAmount | DiscountFreeShipping;
 
 export type DiscountProduct = {
 	id: string;
@@ -43,10 +39,6 @@ export type DiscountCollection = {
 	title: string;
 	handle: string;
 };
-
-// ---------------------------------------------------------------------------
-// Scope de la remise (quels produits sont concernés)
-// ---------------------------------------------------------------------------
 
 export type AllDiscountItems = {
 	__typename: "AllDiscountItems";
@@ -72,18 +64,10 @@ export type DiscountCollections = {
 
 export type DiscountItems = AllDiscountItems | DiscountProducts | DiscountCollections;
 
-// ---------------------------------------------------------------------------
-// CustomerGets
-// ---------------------------------------------------------------------------
-
 export type CustomerGets = {
 	value: DiscountValue;
 	items: DiscountItems;
 };
-
-// ---------------------------------------------------------------------------
-// Combinaison de remises
-// ---------------------------------------------------------------------------
 
 export type CombinesWith = {
 	orderDiscounts: boolean;
@@ -91,9 +75,13 @@ export type CombinesWith = {
 	shippingDiscounts: boolean;
 };
 
-// ---------------------------------------------------------------------------
-// Types de remises
-// ---------------------------------------------------------------------------
+export type DiscountMinimumRequirementSubtotal = {
+	__typename: "DiscountMinimumSubtotal";
+	greaterThanOrEqualToSubtotal: {
+		amount: string;
+		currencyCode: string;
+	};
+};
 
 export type DiscountCodeBasic = {
 	__typename: "DiscountCodeBasic";
@@ -116,11 +104,31 @@ export type DiscountAutomaticBasic = {
 	customerGets: CustomerGets;
 };
 
-export type Discount = DiscountCodeBasic | DiscountAutomaticBasic;
+export type DiscountCodeFreeShipping = {
+	__typename: "DiscountCodeFreeShipping";
+	title: string;
+	startsAt: string;
+	endsAt: string | null;
+	combinesWith: CombinesWith;
+	maximumShippingPrice: { amount: string } | null;
+	minimumRequirement?: DiscountMinimumRequirementSubtotal | null;
+};
 
-// ---------------------------------------------------------------------------
-// Nœud principal retourné par la query
-// ---------------------------------------------------------------------------
+export type DiscountAutomaticFreeShipping = {
+	__typename: "DiscountAutomaticFreeShipping";
+	title: string;
+	startsAt: string;
+	endsAt: string | null;
+	combinesWith: CombinesWith;
+	maximumShippingPrice: { amount: string } | null;
+	minimumRequirement?: DiscountMinimumRequirementSubtotal | null;
+};
+
+export type Discount =
+	| DiscountCodeBasic
+	| DiscountAutomaticBasic
+	| DiscountCodeFreeShipping
+	| DiscountAutomaticFreeShipping;
 
 export type DiscountNode = {
 	id: string;

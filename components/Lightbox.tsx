@@ -18,10 +18,13 @@ type Props = {
 	resetClick: () => void;
 };
 
-// Transition partagée pour éviter la duplication
 const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
 
 export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
+	useEscape(resetClick);
+	useLeftArrow(() => prevImage?.());
+	useRightArrow(() => nextImage?.());
+
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	const imgRef = useRef<HTMLImageElement>(null);
@@ -60,10 +63,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		[prevImage],
 	);
 
-	useEscape(resetClick);
-	useLeftArrow(() => prevImage?.());
-	useRightArrow(() => nextImage?.());
-
 	useEffect(() => {
 		setIsLoaded(false);
 		if (imgRef.current?.complete) {
@@ -86,11 +85,18 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 				<FocusTrap
 					active={isVisible}
 					focusTrapOptions={{
-						escapeDeactivates: false,
-						returnFocusOnDeactivate: true,
 						allowOutsideClick: true,
-						// Évite l'erreur si le premier tabbable n'est pas encore rendu
+						escapeDeactivates: false,
 						fallbackFocus: () => document.body,
+						returnFocusOnDeactivate: true,
+
+						// Peut-être instable
+						setReturnFocus: el => {
+							if (el instanceof HTMLElement) {
+								el.focus({ preventScroll: true });
+							}
+							return false;
+						},
 					}}
 				>
 					<motion.div
@@ -142,8 +148,8 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 								style={{
 									aspectRatio: `${image.width} / ${image.height}`,
 									height: "auto",
-									maxWidth: "calc(100dvw - 4rem)",
 									maxHeight: "calc(100dvh - 4rem)",
+									maxWidth: "calc(100dvw - 4rem)",
 									width: `min(calc(100dvw - 4rem), calc((100dvh - 4rem) * ${image.width} / ${image.height}))`,
 								}}
 							>

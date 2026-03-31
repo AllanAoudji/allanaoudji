@@ -18,7 +18,7 @@ export default function ProductSingleBuyControlsAddButton({
 	product,
 	variant,
 }: Readonly<Props>) {
-	const { resetProductMessage, isCartPending, isProductPending } = useCartActions();
+	const { isCartPending, isProductPending, resetProductMessage } = useCartActions();
 
 	const buttonMessage = isProductPending
 		? "Ajout en cours..."
@@ -34,9 +34,9 @@ export default function ProductSingleBuyControlsAddButton({
 				"cursor-progress!": isProductPending,
 			})}
 			disabled={
-				!product.availableForSale ||
 				isCartPending ||
 				isProductPending ||
+				!product.availableForSale ||
 				!variant ||
 				!variant.availableForSale
 			}

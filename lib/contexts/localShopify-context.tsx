@@ -7,31 +7,31 @@ import { DiscountNode } from "@/types/shopifyDiscount";
 
 type LocalShopifyContext = {
 	collections: Collection[];
-	discountNode: DiscountNode[];
+	discountNodes: DiscountNode[];
 	popularProducts: Product[];
 };
 type Props = {
 	children: React.ReactNode;
-	initialCollection: Collection[];
-	initialDiscountNode: DiscountNode[];
-	initialPopularProduct: Product[];
+	initialCollections: Collection[];
+	initialDiscountNodes: DiscountNode[];
+	initialPopularProducts: Product[];
 };
 
 const localShopifyContext = createContext<LocalShopifyContext | undefined>(undefined);
 
 export function LocalShopifyProvider({
 	children,
-	initialCollection,
-	initialDiscountNode,
-	initialPopularProduct,
+	initialCollections,
+	initialDiscountNodes,
+	initialPopularProducts,
 }: Readonly<Props>) {
 	const value = useMemo(
 		() => ({
-			collections: initialCollection,
-			discountNode: initialDiscountNode,
-			popularProducts: initialPopularProduct,
+			collections: initialCollections,
+			discountNodes: initialDiscountNodes,
+			popularProducts: initialPopularProducts,
 		}),
-		[initialCollection, initialDiscountNode, initialPopularProduct],
+		[initialCollections, initialDiscountNodes, initialPopularProducts],
 	);
 
 	return <localShopifyContext.Provider value={value}>{children}</localShopifyContext.Provider>;

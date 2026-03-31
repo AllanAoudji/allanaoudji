@@ -18,7 +18,6 @@ import {
 	getCollectionQuery,
 	getCollectionsQuery,
 } from "./queries/collection";
-import { getDiscountsQuery } from "./queries/discount";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
@@ -27,16 +26,14 @@ import {
 	getProductQuery,
 	getProductRecommendationsQuery,
 	getProductsQuery,
-	getProductVariantsInventoryQuery,
 } from "./queries/product";
 import ShopifyCart from "@/types/ShopifyCart";
-import VariantInventory from "@/types/VariantInventory";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
 import Connection from "@/types/connection";
+import ExtractVariables from "@/types/extractVariables";
 import Product from "@/types/product";
 import ShopifyCollection from "@/types/shopifyCollection";
-import { DiscountNode } from "@/types/shopifyDiscount";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
@@ -46,7 +43,6 @@ import {
 	ShopifyCollectionProductsOperation,
 	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
-	ShopifyDiscountsQueryOperation,
 	ShopifyLatestProductsOperation,
 	ShopifyMenuOperation,
 	ShopifyPageOperation,
@@ -57,17 +53,11 @@ import {
 	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
-	ShopifyVariantsInventoryQueryOperation,
 } from "@/types/shopifyOperations";
 import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
 import ShopifyProduct from "@/types/shopifyProduct";
 
-type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
-
-/* ---------------------
--- Constants -----------
----------------------- */
 const domain = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
 	: "";
@@ -75,24 +65,27 @@ const domain = process.env.SHOPIFY_STORE_DOMAIN
 const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;
 
-/* ---------------------
--- Util functions ------
----------------------- */
 function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
 	return array.edges.map(edge => edge?.node);
 }
 
 function reshapeCart(cart: ShopifyCart): Cart {
 	if (!cart.cost?.totalTaxAmount) {
-		cart.cost.totalTaxAmount = {
-			amount: "0.0",
-			currencyCode: "USD",
-		};
+		cart.cost.totalTaxAmount = { amount: "0.0", currencyCode: "USD" };
 	}
-	return {
-		...cart,
-		lines: removeEdgesAndNodes(cart.lines),
-	};
+
+	const lines = removeEdgesAndNodes(cart.lines).map(line => ({
+		...line,
+		merchandise: {
+			...line.merchandise,
+			product: {
+				...line.merchandise.product,
+				collections: line.merchandise.product.collections?.edges?.map(e => e.node) ?? [],
+			},
+		},
+	}));
+
+	return { ...cart, lines };
 }
 
 function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
@@ -169,63 +162,6 @@ const stockWarningMessage = (quantityAdded: number): string => {
 	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
 };
 
-/* ---------------------
--- Main Fetch Function -
----------------------- */
-export async function shopifyAdminFetch<T>({
-	cache = "force-cache",
-	headers,
-	query,
-	tags,
-	variables,
-}: {
-	cache?: RequestCache;
-	headers?: HeadersInit;
-	query: string;
-	tags?: string[];
-	variables?: ExtractVariables<T>;
-}): Promise<{ status: number; body: T }> {
-	try {
-		const result = await fetch(
-			`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
-					...headers,
-				},
-				body: JSON.stringify({
-					...(query && { query }),
-					...(variables && { variables }),
-				}),
-				cache,
-				...(tags && { next: { tags } }),
-			},
-		);
-		const body = await result.json();
-		if (body.errors) {
-			throw body.errors[0];
-		}
-		return {
-			status: result.status,
-			body,
-		};
-	} catch (error) {
-		if (isShopifyError(error)) {
-			throw {
-				cause: error.cause?.toString() || "unknown",
-				status: error.status || "500",
-				message: error.message,
-				query,
-			};
-		}
-		throw {
-			error,
-			query,
-		};
-	}
-}
 export async function shopifyFetch<T>({
 	cache = "force-cache",
 	headers,
@@ -278,9 +214,6 @@ export async function shopifyFetch<T>({
 	}
 }
 
-/* ---------------------
--- Fetchers ------------
----------------------- */
 export async function addToCart(
 	cartId: string,
 	variantId: string,
@@ -330,10 +263,9 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 	const res = await shopifyFetch<ShopifyCartOperation>({
 		query: getCartQuery,
 		variables: { cartId },
-		tags: [TAGS.cart],
+		cache: "no-store",
 	});
 
-	// old carts becomes 'null' when you checkout
 	if (!res.body.data.cart) {
 		return undefined;
 	}
@@ -343,7 +275,6 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
 	const res = await shopifyFetch<ShopifyCollectionOperation>({
-		cache: "no-store",
 		query: getCollectionQuery,
 		tags: [TAGS.collections],
 		variables: { handle },
@@ -370,7 +301,6 @@ export async function getCollectionProducts({
 	products: Product[] | null;
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
-		cache: "no-store",
 		query: getCollectionProductsQuery,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
@@ -400,7 +330,6 @@ export async function getCollectionProducts({
 
 export async function getCollections(): Promise<Collection[]> {
 	const res = await shopifyFetch<ShopifyCollectionsOperation>({
-		cache: "no-store",
 		query: getCollectionsQuery,
 		tags: [TAGS.collections],
 	});
@@ -427,18 +356,8 @@ export async function getCollections(): Promise<Collection[]> {
 	return collections;
 }
 
-export async function getDiscount(): Promise<DiscountNode[]> {
-	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
-		query: getDiscountsQuery,
-		cache: "no-store",
-	});
-
-	return res.body.data.discountNodes.edges.map(edge => edge.node);
-}
-
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
-		cache: "no-store",
 		query: getLatestProductsQuery,
 		tags: [TAGS.products],
 	});
@@ -486,7 +405,6 @@ export async function getPages(): Promise<ShopifyPage[]> {
 
 export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
-		cache: "no-store",
 		query: getPopularProductsQuery,
 		tags: [TAGS.products],
 	});
@@ -500,7 +418,6 @@ export async function getPopularProducts(): Promise<Product[]> {
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
-		cache: "no-store",
 		query: getProductQuery,
 		tags: [TAGS.products],
 		variables: { handle },
@@ -515,7 +432,6 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
-		cache: "no-store",
 		query: getProductRecommendationsQuery,
 		tags: [TAGS.products],
 		variables: { productId },
@@ -541,7 +457,6 @@ export async function getProducts({
 	products: Product[];
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
-		cache: "no-store",
 		query: getProductsQuery,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },
@@ -551,24 +466,6 @@ export async function getProducts({
 		pageInfo: res.body.data.products.pageInfo,
 		products: reshapeProducts(removeEdgesAndNodes(res.body.data.products)),
 	};
-}
-
-export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {
-	const res = await shopifyAdminFetch<ShopifyVariantsInventoryQueryOperation>({
-		query: getProductVariantsInventoryQuery,
-		cache: "no-store",
-		variables: { productId },
-	});
-
-	return (
-		res.body.data.product?.variants.edges.map(edge => ({
-			variantId: edge.node.id,
-			variantTitle: edge.node.title,
-			sku: edge.node.sku,
-			inventoryQuantity: edge.node.inventoryQuantity,
-			inventoryTracked: edge.node.inventoryItem.tracked,
-		})) ?? []
-	);
 }
 
 export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {

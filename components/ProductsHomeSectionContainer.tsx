@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import Grid from "./Grid";
 import SubTitle from "./SubTitle";
 
 type Props = {
@@ -10,16 +9,11 @@ type Props = {
 
 export default function ProductsHomeSectionContainer({ children, className }: Readonly<Props>) {
 	return (
-		<section
-			className={cn(
-				"vertical-padding odd:text-secondary even:bg-secondary even:text-primary",
-				className,
-			)}
-		>
+		<section className={cn("vertical-padding", className)}>
 			<div className="padding-container">
 				<SubTitle className="text-primary">Nouveauté de la boutique</SubTitle>
 				<Link className="block" href="/collections">
-					<Grid className="md:grid-cols-4">{children}</Grid>
+					<div className="grid grid-cols-2 gap-4 md:grid-cols-4">{children}</div>
 				</Link>
 			</div>
 		</section>

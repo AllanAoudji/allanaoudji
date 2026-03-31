@@ -1,23 +1,32 @@
 import { cookies } from "next/headers";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { getCart } from "@/lib/shopify";
+import { getDiscount } from "@/lib/shopify/utils/shopifyAdminFetch";
 import CartClientWrapper from "./CartClientWrapper";
-
-type Props = {
-	children: React.ReactNode;
-};
 
 const getCartCached = cache(async (cartId: string | undefined) => {
 	return getCart(cartId);
 });
 
-export default async function CartDispenser({ children }: Readonly<Props>) {
+async function CartDispenserInner({ children }: { children: React.ReactNode }) {
 	const cartId = (await cookies()).get("cartId")?.value;
-	const cart = getCartCached(cartId);
+	const [cart, discountNodes] = await Promise.all([getCartCached(cartId), getDiscount()]);
 
 	return (
-		<CartClientWrapper initialCartId={cartId} cartPromise={cart}>
+		<CartClientWrapper
+			cartPromise={Promise.resolve(cart)}
+			discountNodes={discountNodes}
+			initialCartId={cartId}
+		>
 			{children}
 		</CartClientWrapper>
+	);
+}
+
+export default function CartDispenser({ children }: { children: React.ReactNode }) {
+	return (
+		<Suspense fallback={null}>
+			<CartDispenserInner>{children}</CartDispenserInner>
+		</Suspense>
 	);
 }

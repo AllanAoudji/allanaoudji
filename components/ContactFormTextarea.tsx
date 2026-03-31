@@ -6,7 +6,7 @@ type Props = {
 	error?: string;
 	id: keyof typeof contactFormSchema.shape;
 	placeholder: string;
-	onValueChange?: (_value: string) => void; // <-- nouveau
+	onValueChange?: (_value: string) => void;
 	title: string;
 	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
 };
@@ -28,7 +28,7 @@ export default function ContactFormTextAra({
 	};
 
 	const handleChange = (value: string) => {
-		onValueChange?.(value); // remonte au parent
+		onValueChange?.(value);
 
 		if (!showError) return;
 		validateField(id, value);
@@ -47,6 +47,7 @@ export default function ContactFormTextAra({
 			<textarea
 				aria-describedby={error ? `${id}-error` : undefined}
 				aria-invalid={!!(showError && error)}
+				autoComplete="off"
 				className="bordersecondary focus:ringsecondary block min-h-40 w-full resize-none border px-2 py-2 transition focus:ring-2 focus:outline-none"
 				id={id}
 				name={id}

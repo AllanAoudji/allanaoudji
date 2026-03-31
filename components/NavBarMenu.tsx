@@ -23,14 +23,14 @@ export default function NavBarMenu({
 				className,
 			)}
 		>
-			{asHome && <NavBarMenuItem color={color} menu={HOME_MENU} title="home" direction={direction} />}
+			{asHome && <NavBarMenuItem color={color} direction={direction} menu={HOME_MENU} title="home" />}
 			{HEAD_MENU.map(menu => (
 				<NavBarMenuItem
 					color={color}
+					direction={direction}
 					menu={menu}
 					key={menu.href}
 					title={menu.title}
-					direction={direction}
 				/>
 			))}
 		</ul>

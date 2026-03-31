@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect } from "react";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
-import Grid from "./Grid";
 import ImageContainer from "./ImageContainer";
-import { workGallery } from "@/types/sanityType";
+import { WorkGallery } from "@/types/sanityType";
 
 type Props = {
-	images: workGallery | null;
+	images: WorkGallery | null;
 };
 
 export default function GalleryImages({ images }: Readonly<Props>) {
@@ -38,18 +37,17 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 
 	return (
 		<>
-			<Grid>
+			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 				{images.map(image => (
-					<div key={image._id} className="overflow-hidden">
-						<ImageContainer
-							image={image}
-							onClick={() => handleClick(image._id)}
-							ratio="3/4"
-							className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
-						/>
-					</div>
+					<ImageContainer
+						className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
+						image={image}
+						key={image._id}
+						onClick={() => handleClick(image._id)}
+						ratio="3/4"
+					/>
 				))}
-			</Grid>
+			</div>
 		</>
 	);
 }

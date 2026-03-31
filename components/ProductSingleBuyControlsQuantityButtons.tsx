@@ -41,8 +41,12 @@ export default function ProductSingleBuyControlsQuantityButtons({
 		<div className={cn("border-secondary flex", className)}>
 			<button
 				className={cn(
-					"flex items-center justify-center border-t border-b border-l",
+					"flex cursor-pointer items-center justify-center border-t border-b border-l",
 					`h-${size} w-${size}`,
+					{
+						"cursor-not-allowed": disableDecrement || !variant || !variant.availableForSale,
+						"cursor-progress": isPending,
+					},
 				)}
 				disabled={disableDecrement || isPending}
 				onClick={decrement}
@@ -60,17 +64,23 @@ export default function ProductSingleBuyControlsQuantityButtons({
 					`h-${size} w-${size}`,
 					{
 						"text-secondary/50": isPending || !variant || !variant.availableForSale,
+						"cursor-progress": isPending,
+						"cursor-not-allowed": !variant || !variant.availableForSale,
 					},
 				)}
+				disabled={isPending || !variant || !variant.availableForSale}
 				onBlur={onBlur}
 				onChange={onChange}
-				disabled={isPending}
 				value={quantity}
 			/>
 			<button
 				className={cn(
-					"flex items-center justify-center border-t border-r border-b",
+					"flex cursor-pointer items-center justify-center border-t border-r border-b",
 					`h-${size} w-${size}`,
+					{
+						"cursor-not-allowed": disableIncrement || !variant || !variant.availableForSale,
+						"cursor-progress": isPending,
+					},
 				)}
 				disabled={disableIncrement || isPending || !variant || !variant.availableForSale}
 				onClick={increment}

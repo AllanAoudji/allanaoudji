@@ -54,17 +54,18 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 	const addItem = useCallback(
 		async (variant: ProductVariant, product: Product, quantity: number) => {
 			if (isPendingRef.current) return;
-
 			isPendingRef.current = true;
 			setIsProductPending(true);
 
-			const previousLines =
-				typeof structuredClone !== "undefined"
-					? structuredClone(cart?.lines ?? [])
-					: JSON.parse(JSON.stringify(cart?.lines ?? []));
-			addCartItem(product, variant, quantity);
+			let previousLines: CartItem[] = [];
 
 			try {
+				previousLines =
+					typeof structuredClone !== "undefined"
+						? structuredClone(cart?.lines ?? [])
+						: JSON.parse(JSON.stringify(cart?.lines ?? []));
+				addCartItem(product, variant, quantity);
+
 				const res = await addToCartAction(
 					variant.id,
 					quantity,
@@ -130,13 +131,15 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			isPendingRef.current = true;
 			setIsCartPending(true);
 
-			const previousLines =
-				typeof structuredClone !== "undefined"
-					? structuredClone(cart?.lines ?? [])
-					: JSON.parse(JSON.stringify(cart?.lines ?? []));
-			updateCartItem(cartItem.merchandise.id, "minus");
+			let previousLines: CartItem[] = [];
 
 			try {
+				previousLines =
+					typeof structuredClone !== "undefined"
+						? structuredClone(cart?.lines ?? [])
+						: JSON.parse(JSON.stringify(cart?.lines ?? []));
+				updateCartItem(cartItem.merchandise.id, "minus");
+
 				const res = await updateFromCartAction(cartItem, cartItem.quantity, "minus");
 
 				if (res.type === "success") {
@@ -172,13 +175,14 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			isPendingRef.current = true;
 			setIsCartPending(true);
 
-			const previousLines =
-				typeof structuredClone !== "undefined"
-					? structuredClone(cart?.lines ?? [])
-					: JSON.parse(JSON.stringify(cart?.lines ?? []));
-			updateCartItem(cartItem.merchandise.id, "plus");
+			let previousLines: CartItem[] = [];
 
 			try {
+				previousLines =
+					typeof structuredClone !== "undefined"
+						? structuredClone(cart?.lines ?? [])
+						: JSON.parse(JSON.stringify(cart?.lines ?? []));
+				updateCartItem(cartItem.merchandise.id, "plus");
 				const res = await updateFromCartAction(cartItem, cartItem.quantity, "plus");
 
 				if (res.type === "success") {
@@ -214,13 +218,14 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 			isPendingRef.current = true;
 			setIsCartPending(true);
 
-			const previousLines =
-				typeof structuredClone !== "undefined"
-					? structuredClone(cart?.lines ?? [])
-					: JSON.parse(JSON.stringify(cart?.lines ?? []));
-			removeCartItem(cartItem.merchandise.id);
+			let previousLines: CartItem[] = [];
 
 			try {
+				previousLines =
+					typeof structuredClone !== "undefined"
+						? structuredClone(cart?.lines ?? [])
+						: JSON.parse(JSON.stringify(cart?.lines ?? []));
+				removeCartItem(cartItem.merchandise.id);
 				const res = await removeFromCartAction(cartItem);
 
 				if (res.type === "success") {

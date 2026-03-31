@@ -1,39 +1,37 @@
-// app/sitemap.ts
 import type { MetadataRoute } from "next";
 import { getProducts, getCollections } from "@/lib/shopify";
-import { sanityFetch } from "@/studio/lib/live";
-import { WORKS_SITEMAP_QUERY } from "@/studio/lib/queries";
+import { getWorksSiteMap } from "@/studio/lib/queries";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const [{ products }, collections, { data: works }] = await Promise.all([
-		getProducts({ first: 250 }),
+	const [collections, { products }, { data: works }] = await Promise.all([
 		getCollections(),
-		sanityFetch({ query: WORKS_SITEMAP_QUERY }),
+		getProducts({ first: 250 }),
+		getWorksSiteMap(),
 	]);
 
 	const productUrls = products.map(p => ({
-		url: `${BASE_URL}/products/${p.handle}`,
-		lastModified: p.updatedAt,
 		changeFrequency: "weekly" as const,
+		lastModified: p.updatedAt,
 		priority: 0.7,
+		url: `${BASE_URL}/products/${p.handle}`,
 	}));
 
 	const collectionUrls = collections
 		.filter(c => c.handle)
 		.map(c => ({
-			url: `${BASE_URL}/collections/${c.handle}`,
-			lastModified: c.updatedAt,
 			changeFrequency: "weekly" as const,
+			lastModified: c.updatedAt,
+			url: `${BASE_URL}/collections/${c.handle}`,
 			priority: 0.6,
 		}));
 
 	const workUrls = (works ?? []).map(work => ({
-		url: `${BASE_URL}/works/${work.slug}`,
-		lastModified: new Date(work._updatedAt),
 		changeFrequency: "monthly" as const,
+		lastModified: new Date(work._updatedAt),
 		priority: 0.8,
+		url: `${BASE_URL}/gallery/${work.slug}`,
 	}));
 
 	return [
