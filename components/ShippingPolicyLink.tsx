@@ -1,16 +1,18 @@
 import Link from "next/link";
+import { MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
 	className?: string;
+	onClick?: MouseEventHandler<HTMLSpanElement> | undefined;
 };
 
-export default function ShippingPolicyLink({ className }: Readonly<Props>) {
+export default function ShippingPolicyLink({ className, onClick }: Readonly<Props>) {
 	return (
 		<p className={cn("mt-1 text-xs font-normal", className)}>
 			Taxe incluse.{" "}
 			<Link
-				href="/politique-expedition"
+				href="/shipping-policy"
 				className={cn(
 					"text-secondary cursor-pointer py-1",
 					"hover:[&_span]:after:origin-right hover:[&_span]:after:scale-x-0",
@@ -23,6 +25,7 @@ export default function ShippingPolicyLink({ className }: Readonly<Props>) {
 						"after:ease after:transition-transform after:duration-700 after:will-change-transform",
 						"after:origin-left after:scale-x-100",
 					)}
+					onClick={onClick}
 				>
 					Frais d&apos;expédition
 				</span>

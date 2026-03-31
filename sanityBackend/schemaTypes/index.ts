@@ -6,6 +6,7 @@ import legalNotices from "./legalNotices";
 import portableText from "./portableText";
 import privacyPolicy from "./privacyPolicy";
 import settings from "./settings";
+import shippingPolicy from "./shippingPolicy";
 import tag from "./tag";
 import work from "./work";
 
@@ -15,6 +16,7 @@ export const singletonTypes = new Set([
 	"generalConditionsOfSale",
 	"legalNotices",
 	"privacyPolicy",
+	"shippingPolicy",
 ]);
 
 export const schema: SchemaPluginOptions = {
@@ -24,6 +26,7 @@ export const schema: SchemaPluginOptions = {
 		generalConditionsOfSale,
 		legalNotices,
 		portableText,
+		shippingPolicy,
 		privacyPolicy,
 		settings,
 		tag,

@@ -80,7 +80,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // default-collection.png
 
 // ----- Divers -----
-// revalidate
 // fix husky
 
 // Quand le site est en ligne

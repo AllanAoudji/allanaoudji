@@ -8,10 +8,19 @@
 		"start": "next start",
 		"type-check": "tsc -b",
 		"format": "prettier --write .",
-		"prepare": "husky install",
+		"prepare": "husky || true",
 		"predev": "npm run typegen",
 		"prebuild": "npm run typegen",
 		"typegen": "sanity schema extract --enforce-required-fields --path=./sanityBackend/extract.json && sanity typegen generate"
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,md,css}": [
+			"prettier --write"
+		]
 	},
 	"dependencies": {
 		"@sanity/asset-utils": "^2.2.1",
@@ -44,6 +53,8 @@
 		"zod": "^3.25.74"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
 		"@eslint/eslintrc": "^3",
 		"@tailwindcss/postcss": "^4",
 		"@tailwindcss/typography": "^0.5.16",
@@ -51,11 +62,11 @@
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
-		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^9",
 		"eslint-config-next": "15.3.5",
 		"eslint-config-prettier": "^10.1.5",
-		"husky": "^8.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.4.0",
 		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.6.13",
 		"tailwindcss": "^4",

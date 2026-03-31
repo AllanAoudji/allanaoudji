@@ -37,6 +37,11 @@ export const FOOT_MENU: Menu[] = [
 		href: "/general-conditions-of-sale",
 		title: "conditions générales de vente",
 	},
+	{
+		exact: true,
+		href: "shipping-policy",
+		title: "politique d'expédition",
+	},
 ];
 
 export const HEAD_MENU: Menu[] = [
