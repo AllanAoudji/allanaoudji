@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CartActionsProvider } from "@/lib/contexts/cartActions-context";
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		creator: process.env.NEXT_TWITTER_CREATOR || "@allan_aoudji",
+		creator: process.env.NEXT_PUBLIC_TWITTER_CREATOR || "@allan_aoudji",
 	},
 };
 
@@ -51,6 +53,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 									<LightboxProvider>
 										<main className="mt-header flex-1">
 											{children}
+											<Analytics />
+											<SpeedInsights />
 											<Suspense fallback={null}>
 												<StudioBar />
 											</Suspense>
@@ -74,8 +78,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 // TODO:
 // ----- Editorial -----
-// Utiliser le tutoiement
-// Point à la fin des phrases, espace insécable, etc.
 // Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
 // default-collection.png
 
@@ -95,6 +97,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Pour le serverToken → API → Tokens → "Add API token" → nom au choix → permissions Viewer suffisent pour du read-only → tu copies le token généré dans ton .env comme SANITY_API_READ_TOKEN ou selon comment tu l'as nommé dans ton env.server.ts.
 
 // Resend — tu dois ajouter et vérifier ton domaine allanaoudji.com dans le dashboard Resend pour pouvoir envoyer depuis une adresse personnalisée.
+// La seule chose à faire côté dashboard Vercel, c'est d'activer Speed Insights manuellement sur ton projet (Settings → Speed Insights → Enable), sinon les données ne remontent pas même si le composant est présent. Pour Analytics en revanche, c'est automatique dès le déploiement.
 
-// ----- plus tard -----
-// deal avec console.error
+// Faire un dossier notion avec tous les services utiliser, comment récupérer la clefs pour Instagram, etc.

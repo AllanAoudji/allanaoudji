@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { redirectToCheckout } from "@/lib/actions/redirectToCheckout";
 import { useShopStatus } from "@/lib/hooks/useShopStatus";
-import { cn } from "@/lib/utils";
+import { cn, formatErrorMessage } from "@/lib/utils";
 
 type Props = {
 	className?: string;
@@ -42,9 +42,11 @@ export default function CartCheckout({ className = "" }: Readonly<Props>) {
 			>
 				{checkoutMessage()}
 			</button>
-			<p aria-label="polite" role="status">
-				{message}
-			</p>
+			{message && (
+				<p aria-label="polite" role="status">
+					{formatErrorMessage(message)}
+				</p>
+			)}
 		</form>
 	);
 }

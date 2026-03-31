@@ -73,7 +73,7 @@ export const HOME_MENU: Menu = {
 	title: "home",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_SHOPIFY_API_VERSION}/graphql.json`;
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
 
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,
@@ -128,3 +128,33 @@ export const SPAM_WORDS_FR = [
 	"trafic web",
 	"revenu passif",
 ];
+
+export const ERROR_CODE = {
+	CONTEXT_NOT_FOUND: "CONTEXT_NOT_FOUND",
+	EMAIL_FAILED: "EMAIL_FAILED",
+	EXTERNAL_API_ERROR: "EXTERNAL_API_ERROR",
+	INTERNAL_ERROR: "INTERNAL_ERROR",
+	INVALID_CART: "INVALID_CART",
+	INVALID_FORM_DATA: "INVALID_FORM_DATA",
+	INVALID_SIGNATURE: "INVALID_SIGNATURE",
+	MISSING_ENV_VARIABLE: "MISSING_ENV_VARIABLE",
+	SHOPIFY_API_ERROR: "SHOPIFY_API_ERROR",
+	TOO_MANY_MESSAGES: "TOO_MANY_MESSAGES",
+	UNKNOWN_ERROR: "UNKNOWN_ERROR",
+} as const;
+
+export type ErrorCode = (typeof ERROR_CODE)[keyof typeof ERROR_CODE];
+
+export const ERROR_MESSAGE_FR: Record<ErrorCode, string> = {
+	CONTEXT_NOT_FOUND: "Quelque chose s'est mal passé.",
+	EMAIL_FAILED: "Ton message n'a pas pu être envoyé. Réessaie dans un instant.",
+	EXTERNAL_API_ERROR: "Un service externe ne répond pas. Réessaie dans un instant.",
+	INTERNAL_ERROR: "Une erreur interne s'est produite. Réessaie dans un instant.",
+	INVALID_CART: "Ton panier est introuvable. Réessaie.",
+	INVALID_FORM_DATA: "Certains champs semblent incorrects. Vérifie et réessaie dans un instant.",
+	INVALID_SIGNATURE: "Signature invalide.",
+	MISSING_ENV_VARIABLE: "Une configuration est manquante. Contacte le support.",
+	SHOPIFY_API_ERROR: "La boutique ne répond pas. Réessaie dans un moment.",
+	TOO_MANY_MESSAGES: "Trop de messages envoyés — réessaie dans quelques minutes.",
+	UNKNOWN_ERROR: "Quelque chose s'est mal passé. Réessaie dans un instant.",
+};

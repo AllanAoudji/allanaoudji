@@ -11,7 +11,7 @@ export default function ContactContainer() {
 			<div className="order-1 col-span-6 md:col-span-3 md:col-start-4">
 				<div className="text-lg leading-6">
 					<p className="font-bold">On discute&nbsp;? Une idée de partenariat&nbsp;?</p>
-					<p>Partage ton idée, ton feedback, ou juste pour dire bonjour&nbsp;😄</p>
+					<p>Partage ton idée, ton feedback, ou juste pour dire bonjour&nbsp;🙂</p>
 				</div>
 			</div>
 			<div className="order-3 col-span-6 mt-24 flex md:order-2 md:col-span-3 md:mt-0">

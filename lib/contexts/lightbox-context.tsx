@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import LightBox from "@/components/Lightbox";
 import LightboxImage from "@/types/lightboxImage";
@@ -107,8 +108,7 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 
 export function useLightBox() {
 	const context = useContext(LightboxContext);
-	if (context === undefined) {
-		throw new Error("useLightBox must be used within a LightboxProvider");
-	}
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+
 	return context;
 }

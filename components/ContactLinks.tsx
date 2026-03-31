@@ -1,10 +1,19 @@
+import * as Sentry from "@sentry/nextjs";
 import ContactLinksItem from "./ContactLinksItem";
 import { getContacts } from "@/studio/lib/queries";
 
 export default async function ContactLinks() {
-	const result = await getContacts();
+	let result;
+	try {
+		result = await getContacts();
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "Failed to fetch contacts" },
+		});
+		return null; // silencieux, pas de throw
+	}
 
-	if (!result || !result.data || !result.data || result.data.length === 0) {
+	if (!result || !result.data || result.data.length === 0) {
 		return null;
 	}
 

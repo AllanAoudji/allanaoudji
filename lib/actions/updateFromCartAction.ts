@@ -1,7 +1,8 @@
 "use server";
 
-import { TAGS } from "../constants";
+import { ERROR_CODE, TAGS } from "../constants";
 import { removeFromCart, updateCart } from "../shopify";
+import * as Sentry from "@sentry/nextjs";
 import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
@@ -17,7 +18,7 @@ export default async function updateFromCartAction(
 ): Promise<ActionReponse<UpdateCartItemAction>> {
 	if (!cartItem.id) {
 		return {
-			message: "Item not found in cart.",
+			message: ERROR_CODE.INVALID_CART,
 			type: "error",
 		};
 	}
@@ -25,15 +26,9 @@ export default async function updateFromCartAction(
 	let cookieStore: ReadonlyRequestCookies;
 	try {
 		cookieStore = await cookies();
-	} catch (error) {
-		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
-		}
+	} catch {
 		return {
-			message: "Unknown error occurred while retrieving cookies.",
+			message: ERROR_CODE.UNKNOWN_ERROR,
 			type: "error",
 		};
 	}
@@ -41,7 +36,7 @@ export default async function updateFromCartAction(
 	const cartId = cookieStore.get("cartId")?.value;
 	if (!cartId) {
 		return {
-			message: "Cart not found.",
+			message: ERROR_CODE.INVALID_CART,
 			type: "error",
 		};
 	}
@@ -67,14 +62,17 @@ export default async function updateFromCartAction(
 		}
 		res = await updateCart(cartId, cartItem.id, cartItem.merchandise.id, quantity, previousQuantity);
 	} catch (error) {
-		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
-		}
+		Sentry.captureException(error, {
+			extra: {
+				context: "Failed to update cart item",
+				cartId,
+				cartItemId: cartItem.id,
+				merchandiseId: cartItem.merchandise.id,
+				type,
+			},
+		});
 		return {
-			message: "Unknown error occurred while updating item quantity in cart.",
+			message: ERROR_CODE.UNKNOWN_ERROR,
 			type: "error",
 		};
 	}

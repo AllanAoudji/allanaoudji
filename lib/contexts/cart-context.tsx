@@ -1,7 +1,9 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { cartReducer } from "../reducers/cartReducer";
 import { getCart } from "../shopify";
+import * as Sentry from "@sentry/nextjs";
 import {
 	createContext,
 	useCallback,
@@ -71,7 +73,11 @@ export function CartProvider({ cartId, cartPromise, children, discountNodes }: R
 			try {
 				const freshCart = await getCart(cartId);
 				if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
-			} catch {}
+			} catch (error) {
+				Sentry.captureException(error, {
+					extra: { context: "Failed to sync cart on visibility change", cartId },
+				});
+			}
 		};
 
 		document.addEventListener("visibilitychange", sync);
@@ -108,6 +114,6 @@ export function CartProvider({ cartId, cartPromise, children, discountNodes }: R
 
 export function useCart() {
 	const context = useContext(cartContext);
-	if (!context) throw new Error("useCart must be used within a CartProvider");
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
 	return context;
 }

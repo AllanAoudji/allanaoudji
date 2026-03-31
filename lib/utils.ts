@@ -3,6 +3,7 @@ import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
+import { ERROR_MESSAGE_FR } from "./constants";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
 import Product from "@/types/product";
@@ -172,6 +173,12 @@ export const formatDate = (date: string): string =>
 		month: "long",
 		year: "numeric",
 	});
+
+export function formatErrorMessage(err: unknown): string {
+	return err instanceof Error && err.message in ERROR_MESSAGE_FR
+		? ERROR_MESSAGE_FR[err.message as keyof typeof ERROR_MESSAGE_FR]
+		: ERROR_MESSAGE_FR.INTERNAL_ERROR;
+}
 
 export function getLineQuantity(cart: Cart, variantId: string): number {
 	const line = cart.lines.find(line => line.merchandise.id === variantId);

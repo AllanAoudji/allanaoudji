@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -113,4 +114,14 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+	org: "allan-aoudji",
+	project: "allan-aoudji-nextjs",
+	silent: true,
+	widenClientFileUpload: true,
+	disableLogger: true,
+	sourcemaps: {
+		disable: false,
+		deleteSourcemapsAfterUpload: true,
+	},
+});

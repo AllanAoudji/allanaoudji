@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { createContext, useContext, useMemo } from "react";
 import Collection from "@/types/collection";
 import Product from "@/types/product";
@@ -39,10 +40,7 @@ export function LocalShopifyProvider({
 
 export function useLocalShopify() {
 	const context = useContext(localShopifyContext);
-
-	if (context === undefined) {
-		throw new Error("useCollections must be used within a CollectionsProvider");
-	}
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
 
 	return context;
 }

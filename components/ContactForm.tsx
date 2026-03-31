@@ -4,7 +4,7 @@ import Form from "next/form";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import sendContact from "@/lib/actions/sendContact";
-import { cn, contactFormSchema } from "@/lib/utils";
+import { cn, contactFormSchema, formatErrorMessage } from "@/lib/utils";
 import ContactFormCallbackMessage from "./ContactFormCallbackMessage";
 import ContactFormInput from "./ContactFormInput";
 import ContactFormSubmitButton from "./ContactFormSubmitButton";
@@ -46,9 +46,9 @@ export default function ContactForm({ className }: Readonly<Props>) {
 				type: "success",
 			});
 			setValues({});
-		} catch (err) {
+		} catch (error) {
 			setCallbackMessage({
-				message: err instanceof Error ? err.message : "Erreur lors de l’envoi",
+				message: formatErrorMessage(error),
 				type: "error",
 			});
 		}
@@ -60,10 +60,10 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		try {
 			fieldSchema.parse(value);
 			setErrors(prev => ({ ...prev, [name]: undefined }));
-		} catch (err) {
+		} catch (error) {
 			isValid = false;
-			if (err instanceof z.ZodError) {
-				setErrors(prev => ({ ...prev, [name]: err.errors[0].message }));
+			if (error instanceof z.ZodError) {
+				setErrors(prev => ({ ...prev, [name]: error.errors[0].message }));
 			}
 		}
 

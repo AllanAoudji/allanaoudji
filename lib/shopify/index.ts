@@ -1,11 +1,13 @@
 import {
 	DEFAULT_COLLECTION_IMAGE,
+	ERROR_CODE,
 	HIDDEN_PRODUCT_TAG,
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
 	TAGS,
 } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartWith, getLineQuantity } from "../utils";
+import * as Sentry from "@sentry/nextjs";
 import {
 	addToCartMutation,
 	createCartMutation,
@@ -192,7 +194,15 @@ export async function shopifyFetch<T>({
 		});
 		const body = await result.json();
 		if (body.errors) {
-			throw body.errors[0];
+			Sentry.captureMessage("Shopify GraphQL error", {
+				level: "error",
+				extra: {
+					errors: body.errors,
+					query,
+					variables,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -200,17 +210,25 @@ export async function shopifyFetch<T>({
 		};
 	} catch (error) {
 		if (isShopifyError(error)) {
-			throw {
-				cause: error.cause?.toString() || "unknown",
-				status: error.status || "500",
-				message: error.message,
-				query,
-			};
+			Sentry.captureException(error, {
+				extra: {
+					context: "Shopify API error",
+					cause: error.cause?.toString() ?? "unknown",
+					status: error.status ?? 500,
+					query,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
-		throw {
-			error,
-			query,
-		};
+
+		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
+		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
+			Sentry.captureException(error, {
+				extra: { context: "Unexpected error in shopifyFetch", query },
+			});
+		}
+
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
@@ -338,11 +356,11 @@ export async function getCollections(): Promise<Collection[]> {
 	const collections: Collection[] = [
 		{
 			handle: "",
-			title: "All",
-			description: "All products",
+			title: "Tous les articles",
+			description: "Tous les articles",
 			seo: {
-				title: "All",
-				description: "All products",
+				title: "Tous les articles",
+				description: "Tous les articles",
 			},
 			path: "/collections",
 			updatedAt: "",

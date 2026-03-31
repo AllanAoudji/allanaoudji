@@ -1,7 +1,8 @@
 import { getDiscountsQuery } from "../queries/discount";
 import { getProductVariantsInventoryQuery } from "../queries/product";
+import * as Sentry from "@sentry/nextjs";
 import "server-only";
-import { SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "@/lib/constants";
+import { ERROR_CODE, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "@/lib/constants";
 import { isShopifyError } from "@/lib/type-guards";
 import VariantInventory from "@/types/VariantInventory";
 import ExtractVariables from "@/types/extractVariables";
@@ -44,7 +45,15 @@ export async function shopifyAdminFetch<T>({
 		);
 		const body = await result.json();
 		if (body.errors) {
-			throw body.errors[0];
+			Sentry.captureMessage("Shopify Admin GraphQL error", {
+				level: "error",
+				extra: {
+					errors: body.errors,
+					query,
+					variables,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -52,17 +61,24 @@ export async function shopifyAdminFetch<T>({
 		};
 	} catch (error) {
 		if (isShopifyError(error)) {
-			throw {
-				cause: error.cause?.toString() || "unknown",
-				status: error.status || "500",
-				message: error.message,
-				query,
-			};
+			Sentry.captureException(error, {
+				extra: {
+					context: "Shopify API error",
+					cause: error.cause?.toString() ?? "unknown",
+					status: error.status ?? 500,
+					query,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
-		throw {
-			error,
-			query,
-		};
+
+		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
+			Sentry.captureException(error, {
+				extra: { context: "Unexpected error in shopifyFetch", query },
+			});
+		}
+
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 

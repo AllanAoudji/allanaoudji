@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery`,
 	},
 	description:
-		"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
+		"Découvrez toutes mes créations graphiques et illustrations — affiches, prints et projets originaux.",
 	openGraph: {
 		description:
-			"Découvrez les mes créations graphiques et illustrations — affiches, prints et projets originaux.",
+			"Découvrez toutes mes créations graphiques et illustrations — affiches, prints et projets originaux.",
 		title: "Galerie | Allan Aoudji",
 		type: "website",
 	},

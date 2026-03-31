@@ -3,6 +3,8 @@
 import { addToCartAction } from "../actions/addToCartAction";
 import { removeFromCartAction } from "../actions/removeFromCartAction";
 import updateFromCartAction from "../actions/updateFromCartAction";
+import { ERROR_CODE } from "../constants";
+import { formatErrorMessage } from "../utils";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useCart } from "./cart-context";
 import { useCartRecovery } from "./cartRecovery-context";
@@ -107,13 +109,17 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					}
 				} else {
 					dispatch({ type: "ROLLBACK_ADD", previousLines });
-					setProductMessage({ id: variant.id, message: res.message, type: res.type });
+					setProductMessage({
+						id: variant.id,
+						message: res.message,
+						type: res.type,
+					});
 				}
-			} catch {
+			} catch (error) {
 				dispatch({ type: "ROLLBACK_ADD", previousLines });
 				setProductMessage({
 					id: variant.id,
-					message: "unknown error while adding product to cart.",
+					message: formatErrorMessage(error),
 					type: "error",
 				});
 			} finally {
@@ -153,11 +159,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						type: res.type,
 					});
 				}
-			} catch {
+			} catch (error) {
 				dispatch({ type: "ROLLBACK_UPDATE", previousLines });
 				setCartMessage({
 					id: cartItem.merchandise.id,
-					message: "unknown error while updating cart.",
+					message: formatErrorMessage(error),
 					type: "error",
 				});
 			} finally {
@@ -183,6 +189,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						? structuredClone(cart?.lines ?? [])
 						: JSON.parse(JSON.stringify(cart?.lines ?? []));
 				updateCartItem(cartItem.merchandise.id, "plus");
+
 				const res = await updateFromCartAction(cartItem, cartItem.quantity, "plus");
 
 				if (res.type === "success") {
@@ -196,11 +203,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						type: res.type,
 					});
 				}
-			} catch {
+			} catch (error) {
 				dispatch({ type: "ROLLBACK_UPDATE", previousLines });
 				setCartMessage({
 					id: cartItem.merchandise.id,
-					message: "unknown error while updating cart.",
+					message: formatErrorMessage(error),
 					type: "error",
 				});
 			} finally {
@@ -226,6 +233,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						? structuredClone(cart?.lines ?? [])
 						: JSON.parse(JSON.stringify(cart?.lines ?? []));
 				removeCartItem(cartItem.merchandise.id);
+
 				const res = await removeFromCartAction(cartItem);
 
 				if (res.type === "success") {
@@ -239,11 +247,11 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 						type: res.type,
 					});
 				}
-			} catch {
+			} catch (error) {
 				dispatch({ type: "ROLLBACK_REMOVE", previousLines });
 				setCartMessage({
 					id: cartItem.merchandise.id,
-					message: "unknown error while removing item.",
+					message: formatErrorMessage(error),
 					type: "error",
 				});
 			} finally {
@@ -286,6 +294,6 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 
 export function useCartActions() {
 	const context = useContext(CartActionsContext);
-	if (!context) throw new Error("useCartActions must be used within a CartActionsProvider");
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
 	return context;
 }

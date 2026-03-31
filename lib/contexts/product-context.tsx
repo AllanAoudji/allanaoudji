@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useMemo, useOptimistic } from "react";
 
@@ -68,8 +69,7 @@ export function ProductProvider({ children }: Readonly<Props>) {
 
 export function useProduct() {
 	const context = useContext(ProductContext);
-	if (context === undefined) {
-		throw new Error("useProduct must be used within a ProductProvider");
-	}
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+
 	return context;
 }
