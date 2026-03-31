@@ -39,7 +39,7 @@ export const FOOT_MENU: Menu[] = [
 	},
 	{
 		exact: true,
-		href: "shipping-policy",
+		href: "/shipping-policy",
 		title: "politique d'expédition",
 	},
 ];
@@ -73,7 +73,7 @@ export const HOME_MENU: Menu = {
 	title: "home",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_SHOPIFY_API_VERSION}/graphql.json`;
 
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,

@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import "server-only";
 import { TAGS } from "@/lib/constants";
 
 const ok = () => NextResponse.json({ status: 200 });

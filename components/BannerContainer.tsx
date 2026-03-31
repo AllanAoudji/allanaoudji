@@ -2,11 +2,11 @@
 
 import { use } from "react";
 import Banner from "./Banner";
-import { BANNET_QUERY_RESULT } from "@/studio/types";
+import { BANNER_QUERY_RESULT } from "@/studio/types";
 
 type Props = {
 	bannerPromise: Promise<{
-		data: BANNET_QUERY_RESULT;
+		data: BANNER_QUERY_RESULT;
 	}>;
 };
 

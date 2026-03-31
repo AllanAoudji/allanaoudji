@@ -86,7 +86,7 @@ export default async function updateFromCartAction(
 		quantityAdded: res.data.quantityAdded,
 	};
 
-	if (!!res.warning) {
+	if (res.warning) {
 		return {
 			data,
 			message: res.warning,

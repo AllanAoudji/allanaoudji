@@ -80,6 +80,7 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 					<div className="mt-2 grid grid-cols-4 gap-2">
 						{images.map((image, index) => (
 							<button
+								aria-label="Voir l'image en grand"
 								className={cn("transition", {
 									"cursor-pointer opacity-30": activeIndex !== index,
 								})}

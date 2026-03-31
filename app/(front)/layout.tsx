@@ -32,13 +32,13 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		creator: "@AllanAoudji",
+		creator: process.env.NEXT_TWITTER_CREATOR || "@allan_aoudji",
 	},
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="fr_FR">
+		<html lang="fr-FR">
 			<body className="font-gopher bg-primary text-secondary flex min-h-screen flex-col antialiased">
 				<Suspense fallback={<SplashScreen />}>
 					<LocalShopifyDispenser>

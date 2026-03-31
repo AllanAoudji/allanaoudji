@@ -22,7 +22,7 @@ const ABOUT_QUERY = defineQuery(`
   }
 `);
 
-const BANNET_QUERY = defineQuery(`
+const BANNER_QUERY = defineQuery(`
   *[_type == "settings"][0]{
     banner
   }
@@ -182,7 +182,7 @@ export const getAbout = () => {
 };
 
 export const getBanner = () => {
-	return sanityFetch({ query: BANNET_QUERY });
+	return sanityFetch({ query: BANNER_QUERY });
 };
 
 export const getContacts = () => {

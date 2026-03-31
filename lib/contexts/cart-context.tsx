@@ -64,17 +64,21 @@ export function CartProvider({ cartId, cartPromise, children, discountNodes }: R
 
 	useEffect(() => {
 		if (!cartId) return;
+		let cancelled = false;
 
 		const sync = async () => {
 			if (document.visibilityState !== "visible") return;
 			try {
 				const freshCart = await getCart(cartId);
-				if (freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
+				if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
 			} catch {}
 		};
 
 		document.addEventListener("visibilitychange", sync);
-		return () => document.removeEventListener("visibilitychange", sync);
+		return () => {
+			cancelled = true;
+			document.removeEventListener("visibilitychange", sync);
+		};
 	}, [cartId]);
 
 	const addCartItem = useCallback(

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { cache, Suspense } from "react";
-import { getCart, getDiscount } from "@/lib/shopify";
+import { getCart } from "@/lib/shopify";
+import { getDiscount } from "@/lib/shopify/utils/shopifyAdminFetch";
 import CartClientWrapper from "./CartClientWrapper";
 
 const getCartCached = cache(async (cartId: string | undefined) => {

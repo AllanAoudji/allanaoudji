@@ -449,9 +449,9 @@ export type ABOUT_QUERY_RESULT = {
 } | null;
 
 // Source: sanityBackend/lib/queries.ts
-// Variable: BANNET_QUERY
+// Variable: BANNER_QUERY
 // Query: *[_type == "settings"][0]{    banner  }
-export type BANNET_QUERY_RESULT = {
+export type BANNER_QUERY_RESULT = {
 	banner: string | null;
 } | null;
 
@@ -834,7 +834,7 @@ export type WORK_QUERY_RESULT = {
 declare module "@sanity/client" {
 	interface SanityQueries {
 		'\n  *[_type == "about"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n  }\n': ABOUT_QUERY_RESULT;
-		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNET_QUERY_RESULT;
+		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNER_QUERY_RESULT;
 		'\n  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{\n    _id,\n    "slug": slug.current,\n    text,\n    title,\n    url,\n    blank\n  }\n': CONTACTS_QUERY_RESULT;
 		'\n  *[_type == "generalConditionsOfSale"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;
 		'\n  *[_type == "legalNotices"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': LEGAL_NOTICES_QUERY_RESULT;

@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { getProduct, getProductVariantsInventory } from "@/lib/shopify";
+import { getProduct } from "@/lib/shopify";
+import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControls from "@/components/ProductSingleBuyControls";

@@ -1,4 +1,3 @@
-// types/ShopifyCartItem.ts
 import Connection from "./connection";
 import Money from "./money";
 import shopifyImage from "./shopifyImage";
@@ -22,11 +21,11 @@ type ShopifyCartItem = {
 		selectedOptions: { name: string; value: string }[];
 		image?: shopifyImage;
 		product: {
-			id: string;
-			title: string;
-			handle: string;
 			featuredImage: shopifyImage;
+			handle: string;
+			id: string;
 			priceRange: { maxVariantPrice: Money; minVariantPrice: Money };
+			title: string;
 			collections: Connection<{ id: string; title: string }>;
 		};
 	};
