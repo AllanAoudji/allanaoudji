@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import ContactContainer from "@/components/ContactContainer";
 
 export const metadata: Metadata = {
-	title: "Contact",
+	alternates: {
+		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
+	},
 	description:
 		"Contactez Allan Aoudji pour toute demande de collaboration, commande ou renseignement.",
 	openGraph: {
@@ -10,11 +12,9 @@ export const metadata: Metadata = {
 		type: "website",
 		url: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
 	},
-	alternates: {
-		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
-	},
+	title: "Contact",
 };
 
-export default function Contact() {
+export default function ContactPage() {
 	return <ContactContainer />;
 }

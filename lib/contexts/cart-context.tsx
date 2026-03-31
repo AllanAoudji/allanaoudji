@@ -32,15 +32,15 @@ type CartContextCart = {
 };
 
 type Props = {
-	children: React.ReactNode;
 	cartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
+	children: React.ReactNode;
 	discountNodes: DiscountNode[];
 };
 
 const cartContext = createContext<CartContextCart | undefined>(undefined);
 
-export function CartProvider({ children, cartId, cartPromise, discountNodes }: Readonly<Props>) {
+export function CartProvider({ cartId, cartPromise, children, discountNodes }: Readonly<Props>) {
 	const reducer = useCallback(
 		(cart: Cart | undefined, action: CartAction) => cartReducer(cart, action, discountNodes),
 		[discountNodes],
@@ -70,9 +70,7 @@ export function CartProvider({ children, cartId, cartPromise, discountNodes }: R
 			try {
 				const freshCart = await getCart(cartId);
 				if (freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
-			} catch {
-				// sync silencieuse
-			}
+			} catch {}
 		};
 
 		document.addEventListener("visibilitychange", sync);

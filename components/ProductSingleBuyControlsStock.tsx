@@ -12,15 +12,16 @@ type Props = {
 
 export default function ProductSingleBuyControlsStock({ className, variant }: Readonly<Props>) {
 	const { cart } = useCart();
-	const [mounted, setMounted] = useState(false);
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	const [mounted, setMounted] = useState(false);
 
 	const itemInCart = useMemo(() => {
 		return !!variant && !!cart ? getLineQuantity(cart, variant.id) : undefined;
 	}, [cart, variant]);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	return (
 		<div className={className}>

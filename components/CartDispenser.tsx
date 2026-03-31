@@ -13,9 +13,9 @@ async function CartDispenserInner({ children }: { children: React.ReactNode }) {
 
 	return (
 		<CartClientWrapper
-			initialCartId={cartId}
 			cartPromise={Promise.resolve(cart)}
 			discountNodes={discountNodes}
+			initialCartId={cartId}
 		>
 			{children}
 		</CartClientWrapper>

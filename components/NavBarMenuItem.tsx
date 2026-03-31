@@ -9,16 +9,16 @@ import Menu from "@/types/menu";
 
 type Props = {
 	color?: "dark" | "light";
+	direction?: "column" | "row";
 	menu: Menu;
 	title: string;
-	direction?: "column" | "row";
 };
 
 export default function NavBarMenuItem({
 	color = "dark",
+	direction = "row",
 	menu,
 	title,
-	direction = "row",
 }: Readonly<Props>) {
 	const { closeModal } = useModal();
 	const pathname = usePathname();

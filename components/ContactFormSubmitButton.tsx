@@ -11,13 +11,16 @@ type Props = {
 export default function ContactFormSubmitButton({ className, disabled }: Readonly<Props>) {
 	const { pending } = useFormStatus();
 
-	let buttonLabel = "Envoyer";
-	if (pending) buttonLabel = "Envoi...";
-	else if (disabled) buttonLabel = "Formulaire incomplet";
+	const buttonText = () => {
+		let buttonLabel = "Envoyer";
+		if (pending) buttonLabel = "Envoi...";
+		else if (disabled) buttonLabel = "Formulaire incomplet";
+
+		return buttonLabel;
+	};
 
 	return (
 		<button
-			type="submit"
 			disabled={pending || disabled}
 			className={cn(
 				"bg-secondary text-primary w-full border border-inherit px-4 py-2 tracking-wide uppercase transition",
@@ -29,8 +32,9 @@ export default function ContactFormSubmitButton({ className, disabled }: Readonl
 				},
 				className,
 			)}
+			type="submit"
 		>
-			{buttonLabel}
+			{buttonText()}
 		</button>
 	);
 }

@@ -15,7 +15,6 @@ import { applyFrenchTypography, cn } from "@/lib/utils";
 
 type Props = { className?: string; html: string };
 
-/* Type guard — seul h1 découpe en sections */
 function isSectionHeading(node: ReactNode): node is ReactElement {
 	return isValidElement(node) && typeof node.type === "string" && node.type === "h1";
 }
@@ -32,20 +31,17 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 		const tmp = document.createElement("div");
 		tmp.innerHTML = sanitized;
 
-		// Supprimer toutes les classes et ids
 		tmp.querySelectorAll("[class], [id]").forEach(el => {
 			el.removeAttribute("class");
 			el.removeAttribute("id");
 		});
 
-		// Stripper les styles inline sur les tableaux
 		tmp.querySelectorAll("table, thead, tbody, tfoot, tr, th, td").forEach(el => {
 			el.removeAttribute("style");
 			el.removeAttribute("width");
 			el.removeAttribute("height");
 		});
 
-		// Déplacer <figure> et <img> hors de <p>
 		tmp.querySelectorAll("p figure, p img").forEach(el => {
 			const p = el.closest("p");
 			if (!p || !p.parentNode) return;
@@ -53,12 +49,10 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 			if (!p.textContent?.trim() && !p.children.length) p.remove();
 		});
 
-		// Supprimer les <p> vides
 		tmp.querySelectorAll("p").forEach(p => {
 			if (!p.textContent?.trim() && !p.children.length) p.remove();
 		});
 
-		// Déballe un éventuel div wrapper racine unique
 		const root =
 			tmp.children.length === 1 && tmp.children[0].tagName === "DIV" ? tmp.children[0] : tmp;
 
@@ -66,7 +60,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 
 		const options: HTMLReactParserOptions = {
 			replace: (node: DOMNode) => {
-				/* NŒUDS TEXTE — typographie française */
 				if (node.type === "text") {
 					const textNode = node as Text;
 					const processed = applyFrenchTypography(textNode.data);
@@ -79,14 +72,12 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 				const { name, attribs, children } = node;
 				const style = attribs?.style ?? "";
 
-				/* ALIGNEMENT */
 				const alignMatch = style.match(/text-align:\s*(left|center|right)/);
 				if (alignMatch) {
 					const align = alignMatch[1] as "left" | "center" | "right";
 					return <div className={`text-${align}`}>{domToReact(children as DOMNode[], options)}</div>;
 				}
 
-				/* COULEURS */
 				const colorMatch = style.match(/color:\s*([^;]+)/);
 				if (colorMatch) {
 					const colorValue = colorMatch[1].trim().toLowerCase();
@@ -97,7 +88,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					return undefined;
 				}
 
-				/* IMAGES */
 				if (name === "img") {
 					const src = attribs?.src;
 					const alt = attribs?.alt ?? "";
@@ -119,7 +109,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					);
 				}
 
-				/* TABLEAUX */
 				if (name === "table") {
 					return (
 						<div className="editorial-table-wrapper">
@@ -128,7 +117,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					);
 				}
 
-				/* LIENS */
 				if (name === "a") {
 					const href = attribs?.href;
 					if (!href) return;
@@ -146,7 +134,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 		const parsedNodes = parse(cleanHtml, options);
 		const nodesArray: React.ReactNode[] = Array.isArray(parsedNodes) ? parsedNodes : [parsedNodes];
 
-		// Découpe en sections sur h1 uniquement
 		type Section = { nodes: ReactNode[] };
 		const sections: Section[] = [];
 		let current: Section = { nodes: [] };
@@ -168,7 +155,7 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 		setContent(
 			<div className="editorial-root">
 				{filteredSections.map((section, i) => (
-					<section key={i} className="editorial-section">
+					<section className="editorial-section" key={i}>
 						{section.nodes.map((child, j) => (
 							<Fragment key={j}>{child}</Fragment>
 						))}

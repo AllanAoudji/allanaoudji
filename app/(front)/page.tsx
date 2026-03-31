@@ -16,7 +16,11 @@ export default function RootPage() {
 	const bannerPromise = getBanner();
 	return (
 		<>
-			<BannerContainer bannerPromise={bannerPromise} />
+			<ErrorBoundary errorComponent={NullError}>
+				<Suspense fallback={null}>
+					<BannerContainer bannerPromise={bannerPromise} />
+				</Suspense>
+			</ErrorBoundary>
 			<HomeSections>
 				<ErrorBoundary errorComponent={NullError}>
 					<Suspense fallback={<SkeletonProductsHome />}>

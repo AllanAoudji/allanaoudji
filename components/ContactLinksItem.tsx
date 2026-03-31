@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { contact } from "@/types/sanityType";
+import { Contact } from "@/types/sanityType";
 
 type Props = {
 	className?: string;
-	contact: contact;
+	contact: Contact;
 };
 
 export default function ContactLinksItem({ className, contact }: Readonly<Props>) {

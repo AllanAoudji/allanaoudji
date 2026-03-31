@@ -4,7 +4,7 @@ import GalleryImages from "@/components/GalleryImages";
 import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
 import { getWork } from "@/studio/lib/queries";
-import { workMainImage } from "@/types/sanityType";
+import { WorkMainImage } from "@/types/sanityType";
 
 export async function generateMetadata({
 	params,
@@ -16,48 +16,47 @@ export async function generateMetadata({
 
 	if (!data) return {};
 
-	const title = data.seo?.title || data.title;
 	const description = data.seo?.description || "";
 	const imageUrl = data.mainImage?.url;
+	const title = data.seo?.title || data.title;
 
-	const generateFeatureImage = (featuredImage: workMainImage | undefined) => {
-		if (!featuredImage || !featuredImage.url || !featuredImage.width || !featuredImage.height)
+	const generateFeatureImage = (featuredImage: WorkMainImage | undefined) => {
+		if (!featuredImage || !featuredImage.height || !featuredImage.url || !featuredImage.width)
 			return [];
 		return [
 			{
+				alt: featuredImage.alt ?? title,
+				height: featuredImage.height,
 				url: featuredImage.url,
 				width: featuredImage.width,
-				height: featuredImage.height,
-				alt: featuredImage.alt ?? title,
 			},
 		];
 	};
 
 	return {
-		title,
-		description,
-		openGraph: {
-			title,
-			description,
-			type: "article",
-			modifiedTime: data._updatedAt,
-			images: generateFeatureImage(data.mainImage),
-		},
-		twitter: {
-			card: "summary_large_image",
-			title,
-			description,
-			images: imageUrl ? [imageUrl] : [],
-		},
 		alternates: {
 			canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery/${slug}`,
+		},
+		description,
+		openGraph: {
+			description,
+			images: generateFeatureImage(data.mainImage),
+			modifiedTime: data._updatedAt,
+			title,
+			type: "article",
+		},
+		title,
+		twitter: {
+			card: "summary_large_image",
+			description,
+			images: imageUrl ? [imageUrl] : [],
+			title,
 		},
 	};
 }
 
 export default async function GallerySinglePage({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-
 	const result = await getWork(slug);
 
 	if (!result || !result.data) {

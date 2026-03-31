@@ -25,23 +25,6 @@ export default function ContactForm({ className }: Readonly<Props>) {
 	const [isDisabled, setIsDisabled] = useState(true);
 	const [values, setValues] = useState<Record<string, string>>({});
 
-	// Validation d’un champ unique
-	const validateField = (name: keyof typeof contactFormSchema.shape, value: string) => {
-		const fieldSchema = contactFormSchema.shape[name];
-		let isValid = true;
-		try {
-			fieldSchema.parse(value);
-			setErrors(prev => ({ ...prev, [name]: undefined }));
-		} catch (err) {
-			isValid = false;
-			if (err instanceof z.ZodError) {
-				setErrors(prev => ({ ...prev, [name]: err.errors[0].message }));
-			}
-		}
-
-		return isValid;
-	};
-
 	const handleSubmit = async (formData: FormData) => {
 		const data = Object.fromEntries(formData.entries());
 		const parsed = contactFormSchema.safeParse(data);
@@ -62,7 +45,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 				message: "Merci, ton message a été envoyé !",
 				type: "success",
 			});
-			setValues({}); // reset values
+			setValues({});
 		} catch (err) {
 			setCallbackMessage({
 				message: err instanceof Error ? err.message : "Erreur lors de l’envoi",
@@ -71,7 +54,22 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		}
 	};
 
-	// Mettre à jour le disabled du bouton
+	const validateField = (name: keyof typeof contactFormSchema.shape, value: string) => {
+		const fieldSchema = contactFormSchema.shape[name];
+		let isValid = true;
+		try {
+			fieldSchema.parse(value);
+			setErrors(prev => ({ ...prev, [name]: undefined }));
+		} catch (err) {
+			isValid = false;
+			if (err instanceof z.ZodError) {
+				setErrors(prev => ({ ...prev, [name]: err.errors[0].message }));
+			}
+		}
+
+		return isValid;
+	};
+
 	useEffect(() => {
 		const hasErrors = Object.values(errors).some(Boolean);
 		const hasEmpty = ["firstName", "lastName", "email", "subject", "message"].some(
@@ -96,18 +94,18 @@ export default function ContactForm({ className }: Readonly<Props>) {
 
 				<div className="grid gap-0 lg:grid-cols-2 lg:gap-4">
 					<ContactFormInput
+						autoComplete="given-name"
 						error={errors.firstName}
 						id="firstName"
 						onValueChange={val => setValues(prev => ({ ...prev, firstName: val }))}
 						placeholder="Ton prénom"
 						title="Prénom"
-						autoComplete="given-name"
 						validateField={validateField}
 					/>
 
 					<ContactFormInput
-						error={errors.lastName}
 						autoComplete="family-name"
+						error={errors.lastName}
 						id="lastName"
 						onValueChange={val => setValues(prev => ({ ...prev, lastName: val }))}
 						placeholder="Ton nom"
@@ -117,24 +115,24 @@ export default function ContactForm({ className }: Readonly<Props>) {
 				</div>
 
 				<ContactFormInput
-					error={errors.email}
 					autoComplete="email"
+					error={errors.email}
 					id="email"
 					onValueChange={val => setValues(prev => ({ ...prev, email: val }))}
 					placeholder="Ton email"
 					title="Email"
-					validateField={validateField}
 					type="email"
+					validateField={validateField}
 				/>
 
 				<ContactFormInput
+					autoComplete="off"
 					error={errors.subject}
 					id="subject"
 					onValueChange={val => setValues(prev => ({ ...prev, subject: val }))}
 					placeholder="Sujet"
 					title="Sujet"
 					validateField={validateField}
-					autoComplete="off"
 				/>
 
 				<ContactFormTextAra

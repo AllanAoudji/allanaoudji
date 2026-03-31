@@ -33,8 +33,8 @@ export default async function CollectionsContent({ handle, searchParams }: Reado
 	} else {
 		res = await getProducts({
 			first: FETCH_PRODUCTS,
-			reverse,
 			query: typeof searchValue === "string" ? searchValue : undefined,
+			reverse,
 			sortKey,
 		});
 	}

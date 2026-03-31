@@ -2,16 +2,16 @@ import { IconExclamationMark, IconCheck } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
-	className?: string;
 	callbackMessage: {
-		type: "success" | "error";
 		message: string;
+		type: "success" | "error";
 	} | null;
+	className?: string;
 };
 
 export default function ContactFormCallbackMessage({
-	className,
 	callbackMessage,
+	className,
 }: Readonly<Props>) {
 	if (!callbackMessage) return null;
 

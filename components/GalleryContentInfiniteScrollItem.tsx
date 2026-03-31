@@ -1,10 +1,10 @@
 import GalleryImages from "./GalleryImages";
 import GalleryText from "./GalleryText";
 import SubTitle from "./SubTitle";
-import { work } from "@/types/sanityType";
+import { Work } from "@/types/sanityType";
 
 type Props = {
-	work: work;
+	work: Work;
 };
 
 export default function GalleryContentInfiniteScrollItem({ work }: Readonly<Props>) {

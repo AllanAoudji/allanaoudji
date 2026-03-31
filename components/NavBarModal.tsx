@@ -9,10 +9,10 @@ type Props = {
 export default function NavBarModal({ onCloseAction, open }: Readonly<Props>) {
 	return (
 		<FullscreenModal
-			onCloseAction={onCloseAction}
-			open={open}
 			className="flex flex-col items-stretch justify-end"
 			closeOn="md"
+			onCloseAction={onCloseAction}
+			open={open}
 		>
 			<NavBarMenu asHome={true} className="padding-container pb-16" direction="column" />
 		</FullscreenModal>

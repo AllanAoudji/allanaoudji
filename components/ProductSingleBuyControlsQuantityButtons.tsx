@@ -68,9 +68,9 @@ export default function ProductSingleBuyControlsQuantityButtons({
 						"cursor-not-allowed": !variant || !variant.availableForSale,
 					},
 				)}
+				disabled={isPending || !variant || !variant.availableForSale}
 				onBlur={onBlur}
 				onChange={onChange}
-				disabled={isPending || !variant || !variant.availableForSale}
 				value={quantity}
 			/>
 			<button

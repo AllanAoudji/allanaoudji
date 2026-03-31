@@ -3,10 +3,10 @@ import { MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
+	"aria-label": string;
 	className?: string;
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 	icon: React.ComponentType<IconProps>;
-	"aria-label": string;
 };
 
 export default function LightBoxButton({
@@ -17,15 +17,15 @@ export default function LightBoxButton({
 }: Readonly<Props>) {
 	return (
 		<button
-			type="button"
 			aria-label={ariaLabel}
 			className={cn(
 				"bg-tertiary/75 absolute z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full",
 				className,
 			)}
 			onClick={onClick}
+			type="button"
 		>
-			<Icon className="text-secondary" aria-hidden="true" />
+			<Icon aria-hidden="true" className="text-secondary" />
 		</button>
 	);
 }

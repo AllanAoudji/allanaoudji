@@ -2,8 +2,8 @@
 
 import { useCart } from "@/lib/contexts/cart-context";
 import { cn } from "@/lib/utils";
-import CartDisabled from "./CartDisabled";
 import CartHeaderCloseButton from "./CartHeaderCloseButton";
+import ShopDisabled from "./ShopDisabled";
 
 type Props = {
 	className?: string;
@@ -22,7 +22,7 @@ export default function CartHeader({ className }: Readonly<Props>) {
 					</h4>
 				</div>
 			</div>
-			<CartDisabled className="mb-4" />
+			<ShopDisabled className="mb-4" />
 		</div>
 	);
 }

@@ -10,7 +10,6 @@ interface Args {
 
 const useProductSingleSelectedVariant = ({ state, variants, variantsInventory }: Args) => {
 	const { finalVariant, finalVariantInventory } = useMemo(() => {
-		// Trouve la variante correspondant au state ou prends la seule variante disponible
 		const matchedVariant = variants.find(variant =>
 			variant.selectedOptions.every(option => option.value === state[option.name.toLowerCase()]),
 		);

@@ -7,11 +7,11 @@ import Product from "@/types/product";
 
 type Props = {
 	className?: string;
-	product: Product;
 	onClick?: MouseEventHandler<HTMLAnchorElement>;
+	product: Product;
 };
 
-export default function ProductLink({ className, product, onClick }: Readonly<Props>) {
+export default function ProductLink({ className, onClick, product }: Readonly<Props>) {
 	const hasSecondImage = product.images.length > 1;
 
 	return (

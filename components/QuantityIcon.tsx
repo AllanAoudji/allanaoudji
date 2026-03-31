@@ -9,16 +9,6 @@ type Props = {
 	type: "plus" | "minus" | "delete";
 };
 
-export default function QuantityIcon({ className, size = "normal", type }: Readonly<Props>) {
-	if (type === "plus") {
-		return <IconPlus className={cn(className)} size={convertSize(size)} />;
-	}
-	if (type === "minus") {
-		return <IconMinus className={cn(className)} size={convertSize(size)} />;
-	}
-	return <IconX className={cn(className)} size={convertSize(size)} />;
-}
-
 const convertSize = (size: Size): number => {
 	switch (size) {
 		case "large":
@@ -30,3 +20,13 @@ const convertSize = (size: Size): number => {
 			return 12;
 	}
 };
+
+export default function QuantityIcon({ className, size = "normal", type }: Readonly<Props>) {
+	if (type === "plus") {
+		return <IconPlus className={cn(className)} size={convertSize(size)} />;
+	}
+	if (type === "minus") {
+		return <IconMinus className={cn(className)} size={convertSize(size)} />;
+	}
+	return <IconX className={cn(className)} size={convertSize(size)} />;
+}

@@ -15,14 +15,13 @@ const PERMANENT_THRESHOLD = {
 };
 
 export default function FreeDelivery({ className }: Readonly<Props>) {
-	const { discountNode } = useLocalShopify();
+	const { discountNodes } = useLocalShopify();
 
-	const promotional = getFreeShippingThreshold(discountNode);
+	const promotional = getFreeShippingThreshold(discountNodes);
 
 	const threshold = (() => {
 		if (!promotional) return PERMANENT_THRESHOLD;
 
-		// Toujours afficher le seuil le plus bas (le plus avantageux)
 		return parseFloat(promotional.amount) < parseFloat(PERMANENT_THRESHOLD.amount)
 			? promotional
 			: PERMANENT_THRESHOLD;

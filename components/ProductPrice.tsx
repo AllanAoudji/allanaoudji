@@ -13,11 +13,11 @@ type Props = {
 };
 
 export default function ProductPrice({ className, product, size = "sm" }: Readonly<Props>) {
-	const { discountNode } = useLocalShopify();
+	const { discountNodes } = useLocalShopify();
 
-	const originalPrice = parseFloat(product.priceRange.minVariantPrice.amount);
 	const collectionIds = product.collections.map(c => c.id);
-	const discounts = getApplicableDiscounts(discountNode, product.id, collectionIds);
+	const originalPrice = parseFloat(product.priceRange.minVariantPrice.amount);
+	const discounts = getApplicableDiscounts(discountNodes, product.id, collectionIds);
 	const { finalPrice, applied } = computeFinalPrice(originalPrice, discounts);
 	const hasDiscount = applied.length > 0;
 
@@ -29,8 +29,8 @@ export default function ProductPrice({ className, product, size = "sm" }: Readon
 						"text-xs": size === "xs",
 					})}
 					price={{
-						currencyCode: product.priceRange.minVariantPrice.currencyCode,
 						amount: finalPrice.toString(),
+						currencyCode: product.priceRange.minVariantPrice.currencyCode,
 					}}
 				/>
 			)}

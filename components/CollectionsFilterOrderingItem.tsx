@@ -12,6 +12,7 @@ type Props = {
 export default function CollectionsFilterOrderingItem({ item }: Readonly<Props>) {
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
+
 	const active = searchParams.get("sort") === item.slug;
 	const q = searchParams.get("q");
 

@@ -28,9 +28,6 @@ export default function ProductSingleBuyControls({
 	product,
 	variantsInventory,
 }: Readonly<Props>) {
-	// --------------------------------
-	// --------- State & Hooks --------
-	// --------------------------------
 	const { variants } = product;
 
 	const { state } = useProduct();
@@ -54,10 +51,6 @@ export default function ProductSingleBuyControls({
 		resetQuantity,
 	} = useProductSingleQuantity({ variants, finalVariantInventory });
 
-	// --------------------------------
-	// ------------ action ------------
-	// --------------------------------
-
 	const cartAction = useCallback(() => {
 		if (!finalVariant) return;
 		resetQuantity();
@@ -74,9 +67,6 @@ export default function ProductSingleBuyControls({
 		};
 	}, [resetProductMessage]);
 
-	// --------------------------------
-	// ------------ return ------------
-	// --------------------------------
 	return (
 		<div className={cn(className)}>
 			<ProductSingleBuyControlsVariantSelector
@@ -99,8 +89,8 @@ export default function ProductSingleBuyControls({
 					variant={finalVariant}
 				/>
 				<ProductSingleBuyControlsAddButton
-					className="grow"
 					cartAction={cartAction}
+					className="grow"
 					product={product}
 					variant={finalVariant}
 				/>

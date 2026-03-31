@@ -12,6 +12,7 @@ type Props = {
 
 export default function BannerContainer({ bannerPromise }: Readonly<Props>) {
 	const query = use(bannerPromise);
+
 	if (!query || !query.data || !query.data.banner || query.data.banner === "") return null;
 
 	return <Banner banner={query.data.banner} separator="    ★    " speed={30} />;

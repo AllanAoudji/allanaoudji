@@ -16,6 +16,7 @@ export async function addToCartAction(
 	previousQuantity: number,
 ): Promise<ActionReponse<UpdateCartItemAction>> {
 	let cookieStore: ReadonlyRequestCookies;
+
 	try {
 		cookieStore = await cookies();
 	} catch (error) {

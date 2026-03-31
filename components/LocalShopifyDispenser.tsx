@@ -7,16 +7,16 @@ type Props = {
 };
 
 export default async function LocalShopifyDispenser({ children }: Readonly<Props>) {
-	const [collections, popularProducts, discountNodes] = await withMinimumDelay(
-		Promise.all([getCollections(), getPopularProducts(), getDiscount()]),
+	const [collections, discountNodes, popularProducts] = await withMinimumDelay(
+		Promise.all([getCollections(), getDiscount(), getPopularProducts()]),
 		2000,
 	);
 
 	return (
 		<LocalShopifyProvider
-			initialDiscountNode={discountNodes}
-			initialCollection={collections}
-			initialPopularProduct={popularProducts}
+			initialCollections={collections}
+			initialDiscountNodes={discountNodes}
+			initialPopularProducts={popularProducts}
 		>
 			{children}
 		</LocalShopifyProvider>

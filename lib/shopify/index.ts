@@ -65,9 +65,6 @@ import ShopifyProduct from "@/types/shopifyProduct";
 
 type ExtractVariables<T> = T extends { variables: infer V } ? V : never;
 
-/* ---------------------
--- Constants -----------
----------------------- */
 const domain = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
 	: "";
@@ -75,24 +72,27 @@ const domain = process.env.SHOPIFY_STORE_DOMAIN
 const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;
 
-/* ---------------------
--- Util functions ------
----------------------- */
 function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
 	return array.edges.map(edge => edge?.node);
 }
 
 function reshapeCart(cart: ShopifyCart): Cart {
 	if (!cart.cost?.totalTaxAmount) {
-		cart.cost.totalTaxAmount = {
-			amount: "0.0",
-			currencyCode: "USD",
-		};
+		cart.cost.totalTaxAmount = { amount: "0.0", currencyCode: "USD" };
 	}
-	return {
-		...cart,
-		lines: removeEdgesAndNodes(cart.lines),
-	};
+
+	const lines = removeEdgesAndNodes(cart.lines).map(line => ({
+		...line,
+		merchandise: {
+			...line.merchandise,
+			product: {
+				...line.merchandise.product,
+				collections: line.merchandise.product.collections?.edges?.map(e => e.node) ?? [],
+			},
+		},
+	}));
+
+	return { ...cart, lines };
 }
 
 function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
@@ -169,9 +169,6 @@ const stockWarningMessage = (quantityAdded: number): string => {
 	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
 };
 
-/* ---------------------
--- Main Fetch Function -
----------------------- */
 export async function shopifyAdminFetch<T>({
 	cache = "force-cache",
 	headers,
@@ -278,9 +275,6 @@ export async function shopifyFetch<T>({
 	}
 }
 
-/* ---------------------
--- Fetchers ------------
----------------------- */
 export async function addToCart(
 	cartId: string,
 	variantId: string,
@@ -333,7 +327,6 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 		cache: "no-store",
 	});
 
-	// old carts becomes 'null' when you checkout
 	if (!res.body.data.cart) {
 		return undefined;
 	}

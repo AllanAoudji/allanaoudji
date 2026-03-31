@@ -9,20 +9,20 @@ import Cart from "@/types/cart";
 import { DiscountNode } from "@/types/shopifyDiscount";
 
 type Props = {
-	children: React.ReactNode;
-	initialCartId: string | undefined;
 	cartPromise: Promise<Cart | undefined>;
+	children: React.ReactNode;
 	discountNodes: DiscountNode[];
+	initialCartId: string | undefined;
 };
 
 export default function CartClientWrapper({
-	children,
-	initialCartId,
 	cartPromise,
+	children,
 	discountNodes,
+	initialCartId,
 }: Readonly<Props>) {
-	const [currentCartPromise, setCurrentCartPromise] = useState(cartPromise);
 	const [currentCartId, setCurrentCartId] = useState(initialCartId);
+	const [currentCartPromise, setCurrentCartPromise] = useState(cartPromise);
 	const [hasError, setHasError] = useState(false);
 
 	const onCartCreated = useCallback((newCartId: string) => {
@@ -39,8 +39,8 @@ export default function CartClientWrapper({
 		<CartDispenserErrorBoundary onError={() => setHasError(true)}>
 			<Suspense fallback={null}>
 				<CartProvider
-					cartPromise={currentCartPromise}
 					cartId={currentCartId}
+					cartPromise={currentCartPromise}
 					discountNodes={discountNodes}
 				>
 					{children}

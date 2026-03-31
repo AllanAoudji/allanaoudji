@@ -6,24 +6,26 @@ import { FETCH_WORKS_GALLERY } from "@/lib/constants";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
 import GalleryContentInfiniteScrollItem from "./GalleryContentInfiniteScrollItem";
 import InfiniteSpinner from "./InfiniteSpinner";
-import { works } from "@/types/sanityType";
+import { Works } from "@/types/sanityType";
 
 type Props = {
 	initialTotal: number;
-	initialWorks: works;
+	initialWorks: Works;
 };
 
-const getLightBoxImages = (works: works) => {
+const getLightBoxImages = (works: Works) => {
 	if (!works) return [];
 	return works.flatMap(work => work.gallery || []);
 };
 
 export default function GalleryContentInfiniteScroll({
-	initialWorks,
 	initialTotal,
+	initialWorks,
 }: Readonly<Props>) {
+	const { appendImages } = useLightBox();
+
 	const [isLoading, setIsLoading] = useState(false);
-	const [works, setWorks] = useState<works>(initialWorks);
+	const [works, setWorks] = useState<Works>(initialWorks);
 
 	const fromRef = useRef(FETCH_WORKS_GALLERY);
 	const hasNextPageRef = useRef(FETCH_WORKS_GALLERY < initialTotal);
@@ -34,8 +36,6 @@ export default function GalleryContentInfiniteScroll({
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	const [, startTransition] = useTransition();
-
-	const { appendImages } = useLightBox();
 
 	useEffect(() => {
 		if (!works || works.length <= prevWorksLengthRef.current) return;
@@ -107,7 +107,7 @@ export default function GalleryContentInfiniteScroll({
 				<GalleryContentInfiniteScrollItem key={work._id} work={work} />
 			))}
 
-			<div ref={sentinelRef} aria-hidden="true" />
+			<div aria-hidden="true" ref={sentinelRef} />
 
 			<InfiniteSpinner isLoading={isLoading} />
 		</>

@@ -15,20 +15,20 @@ import "@/app/globals.css";
 import { SanityLive } from "@/studio/lib/live";
 
 export const metadata: Metadata = {
-	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
 	alternates: {
 		canonical: process.env.NEXT_PUBLIC_SITE_URL,
+	},
+	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
+	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+	openGraph: {
+		images: [{ url: "/og-default.jpg", width: 1200, height: 630 }],
+		locale: "fr_FR",
+		siteName: "Allan Aoudji",
+		type: "website",
 	},
 	title: {
 		default: "Allan Aoudji",
 		template: "%s | Allan Aoudji",
-	},
-	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
-	openGraph: {
-		siteName: "Allan Aoudji",
-		locale: "fr_FR",
-		type: "website",
-		images: [{ url: "/og-default.jpg", width: 1200, height: 630 }], // ← image par défaut
 	},
 	twitter: {
 		card: "summary_large_image",
@@ -78,7 +78,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Point à la fin des phrases, espace insécable, etc.
 // Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
 // default-collection.png
-// clean les files, commentaires et ordre alphabetique
 
 // ---------------
 // Quand le site est en ligne
@@ -96,3 +95,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 // Pour le serverToken → API → Tokens → "Add API token" → nom au choix → permissions Viewer suffisent pour du read-only → tu copies le token généré dans ton .env comme SANITY_API_READ_TOKEN ou selon comment tu l'as nommé dans ton env.server.ts.
 
 // Resend — tu dois ajouter et vérifier ton domaine allanaoudji.com dans le dashboard Resend pour pouvoir envoyer depuis une adresse personnalisée.
+
+// ----- plus tard -----
+// deal avec console.error

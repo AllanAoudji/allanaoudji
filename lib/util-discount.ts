@@ -6,10 +6,6 @@ import type {
 	CombinesWith,
 } from "@/types/shopifyDiscount";
 
-// ---------------------------------------------------------------------------
-// Types utilitaires
-// ---------------------------------------------------------------------------
-
 export type ApplicableDiscount = {
 	title: string;
 	value: DiscountValue;
@@ -21,10 +17,6 @@ export type DiscountResult = {
 	applied: ApplicableDiscount[];
 	isCombined: boolean;
 };
-
-// ---------------------------------------------------------------------------
-// Helpers internes
-// ---------------------------------------------------------------------------
 
 function isDiscountActive(startsAt: string, endsAt: string | null): boolean {
 	const now = new Date();
@@ -85,12 +77,6 @@ function findCombinableGroups(discounts: ApplicableDiscount[]): ApplicableDiscou
 	return groups;
 }
 
-// ---------------------------------------------------------------------------
-// Filtre les remises automatiques applicables à un produit donné
-// ⚠️ Seuls DiscountAutomaticBasic sont pris en compte pour le prix produit
-// DiscountAutomaticFreeShipping est géré séparément via getFreeShippingThreshold
-// ---------------------------------------------------------------------------
-
 export function getApplicableDiscounts(
 	discountNodes: DiscountNode[],
 	productId: string,
@@ -99,7 +85,6 @@ export function getApplicableDiscounts(
 	const applicable: ApplicableDiscount[] = [];
 
 	for (const { discount } of discountNodes) {
-		// Uniquement les remises automatiques sur produit
 		if (discount.__typename !== "DiscountAutomaticBasic") continue;
 
 		if (!isDiscountActive(discount.startsAt, discount.endsAt)) continue;
@@ -115,10 +100,6 @@ export function getApplicableDiscounts(
 
 	return applicable;
 }
-
-// ---------------------------------------------------------------------------
-// Calcule le prix final
-// ---------------------------------------------------------------------------
 
 export function computeFinalPrice(
 	originalPrice: number,
@@ -153,10 +134,6 @@ export function computeFinalPrice(
 	};
 }
 
-// ---------------------------------------------------------------------------
-// Formate un label de remise lisible
-// ---------------------------------------------------------------------------
-
 export function formatDiscountLabel(value: DiscountValue, locale = "fr-FR"): string {
 	switch (value.__typename) {
 		case "DiscountPercentage":
@@ -171,15 +148,9 @@ export function formatDiscountLabel(value: DiscountValue, locale = "fr-FR"): str
 	}
 }
 
-// ---------------------------------------------------------------------------
-// Retourne le seuil de livraison gratuite (automatiques uniquement)
-// ⚠️ DiscountCodeFreeShipping et DiscountCodeBasic sont ignorés
-// ---------------------------------------------------------------------------
-
 export function getFreeShippingThreshold(discountNodes: DiscountNode[]): Money | null {
 	const shippingDiscounts: Money[] = discountNodes
 		.map(({ discount }) => {
-			// Livraison gratuite automatique avec montant minimum
 			if (
 				discount.__typename === "DiscountAutomaticFreeShipping" &&
 				isDiscountActive(discount.startsAt, discount.endsAt)
@@ -199,7 +170,6 @@ export function getFreeShippingThreshold(discountNodes: DiscountNode[]): Money |
 
 	if (!shippingDiscounts.length) return null;
 
-	// Seuil le plus bas si plusieurs remises livraison existent
 	shippingDiscounts.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
 	return shippingDiscounts[0];
 }

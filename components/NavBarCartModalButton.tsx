@@ -21,7 +21,6 @@ export default function NavBarCartModalButton({ className, color = "dark" }: Rea
 	return (
 		<div className={cn("h-header flex items-center justify-end", className)}>
 			<button
-				onClick={handleClick}
 				className={cn(
 					"text-secondary h-header cursor-pointer pl-4 text-sm font-bold uppercase",
 					"hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100",
@@ -29,6 +28,7 @@ export default function NavBarCartModalButton({ className, color = "dark" }: Rea
 						"text-primary": color === "light",
 					},
 				)}
+				onClick={handleClick}
 			>
 				<span
 					className={cn(

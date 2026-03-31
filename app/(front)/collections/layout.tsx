@@ -8,7 +8,6 @@ export default function CollectionsLayout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>boutique</Title>
-
 			{children}
 		</div>
 	);

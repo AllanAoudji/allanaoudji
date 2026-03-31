@@ -1,4 +1,4 @@
-import CartItem from "./cartItem";
+import ShopifyCartItem from "./ShopifyCartItem";
 import Connection from "./connection";
 import Money from "./money";
 
@@ -14,7 +14,7 @@ type ShopifyCart = {
 		totalAmount: Money;
 		totalTaxAmount: Money;
 	};
-	lines: Connection<CartItem>;
+	lines: Connection<ShopifyCartItem>;
 	totalQuantity: number;
 };
 

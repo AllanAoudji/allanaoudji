@@ -18,7 +18,6 @@ export function CartRecoveryProvider({ children, onCartCreated }: Readonly<Props
 	);
 }
 
-// nullable volontairement — pas toujours monté
 export function useCartRecovery() {
 	return useContext(CartRecoveryContext);
 }

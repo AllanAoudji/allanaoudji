@@ -17,11 +17,11 @@ export default async function ProductsHomeSection({ className }: Readonly<Props>
 		<ProductsHomeSectionContainer className={className}>
 			{products.map(product => (
 				<ImageContainer
+					className="border-primary border"
 					image={product.featuredImage}
+					key={product.id}
 					priority={true}
 					ratio="3/4"
-					key={product.id}
-					className="border-primary border"
 				/>
 			))}
 		</ProductsHomeSectionContainer>

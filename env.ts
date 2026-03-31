@@ -10,9 +10,9 @@ const envVariables = z.object({
 	NEXT_PUBLIC_SANITY_DATASET: z.string(),
 	NEXT_PUBLIC_SANITY_PROJECT_ID: z.string(),
 	NEXT_PUBLIC_SANITY_USE_CDN: z.string(),
-	NEXT_PUBLIC_SITE_URL: z.string(),
 	NEXT_PUBLIC_SHOP_ENABLED: z.string(),
 	NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: z.string(),
+	NEXT_PUBLIC_SITE_URL: z.string(),
 	RESEND_API_KEY: z.string(),
 	SANITY_SERVER_TOKEN: z.string(),
 	SANITY_WEBHOOK_SECRET: z.string(),
@@ -21,8 +21,8 @@ const envVariables = z.object({
 	SHOPIFY_PUBLIC_ACCESS_TOKEN: z.string(),
 	SHOPIFY_STORE_DOMAIN: z.string(),
 	SHOPIFY_WEBHOOK_SECRET: z.string(),
-	UPSTASH_REDIS_REST_URL: z.string(),
 	UPSTASH_REDIS_REST_TOKEN: z.string(),
+	UPSTASH_REDIS_REST_URL: z.string(),
 });
 
 envVariables.parse(process.env);

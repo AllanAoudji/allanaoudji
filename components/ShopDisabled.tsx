@@ -7,7 +7,7 @@ type Props = {
 	className?: string;
 };
 
-export default function CartDisabled({ className }: Readonly<Props>) {
+export default function ShopDisabled({ className }: Readonly<Props>) {
 	const { isEnabled } = useShopStatus();
 
 	if (isEnabled) {

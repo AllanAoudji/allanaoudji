@@ -3,13 +3,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import LightBox from "@/components/Lightbox";
 import LightboxImage from "@/types/lightboxImage";
-import { workGalleryImage } from "@/types/sanityType";
+import { WorkGalleryImage } from "@/types/sanityType";
 import shopifyImage from "@/types/shopifyImage";
 
-// types/lightboxImage.ts
-
-function normalizeSanityImage(img: workGalleryImage): LightboxImage {
-	return img as LightboxImage; // _id already exists
+function normalizeSanityImage(img: WorkGalleryImage): LightboxImage {
+	return img as LightboxImage;
 }
 
 export function normalizeShopifyImage(img: shopifyImage): LightboxImage {
@@ -21,10 +19,10 @@ type Props = {
 };
 
 type LightBoxContextType = {
-	appendImages: (_newImages: workGalleryImage[] | shopifyImage[]) => void;
+	appendImages: (_newImages: WorkGalleryImage[] | shopifyImage[]) => void;
 	resetImages: () => void;
 	setImage: (_id: string) => void;
-	updateImages: (_newImages: workGalleryImage[] | shopifyImage[]) => void;
+	updateImages: (_newImages: WorkGalleryImage[] | shopifyImage[]) => void;
 };
 
 const LightboxContext = createContext<LightBoxContextType | undefined>(undefined);
@@ -47,14 +45,14 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		[images],
 	);
 
-	const appendImages = useCallback((newImages: workGalleryImage[] | shopifyImage[]) => {
+	const appendImages = useCallback((newImages: WorkGalleryImage[] | shopifyImage[]) => {
 		const normalized: LightboxImage[] = newImages.map(img =>
 			"_id" in img ? normalizeSanityImage(img) : normalizeShopifyImage(img),
 		);
 		setImages(prev => (prev ? [...prev, ...normalized] : normalized));
 	}, []);
 
-	const updateImages = useCallback((newImages: workGalleryImage[] | shopifyImage[]) => {
+	const updateImages = useCallback((newImages: WorkGalleryImage[] | shopifyImage[]) => {
 		const normalized: LightboxImage[] = newImages.map(img =>
 			"_id" in img ? normalizeSanityImage(img) : normalizeShopifyImage(img),
 		);
@@ -75,13 +73,11 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		setImages(null);
 	}, []);
 
-	// Sync index → image (navigation par flèches)
 	useEffect(() => {
 		if (clickedIndex === null || images === null) return;
 		setClickedImage(images[clickedIndex]);
-	}, [clickedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [clickedIndex, images]);
 
-	// Sync image → index (ouverture par clic)
 	useEffect(() => {
 		if (clickedImage === null || images === null) {
 			setClickedIndex(null);
@@ -89,7 +85,7 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		}
 		const idx = images.findIndex(img => img._id === clickedImage._id);
 		setClickedIndex(idx === -1 ? null : idx);
-	}, [clickedImage]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [clickedImage, images]);
 
 	const value = useMemo(
 		() => ({ appendImages, resetImages, setImage, updateImages }),

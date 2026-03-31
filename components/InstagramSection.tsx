@@ -6,10 +6,10 @@ type Props = {
 	className?: string;
 };
 
-const ROOT = "https://graph.instagram.com/";
 const END_POINT = "/me/media";
 const FIELDS =
 	"?fields=id,media_type,media_url,alt_text,comments_count,like_count,thumbnail_url&limit=6";
+const ROOT = "https://graph.instagram.com/";
 
 async function getData(): Promise<InstagramFeeds> {
 	const res = await fetch(

@@ -27,15 +27,16 @@ export default function ProductSingleBuyControlsVariantSelector({
 	options,
 	variants,
 }: Readonly<Props>) {
-	const { state, updateOption } = useProduct();
 	const { resetProductMessage } = useCartActions();
+	const { state, updateOption } = useProduct();
+
 	const updateURL = useUpdateURL();
 
 	const combinations: Combination[] = useMemo(
 		() =>
 			variants.map(variant => ({
-				id: variant.id,
 				availableForSale: variant.availableForSale,
+				id: variant.id,
 				...variant.selectedOptions.reduce(
 					(acc, option) => ({
 						...acc,
@@ -60,7 +61,7 @@ export default function ProductSingleBuyControlsVariantSelector({
 	return (
 		<div className={cn(className)}>
 			{options.map(option => (
-				<Form key={option.id} action="pick variant">
+				<Form action="pick variant" key={option.id}>
 					<dl className="mb-4">
 						<dt className="mb-1 text-xs tracking-wide uppercase">{option.name}</dt>
 						<dd className="flex flex-wrap gap-2">
@@ -80,19 +81,19 @@ export default function ProductSingleBuyControlsVariantSelector({
 
 								return (
 									<button
-										key={value}
 										aria-disabled={!isAvailableForSale}
-										disabled={!isAvailableForSale}
-										onClick={handleClick}
-										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
 										className={cn("border-secondary font-sm rounded-full border-2 px-3", {
 											"bg-secondary text-primary": isActive,
 											"line-through opacity-50": !isAvailableForSale,
 										})}
+										disabled={!isAvailableForSale}
 										formAction={() => {
 											const newState = updateOption(optionNameLowerCase, value);
 											updateURL(newState);
 										}}
+										key={value}
+										onClick={handleClick}
+										title={`${option.name} ${value}${isAvailableForSale && "(out of stock)"}`}
 									>
 										{value}
 									</button>

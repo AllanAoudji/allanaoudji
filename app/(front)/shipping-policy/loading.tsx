@@ -1,5 +1,5 @@
 import SkeletonLegalPortableText from "@/components/SkeletonLegalPortableText";
 
-export default function PrivacyPolicyLoading() {
+export default function ShippingPolicyLoading() {
 	return <SkeletonLegalPortableText />;
 }

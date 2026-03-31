@@ -36,21 +36,21 @@ function getCartItemPricing(item: CartItem) {
 	const discountedAmount = (parseFloat(totalAmount.amount) - totalDiscounted).toFixed(2);
 
 	return {
-		original: totalAmount,
 		discounted: { amount: discountedAmount, currencyCode },
+		original: totalAmount,
 	};
 }
 
 export default function CartContentItem({ item }: Readonly<Props>) {
-	const { closeModal } = useModal();
 	const { isCartPending } = useCartActions();
+	const { closeModal } = useModal();
 
 	const image = useMemo(
 		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
 		[item],
 	);
 
-	const { original, discounted } = getCartItemPricing(item);
+	const { discounted, original } = getCartItemPricing(item);
 
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
 	item.merchandise.selectedOptions.forEach(({ name, value }) => {

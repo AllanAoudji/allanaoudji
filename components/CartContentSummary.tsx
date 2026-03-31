@@ -12,7 +12,7 @@ type Props = {
 	className?: string;
 };
 
-export default function CartContentSummary({ cart, className = "" }: Readonly<Props>) {
+export default function CartContentSummary({ cart, className }: Readonly<Props>) {
 	const { closeModal } = useModal();
 
 	return (

@@ -11,11 +11,11 @@ type ContactFormFields = "firstName" | "lastName" | "email" | "subject" | "messa
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const schema = z.object({
+	email: z.string().email(),
 	firstName: z.string().min(2).max(50),
 	lastName: z.string().min(2).max(50),
-	email: z.string().email(),
-	subject: z.string().min(3).max(120),
 	message: z.string().min(10).max(2000),
+	subject: z.string().min(3).max(120),
 	website: z.string().optional(),
 });
 
@@ -31,11 +31,11 @@ function getFormValue<T extends string>(formData: FormData, key: T): string {
 
 export default async function sendContact(formData: FormData) {
 	const data = {
+		email: getFormValue<ContactFormFields>(formData, "email"),
 		firstName: getFormValue<ContactFormFields>(formData, "firstName"),
 		lastName: getFormValue<ContactFormFields>(formData, "lastName"),
-		email: getFormValue<ContactFormFields>(formData, "email"),
-		subject: getFormValue<ContactFormFields>(formData, "subject"),
 		message: getFormValue<ContactFormFields>(formData, "message"),
+		subject: getFormValue<ContactFormFields>(formData, "subject"),
 		website: getFormValue<ContactFormFields>(formData, "website"),
 	};
 	const parsed = schema.safeParse(data);

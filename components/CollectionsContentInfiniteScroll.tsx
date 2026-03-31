@@ -58,7 +58,6 @@ export default function CollectionsContentInfiniteScroll({
 			isFetching.current = true;
 			setIsLoading(true);
 
-			// 🔑 Couper l'observer immédiatement et synchronement
 			if (sentinelRef.current && observerRef.current) {
 				observerRef.current.unobserve(sentinelRef.current);
 			}
@@ -79,8 +78,6 @@ export default function CollectionsContentInfiniteScroll({
 						cursorRef.current = result.pageInfo.endCursor ?? null;
 						hasNextPageRef.current = result.pageInfo.hasNextPage ?? false;
 					})
-					// TODO:
-					// Error handler
 					.catch(console.error)
 					.finally(() => {
 						isFetching.current = false;
@@ -123,7 +120,7 @@ export default function CollectionsContentInfiniteScroll({
 				))}
 			</div>
 
-			<div ref={sentinelRef} aria-hidden="true" />
+			<div aria-hidden="true" ref={sentinelRef} />
 
 			<InfiniteSpinner isLoading={isLoading} />
 		</>

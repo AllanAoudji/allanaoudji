@@ -16,7 +16,7 @@ export default class CartDispenserErrorBoundary extends Component<Props, State> 
 	}
 
 	componentDidCatch() {
-		this.props.onError?.(); // ← notifie CartClientWrapper
+		this.props.onError?.();
 	}
 
 	render() {

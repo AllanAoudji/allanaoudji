@@ -5,92 +5,31 @@ import { useEffect, useRef, useState } from "react";
 type props = {
 	banner: string;
 	className?: string;
-	speed?: number;
 	separator?: string;
+	speed?: number;
 };
 
 export default function Banner({
 	banner,
 	className = "",
-	speed = 80,
 	separator = " ★ ",
+	speed = 80,
 }: Readonly<props>) {
-	const viewportRef = useRef<HTMLDivElement>(null);
-	const stripRef = useRef<HTMLSpanElement>(null);
-	const trackRef = useRef<HTMLDivElement>(null);
-
+	const [duration, setDuration] = useState(10);
 	const [repeatCount, setRepeatCount] = useState(4);
-	const [duration, setDuration] = useState(10); // kept only to trigger rAF effect re-run
 
+	const isPausedRef = useRef<boolean>(false);
+	const pausedAtRef = useRef<number>(0);
 	const rafRef = useRef<number | null>(null);
 	const startTimeRef = useRef<number | null>(null);
-	const pausedAtRef = useRef<number>(0); // exact px when paused
+	const stripRef = useRef<HTMLSpanElement>(null);
 	const stripWidthRef = useRef<number>(0);
-	const isPausedRef = useRef<boolean>(false);
-
+	const trackRef = useRef<HTMLDivElement>(null);
 	const unit = `${banner}${separator.replace(/ /g, "\u00A0")}`;
-	// const unit = banner + separator;
+	const viewportRef = useRef<HTMLDivElement>(null);
 
-	// ─── Measurement ────────────────────────────────────────────────────────────
-	useEffect(() => {
-		const viewport = viewportRef.current;
-		const strip = stripRef.current;
-		if (!viewport || !strip) return;
+	const repeatedText = Array(repeatCount).fill(unit).join("");
 
-		const recalculate = () => {
-			const viewportWidth = viewport.offsetWidth;
-			const unitWidth = strip.scrollWidth / repeatCount;
-			if (unitWidth === 0) return;
-
-			const neededRepeats = Math.ceil((viewportWidth * 2) / unitWidth) + 2;
-			const safeRepeats = Math.max(neededRepeats, 4);
-			const stripWidth = unitWidth * safeRepeats;
-
-			stripWidthRef.current = stripWidth;
-			setRepeatCount(safeRepeats);
-			setDuration(stripWidth / speed); // triggers rAF effect
-		};
-
-		const ro = new ResizeObserver(recalculate);
-		ro.observe(viewport);
-		ro.observe(strip);
-		recalculate();
-		return () => ro.disconnect();
-	}, [banner, separator, speed, repeatCount]);
-
-	// ─── rAF animation loop ──────────────────────────────────────────────────────
-	useEffect(() => {
-		const track = trackRef.current;
-		if (!track || stripWidthRef.current === 0) return;
-
-		const animate = (ts: number) => {
-			if (isPausedRef.current) return; // safety guard
-
-			if (startTimeRef.current === null) {
-				// Re-anchor: continue from wherever we paused
-				startTimeRef.current = ts - (pausedAtRef.current / speed) * 1000;
-			}
-
-			const elapsed = (ts - startTimeRef.current) / 1000;
-			const px = (elapsed * speed) % stripWidthRef.current;
-
-			track.style.transform = `translate3d(${-px}px, 0, 0)`;
-			rafRef.current = requestAnimationFrame(animate);
-		};
-
-		isPausedRef.current = false;
-		rafRef.current = requestAnimationFrame(animate);
-
-		return () => {
-			if (rafRef.current !== null) {
-				cancelAnimationFrame(rafRef.current);
-				rafRef.current = null;
-			}
-			startTimeRef.current = null;
-		};
-	}, [duration, speed]); // re-run when strip geometry changes
-
-	// ─── Hover handlers ──────────────────────────────────────────────────────────
 	const handleMouseEnter = () => {
 		isPausedRef.current = true;
 
@@ -99,18 +38,17 @@ export default function Banner({
 			rafRef.current = null;
 		}
 
-		// Capture the exact current pixel position from the live transform
 		const track = trackRef.current;
 		if (track) {
 			const matrix = new DOMMatrix(getComputedStyle(track).transform);
-			pausedAtRef.current = Math.abs(matrix.m41); // translateX is negative
+			pausedAtRef.current = Math.abs(matrix.m41);
 		}
-		startTimeRef.current = null; // will re-anchor on resume
+		startTimeRef.current = null;
 	};
 
 	const handleMouseLeave = () => {
 		isPausedRef.current = false;
-		startTimeRef.current = null; // re-anchor from pausedAtRef on next frame
+		startTimeRef.current = null;
 
 		const track = trackRef.current;
 		if (!track) return;
@@ -132,24 +70,80 @@ export default function Banner({
 		rafRef.current = requestAnimationFrame(animate);
 	};
 
-	const repeatedText = Array(repeatCount).fill(unit).join("");
+	useEffect(() => {
+		const strip = stripRef.current;
+		const viewport = viewportRef.current;
+		if (!strip || !viewport) return;
+
+		const recalculate = () => {
+			const unitWidth = strip.scrollWidth / repeatCount;
+			const viewportWidth = viewport.offsetWidth;
+
+			if (unitWidth === 0) return;
+
+			const neededRepeats = Math.ceil((viewportWidth * 2) / unitWidth) + 2;
+			const safeRepeats = Math.max(neededRepeats, 4);
+			const stripWidth = unitWidth * safeRepeats;
+
+			stripWidthRef.current = stripWidth;
+			setRepeatCount(safeRepeats);
+			setDuration(stripWidth / speed);
+		};
+
+		const ro = new ResizeObserver(recalculate);
+		ro.observe(viewport);
+		ro.observe(strip);
+		recalculate();
+		return () => ro.disconnect();
+	}, [banner, repeatCount, separator, speed]);
+
+	useEffect(() => {
+		const track = trackRef.current;
+
+		if (!track || stripWidthRef.current === 0) return;
+
+		const animate = (ts: number) => {
+			if (isPausedRef.current) return;
+
+			if (startTimeRef.current === null) {
+				startTimeRef.current = ts - (pausedAtRef.current / speed) * 1000;
+			}
+
+			const elapsed = (ts - startTimeRef.current) / 1000;
+			const px = (elapsed * speed) % stripWidthRef.current;
+
+			track.style.transform = `translate3d(${-px}px, 0, 0)`;
+			rafRef.current = requestAnimationFrame(animate);
+		};
+
+		isPausedRef.current = false;
+		rafRef.current = requestAnimationFrame(animate);
+
+		return () => {
+			if (rafRef.current !== null) {
+				cancelAnimationFrame(rafRef.current);
+				rafRef.current = null;
+			}
+			startTimeRef.current = null;
+		};
+	}, [duration, speed]);
 
 	return (
 		<div
-			ref={viewportRef}
 			className={`bg-tertiary relative w-full overflow-hidden text-xl ${className}`}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
+			ref={viewportRef}
 		>
 			<div
-				ref={trackRef}
 				className="flex w-max py-2"
+				ref={trackRef}
 				style={{
+					backfaceVisibility: "hidden",
 					willChange: "transform",
-					backfaceVisibility: "hidden", // force GPU compositing layer
 				}}
 			>
-				<span ref={stripRef} aria-hidden className="whitespace-nowrap">
+				<span aria-hidden className="whitespace-nowrap" ref={stripRef}>
 					{repeatedText}
 				</span>
 				<span aria-hidden className="whitespace-nowrap">

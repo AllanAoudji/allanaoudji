@@ -7,8 +7,8 @@ type ProductState = { [key: string]: string };
 
 type ProductContextType = {
 	state: ProductState;
-	updateOption: (_name: string, _value: string) => ProductState;
 	updateImage: (_index: string) => ProductState;
+	updateOption: (_name: string, _value: string) => ProductState;
 };
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -57,10 +57,10 @@ export function ProductProvider({ children }: Readonly<Props>) {
 	const value = useMemo(
 		() => ({
 			state,
-			updateOption,
 			updateImage,
+			updateOption,
 		}),
-		[state, updateOption, updateImage],
+		[state, updateImage, updateOption],
 	);
 
 	return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

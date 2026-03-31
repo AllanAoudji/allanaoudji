@@ -1,11 +1,11 @@
 import { FaCommentAlt, FaHeart } from "react-icons/fa";
 
 type Props = {
-	type: "likes" | "comments";
 	count: number;
+	type: "likes" | "comments";
 };
 
-export default function InstagramSectionItemIcon({ type, count }: Readonly<Props>) {
+export default function InstagramSectionItemIcon({ count, type }: Readonly<Props>) {
 	return (
 		<div className="flex items-center gap-1">
 			<div>

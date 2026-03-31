@@ -3,8 +3,11 @@ import type { Metadata } from "next";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-	title: "Allan Aoudji",
-	description: "Allan Aoudji | graphiste & illustrateur",
+	title: "Studio | Allan Aoudji",
+	robots: {
+		index: false,
+		follow: false,
+	},
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

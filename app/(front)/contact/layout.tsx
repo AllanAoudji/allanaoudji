@@ -4,11 +4,11 @@ type Props = {
 	children: React.ReactNode;
 };
 
-export default function Layout({ children }: Readonly<Props>) {
+export default function ContactLayout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>Contact</Title>
-			<div>{children}</div>
+			{children}
 		</div>
 	);
 }

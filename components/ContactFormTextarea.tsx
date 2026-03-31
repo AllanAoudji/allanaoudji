@@ -6,7 +6,7 @@ type Props = {
 	error?: string;
 	id: keyof typeof contactFormSchema.shape;
 	placeholder: string;
-	onValueChange?: (_value: string) => void; // <-- nouveau
+	onValueChange?: (_value: string) => void;
 	title: string;
 	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
 };
@@ -28,7 +28,7 @@ export default function ContactFormTextAra({
 	};
 
 	const handleChange = (value: string) => {
-		onValueChange?.(value); // remonte au parent
+		onValueChange?.(value);
 
 		if (!showError) return;
 		validateField(id, value);

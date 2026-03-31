@@ -35,7 +35,7 @@ export default defineType({
 					input
 						.toLowerCase()
 						.normalize("NFD")
-						.replace(/[\u0300-\u036f]/g, "") // supprime les accents
+						.replace(/[\u0300-\u036f]/g, "")
 						.replace(/[^a-z0-9]+/g, "-")
 						.replace(/(^-|-$)/g, ""),
 			},

@@ -4,15 +4,15 @@ import PortableTextContent from "@/components/PortableTextContent";
 import { getAbout } from "@/studio/lib/queries";
 
 export const metadata: Metadata = {
-	title: "À propos",
+	alternates: {
+		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/about`,
+	},
 	description: "Graphiste & illustrateur — retrouvez mon parcours et mes inspirations.",
 	openGraph: {
 		title: "À propos | Allan Aoudji",
 		type: "website",
 	},
-	alternates: {
-		canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/about`,
-	},
+	title: "À propos",
 };
 
 export default async function AboutPage() {

@@ -4,7 +4,7 @@ type Props = {
 	children: React.ReactNode;
 };
 
-export default function PrivacyPolicyLayout({ children }: Readonly<Props>) {
+export default function ShippingPolicyLayout({ children }: Readonly<Props>) {
 	return (
 		<div className="padding-container vertical-padding">
 			<Title>Politique d’expédition</Title>

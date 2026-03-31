@@ -12,11 +12,11 @@ export default function ShippingPolicyLink({ className, onClick }: Readonly<Prop
 		<p className={cn("mt-1 text-xs font-normal", className)}>
 			Taxe incluse.{" "}
 			<Link
-				href="/shipping-policy"
 				className={cn(
 					"text-secondary cursor-pointer py-1",
 					"hover:[&_span]:after:origin-right hover:[&_span]:after:scale-x-0",
 				)}
+				href="/shipping-policy"
 			>
 				<span
 					className={cn(
