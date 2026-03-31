@@ -330,7 +330,7 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 	const res = await shopifyFetch<ShopifyCartOperation>({
 		query: getCartQuery,
 		variables: { cartId },
-		tags: [TAGS.cart],
+		cache: "no-store",
 	});
 
 	// old carts becomes 'null' when you checkout
@@ -343,7 +343,6 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
 	const res = await shopifyFetch<ShopifyCollectionOperation>({
-		cache: "no-store",
 		query: getCollectionQuery,
 		tags: [TAGS.collections],
 		variables: { handle },
@@ -370,7 +369,6 @@ export async function getCollectionProducts({
 	products: Product[] | null;
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
-		cache: "no-store",
 		query: getCollectionProductsQuery,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
@@ -400,7 +398,6 @@ export async function getCollectionProducts({
 
 export async function getCollections(): Promise<Collection[]> {
 	const res = await shopifyFetch<ShopifyCollectionsOperation>({
-		cache: "no-store",
 		query: getCollectionsQuery,
 		tags: [TAGS.collections],
 	});
@@ -430,7 +427,7 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getDiscount(): Promise<DiscountNode[]> {
 	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
 		query: getDiscountsQuery,
-		cache: "no-store",
+		tags: [TAGS.discounts],
 	});
 
 	return res.body.data.discountNodes.edges.map(edge => edge.node);
@@ -438,7 +435,6 @@ export async function getDiscount(): Promise<DiscountNode[]> {
 
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
-		cache: "no-store",
 		query: getLatestProductsQuery,
 		tags: [TAGS.products],
 	});
@@ -486,7 +482,6 @@ export async function getPages(): Promise<ShopifyPage[]> {
 
 export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
-		cache: "no-store",
 		query: getPopularProductsQuery,
 		tags: [TAGS.products],
 	});
@@ -500,7 +495,6 @@ export async function getPopularProducts(): Promise<Product[]> {
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
-		cache: "no-store",
 		query: getProductQuery,
 		tags: [TAGS.products],
 		variables: { handle },
@@ -515,7 +509,6 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
-		cache: "no-store",
 		query: getProductRecommendationsQuery,
 		tags: [TAGS.products],
 		variables: { productId },
@@ -541,7 +534,6 @@ export async function getProducts({
 	products: Product[];
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
-		cache: "no-store",
 		query: getProductsQuery,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },
