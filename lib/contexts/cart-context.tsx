@@ -1,8 +1,8 @@
 "use client";
 
+import { getCartAction } from "../actions/getCartAction";
 import { ERROR_CODE } from "../constants";
 import { cartReducer } from "../reducers/cartReducer";
-import { getCart } from "../shopify";
 import * as Sentry from "@sentry/nextjs";
 import {
 	createContext,
@@ -71,7 +71,7 @@ export function CartProvider({ cartId, cartPromise, children, discountNodes }: R
 		const sync = async () => {
 			if (document.visibilityState !== "visible") return;
 			try {
-				const freshCart = await getCart(cartId);
+				const freshCart = await getCartAction(cartId);
 				if (!cancelled && freshCart) dispatch({ type: "SYNC_CART", cart: freshCart });
 			} catch (error) {
 				Sentry.captureException(error, {

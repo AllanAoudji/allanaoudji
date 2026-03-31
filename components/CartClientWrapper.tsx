@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useState, Suspense } from "react";
+import { getCartAction } from "@/lib/actions/getCartAction";
 import { CartProvider } from "@/lib/contexts/cart-context";
 import { CartRecoveryProvider } from "@/lib/contexts/cartRecovery-context";
-import { getCart } from "@/lib/shopify";
 import CartDispenserErrorBoundary from "./CartDispenserErrorBoundary";
 import Cart from "@/types/cart";
 import { DiscountNode } from "@/types/shopifyDiscount";
@@ -27,7 +27,7 @@ export default function CartClientWrapper({
 
 	const onCartCreated = useCallback((newCartId: string) => {
 		setCurrentCartId(newCartId);
-		setCurrentCartPromise(getCart(newCartId));
+		setCurrentCartPromise(getCartAction(newCartId));
 		setHasError(false);
 	}, []);
 
