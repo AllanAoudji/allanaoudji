@@ -119,9 +119,13 @@ export default withSentryConfig(nextConfig, {
 	project: "allan-aoudji-nextjs",
 	silent: true,
 	widenClientFileUpload: true,
-	disableLogger: true,
 	sourcemaps: {
 		disable: false,
 		deleteSourcemapsAfterUpload: true,
+	},
+	webpack: {
+		treeshake: {
+			removeDebugLogging: true,
+		},
 	},
 });

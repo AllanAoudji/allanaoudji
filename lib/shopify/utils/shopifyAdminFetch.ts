@@ -2,8 +2,9 @@ import { getDiscountsQuery } from "../queries/discount";
 import { getProductVariantsInventoryQuery } from "../queries/product";
 import * as Sentry from "@sentry/nextjs";
 import "server-only";
-import { ERROR_CODE, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "@/lib/constants";
+import { ERROR_CODE, TAGS } from "@/lib/constants";
 import { isShopifyError } from "@/lib/type-guards";
+import { ensureEndWithout, ensureStartWith } from "@/lib/utils";
 import VariantInventory from "@/types/VariantInventory";
 import ExtractVariables from "@/types/extractVariables";
 import { DiscountNode } from "@/types/shopifyDiscount";
@@ -11,6 +12,11 @@ import {
 	ShopifyDiscountsQueryOperation,
 	ShopifyVariantsInventoryQueryOperation,
 } from "@/types/shopifyOperations";
+
+const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
+	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
+	: "";
+const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
 
 export async function shopifyAdminFetch<T>({
 	cache = "force-cache",
@@ -26,23 +32,20 @@ export async function shopifyAdminFetch<T>({
 	variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: T }> {
 	try {
-		const result = await fetch(
-			`https://${process.env.SHOPIFY_STORE_DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
-					...headers,
-				},
-				body: JSON.stringify({
-					...(query && { query }),
-					...(variables && { variables }),
-				}),
-				cache,
-				...(tags && { next: { tags } }),
+		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+				...headers,
 			},
-		);
+			body: JSON.stringify({
+				...(query && { query }),
+				...(variables && { variables }),
+			}),
+			cache,
+			...(tags && { next: { tags } }),
+		});
 		const body = await result.json();
 		if (body.errors) {
 			Sentry.captureMessage("Shopify Admin GraphQL error", {

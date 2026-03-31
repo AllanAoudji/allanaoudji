@@ -73,8 +73,6 @@ export const HOME_MENU: Menu = {
 	title: "home",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
-
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,
 	{ title: "Trending", slug: "trending-desc", sortKey: "BEST_SELLING", reverse: false },

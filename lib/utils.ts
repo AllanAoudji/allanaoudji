@@ -160,6 +160,13 @@ export function createUrl(
 	return `${pathname}${queryString}`;
 }
 
+export const ensureEndWithout = (url: string, suffix: string): string => {
+	if (url.endsWith(suffix)) {
+		return url.slice(0, -suffix.length);
+	}
+	return url;
+};
+
 export const ensureStartWith = (url: string, prefix: string): string => {
 	if (!url.startsWith(prefix)) {
 		return prefix + url;

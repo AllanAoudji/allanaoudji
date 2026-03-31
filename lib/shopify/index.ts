@@ -1,12 +1,6 @@
-import {
-	DEFAULT_COLLECTION_IMAGE,
-	ERROR_CODE,
-	HIDDEN_PRODUCT_TAG,
-	SHOPIFY_GRAPHQL_API_ENDPOINT,
-	TAGS,
-} from "../constants";
+import { DEFAULT_COLLECTION_IMAGE, ERROR_CODE, HIDDEN_PRODUCT_TAG, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
-import { ensureStartWith, getLineQuantity } from "../utils";
+import { ensureEndWithout, ensureStartWith, getLineQuantity } from "../utils";
 import * as Sentry from "@sentry/nextjs";
 import {
 	addToCartMutation,
@@ -60,11 +54,12 @@ import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
 import ShopifyProduct from "@/types/shopifyProduct";
 
-const domain = process.env.SHOPIFY_STORE_DOMAIN
-	? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
+const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
+	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
+const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
 
-const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
+const endpoint = `${DOMAIN}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;
 
 function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
@@ -397,7 +392,7 @@ export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 	return (
 		res.body?.data?.menu?.items.map((item: { title: string; url: string }) => ({
 			title: item.title,
-			path: item.url.replace(domain, "").replace("/collections", "/search").replace("/pages", ""),
+			path: item.url.replace(DOMAIN, "").replace("/collections", "/search").replace("/pages", ""),
 		})) || []
 	);
 }
