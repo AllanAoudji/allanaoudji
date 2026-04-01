@@ -56,7 +56,6 @@ export async function shopifyAdminFetch<T>({
 		});
 		const body = await result.json();
 		if (body.errors) {
-			console.log("body error: ", body);
 			Sentry.captureMessage("Shopify Admin GraphQL error", {
 				level: "error",
 				extra: {
@@ -73,7 +72,6 @@ export async function shopifyAdminFetch<T>({
 		};
 	} catch (error) {
 		if (isShopifyError(error)) {
-			console.log("shopify error: ", error);
 			Sentry.captureException(error, {
 				extra: {
 					context: "Shopify API error",
