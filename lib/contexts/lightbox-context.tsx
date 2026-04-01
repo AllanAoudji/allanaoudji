@@ -29,19 +29,20 @@ type LightBoxContextType = {
 const LightboxContext = createContext<LightBoxContextType | undefined>(undefined);
 
 export function LightboxProvider({ children }: Readonly<Props>) {
-	const [clickedImage, setClickedImage] = useState<LightboxImage | null>(null);
 	const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 	const [images, setImages] = useState<LightboxImage[] | null>(null);
 
+	const clickedImage = clickedIndex !== null && images ? (images[clickedIndex] ?? null) : null;
+
 	const resetClick = useCallback(() => {
-		setClickedImage(null);
 		setClickedIndex(null);
 	}, []);
 
 	const setImage = useCallback(
 		(id: string) => {
-			const image = images?.find(img => img._id === id) ?? null;
-			setClickedImage(image);
+			if (!images) return;
+			const idx = images.findIndex(img => img._id === id);
+			setClickedIndex(idx === -1 ? null : idx);
 		},
 		[images],
 	);
@@ -61,32 +62,28 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 	}, []);
 
 	const nextImage = useCallback(() => {
-		if (!images || clickedIndex === null) return;
+		if (!images) return;
 		setClickedIndex(prev => (prev !== null ? (prev + 1) % images.length : null));
-	}, [clickedIndex, images]);
+	}, [images]);
 
 	const prevImage = useCallback(() => {
-		if (!images || clickedIndex === null) return;
+		if (!images) return;
 		setClickedIndex(prev => (prev !== null ? (prev - 1 + images.length) % images.length : null));
-	}, [clickedIndex, images]);
+	}, [images]);
 
 	const resetImages = useCallback(() => {
 		setImages(null);
+		setClickedIndex(null);
 	}, []);
 
 	useEffect(() => {
-		if (clickedIndex === null || images === null) return;
-		setClickedImage(images[clickedIndex]);
-	}, [clickedIndex, images]);
-
-	useEffect(() => {
-		if (clickedImage === null || images === null) {
-			setClickedIndex(null);
-			return;
-		}
-		const idx = images.findIndex(img => img._id === clickedImage._id);
-		setClickedIndex(idx === -1 ? null : idx);
-	}, [clickedImage, images]);
+		if (clickedImage === null) return;
+		const prev = document.documentElement.style.overflow;
+		document.documentElement.style.overflow = "hidden";
+		return () => {
+			document.documentElement.style.overflow = prev;
+		};
+	}, [clickedImage]);
 
 	const value = useMemo(
 		() => ({ appendImages, resetImages, setImage, updateImages }),
