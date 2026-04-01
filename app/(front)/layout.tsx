@@ -75,28 +75,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		</html>
 	);
 }
-
-// TODO:
-// ----- Editorial -----
-// Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
-// default-collection.png
-
-// ---------------
-// Quand le site est en ligne
-// Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
-// Vérification du rendu — utilisez opengraph.xyz pour tester que vos OG images s'affichent correctement sur les réseaux sociaux.
-
-// Côté Shopify Dashboard — c'est là où tu dois vérifier :
-// Aller dans Settings → Notifications → Webhooks
-// Créer un webhook pour chaque topic (products/update, collections/update, etc.)
-// URL : https://ton-domaine.com/api/revalidate/shopify
-// Copier le Webhook Secret généré → SHOPIFY_WEBHOOK_SECRET dans ton .env
-
-// Dans ton dashboard Sanity sur sanity.io :
-// Pour le SANITY_WEBHOOK_SECRET → API → Webhooks → créer un webhook → tu définis toi-même le secret lors de la création, tu le copies dans ton .env.
-// Pour le serverToken → API → Tokens → "Add API token" → nom au choix → permissions Viewer suffisent pour du read-only → tu copies le token généré dans ton .env comme SANITY_API_READ_TOKEN ou selon comment tu l'as nommé dans ton env.server.ts.
-
-// Resend — tu dois ajouter et vérifier ton domaine allanaoudji.com dans le dashboard Resend pour pouvoir envoyer depuis une adresse personnalisée.
-// La seule chose à faire côté dashboard Vercel, c'est d'activer Speed Insights manuellement sur ton projet (Settings → Speed Insights → Enable), sinon les données ne remontent pas même si le composant est présent. Pour Analytics en revanche, c'est automatique dès le déploiement.
-
-// Faire un dossier notion avec tous les services utiliser, comment récupérer la clefs pour Instagram, etc.

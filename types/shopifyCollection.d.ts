@@ -8,6 +8,9 @@ type ShopifyCollection = {
 	seo: SEO;
 	updatedAt: string;
 	image: shopifyImage | null;
+	productsCount: {
+		count: number;
+	};
 };
 
 export default ShopifyCollection;

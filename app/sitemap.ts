@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { getProducts, getCollections } from "@/lib/shopify";
+import { getProducts } from "@/lib/shopify";
+import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getWorksSiteMap } from "@/studio/lib/queries";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL!;

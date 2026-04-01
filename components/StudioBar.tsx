@@ -3,10 +3,11 @@
 import { createClient } from "@sanity/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { apiVersion, dataset } from "@/studio/env.public";
 
 const client = createClient({
-	apiVersion: "2021-06-07",
-	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+	apiVersion,
+	dataset,
 	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
 	useCdn: false,
 	withCredentials: true,

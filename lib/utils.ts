@@ -6,8 +6,11 @@ import z from "zod";
 import { ERROR_MESSAGE_FR } from "./constants";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
+import Collection from "@/types/collection";
+import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
+import ShopifyCollection from "@/types/shopifyCollection";
 
 export function applyFrenchTypography(text: string): string {
 	let t = text;
@@ -63,6 +66,26 @@ export function assertValue<T>(v: T | undefined, errorMessage: string): T {
 	}
 
 	return v;
+}
+
+export function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
+	if (!collection) return undefined;
+	return {
+		...collection,
+		path: `/collections/${collection.handle}`,
+	};
+}
+export function reshapeCollections(collections: ShopifyCollection[]): Collection[] {
+	const reshapedCollections = [];
+	for (const collection of collections) {
+		if (collection) {
+			const reshapedCollection = reshapeCollection(collection);
+			if (reshapedCollection) {
+				reshapedCollections.push(reshapedCollection);
+			}
+		}
+	}
+	return reshapedCollections;
 }
 
 export function buildGalleryImages(product: Product, variant: ProductVariant | undefined) {
@@ -203,6 +226,10 @@ export function getProductDefaultVariant(product: Product): string | undefined {
 	return new URLSearchParams(
 		variants[0].selectedOptions.map(option => [option.name.toLocaleLowerCase(), option.value]),
 	).toString();
+}
+
+export function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
+	return array.edges.map(edge => edge?.node);
 }
 
 export async function withMinimumDelay<T>(

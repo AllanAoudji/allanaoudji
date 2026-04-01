@@ -1,6 +1,12 @@
-import { DEFAULT_COLLECTION_IMAGE, ERROR_CODE, HIDDEN_PRODUCT_TAG, TAGS } from "../constants";
+import { ERROR_CODE, HIDDEN_PRODUCT_TAG, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
-import { ensureEndWithout, ensureStartWith, getLineQuantity } from "../utils";
+import {
+	ensureEndWithout,
+	ensureStartWith,
+	getLineQuantity,
+	removeEdgesAndNodes,
+	reshapeCollection,
+} from "../utils";
 import * as Sentry from "@sentry/nextjs";
 import {
 	addToCartMutation,
@@ -9,11 +15,7 @@ import {
 	removeFromCartMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
-import {
-	getCollectionProductsQuery,
-	getCollectionQuery,
-	getCollectionsQuery,
-} from "./queries/collection";
+import { getCollectionProductsQuery, getCollectionQuery } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
@@ -29,7 +31,6 @@ import Collection from "@/types/collection";
 import Connection from "@/types/connection";
 import ExtractVariables from "@/types/extractVariables";
 import Product from "@/types/product";
-import ShopifyCollection from "@/types/shopifyCollection";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
@@ -37,7 +38,6 @@ import {
 	ShopifyCartOperation,
 	ShopifyCollectionOperation,
 	ShopifyCollectionProductsOperation,
-	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
 	ShopifyLatestProductsOperation,
 	ShopifyMenuOperation,
@@ -62,10 +62,6 @@ const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API
 const endpoint = `${DOMAIN}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;
 
-function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
-	return array.edges.map(edge => edge?.node);
-}
-
 function reshapeCart(cart: ShopifyCart): Cart {
 	if (!cart.cost?.totalTaxAmount) {
 		cart.cost.totalTaxAmount = { amount: "0.0", currencyCode: "USD" };
@@ -83,27 +79,6 @@ function reshapeCart(cart: ShopifyCart): Cart {
 	}));
 
 	return { ...cart, lines };
-}
-
-function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
-	if (!collection) return undefined;
-	return {
-		...collection,
-		path: `/collections/${collection.handle}`,
-	};
-}
-
-function reshapeCollections(collections: ShopifyCollection[]): Collection[] {
-	const reshapedCollections = [];
-	for (const collection of collections) {
-		if (collection) {
-			const reshapedCollection = reshapeCollection(collection);
-			if (reshapedCollection) {
-				reshapedCollections.push(reshapedCollection);
-			}
-		}
-	}
-	return reshapedCollections;
 }
 
 function reshapeImages(images: Connection<shopifyImage>, title: string) {
@@ -339,34 +314,6 @@ export async function getCollectionProducts({
 		pageInfo: res.body.data.collection.products.pageInfo,
 		products: reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products)),
 	};
-}
-
-export async function getCollections(): Promise<Collection[]> {
-	const res = await shopifyFetch<ShopifyCollectionsOperation>({
-		query: getCollectionsQuery,
-		tags: [TAGS.collections],
-	});
-
-	const shopifyCollections = removeEdgesAndNodes(res?.body?.data?.collections);
-	const collections: Collection[] = [
-		{
-			handle: "",
-			title: "Tous les articles",
-			description: "Tous les articles",
-			seo: {
-				title: "Tous les articles",
-				description: "Tous les articles",
-			},
-			path: "/collections",
-			updatedAt: "",
-			image: DEFAULT_COLLECTION_IMAGE,
-		},
-		...reshapeCollections(shopifyCollections).filter(
-			collection => !collection.handle.startsWith("hidden"),
-		),
-	];
-
-	return collections;
 }
 
 export async function getLatestProducts(): Promise<Product[]> {

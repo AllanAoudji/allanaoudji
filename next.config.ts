@@ -24,8 +24,10 @@ const csp = [
 		"https://*.myshopify.com",
 		"https://use.typekit.net",
 		"https://p.typekit.net",
+		"https://*.sentry.io",
+		"https://*.ingest.sentry.io",
+		"https://*.ingest.de.sentry.io",
 	].join(" "),
-
 	// styles
 	[
 		"style-src",

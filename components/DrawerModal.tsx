@@ -13,6 +13,7 @@ type Props = {
 	children: ReactNode;
 	className?: string;
 	closeOn?: MediaQuery;
+	disabled?: boolean;
 	onCloseAction: () => void;
 	open: boolean;
 	position?: "left" | "right";
@@ -22,6 +23,7 @@ export default function DrawerModal({
 	children,
 	className,
 	closeOn,
+	disabled = false,
 	onCloseAction,
 	open,
 	position = "right",
@@ -45,7 +47,7 @@ export default function DrawerModal({
 
 	return (
 		<AnimatePresence>
-			{open && (
+			{open && !disabled && (
 				<>
 					{/* overlay */}
 					<motion.div

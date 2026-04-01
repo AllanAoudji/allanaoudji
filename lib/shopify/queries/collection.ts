@@ -1,4 +1,4 @@
-import collectionFragment from "../fragments/collection";
+import { collectionClientFragment, collectionServerFragment } from "../fragments/collection";
 import productFragment from "../fragments/product";
 
 export const getCollectionQuery = /* Graphql */ `
@@ -7,7 +7,7 @@ export const getCollectionQuery = /* Graphql */ `
             ...collection
         }
     }
-    ${collectionFragment}
+    ${collectionClientFragment}
 `;
 
 export const getCollectionsQuery = /* Graphql */ `
@@ -20,7 +20,7 @@ export const getCollectionsQuery = /* Graphql */ `
             }
         }
     }
-    ${collectionFragment}
+    ${collectionServerFragment}
 `;
 
 export const getCollectionProductsQuery = /* Graphql */ `

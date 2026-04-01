@@ -5,21 +5,16 @@ const isDev = process.env.NODE_ENV === "development";
 Sentry.init({
 	dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 	enabled: !isDev,
-
 	tracesSampleRate: isDev ? 0 : 0.2,
 
-	ignoreErrors: ["AbortError", "fetch failed", "ECONNRESET"],
+	ignoreErrors: ["AbortError", "NetworkError", "Failed to fetch"],
 
 	beforeSend(event, hint) {
 		const error = hint?.originalException as Error | undefined;
 
-		if (!error) return event;
-
-		if (error.name === "AbortError") return null;
-
-		// Next hot reload errors
-		if (error.message?.includes("NEXT_REDIRECT")) return null;
-		if (error.message?.includes("NEXT_NOT_FOUND")) return null;
+		if (error?.name === "AbortError") {
+			return null;
+		}
 
 		return event;
 	},

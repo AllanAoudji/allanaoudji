@@ -26,13 +26,18 @@ export function LocalShopifyProvider({
 	initialDiscountNodes,
 	initialPopularProducts,
 }: Readonly<Props>) {
+	const collections = useMemo(
+		() => initialCollections.filter(collection => collection.productsCount.count > 0),
+		[initialCollections],
+	);
+
 	const value = useMemo(
 		() => ({
-			collections: initialCollections,
+			collections,
 			discountNodes: initialDiscountNodes,
 			popularProducts: initialPopularProducts,
 		}),
-		[initialCollections, initialDiscountNodes, initialPopularProducts],
+		[collections, initialDiscountNodes, initialPopularProducts],
 	);
 
 	return <localShopifyContext.Provider value={value}>{children}</localShopifyContext.Provider>;
