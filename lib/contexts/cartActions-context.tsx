@@ -111,7 +111,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					dispatch({ type: "ROLLBACK_ADD", previousLines });
 					setProductMessage({
 						id: variant.id,
-						message: res.message,
+						message: formatErrorMessage(res.message),
 						type: res.type,
 					});
 				}
@@ -155,7 +155,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					dispatch({ type: "ROLLBACK_UPDATE", previousLines });
 					setCartMessage({
 						id: cartItem.merchandise.id,
-						message: res.message,
+						message: res.type === "error" ? formatErrorMessage(res.message) : res.message,
 						type: res.type,
 					});
 				}
@@ -199,7 +199,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					dispatch({ type: "ROLLBACK_UPDATE", previousLines });
 					setCartMessage({
 						id: cartItem.merchandise.id,
-						message: res.message,
+						message: res.type === "error" ? formatErrorMessage(res.message) : res.message,
 						type: res.type,
 					});
 				}
@@ -243,7 +243,7 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 					dispatch({ type: "ROLLBACK_REMOVE", previousLines });
 					setCartMessage({
 						id: cartItem.merchandise.id,
-						message: res.message,
+						message: res.type === "error" ? formatErrorMessage(res.message) : res.message,
 						type: res.type,
 					});
 				}
