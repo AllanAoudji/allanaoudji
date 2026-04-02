@@ -8,7 +8,7 @@ type ShopifyCollection = {
 	seo: SEO;
 	updatedAt: string;
 	image: shopifyImage | null;
-	productsCount: {
+	productsCount?: {
 		count: number;
 	};
 };

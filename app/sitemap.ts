@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	}));
 
 	const collectionUrls = collections
-		.filter(c => c.handle)
+		.filter(c => c.handle && (c.productsCount?.count ?? 0) > 0)
 		.map(c => ({
 			changeFrequency: "weekly" as const,
 			lastModified: c.updatedAt,

@@ -27,7 +27,7 @@ export function LocalShopifyProvider({
 	initialPopularProducts,
 }: Readonly<Props>) {
 	const collections = useMemo(
-		() => initialCollections.filter(collection => collection.productsCount.count > 0),
+		() => initialCollections.filter(c => (c.productsCount?.count ?? 0) > 0),
 		[initialCollections],
 	);
 
