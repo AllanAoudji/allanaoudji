@@ -1,24 +1,25 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
-import { Work } from "@/types/sanityType";
+import { WorkGalleryImage, WorkMainImage } from "@/types/sanityType";
+import shopifyImage from "@/types/shopifyImage";
 
 type Props = {
-	work: Work;
+	href: string;
+	image: WorkGalleryImage | shopifyImage | WorkMainImage;
+	title: string;
 };
 
-export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
+export default function ImageLink({ href, image, title }: Readonly<Props>) {
 	return (
-		<Link className="group block" href={`/gallery/${work.slug}`} key={work._id}>
-			{!!work.mainImage && (
-				<div className="mb-1.5 overflow-hidden">
-					<ImageContainer
-						className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
-						image={work.mainImage}
-						ratio="4/3"
-					/>
-				</div>
-			)}
+		<Link className="group block" href={href}>
+			<div className="mb-1.5 overflow-hidden">
+				<ImageContainer
+					className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
+					image={image}
+					ratio="4/3"
+				/>
+			</div>
 			<div className="flex text-xs font-bold">
 				<h3
 					className={cn(
@@ -30,7 +31,7 @@ export default function GalleryHomeSectionItem({ work }: Readonly<Props>) {
 						"after:origin-right after:scale-x-0",
 					)}
 				>
-					{work.title}
+					{title}
 				</h3>
 			</div>
 		</Link>

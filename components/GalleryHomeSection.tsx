@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { FETCH_WORKS_HOME } from "@/lib/constants";
 import GalleryHomeSectionContainer from "./GalleryHomeSectionContainer";
-import GalleryHomeSectionItem from "./GalleryHomeSectionItem";
+import ImageLink from "./ImageLink";
 import { getWorks } from "@/studio/lib/queries";
 
 type Props = {
@@ -26,7 +26,12 @@ export default async function GalleryHomeSection({ className }: Readonly<Props>)
 	return (
 		<GalleryHomeSectionContainer className={className}>
 			{query.data.works.map(work => (
-				<GalleryHomeSectionItem key={work._id} work={work} />
+				<ImageLink
+					href={`/gallery/${work.slug}`}
+					image={work.mainImage}
+					title={work.title}
+					key={work._id}
+				/>
 			))}
 		</GalleryHomeSectionContainer>
 	);
