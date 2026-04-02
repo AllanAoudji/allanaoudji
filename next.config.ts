@@ -28,6 +28,7 @@ const csp = [
 		"https://*.ingest.sentry.io",
 		"https://*.ingest.de.sentry.io",
 	].join(" "),
+
 	// styles
 	[
 		"style-src",
@@ -52,24 +53,22 @@ const csp = [
 		"https://*.cdninstagram.com",
 	].join(" "),
 
-	// frames (Sanity preview important)
+	// frames (Sanity preview)
 	["frame-src", "'self'", "https://*.sanity.io"].join(" "),
 
 	"worker-src 'self' blob:",
 	"child-src 'self'",
 
-	// sécurité forte
 	"object-src 'none'",
 	"base-uri 'self'",
 	"form-action 'self'",
 	"frame-ancestors 'self'",
 
-	// amélioration sécurité HTTPS
 	"upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {
-	reactStrictMode: false,
+	reactStrictMode: true,
 	async headers() {
 		return [
 			{
@@ -88,13 +87,13 @@ const nextConfig: NextConfig = {
 			{
 				source: "/products",
 				destination: "/collections",
-				permanent: true, // 308 — meilleur pour le SEO
+				permanent: true,
 			},
 		];
 	},
 	cacheComponents: true,
 	images: {
-		unoptimized: process.env.NODE_ENV === "development",
+		unoptimized: isDev,
 		dangerouslyAllowSVG: false,
 		minimumCacheTTL: 60 * 60 * 24 * 7,
 		remotePatterns: [
@@ -117,8 +116,8 @@ const nextConfig: NextConfig = {
 };
 
 export default withSentryConfig(nextConfig, {
-	org: "allan-aoudji",
-	project: "allan-aoudji-nextjs",
+	org: process.env.SENTRY_ORG,
+	project: process.env.SENTRY_PROJECT,
 	silent: true,
 	widenClientFileUpload: true,
 	sourcemaps: {

@@ -26,13 +26,7 @@ export default async function ProductsHomeSection({ className }: Readonly<Props>
 	return (
 		<ProductsHomeSectionContainer className={className}>
 			{products.map(product => (
-				<ImageContainer
-					className="border-primary border"
-					image={product.featuredImage}
-					key={product.id}
-					priority={true}
-					ratio="3/4"
-				/>
+				<ImageContainer image={product.featuredImage} key={product.id} priority={true} ratio="3/4" />
 			))}
 		</ProductsHomeSectionContainer>
 	);
