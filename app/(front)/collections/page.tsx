@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 				alt: "Collections Allan Aoudji",
 				height: 1200,
 				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/default-collection.png`,
-				width: 810,
+				width: 1600,
 			},
 		],
 		title: "Collections | Allan Aoudji",

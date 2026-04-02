@@ -1,28 +1,31 @@
 import { ImageResponse } from "next/og";
-import { getWork } from "@/studio/lib/queries";
+import { DEFAULT_COLLECTION_IMAGE } from "@/lib/constants";
+import { getCollection } from "@/lib/shopify";
 
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
 
-export default async function GallerySingleOGImage({
+export default async function CollectionSingleOGImage({
 	params,
 }: {
-	params: Promise<{ slug: string }>;
+	params: Promise<{ handle: string }>;
 }) {
-	const { slug } = await params;
-	const { data } = await getWork(slug);
+	const { handle } = await params;
+	const collection = await getCollection(handle);
 
-	if (!data) {
+	if (!collection) {
 		return new ImageResponse(
 			<img
+				alt="default opengraph image"
 				src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/og-default.jpg`}
 				width={1200}
 				height={630}
-				alt="default opengraph image"
 			/>,
 			size,
 		);
 	}
+
+	const image = collection.image ?? DEFAULT_COLLECTION_IMAGE;
 
 	return new ImageResponse(
 		<div
@@ -34,13 +37,11 @@ export default async function GallerySingleOGImage({
 				width: "100%",
 			}}
 		>
-			{data.mainImage?.url && (
-				<img
-					alt={data.mainImage.alt ?? data.title ?? ""}
-					src={data.mainImage.url}
-					style={{ height: "100%", objectFit: "cover", opacity: 0.7, width: "100%" }}
-				/>
-			)}
+			<img
+				alt=""
+				src={image.url}
+				style={{ height: "100%", objectFit: "cover", opacity: 0.7, width: "100%" }}
+			/>
 			<div
 				style={{
 					bottom: 48,
@@ -51,7 +52,7 @@ export default async function GallerySingleOGImage({
 					position: "absolute",
 				}}
 			>
-				{data.title}
+				{collection.title}
 			</div>
 			<div
 				style={{

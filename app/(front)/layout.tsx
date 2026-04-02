@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
 	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
 	openGraph: {
-		images: [{ url: "/og-default.jpg", width: 1200, height: 630 }],
+		images: [{ url: "/images/og-default.jpg", width: 1200, height: 630 }],
 		locale: "fr_FR",
 		siteName: "Allan Aoudji",
 		type: "website",

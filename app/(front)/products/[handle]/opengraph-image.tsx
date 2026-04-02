@@ -1,24 +1,20 @@
 import { ImageResponse } from "next/og";
-import { getWork } from "@/studio/lib/queries";
+import { getProduct } from "@/lib/shopify";
 
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
 
-export default async function GallerySingleOGImage({
-	params,
-}: {
-	params: Promise<{ slug: string }>;
-}) {
-	const { slug } = await params;
-	const { data } = await getWork(slug);
+export default async function ProductOGImage({ params }: { params: Promise<{ handle: string }> }) {
+	const { handle } = await params;
+	const product = await getProduct(handle);
 
-	if (!data) {
+	if (!product) {
 		return new ImageResponse(
 			<img
+				alt="image opengraph par default"
 				src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/og-default.jpg`}
 				width={1200}
 				height={630}
-				alt="default opengraph image"
 			/>,
 			size,
 		);
@@ -34,11 +30,17 @@ export default async function GallerySingleOGImage({
 				width: "100%",
 			}}
 		>
-			{data.mainImage?.url && (
+			{product.featuredImage && (
 				<img
-					alt={data.mainImage.alt ?? data.title ?? ""}
-					src={data.mainImage.url}
-					style={{ height: "100%", objectFit: "cover", opacity: 0.7, width: "100%" }}
+					alt=""
+					src={product.featuredImage.url}
+					style={{
+						height: "100%",
+						objectFit: "cover",
+						objectPosition: "top",
+						opacity: 0.7,
+						width: "100%",
+					}}
 				/>
 			)}
 			<div
@@ -51,7 +53,7 @@ export default async function GallerySingleOGImage({
 					position: "absolute",
 				}}
 			>
-				{data.title}
+				{product.title}
 			</div>
 			<div
 				style={{
