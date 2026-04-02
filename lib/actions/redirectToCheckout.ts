@@ -11,6 +11,10 @@ export async function redirectToCheckout() {
 	let cartId: string | undefined;
 	let cart: Cart | undefined;
 
+	if (!process.env.NEXT_PUBLIC_SHOP_ENABLED) {
+		return ERROR_CODE.INVALID_CART;
+	}
+
 	try {
 		cartId = (await cookies()).get("cartId")?.value;
 	} catch (error) {
