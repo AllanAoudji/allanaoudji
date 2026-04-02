@@ -11,7 +11,7 @@ export default function ProductSingleNotFound() {
 			<p>Ce produit n&rsquo;existe pas ou n&rsquo;est plus disponible.</p>
 			<IssueLinksContainer>
 				<IssueLink href="/collections">Voir la boutique</IssueLink>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

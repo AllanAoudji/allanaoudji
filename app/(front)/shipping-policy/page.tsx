@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyShippingPolicy from "@/components/EmptyShippingPolicy";
 import LegalPageContainer from "@/components/LegalPageContainer";
 import { getShippingPolicy } from "@/studio/lib/queries";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default async function ShippingPolicyPage() {
 	const result = await getShippingPolicy();
 
-	if (!result || !result.data || !result.data.content) {
+	if (!result?.data?.content || isPortableTextEmpty(result.data.content)) {
 		return <EmptyShippingPolicy />;
 	}
 

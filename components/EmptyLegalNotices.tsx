@@ -8,7 +8,7 @@ export default function EmptyLegalNotices() {
 		<IssueContainer>
 			<SubTitle>Les mentions légales ne sont pas encore disponibles.</SubTitle>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

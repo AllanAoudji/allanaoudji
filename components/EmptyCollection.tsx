@@ -29,7 +29,7 @@ export default function EmptyCollection({ handle }: Readonly<Props>) {
 				</>
 			)}
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 				{collectionName && <IssueLink href="/collections">Toutes les collections</IssueLink>}
 			</IssueLinksContainer>
 		</IssueContainer>

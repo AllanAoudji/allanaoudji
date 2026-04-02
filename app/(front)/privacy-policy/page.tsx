@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyPrivacyPolicy from "@/components/EmptyPrivacyPolicy";
 import LegalPageContainer from "@/components/LegalPageContainer";
 import { getPrivacyPolicy } from "@/studio/lib/queries";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default async function PrivacyPolicyPage() {
 	const result = await getPrivacyPolicy();
 
-	if (!result || !result.data || !result.data.content) {
+	if (!result?.data?.content || isPortableTextEmpty(result.data.content)) {
 		return <EmptyPrivacyPolicy />;
 	}
 

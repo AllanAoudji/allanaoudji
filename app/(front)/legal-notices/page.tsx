@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyLegalNotices from "@/components/EmptyLegalNotices";
 import LegalPageContainer from "@/components/LegalPageContainer";
 import { getLegalNotices } from "@/studio/lib/queries";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default async function LegalNoticesPage() {
 	const result = await getLegalNotices();
 
-	if (!result || !result.data || !result.data.content) {
+	if (!result?.data?.content || isPortableTextEmpty(result.data.content)) {
 		return <EmptyLegalNotices />;
 	}
 

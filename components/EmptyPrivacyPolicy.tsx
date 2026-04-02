@@ -8,7 +8,7 @@ export default function EmptyPrivacyPolicy() {
 		<IssueContainer>
 			<SubTitle>La politique de confidentialité n&rsquo;est pas encore disponible.</SubTitle>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

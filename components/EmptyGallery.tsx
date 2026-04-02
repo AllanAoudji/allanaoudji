@@ -9,7 +9,7 @@ export default function EmptyGallery() {
 			<SubTitle>La galerie se remplit bientôt.</SubTitle>
 			<p>Revenez découvrir mes créations 🙂</p>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

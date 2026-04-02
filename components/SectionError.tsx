@@ -28,7 +28,7 @@ export default function SectionError({ error, reset }: Readonly<Props>) {
 			{reset && (
 				<IssueLinksContainer>
 					<IssueResetButton onClick={reset} />
-					<IssueLink href="/">Acceuil</IssueLink>
+					<IssueLink href="/">Accueil</IssueLink>
 				</IssueLinksContainer>
 			)}
 		</IssueContainer>

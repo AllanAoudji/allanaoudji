@@ -1,3 +1,4 @@
+// lib/isPortableTextEmpty.ts
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
@@ -11,6 +12,11 @@ import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
 import ShopifyCollection from "@/types/shopifyCollection";
+
+type SanityBlock = {
+	_type: string;
+	children?: Array<{ _type: string; text?: string }>;
+};
 
 export function applyFrenchTypography(text: string): string {
 	let t = text;
@@ -226,6 +232,24 @@ export function getProductDefaultVariant(product: Product): string | undefined {
 	return new URLSearchParams(
 		variants[0].selectedOptions.map(option => [option.name.toLocaleLowerCase(), option.value]),
 	).toString();
+}
+
+export function isPortableTextEmpty(value: SanityBlock[] | null | undefined): boolean {
+	if (!value || value.length === 0) return true;
+
+	return value.every(block => {
+		// Blocs non-texte (image, table, callout, etc.) = contenu présent
+		if (block._type !== "block") return false;
+
+		// Pas de children = vide
+		if (!block.children || block.children.length === 0) return true;
+
+		// Tous les spans ont un texte vide ou whitespace-only
+		return block.children.every(
+			(child: { _type: string; text?: string }) =>
+				child._type === "span" && (!child.text || child.text.trim() === ""),
+		);
+	});
 }
 
 export function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
