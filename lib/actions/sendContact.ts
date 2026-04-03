@@ -1,13 +1,11 @@
 "use server";
 
-import { ERROR_CODE, SPAM_WORDS_FR } from "../constants";
+import { ContactFormFields, ERROR_CODE, SPAM_WORDS_FR } from "../constants";
 import { checkRateLimit } from "../redis";
 import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";
-
-type ContactFormFields = "firstName" | "lastName" | "email" | "subject" | "message" | "website";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

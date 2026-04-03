@@ -3,7 +3,12 @@ import { getDiscountsQuery } from "../queries/discount";
 import { getProductVariantsInventoryQuery } from "../queries/product";
 import * as Sentry from "@sentry/nextjs";
 import "server-only";
-import { DEFAULT_COLLECTION_IMAGE, ERROR_CODE, TAGS } from "@/lib/constants";
+import {
+	DEFAULT_COLLECTION_IMAGE,
+	ERROR_CODE,
+	SHOPIFY_GRAPHQL_API_ENDPOINT,
+	TAGS,
+} from "@/lib/constants";
 import { isShopifyError } from "@/lib/type-guards";
 import {
 	ensureEndWithout,
@@ -24,7 +29,6 @@ import {
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
-const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
 
 export async function shopifyAdminFetch<T>({
 	cache = "force-cache",

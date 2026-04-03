@@ -4,13 +4,14 @@ import Form from "next/form";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import sendContact from "@/lib/actions/sendContact";
-import { cn, contactFormSchema, formatErrorMessage } from "@/lib/utils";
+import { CONTACT_FORM_SCHEMA } from "@/lib/constants";
+import { cn, formatErrorMessage } from "@/lib/utils";
 import ContactFormCallbackMessage from "./ContactFormCallbackMessage";
 import ContactFormInput from "./ContactFormInput";
 import ContactFormSubmitButton from "./ContactFormSubmitButton";
 import ContactFormTextAra from "./ContactFormTextarea";
 
-type FormErrors = Partial<Record<keyof z.infer<typeof contactFormSchema>, string>>;
+type FormErrors = Partial<Record<keyof z.infer<typeof CONTACT_FORM_SCHEMA>, string>>;
 
 type Props = {
 	className?: string;
@@ -27,7 +28,7 @@ export default function ContactForm({ className }: Readonly<Props>) {
 
 	const handleSubmit = async (formData: FormData) => {
 		const data = Object.fromEntries(formData.entries());
-		const parsed = contactFormSchema.safeParse(data);
+		const parsed = CONTACT_FORM_SCHEMA.safeParse(data);
 
 		if (!parsed.success) {
 			const fieldErrors: FormErrors = {};
@@ -54,8 +55,8 @@ export default function ContactForm({ className }: Readonly<Props>) {
 		}
 	};
 
-	const validateField = (name: keyof typeof contactFormSchema.shape, value: string) => {
-		const fieldSchema = contactFormSchema.shape[name];
+	const validateField = (name: keyof typeof CONTACT_FORM_SCHEMA.shape, value: string) => {
+		const fieldSchema = CONTACT_FORM_SCHEMA.shape[name];
 		let isValid = true;
 		try {
 			fieldSchema.parse(value);

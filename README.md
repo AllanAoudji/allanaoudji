@@ -183,7 +183,6 @@ cp .env.example .env.local
 | Variable                           | Description                                         |
 | ---------------------------------- | --------------------------------------------------- |
 | `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` | Domaine public de la boutique (`xxx.myshopify.com`) |
-| `NEXT_PUBLIC_SHOPIFY_API_VERSION`  | Version de l'API Shopify (ex: `2024-04`)            |
 | `SHOPIFY_STORE_DOMAIN`             | Domaine (server-side)                               |
 | `SHOPIFY_PUBLIC_ACCESS_TOKEN`      | Token Storefront API (public)                       |
 | `SHOPIFY_ADMIN_ACCESS_TOKEN`       | Token Admin API (server-side uniquement)            |

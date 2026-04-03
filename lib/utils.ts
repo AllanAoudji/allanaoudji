@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import z from "zod";
 import { ERROR_MESSAGE_FR } from "./constants";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
@@ -126,29 +125,6 @@ export function buildGalleryImages(product: Product, variant: ProductVariant | u
 export const cn = (...inputs: ClassValue[]): string => {
 	return twMerge(clsx(inputs));
 };
-
-export const contactFormSchema = z.object({
-	firstName: z
-		.string()
-		.min(2, "Doit contenir au moins 2 caractères")
-		.max(50, "Ne peut pas dépasser 50 caractères"),
-	lastName: z
-		.string()
-		.min(2, "Doit contenir au moins 2 caractères")
-		.max(50, "Ne peut pas dépasser 50 caractères"),
-	email: z.string().email("Email invalide"),
-	subject: z
-		.string()
-		.min(3, "Doit contenir au moins 3 caractères")
-		.max(120, "Ne peut pas dépasser 120 caractères"),
-	message: z
-		.string()
-		.min(10, "Doit contenir au moins 10 caractères")
-		.max(2000, "Ne peut pas dépasser 2000 caractères"),
-	website: z.string().optional(),
-});
-
-export type ContactFormFields = keyof typeof contactFormSchema.shape;
 
 export function convertCurrencyCode(currencyCode: string): string {
 	switch (currencyCode) {

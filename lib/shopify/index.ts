@@ -1,4 +1,4 @@
-import { ERROR_CODE, HIDDEN_PRODUCT_TAG, TAGS } from "../constants";
+import { ERROR_CODE, HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import {
 	ensureEndWithout,
@@ -57,7 +57,6 @@ import ShopifyProduct from "@/types/shopifyProduct";
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
-const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`;
 
 const endpoint = `${DOMAIN}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;

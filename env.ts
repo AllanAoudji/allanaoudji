@@ -13,7 +13,6 @@ const envVariables = z.object({
 	NEXT_PUBLIC_SHOP_ENABLED: z.string(),
 	NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: z.string(),
 	NEXT_PUBLIC_SITE_URL: z.string(),
-	NEXT_PUBLIC_SHOPIFY_API_VERSION: z.string(),
 	NEXT_PUBLIC_TWITTER_CREATOR: z.string(),
 	RESEND_API_KEY: z.string(),
 	SANITY_SERVER_TOKEN: z.string(),

@@ -1,3 +1,4 @@
+import z from "zod";
 import Menu from "@/types/menu";
 import shopifyImage from "@/types/shopifyImage";
 import SortFilterItem from "@/types/sortFilterItem";
@@ -87,8 +88,33 @@ export const TAGS = {
 	discounts: "discounts",
 };
 
+export const CONTACT_FORM_SCHEMA = z.object({
+	firstName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	lastName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	email: z.string().email("Email invalide"),
+	subject: z
+		.string()
+		.min(3, "Doit contenir au moins 3 caractères")
+		.max(120, "Ne peut pas dépasser 120 caractères"),
+	message: z
+		.string()
+		.min(10, "Doit contenir au moins 10 caractères")
+		.max(2000, "Ne peut pas dépasser 2000 caractères"),
+	website: z.string().optional(),
+});
+
+export type ContactFormFields = keyof typeof CONTACT_FORM_SCHEMA.shape;
+
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
 export const DEFAULT_OPTION = "Default Title";
+
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2026-01/graphql.json";
 
 export const SPAM_WORDS_FR = [
 	// Publicité / marketing agressif
