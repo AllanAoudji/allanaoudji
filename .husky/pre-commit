@@ -1,1 +1,1 @@
-npm run typegen && git add sanityBackend/types.ts && npm run type-check && npx lint-staged
+npm run typegen && git add sanityBackend/types.ts && git add sanityBackend/extract.json && npm run type-check && npx lint-staged
