@@ -3,7 +3,7 @@ import SkeletonText from "./SkeletonText";
 
 export default function SkeletonPortableText() {
 	return (
-		<div className="grid min-h-screen grid-cols-1 gap-4 pt-1 md:grid-cols-2 lg:grid-cols-3">
+		<div className="grid min-h-dvh grid-cols-1 gap-4 pt-1 md:grid-cols-2 lg:grid-cols-3">
 			<div>
 				<SkeletonText className="mb-2" size={70} type="h1" />
 				<SkeletonText className="mb-2" size={55} type="h2" />

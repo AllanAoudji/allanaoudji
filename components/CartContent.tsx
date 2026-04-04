@@ -9,7 +9,7 @@ type Props = {
 
 export default function CartContent({ cart }: Readonly<Props>) {
 	return (
-		<div className="flex h-screen flex-col">
+		<div className="flex h-dvh flex-col">
 			<CartHeader />
 			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pt-4 pb-8">
 				{cart.lines

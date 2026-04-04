@@ -28,7 +28,7 @@ export default function ProductLink({ className, onClick, product }: Readonly<Pr
 				<ImageContainer image={product.featuredImage} priority={true} ratio="3/4" />
 				{hasSecondImage && (
 					<ImageContainer
-						className="absolute top-0 z-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+						className="absolute top-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 						image={product.images[1]}
 						ratio="3/4"
 					/>

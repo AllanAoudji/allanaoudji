@@ -69,7 +69,7 @@ export default function DrawerModal({
 					>
 						<motion.div
 							animate={{ x: 0 }}
-							className={cn(`bg-primary fixed top-0 z-50 h-full w-fit shadow-xl`, {
+							className={cn(`bg-primary fixed top-0 z-50 h-dvh w-fit shadow-xl`, {
 								"left-0": !isRight,
 								"right-0": isRight,
 							})}

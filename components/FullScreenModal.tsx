@@ -51,7 +51,7 @@ export default function FullscreenModal({
 				>
 					<motion.div
 						animate={{ x: 0 }}
-						className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
+						className="bg-primary top-header fixed left-0 z-50 h-dvh w-full shadow-xl"
 						exit={{ x: "-100%" }}
 						initial={{ x: "-100%" }}
 						transition={{

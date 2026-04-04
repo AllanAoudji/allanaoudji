@@ -20,7 +20,7 @@ export default function CollectionsFiltersModal({ onCloseAction, open }: Readonl
 			open={open}
 			disabled={collections.length <= 2}
 		>
-			<div className="flex h-screen flex-col">
+			<div className="flex h-dvh flex-col">
 				<CollectionsFilterModalHeader />
 				<CollectionsFilter
 					className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-8"
