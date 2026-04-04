@@ -171,7 +171,7 @@ export async function shopifyFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			throw new Error(`1${ERROR_CODE.SHOPIFY_API_ERROR}`);
 		}
 		return {
 			status: result.status,
@@ -187,7 +187,7 @@ export async function shopifyFetch<T>({
 					query,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			throw new Error(`2${ERROR_CODE.SHOPIFY_API_ERROR}`);
 		}
 
 		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
@@ -197,7 +197,7 @@ export async function shopifyFetch<T>({
 			});
 		}
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		throw new Error(`3${ERROR_CODE.SHOPIFY_API_ERROR}`);
 	}
 }
 

@@ -68,7 +68,7 @@ export async function shopifyAdminFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(body);
+			throw new Error(`4${ERROR_CODE.SHOPIFY_API_ERROR}`);
 		}
 		return {
 			status: result.status,
@@ -84,7 +84,7 @@ export async function shopifyAdminFetch<T>({
 					query,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			throw new Error(`5${ERROR_CODE.SHOPIFY_API_ERROR}`);
 		}
 
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
@@ -93,7 +93,7 @@ export async function shopifyAdminFetch<T>({
 			});
 		}
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		throw new Error(`6${ERROR_CODE.SHOPIFY_API_ERROR}`);
 	}
 }
 
