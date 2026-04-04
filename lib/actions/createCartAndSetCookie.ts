@@ -12,7 +12,13 @@ export default async function createCartAndSetCookie() {
 		const [createdCart, cookieStore] = await Promise.all([createCart(), cookies()]);
 
 		cart = createdCart;
-		cookieStore.set("cartId", cart.id!);
+		cookieStore.set("cartId", cart.id!, {
+			maxAge: 60 * 60 * 24 * 7, // 7 jours
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "lax",
+			path: "/",
+		});
 
 		return cart.id!;
 	} catch (error) {
