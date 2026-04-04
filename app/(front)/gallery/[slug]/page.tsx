@@ -1,9 +1,18 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import GalleryImages from "@/components/GalleryImages";
 import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
-import { getWork } from "@/studio/lib/queries";
+import { getWork, getWorksSiteMap } from "@/studio/lib/queries";
+
+const getWorkCached = cache(getWork);
+
+export async function generateStaticParams() {
+	const { data } = await getWorksSiteMap();
+	if (!data) return [];
+	return data.map((work: { slug: string }) => ({ slug: work.slug }));
+}
 
 export async function generateMetadata({
 	params,
@@ -11,7 +20,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
 	const { slug } = await params;
-	const { data } = await getWork(slug);
+	const { data } = await getWorkCached(slug);
 
 	if (!data) return {};
 
@@ -40,7 +49,7 @@ export async function generateMetadata({
 
 export default async function GallerySinglePage({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const result = await getWork(slug);
+	const result = await getWorkCached(slug);
 
 	if (!result || !result.data) {
 		notFound();

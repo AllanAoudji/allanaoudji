@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { getProduct } from "@/lib/shopify";
+import { getProduct, getProducts } from "@/lib/shopify";
 import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
@@ -17,6 +17,21 @@ type Props = {
 };
 
 const getProductCached = cache(getProduct);
+
+export async function generateStaticParams() {
+	const handles: { handle: string }[] = [];
+	let after: string | undefined = undefined;
+	let hasNextPage = true;
+
+	while (hasNextPage) {
+		const { products, pageInfo } = await getProducts({ first: 100, after });
+		products.forEach(p => handles.push({ handle: p.handle }));
+		hasNextPage = pageInfo.hasNextPage;
+		after = pageInfo.endCursor ?? undefined;
+	}
+
+	return handles;
+}
 
 export async function generateMetadata({ params }: Readonly<Props>): Promise<Metadata> {
 	const { handle } = await params;
