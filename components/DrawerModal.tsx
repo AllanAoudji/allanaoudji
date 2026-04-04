@@ -2,6 +2,7 @@
 
 import { FocusTrap } from "focus-trap-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
 import useEscape from "@/lib/hooks/useEscape";
@@ -28,11 +29,14 @@ export default function DrawerModal({
 	open,
 	position = "right",
 }: Readonly<Props>) {
+	const pathname = usePathname();
+
 	const { width } = useWindowDimensions();
 	useEscape(onCloseAction);
 	useBodyScrollLock(open);
 
 	const prevWidth = useRef(width);
+	const prevPathname = useRef(pathname);
 
 	const isRight = position === "right";
 
@@ -44,6 +48,12 @@ export default function DrawerModal({
 			onCloseAction();
 		}
 	}, [closeOn, onCloseAction, open, width]);
+
+	useEffect(() => {
+		if (prevPathname.current === pathname) return;
+		prevPathname.current = pathname;
+		if (open) onCloseAction();
+	}, [pathname, open, onCloseAction]);
 
 	return (
 		<AnimatePresence>
@@ -69,7 +79,7 @@ export default function DrawerModal({
 					>
 						<motion.div
 							animate={{ x: 0 }}
-							className={cn(`bg-primary fixed top-0 z-50 h-full w-fit shadow-xl`, {
+							className={cn(`bg-primary fixed top-0 z-50 h-dvh w-fit shadow-xl`, {
 								"left-0": !isRight,
 								"right-0": isRight,
 							})}

@@ -2,6 +2,7 @@
 
 import { FocusTrap } from "focus-trap-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import useBodyScrollLock from "@/lib/hooks/useBodyScrollLock";
 import useEscape from "@/lib/hooks/useEscape";
@@ -24,9 +25,12 @@ export default function FullscreenModal({
 	open,
 }: Readonly<Props>) {
 	const { width } = useWindowDimensions();
+	const pathname = usePathname();
+
 	useBodyScrollLock(open);
 	useEscape(onCloseAction);
 
+	const prevPathname = useRef(pathname);
 	const prevWidth = useRef(width);
 
 	useEffect(() => {
@@ -37,6 +41,12 @@ export default function FullscreenModal({
 			onCloseAction();
 		}
 	}, [closeOn, onCloseAction, open, width]);
+
+	useEffect(() => {
+		if (prevPathname.current === pathname) return;
+		prevPathname.current = pathname;
+		if (open) onCloseAction();
+	}, [pathname, open, onCloseAction]);
 
 	return (
 		<AnimatePresence>
@@ -51,7 +61,7 @@ export default function FullscreenModal({
 				>
 					<motion.div
 						animate={{ x: 0 }}
-						className={cn("bg-primary top-header fixed left-0 z-50 h-full w-full shadow-xl")}
+						className="bg-primary top-header fixed left-0 z-50 h-dvh w-full shadow-xl"
 						exit={{ x: "-100%" }}
 						initial={{ x: "-100%" }}
 						transition={{

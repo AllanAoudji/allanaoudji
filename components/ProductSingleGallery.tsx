@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useLightBox } from "@/lib/contexts/lightbox-context";
 import { useProduct } from "@/lib/contexts/product-context";
 import { buildGalleryImages, cn } from "@/lib/utils";
@@ -19,6 +19,11 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 	const { state } = useProduct();
 
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [dragging, setDragging] = useState(false);
+	const [dragOffset, setDragOffset] = useState(0);
+
+	const touchStartX = useRef<number>(0);
+	const dragX = useRef<number>(0);
 
 	const variant = useMemo(() => {
 		return variants.find(variant =>
@@ -35,6 +40,37 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 			setImage(id);
 		},
 		[setImage],
+	);
+
+	const handleTouchStart = useCallback((e: React.TouchEvent) => {
+		const startX = e.touches[0].clientX;
+		if (startX < 20) return;
+		touchStartX.current = startX;
+		setDragging(true);
+		setDragOffset(0);
+	}, []);
+
+	const handleTouchMove = useCallback((e: React.TouchEvent) => {
+		const delta = e.touches[0].clientX - touchStartX.current;
+		dragX.current = delta;
+		setDragOffset(delta);
+	}, []);
+
+	const handleTouchEnd = useCallback(
+		(e: React.TouchEvent) => {
+			setDragging(false);
+			setDragOffset(0);
+			const delta = dragX.current;
+			dragX.current = 0;
+			if (Math.abs(delta) < 50) return;
+			e.preventDefault();
+			if (delta < 0) {
+				setActiveIndex(i => Math.min(i + 1, images.length - 1));
+			} else {
+				setActiveIndex(i => Math.max(i - 1, 0));
+			}
+		},
+		[images.length],
 	);
 
 	useEffect(() => {
@@ -59,8 +95,14 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 			<div className="lg:hidden">
 				<div className="relative aspect-3/4 w-full overflow-hidden">
 					<div
-						className="flex transition-transform duration-300 ease-in-out"
-						style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+						style={{
+							transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))`,
+							transition: dragging ? "none" : "transform 300ms ease-in-out",
+						}}
+						className="flex"
+						onTouchStart={handleTouchStart}
+						onTouchMove={handleTouchMove}
+						onTouchEnd={handleTouchEnd}
 					>
 						{images.map(image => (
 							<div key={image.id} className="w-full shrink-0">

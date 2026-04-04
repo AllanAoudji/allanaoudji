@@ -12,7 +12,7 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
 
 	return (
 		<html lang="fr">
-			<body className="font-gopher bg-primary text-secondary flex h-screen flex-col items-center justify-center antialiased">
+			<body className="font-gopher bg-primary text-secondary flex h-dvh flex-col items-center justify-center antialiased">
 				<div className="flex flex-col items-center justify-center">
 					<p className="text-sm tracking-widest uppercase opacity-40">500</p>
 					<Title>Erreur critique</Title>
