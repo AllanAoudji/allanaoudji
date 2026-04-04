@@ -84,7 +84,7 @@ export async function shopifyAdminFetch<T>({
 					query,
 				},
 			});
-			throw new Error(`5${ERROR_CODE.SHOPIFY_API_ERROR}`);
+			throw new Error(`${error.message} ${error.cause}`);
 		}
 
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
