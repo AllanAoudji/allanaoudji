@@ -9,7 +9,7 @@ import {
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
 	TAGS,
 } from "@/lib/constants";
-import { isShopifyError } from "@/lib/type-guards";
+// import { isShopifyError } from "@/lib/type-guards";
 import {
 	ensureEndWithout,
 	ensureStartWith,
@@ -68,32 +68,34 @@ export async function shopifyAdminFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(body.errors);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
 			body,
 		};
 	} catch (error) {
-		if (isShopifyError(error)) {
-			Sentry.captureException(error, {
-				extra: {
-					context: "Shopify API error",
-					cause: error.cause?.toString() ?? "unknown",
-					status: error.status ?? 500,
-					query,
-				},
-			});
-			throw new Error(error.cause?.toString() ?? "unknown");
-		}
+		// if (isShopifyError(error)) {
+		// 	Sentry.captureException(error, {
+		// 		extra: {
+		// 			context: "Shopify API error",
+		// 			cause: error.cause?.toString() ?? "unknown",
+		// 			status: error.status ?? 500,
+		// 			query,
+		// 		},
+		// 	});
+		// 	throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		// }
 
-		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
-			Sentry.captureException(error, {
-				extra: { context: "Unexpected error in shopifyFetch", query },
-			});
+		// if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
+		// 	Sentry.captureException(error, {
+		// 		extra: { context: "Unexpected error in shopifyFetch", query },
+		// 	});
+		// }
+		if (error instanceof Error) {
+			throw error;
 		}
-
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		throw new Error("unkown");
 	}
 }
 
