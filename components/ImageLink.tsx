@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 import ImageContainer from "./ImageContainer";
 import { WorkGalleryImage, WorkMainImage } from "@/types/sanityType";
@@ -7,12 +8,13 @@ import shopifyImage from "@/types/shopifyImage";
 type Props = {
 	href: string;
 	image: WorkGalleryImage | shopifyImage | WorkMainImage;
+	onClick?: MouseEventHandler<HTMLAnchorElement> | undefined;
 	title: string;
 };
 
-export default function ImageLink({ href, image, title }: Readonly<Props>) {
+export default function ImageLink({ href, image, onClick, title }: Readonly<Props>) {
 	return (
-		<Link className="group block" href={href}>
+		<Link className="group block" href={href} onClick={onClick}>
 			<div className="mb-1.5 overflow-hidden">
 				<ImageContainer
 					className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"

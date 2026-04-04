@@ -6,7 +6,7 @@ import SortFilterItem from "@/types/sortFilterItem";
 export const DEFAULT_COLLECTION_IMAGE: shopifyImage = {
 	height: 1200,
 	id: "default-collection-image",
-	url: "/images/default-collection.png",
+	url: "/images/default-collection.jpg",
 	width: 810,
 	altText: "image de collection par défault",
 };
