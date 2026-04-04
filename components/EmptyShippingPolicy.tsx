@@ -8,7 +8,7 @@ export default function EmptyShippingPolicy() {
 		<IssueContainer>
 			<SubTitle>La politique d&rsquo;expédition n&rsquo;est pas encore disponible.</SubTitle>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

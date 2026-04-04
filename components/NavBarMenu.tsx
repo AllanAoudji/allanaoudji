@@ -23,7 +23,9 @@ export default function NavBarMenu({
 				className,
 			)}
 		>
-			{asHome && <NavBarMenuItem color={color} direction={direction} menu={HOME_MENU} title="home" />}
+			{asHome && (
+				<NavBarMenuItem color={color} direction={direction} menu={HOME_MENU} title="accueil" />
+			)}
 			{HEAD_MENU.map(menu => (
 				<NavBarMenuItem
 					color={color}

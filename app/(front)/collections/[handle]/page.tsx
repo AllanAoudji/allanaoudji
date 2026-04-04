@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import { DEFAULT_COLLECTION_IMAGE } from "@/lib/constants";
 import { getCollection } from "@/lib/shopify";
 import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
@@ -25,8 +24,6 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 
 	if (!collection) return {};
 
-	const image = collection.image ?? DEFAULT_COLLECTION_IMAGE;
-
 	return {
 		alternates: {
 			canonical: url,
@@ -34,14 +31,6 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 		description: collection.seo?.description ?? collection.description,
 		openGraph: {
 			description: collection.seo?.description ?? collection.description,
-			images: [
-				{
-					alt: image.altText ?? collection.title,
-					height: image.height,
-					url: image.url,
-					width: image.width,
-				},
-			],
 			title: collection.seo?.title ?? collection.title,
 			type: "website",
 			url,

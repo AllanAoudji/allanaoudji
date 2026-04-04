@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import ModalType from "@/types/type";
 
@@ -31,8 +32,7 @@ export function ModalProvider({ children }: Readonly<Props>) {
 
 export function useModal() {
 	const context = useContext(ModalContext);
-	if (context === undefined) {
-		throw new Error("useModal must be used inside ModalProvider");
-	}
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+
 	return context;
 }

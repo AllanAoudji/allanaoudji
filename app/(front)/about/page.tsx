@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyAbout from "@/components/EmptyAbout";
 import PortableTextContent from "@/components/PortableTextContent";
 import { getAbout } from "@/studio/lib/queries";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
 	const result = await getAbout();
 
-	if (!result || !result.data || !result.data.content) {
+	if (!result?.data?.content || isPortableTextEmpty(result.data.content)) {
 		return <EmptyAbout />;
 	}
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_CODE } from "../constants";
 import { createContext, useContext, useMemo } from "react";
 import Collection from "@/types/collection";
 import Product from "@/types/product";
@@ -25,13 +26,18 @@ export function LocalShopifyProvider({
 	initialDiscountNodes,
 	initialPopularProducts,
 }: Readonly<Props>) {
+	const collections = useMemo(
+		() => initialCollections.filter(c => (c.productsCount?.count ?? 0) > 0),
+		[initialCollections],
+	);
+
 	const value = useMemo(
 		() => ({
-			collections: initialCollections,
+			collections,
 			discountNodes: initialDiscountNodes,
 			popularProducts: initialPopularProducts,
 		}),
-		[initialCollections, initialDiscountNodes, initialPopularProducts],
+		[collections, initialDiscountNodes, initialPopularProducts],
 	);
 
 	return <localShopifyContext.Provider value={value}>{children}</localShopifyContext.Provider>;
@@ -39,10 +45,7 @@ export function LocalShopifyProvider({
 
 export function useLocalShopify() {
 	const context = useContext(localShopifyContext);
-
-	if (context === undefined) {
-		throw new Error("useCollections must be used within a CollectionsProvider");
-	}
+	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
 
 	return context;
 }

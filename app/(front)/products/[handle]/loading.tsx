@@ -42,7 +42,7 @@ export default function ProductSingleLoading() {
 				</div>
 			</div>
 			<div className="mt-16 lg:mt-12">
-				<SubTitle>Vous aimerez peut-être...</SubTitle>
+				<SubTitle>Tu aimeras peut-être...</SubTitle>
 				<div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 					<SkeletonProductLink />
 					<SkeletonProductLink />

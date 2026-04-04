@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { cn, contactFormSchema } from "@/lib/utils";
+import { CONTACT_FORM_SCHEMA } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 type Props = {
 	className?: string;
 	error?: string;
-	id: keyof typeof contactFormSchema.shape;
+	id: keyof typeof CONTACT_FORM_SCHEMA.shape;
 	placeholder: string;
 	onValueChange?: (_value: string) => void;
 	title: string;
-	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
+	validateField: (_name: keyof typeof CONTACT_FORM_SCHEMA.shape, _value: string) => boolean;
 };
 
 export default function ContactFormTextAra({

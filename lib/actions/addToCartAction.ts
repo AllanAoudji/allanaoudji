@@ -1,10 +1,11 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
 import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import createCartAndSetCookie from "@/lib/actions/createCartAndSetCookie";
-import { TAGS } from "@/lib/constants";
+import { ERROR_CODE, TAGS } from "@/lib/constants";
 import { addToCart } from "@/lib/shopify";
 import ActionReponse from "@/types/actionResponse";
 import Cart from "@/types/cart";
@@ -19,11 +20,8 @@ export async function addToCartAction(
 
 	try {
 		cookieStore = await cookies();
-	} catch (error) {
-		if (error instanceof Error) {
-			return { message: error.message, type: "error" };
-		}
-		return { message: "Unknown error occurred while retrieving cookies.", type: "error" };
+	} catch {
+		return { message: ERROR_CODE.UNKNOWN_ERROR, type: "error" };
 	}
 
 	let cartId = cookieStore.get("cartId")?.value;
@@ -34,11 +32,11 @@ export async function addToCartAction(
 			newCartId = await createCartAndSetCookie();
 			cartId = newCartId;
 		} catch (error) {
-			if (error instanceof Error) {
-				return { message: error.message, type: "error" };
-			}
+			Sentry.captureException(error, {
+				extra: { context: "Failed to create cart" },
+			});
 			return {
-				message: "Unknown error occurred while retrieving cart ID from cookies.",
+				message: ERROR_CODE.UNKNOWN_ERROR,
 				type: "error",
 			};
 		}
@@ -56,10 +54,15 @@ export async function addToCartAction(
 	try {
 		res = await addToCart(cartId, variantId, finalQuantity, previousQuantity);
 	} catch (error) {
-		if (error instanceof Error) {
-			return { message: error.message, type: "error" };
-		}
-		return { message: "Unknown error occurred while adding item to cart.", type: "error" };
+		Sentry.captureException(error, {
+			extra: {
+				context: "Failed to add to cart",
+				cartId,
+				variantId,
+				finalQuantity,
+			},
+		});
+		return { message: ERROR_CODE.UNKNOWN_ERROR, type: "error" };
 	}
 
 	updateTag(TAGS.cart);

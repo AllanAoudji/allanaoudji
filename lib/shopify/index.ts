@@ -1,11 +1,13 @@
-import {
-	DEFAULT_COLLECTION_IMAGE,
-	HIDDEN_PRODUCT_TAG,
-	SHOPIFY_GRAPHQL_API_ENDPOINT,
-	TAGS,
-} from "../constants";
+import { ERROR_CODE, HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
-import { ensureStartWith, getLineQuantity } from "../utils";
+import {
+	ensureEndWithout,
+	ensureStartWith,
+	getLineQuantity,
+	removeEdgesAndNodes,
+	reshapeCollection,
+} from "../utils";
+import * as Sentry from "@sentry/nextjs";
 import {
 	addToCartMutation,
 	createCartMutation,
@@ -13,11 +15,7 @@ import {
 	removeFromCartMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
-import {
-	getCollectionProductsQuery,
-	getCollectionQuery,
-	getCollectionsQuery,
-} from "./queries/collection";
+import { getCollectionProductsQuery, getCollectionQuery } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
@@ -33,7 +31,6 @@ import Collection from "@/types/collection";
 import Connection from "@/types/connection";
 import ExtractVariables from "@/types/extractVariables";
 import Product from "@/types/product";
-import ShopifyCollection from "@/types/shopifyCollection";
 import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
@@ -41,7 +38,6 @@ import {
 	ShopifyCartOperation,
 	ShopifyCollectionOperation,
 	ShopifyCollectionProductsOperation,
-	ShopifyCollectionsOperation,
 	ShopifyCreateCartOperation,
 	ShopifyLatestProductsOperation,
 	ShopifyMenuOperation,
@@ -58,16 +54,12 @@ import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
 import ShopifyProduct from "@/types/shopifyProduct";
 
-const domain = process.env.SHOPIFY_STORE_DOMAIN
-	? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
+const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
+	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
 
-const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
+const endpoint = `${DOMAIN}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_PUBLIC_ACCESS_TOKEN;
-
-function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
-	return array.edges.map(edge => edge?.node);
-}
 
 function reshapeCart(cart: ShopifyCart): Cart {
 	if (!cart.cost?.totalTaxAmount) {
@@ -86,27 +78,6 @@ function reshapeCart(cart: ShopifyCart): Cart {
 	}));
 
 	return { ...cart, lines };
-}
-
-function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
-	if (!collection) return undefined;
-	return {
-		...collection,
-		path: `/collections/${collection.handle}`,
-	};
-}
-
-function reshapeCollections(collections: ShopifyCollection[]): Collection[] {
-	const reshapedCollections = [];
-	for (const collection of collections) {
-		if (collection) {
-			const reshapedCollection = reshapeCollection(collection);
-			if (reshapedCollection) {
-				reshapedCollections.push(reshapedCollection);
-			}
-		}
-	}
-	return reshapedCollections;
 }
 
 function reshapeImages(images: Connection<shopifyImage>, title: string) {
@@ -192,7 +163,15 @@ export async function shopifyFetch<T>({
 		});
 		const body = await result.json();
 		if (body.errors) {
-			throw body.errors[0];
+			Sentry.captureMessage("Shopify GraphQL error", {
+				level: "error",
+				extra: {
+					errors: body.errors,
+					query,
+					variables,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -200,17 +179,25 @@ export async function shopifyFetch<T>({
 		};
 	} catch (error) {
 		if (isShopifyError(error)) {
-			throw {
-				cause: error.cause?.toString() || "unknown",
-				status: error.status || "500",
-				message: error.message,
-				query,
-			};
+			Sentry.captureException(error, {
+				extra: {
+					context: "Shopify API error",
+					cause: error.cause?.toString() ?? "unknown",
+					status: error.status ?? 500,
+					query,
+				},
+			});
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
-		throw {
-			error,
-			query,
-		};
+
+		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
+		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
+			Sentry.captureException(error, {
+				extra: { context: "Unexpected error in shopifyFetch", query },
+			});
+		}
+
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
@@ -328,34 +315,6 @@ export async function getCollectionProducts({
 	};
 }
 
-export async function getCollections(): Promise<Collection[]> {
-	const res = await shopifyFetch<ShopifyCollectionsOperation>({
-		query: getCollectionsQuery,
-		tags: [TAGS.collections],
-	});
-
-	const shopifyCollections = removeEdgesAndNodes(res?.body?.data?.collections);
-	const collections: Collection[] = [
-		{
-			handle: "",
-			title: "All",
-			description: "All products",
-			seo: {
-				title: "All",
-				description: "All products",
-			},
-			path: "/collections",
-			updatedAt: "",
-			image: DEFAULT_COLLECTION_IMAGE,
-		},
-		...reshapeCollections(shopifyCollections).filter(
-			collection => !collection.handle.startsWith("hidden"),
-		),
-	];
-
-	return collections;
-}
-
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
 		query: getLatestProductsQuery,
@@ -379,7 +338,7 @@ export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 	return (
 		res.body?.data?.menu?.items.map((item: { title: string; url: string }) => ({
 			title: item.title,
-			path: item.url.replace(domain, "").replace("/collections", "/search").replace("/pages", ""),
+			path: item.url.replace(DOMAIN, "").replace("/collections", "/search").replace("/pages", ""),
 		})) || []
 	);
 }

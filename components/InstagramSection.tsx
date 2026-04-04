@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs";
+import { ERROR_CODE } from "@/lib/constants";
 import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
 import InstagramFeeds from "@/types/instagramFeed";
@@ -17,14 +19,35 @@ async function getData(): Promise<InstagramFeeds> {
 		{ cache: "no-store" },
 	);
 
-	return await res.json();
+	if (!res.ok) {
+		Sentry.captureMessage("Instagram API HTTP error", {
+			level: "error",
+			extra: {
+				status: res.status,
+				statusText: res.statusText,
+			},
+		});
+		throw new Error(ERROR_CODE.EXTERNAL_API_ERROR);
+	}
+
+	const data = await res.json();
+
+	return data;
 }
 
 export default async function InstagramSection({ className }: Readonly<Props>) {
 	const data = await getData();
 
 	if (data.error) {
-		throw new Error(data.error.message);
+		Sentry.captureMessage("Instagram API returned an error", {
+			level: "error",
+			extra: {
+				code: data.error.code,
+				message: data.error.message,
+				type: data.error.type,
+			},
+		});
+		throw new Error(ERROR_CODE.EXTERNAL_API_ERROR);
 	}
 
 	if (!data.data.length) {

@@ -70,15 +70,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		}
 	}, [image?._id]);
 
-	useEffect(() => {
-		if (!isVisible) return;
-		const prev = document.documentElement.style.overflow;
-		document.documentElement.style.overflow = "hidden";
-		return () => {
-			document.documentElement.style.overflow = prev;
-		};
-	}, [isVisible]);
-
 	return (
 		<AnimatePresence>
 			{isVisible && (

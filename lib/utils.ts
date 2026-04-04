@@ -1,12 +1,21 @@
+// lib/isPortableTextEmpty.ts
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import z from "zod";
+import { ERROR_MESSAGE_FR } from "./constants";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
+import Collection from "@/types/collection";
+import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
+import ShopifyCollection from "@/types/shopifyCollection";
+
+type SanityBlock = {
+	_type: string;
+	children?: Array<{ _type: string; text?: string }>;
+};
 
 export function applyFrenchTypography(text: string): string {
 	let t = text;
@@ -64,6 +73,26 @@ export function assertValue<T>(v: T | undefined, errorMessage: string): T {
 	return v;
 }
 
+export function reshapeCollection(collection: ShopifyCollection): Collection | undefined {
+	if (!collection) return undefined;
+	return {
+		...collection,
+		path: `/collections/${collection.handle}`,
+	};
+}
+export function reshapeCollections(collections: ShopifyCollection[]): Collection[] {
+	const reshapedCollections = [];
+	for (const collection of collections) {
+		if (collection) {
+			const reshapedCollection = reshapeCollection(collection);
+			if (reshapedCollection) {
+				reshapedCollections.push(reshapedCollection);
+			}
+		}
+	}
+	return reshapedCollections;
+}
+
 export function buildGalleryImages(product: Product, variant: ProductVariant | undefined) {
 	const variantImage = variant?.image ?? null;
 	const featuredImage = product.featuredImage ?? null;
@@ -96,29 +125,6 @@ export function buildGalleryImages(product: Product, variant: ProductVariant | u
 export const cn = (...inputs: ClassValue[]): string => {
 	return twMerge(clsx(inputs));
 };
-
-export const contactFormSchema = z.object({
-	firstName: z
-		.string()
-		.min(2, "Doit contenir au moins 2 caractères")
-		.max(50, "Ne peut pas dépasser 50 caractères"),
-	lastName: z
-		.string()
-		.min(2, "Doit contenir au moins 2 caractères")
-		.max(50, "Ne peut pas dépasser 50 caractères"),
-	email: z.string().email("Email invalide"),
-	subject: z
-		.string()
-		.min(3, "Doit contenir au moins 3 caractères")
-		.max(120, "Ne peut pas dépasser 120 caractères"),
-	message: z
-		.string()
-		.min(10, "Doit contenir au moins 10 caractères")
-		.max(2000, "Ne peut pas dépasser 2000 caractères"),
-	website: z.string().optional(),
-});
-
-export type ContactFormFields = keyof typeof contactFormSchema.shape;
 
 export function convertCurrencyCode(currencyCode: string): string {
 	switch (currencyCode) {
@@ -159,6 +165,13 @@ export function createUrl(
 	return `${pathname}${queryString}`;
 }
 
+export const ensureEndWithout = (url: string, suffix: string): string => {
+	if (url.endsWith(suffix)) {
+		return url.slice(0, -suffix.length);
+	}
+	return url;
+};
+
 export const ensureStartWith = (url: string, prefix: string): string => {
 	if (!url.startsWith(prefix)) {
 		return prefix + url;
@@ -172,6 +185,12 @@ export const formatDate = (date: string): string =>
 		month: "long",
 		year: "numeric",
 	});
+
+export function formatErrorMessage(err: unknown): string {
+	return err instanceof Error && err.message in ERROR_MESSAGE_FR
+		? ERROR_MESSAGE_FR[err.message as keyof typeof ERROR_MESSAGE_FR]
+		: ERROR_MESSAGE_FR.INTERNAL_ERROR;
+}
 
 export function getLineQuantity(cart: Cart, variantId: string): number {
 	const line = cart.lines.find(line => line.merchandise.id === variantId);
@@ -189,6 +208,28 @@ export function getProductDefaultVariant(product: Product): string | undefined {
 	return new URLSearchParams(
 		variants[0].selectedOptions.map(option => [option.name.toLocaleLowerCase(), option.value]),
 	).toString();
+}
+
+export function isPortableTextEmpty(value: SanityBlock[] | null | undefined): boolean {
+	if (!value || value.length === 0) return true;
+
+	return value.every(block => {
+		// Blocs non-texte (image, table, callout, etc.) = contenu présent
+		if (block._type !== "block") return false;
+
+		// Pas de children = vide
+		if (!block.children || block.children.length === 0) return true;
+
+		// Tous les spans ont un texte vide ou whitespace-only
+		return block.children.every(
+			(child: { _type: string; text?: string }) =>
+				child._type === "span" && (!child.text || child.text.trim() === ""),
+		);
+	});
+}
+
+export function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
+	return array.edges.map(edge => edge?.node);
 }
 
 export async function withMinimumDelay<T>(

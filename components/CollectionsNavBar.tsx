@@ -14,7 +14,7 @@ export default function CollectionsNavBar({ handle }: Readonly<Props>) {
 	const collection = collections.find(c => c.handle === handle);
 	const collectionIsMissing = !!handle && !collection;
 
-	if (collections.length <= 1) return null;
+	if (collections.length <= 2) return null;
 
 	return (
 		<div

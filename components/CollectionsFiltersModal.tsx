@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocalShopify } from "@/lib/contexts/localShopify-context";
 import CollectionsFilter from "./CollectionsFilter";
 import CollectionsFilterModalHeader from "./CollectionsFilterModalHeader";
 import DrawerModal from "./DrawerModal";
@@ -10,8 +11,15 @@ type Props = {
 };
 
 export default function CollectionsFiltersModal({ onCloseAction, open }: Readonly<Props>) {
+	const { collections } = useLocalShopify();
+
 	return (
-		<DrawerModal className="w-xl max-w-screen" onCloseAction={onCloseAction} open={open}>
+		<DrawerModal
+			className="w-xl max-w-screen"
+			onCloseAction={onCloseAction}
+			open={open}
+			disabled={collections.length <= 2}
+		>
 			<div className="flex h-screen flex-col">
 				<CollectionsFilterModalHeader />
 				<CollectionsFilter

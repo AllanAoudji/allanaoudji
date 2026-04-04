@@ -1,6 +1,6 @@
 import { LocalShopifyProvider } from "@/lib/contexts/localShopify-context";
-import { getCollections, getPopularProducts } from "@/lib/shopify";
-import { getDiscount } from "@/lib/shopify/utils/shopifyAdminFetch";
+import { getPopularProducts } from "@/lib/shopify";
+import { getCollections, getDiscount } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { withMinimumDelay } from "@/lib/utils";
 
 type Props = {

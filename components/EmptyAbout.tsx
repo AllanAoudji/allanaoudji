@@ -10,7 +10,7 @@ export default function EmptyAbout() {
 			<p className="mb-2">Je prépare quelque chose pour te présenter très vite qui je suis.</p>
 			<p>Reviens bientôt 🙂</p>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

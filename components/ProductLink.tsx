@@ -25,27 +25,16 @@ export default function ProductLink({ className, onClick, product }: Readonly<Pr
 					"bg-gray-300": !product.availableForSale,
 				})}
 			>
-				<ImageContainer
-					className={cn({
-						"opacity-50": !product.availableForSale,
-						"group-hover:opacity-0": hasSecondImage,
-					})}
-					image={product.featuredImage}
-					priority={true}
-					ratio="3/4"
-				/>
+				<ImageContainer image={product.featuredImage} priority={true} ratio="3/4" />
 				{hasSecondImage && (
 					<ImageContainer
-						className={cn("absolute top-0 -z-10", {
-							"opacity-50": !product.availableForSale,
-						})}
+						className="absolute top-0 z-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 						image={product.images[1]}
 						ratio="3/4"
 					/>
 				)}
-
 				{!product.availableForSale && (
-					<div className="text-primary absolute inset-x-0 bottom-0 bg-red-500 px-1 py-2 text-center text-sm uppercase">
+					<div className="text-primary absolute inset-x-0 bottom-0 z-20 bg-red-500 px-1 py-2 text-center text-sm uppercase">
 						<p className="font-bold tracking-widest">out of stock</p>
 					</div>
 				)}

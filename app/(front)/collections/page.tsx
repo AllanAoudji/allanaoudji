@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 		images: [
 			{
 				alt: "Collections Allan Aoudji",
-				height: 1200,
-				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/default-collection.png`,
-				width: 810,
+				height: 630,
+				url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/og-collections.jpg`,
+				width: 1200,
 			},
 		],
 		title: "Collections | Allan Aoudji",

@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -23,6 +24,9 @@ const csp = [
 		"https://*.myshopify.com",
 		"https://use.typekit.net",
 		"https://p.typekit.net",
+		"https://*.sentry.io",
+		"https://*.ingest.sentry.io",
+		"https://*.ingest.de.sentry.io",
 	].join(" "),
 
 	// styles
@@ -49,24 +53,22 @@ const csp = [
 		"https://*.cdninstagram.com",
 	].join(" "),
 
-	// frames (Sanity preview important)
+	// frames (Sanity preview)
 	["frame-src", "'self'", "https://*.sanity.io"].join(" "),
 
 	"worker-src 'self' blob:",
 	"child-src 'self'",
 
-	// sécurité forte
 	"object-src 'none'",
 	"base-uri 'self'",
 	"form-action 'self'",
 	"frame-ancestors 'self'",
 
-	// amélioration sécurité HTTPS
 	"upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {
-	reactStrictMode: false,
+	reactStrictMode: true,
 	async headers() {
 		return [
 			{
@@ -85,13 +87,13 @@ const nextConfig: NextConfig = {
 			{
 				source: "/products",
 				destination: "/collections",
-				permanent: true, // 308 — meilleur pour le SEO
+				permanent: true,
 			},
 		];
 	},
 	cacheComponents: true,
 	images: {
-		unoptimized: process.env.NODE_ENV === "development",
+		unoptimized: isDev,
 		dangerouslyAllowSVG: false,
 		minimumCacheTTL: 60 * 60 * 24 * 7,
 		remotePatterns: [
@@ -113,4 +115,18 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+	org: process.env.SENTRY_ORG,
+	project: process.env.SENTRY_PROJECT,
+	silent: true,
+	widenClientFileUpload: true,
+	sourcemaps: {
+		disable: false,
+		deleteSourcemapsAfterUpload: true,
+	},
+	webpack: {
+		treeshake: {
+			removeDebugLogging: true,
+		},
+	},
+});

@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { cn, contactFormSchema } from "@/lib/utils";
+import { CONTACT_FORM_SCHEMA } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 type Props = {
 	autoComplete?: string;
 	className?: string;
 	error?: string;
-	id: keyof typeof contactFormSchema.shape;
+	id: keyof typeof CONTACT_FORM_SCHEMA.shape;
 	onValueChange?: (_value: string) => void;
 	placeholder: string;
 	title: string;
-	validateField: (_name: keyof typeof contactFormSchema.shape, _value: string) => boolean;
+	validateField: (_name: keyof typeof CONTACT_FORM_SCHEMA.shape, _value: string) => boolean;
 	type?: string;
 };
 

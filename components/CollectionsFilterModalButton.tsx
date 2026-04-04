@@ -17,7 +17,7 @@ export default function CollectionsFilterModalButton({ className }: Readonly<Pro
 		openModal("collections-filters");
 	}, [openModal]);
 
-	if (collections.length <= 1) return null;
+	if (collections.length <= 2) return null;
 
 	return (
 		<div className={cn("flex justify-end", className)}>

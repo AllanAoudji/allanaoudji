@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreProducts } from "@/lib/actions/fetchMoreProducts";
 import { FETCH_PRODUCTS } from "@/lib/constants";
@@ -78,7 +79,16 @@ export default function CollectionsContentInfiniteScroll({
 						cursorRef.current = result.pageInfo.endCursor ?? null;
 						hasNextPageRef.current = result.pageInfo.hasNextPage ?? false;
 					})
-					.catch(console.error)
+					.catch(error => {
+						Sentry.captureException(error, {
+							extra: {
+								context: "Failed to fetch more products",
+								cursor: cursorRef.current,
+								handle,
+								sortKey,
+							},
+						});
+					})
 					.finally(() => {
 						isFetching.current = false;
 						setIsLoading(false);

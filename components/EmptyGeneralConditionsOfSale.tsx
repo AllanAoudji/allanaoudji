@@ -8,7 +8,7 @@ export default function EmptyGeneralConditionsOfSale() {
 		<IssueContainer>
 			<SubTitle>Les conditions générales de vente ne sont pas encore disponibles.</SubTitle>
 			<IssueLinksContainer>
-				<IssueLink href="/">Acceuil</IssueLink>
+				<IssueLink href="/">Accueil</IssueLink>
 			</IssueLinksContainer>
 		</IssueContainer>
 	);

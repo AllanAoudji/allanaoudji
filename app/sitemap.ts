@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { getProducts, getCollections } from "@/lib/shopify";
+import { getProducts } from "@/lib/shopify";
+import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getWorksSiteMap } from "@/studio/lib/queries";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
@@ -19,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	}));
 
 	const collectionUrls = collections
-		.filter(c => c.handle)
+		.filter(c => c.handle && (c.productsCount?.count ?? 0) > 0)
 		.map(c => ({
 			changeFrequency: "weekly" as const,
 			lastModified: c.updatedAt,

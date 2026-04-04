@@ -1,3 +1,4 @@
+import z from "zod";
 import Menu from "@/types/menu";
 import shopifyImage from "@/types/shopifyImage";
 import SortFilterItem from "@/types/sortFilterItem";
@@ -5,7 +6,7 @@ import SortFilterItem from "@/types/sortFilterItem";
 export const DEFAULT_COLLECTION_IMAGE: shopifyImage = {
 	height: 1200,
 	id: "default-collection-image",
-	url: "/images/default-collection.png",
+	url: "/images/default-collection.jpg",
 	width: 810,
 	altText: "image de collection par défault",
 };
@@ -73,8 +74,6 @@ export const HOME_MENU: Menu = {
 	title: "home",
 };
 
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = `/api/${process.env.NEXT_SHOPIFY_API_VERSION}/graphql.json`;
-
 export const SORTING: SortFilterItem[] = [
 	DEFAULT_SORT,
 	{ title: "Trending", slug: "trending-desc", sortKey: "BEST_SELLING", reverse: false },
@@ -89,8 +88,33 @@ export const TAGS = {
 	discounts: "discounts",
 };
 
+export const CONTACT_FORM_SCHEMA = z.object({
+	firstName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	lastName: z
+		.string()
+		.min(2, "Doit contenir au moins 2 caractères")
+		.max(50, "Ne peut pas dépasser 50 caractères"),
+	email: z.string().email("Email invalide"),
+	subject: z
+		.string()
+		.min(3, "Doit contenir au moins 3 caractères")
+		.max(120, "Ne peut pas dépasser 120 caractères"),
+	message: z
+		.string()
+		.min(10, "Doit contenir au moins 10 caractères")
+		.max(2000, "Ne peut pas dépasser 2000 caractères"),
+	website: z.string().optional(),
+});
+
+export type ContactFormFields = keyof typeof CONTACT_FORM_SCHEMA.shape;
+
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
 export const DEFAULT_OPTION = "Default Title";
+
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2026-01/graphql.json";
 
 export const SPAM_WORDS_FR = [
 	// Publicité / marketing agressif
@@ -128,3 +152,33 @@ export const SPAM_WORDS_FR = [
 	"trafic web",
 	"revenu passif",
 ];
+
+export const ERROR_CODE = {
+	CONTEXT_NOT_FOUND: "CONTEXT_NOT_FOUND",
+	EMAIL_FAILED: "EMAIL_FAILED",
+	EXTERNAL_API_ERROR: "EXTERNAL_API_ERROR",
+	INTERNAL_ERROR: "INTERNAL_ERROR",
+	INVALID_CART: "INVALID_CART",
+	INVALID_FORM_DATA: "INVALID_FORM_DATA",
+	INVALID_SIGNATURE: "INVALID_SIGNATURE",
+	MISSING_ENV_VARIABLE: "MISSING_ENV_VARIABLE",
+	SHOPIFY_API_ERROR: "SHOPIFY_API_ERROR",
+	TOO_MANY_MESSAGES: "TOO_MANY_MESSAGES",
+	UNKNOWN_ERROR: "UNKNOWN_ERROR",
+} as const;
+
+export type ErrorCode = (typeof ERROR_CODE)[keyof typeof ERROR_CODE];
+
+export const ERROR_MESSAGE_FR: Record<ErrorCode, string> = {
+	CONTEXT_NOT_FOUND: "Quelque chose s'est mal passé.",
+	EMAIL_FAILED: "Ton message n'a pas pu être envoyé. Réessaie dans un instant.",
+	EXTERNAL_API_ERROR: "Un service externe ne répond pas. Réessaie dans un instant.",
+	INTERNAL_ERROR: "Une erreur interne s'est produite. Réessaie dans un instant.",
+	INVALID_CART: "Ton panier est introuvable. Réessaie.",
+	INVALID_FORM_DATA: "Certains champs semblent incorrects. Vérifie et réessaie dans un instant.",
+	INVALID_SIGNATURE: "Signature invalide.",
+	MISSING_ENV_VARIABLE: "Une configuration est manquante. Contacte le support.",
+	SHOPIFY_API_ERROR: "La boutique ne répond pas. Réessaie dans un moment.",
+	TOO_MANY_MESSAGES: "Trop de messages envoyés — réessaie dans quelques minutes.",
+	UNKNOWN_ERROR: "Quelque chose s'est mal passé. Réessaie dans un instant.",
+};

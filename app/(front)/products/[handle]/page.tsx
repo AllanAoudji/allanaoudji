@@ -11,7 +11,6 @@ import ProductSingleGallery from "@/components/ProductSingleGallery";
 import ProductSingleRelated from "@/components/ProductSingleRelated";
 import ShopDisabled from "@/components/ShopDisabled";
 import Title from "@/components/Title";
-import shopifyImage from "@/types/shopifyImage";
 
 type Props = {
 	params: Promise<{ handle: string }>;
@@ -25,21 +24,9 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 
 	if (!product) return {};
 
-	const { description, featuredImage, title } = product;
+	const { description, title } = product;
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
 	const variantUrl = `${url}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
-
-	const generateFeatureImage = (featuredImage: shopifyImage | undefined) => {
-		if (!featuredImage) return [];
-		return [
-			{
-				alt: featuredImage.altText ?? title,
-				url: featuredImage.url,
-				height: featuredImage.height,
-				width: featuredImage.width,
-			},
-		];
-	};
 
 	return {
 		alternates: {
@@ -48,7 +35,6 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 		description,
 		openGraph: {
 			description,
-			images: generateFeatureImage(featuredImage),
 			title,
 			type: "website",
 			url,
@@ -57,7 +43,6 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 		twitter: {
 			card: "summary_large_image",
 			description,
-			images: featuredImage ? [featuredImage.url] : [],
 			title,
 		},
 	};

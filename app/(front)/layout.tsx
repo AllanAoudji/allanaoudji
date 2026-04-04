@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CartActionsProvider } from "@/lib/contexts/cartActions-context";
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
 	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
 	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
 	openGraph: {
-		images: [{ url: "/og-default.jpg", width: 1200, height: 630 }],
+		images: [{ url: "/images/og-default.jpg", width: 1200, height: 630 }],
 		locale: "fr_FR",
 		siteName: "Allan Aoudji",
 		type: "website",
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		creator: process.env.NEXT_TWITTER_CREATOR || "@allan_aoudji",
+		creator: process.env.NEXT_PUBLIC_TWITTER_CREATOR || "@allan_aoudji",
 	},
 };
 
@@ -51,6 +53,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 									<LightboxProvider>
 										<main className="mt-header flex-1">
 											{children}
+											<Analytics />
+											<SpeedInsights />
 											<Suspense fallback={null}>
 												<StudioBar />
 											</Suspense>
@@ -71,30 +75,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		</html>
 	);
 }
-
-// TODO:
-// ----- Editorial -----
-// Utiliser le tutoiement
-// Point à la fin des phrases, espace insécable, etc.
-// Ajouter une image public/og-default.jpg (1200×630) comme fallback pour les pages sans OG image dynamique.
-// default-collection.png
-
-// ---------------
-// Quand le site est en ligne
-// Google Search Console — soumettez votre sitemap une fois déployé. C'est gratuit et indispensable pour suivre l'indexation.
-// Vérification du rendu — utilisez opengraph.xyz pour tester que vos OG images s'affichent correctement sur les réseaux sociaux.
-
-// Côté Shopify Dashboard — c'est là où tu dois vérifier :
-// Aller dans Settings → Notifications → Webhooks
-// Créer un webhook pour chaque topic (products/update, collections/update, etc.)
-// URL : https://ton-domaine.com/api/revalidate/shopify
-// Copier le Webhook Secret généré → SHOPIFY_WEBHOOK_SECRET dans ton .env
-
-// Dans ton dashboard Sanity sur sanity.io :
-// Pour le SANITY_WEBHOOK_SECRET → API → Webhooks → créer un webhook → tu définis toi-même le secret lors de la création, tu le copies dans ton .env.
-// Pour le serverToken → API → Tokens → "Add API token" → nom au choix → permissions Viewer suffisent pour du read-only → tu copies le token généré dans ton .env comme SANITY_API_READ_TOKEN ou selon comment tu l'as nommé dans ton env.server.ts.
-
-// Resend — tu dois ajouter et vérifier ton domaine allanaoudji.com dans le dashboard Resend pour pouvoir envoyer depuis une adresse personnalisée.
-
-// ----- plus tard -----
-// deal avec console.error

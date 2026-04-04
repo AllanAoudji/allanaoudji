@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchMoreWorks } from "@/lib/actions/fetchMoreWorks";
 import { FETCH_WORKS_GALLERY } from "@/lib/constants";
@@ -69,7 +70,15 @@ export default function GalleryContentInfiniteScroll({
 						fromRef.current = to;
 						hasNextPageRef.current = to < (data.total ?? 0);
 					})
-					.catch(console.error)
+					.catch(error => {
+						Sentry.captureException(error, {
+							extra: {
+								context: "Failed to fetch more works",
+								from: fromRef.current,
+								to: fromRef.current + FETCH_WORKS_GALLERY,
+							},
+						});
+					})
 					.finally(() => {
 						isFetching.current = false;
 						setIsLoading(false);

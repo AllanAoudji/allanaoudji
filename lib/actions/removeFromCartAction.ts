@@ -1,7 +1,8 @@
 "use server";
 
-import { TAGS } from "../constants";
+import { ERROR_CODE, TAGS } from "../constants";
 import { removeFromCart } from "../shopify";
+import * as Sentry from "@sentry/nextjs";
 import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
@@ -14,7 +15,7 @@ export async function removeFromCartAction(
 ): Promise<ActionReponse<RemoveActionFromCartActionData>> {
 	if (!cartItem.id) {
 		return {
-			message: "Unknown error occurred while removing item.",
+			message: ERROR_CODE.UNKNOWN_ERROR,
 			type: "error",
 		};
 	}
@@ -23,14 +24,11 @@ export async function removeFromCartAction(
 	try {
 		cookieStore = await cookies();
 	} catch (error) {
-		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
-		}
+		Sentry.captureException(error, {
+			extra: { context: "Failed to read cookie store" },
+		});
 		return {
-			message: "Unknown error occurred while retrieving cookies.",
+			message: ERROR_CODE.UNKNOWN_ERROR,
 			type: "error",
 		};
 	}
@@ -38,7 +36,7 @@ export async function removeFromCartAction(
 	const cartId = cookieStore.get("cartId")?.value;
 	if (!cartId) {
 		return {
-			message: "Cart not found.",
+			message: ERROR_CODE.INVALID_CART,
 			type: "error",
 		};
 	}
@@ -46,15 +44,15 @@ export async function removeFromCartAction(
 	try {
 		await removeFromCart(cartId, [cartItem.id]);
 	} catch (error) {
-		console.error("removeFromCart error:", error);
-		if (error instanceof Error) {
-			return {
-				message: error.message,
-				type: "error",
-			};
-		}
+		Sentry.captureException(error, {
+			extra: {
+				context: "Failed to remove item from cart",
+				cartId,
+				cartItemId: cartItem.id,
+			},
+		});
 		return {
-			message: "Unknown error occurred while removing item to cart.",
+			message: ERROR_CODE.UNKNOWN_ERROR,
 			type: "error",
 		};
 	}
