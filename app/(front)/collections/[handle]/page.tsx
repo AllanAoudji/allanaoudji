@@ -3,7 +3,7 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 import { cache } from "react";
 import { getCollection } from "@/lib/shopify";
-import { getCollectionsSafe } from "@/lib/shopify/utils/shopifyAdminFetch";
+import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
 import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
 import SectionError from "@/components/SectionError";
@@ -23,32 +23,28 @@ export const dynamicParams = true;
 const getCollectionCached = cache(getCollection);
 
 export async function generateStaticParams() {
-	const collections = await getCollectionsSafe();
+	const collections = await getCollections();
 	return collections.filter(c => c.handle !== "").map(c => ({ handle: c.handle }));
 }
 
 export async function generateMetadata({ params }: Readonly<MetadataProps>): Promise<Metadata> {
-	try {
-		const { handle } = await params;
-		const collection = await getCollectionCached(handle);
-		const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
+	const { handle } = await params;
+	const collection = await getCollectionCached(handle);
+	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
 
-		if (!collection) return {};
+	if (!collection) return {};
 
-		return {
-			alternates: { canonical: url },
+	return {
+		alternates: { canonical: url },
+		description: collection.seo?.description ?? collection.description,
+		openGraph: {
 			description: collection.seo?.description ?? collection.description,
-			openGraph: {
-				description: collection.seo?.description ?? collection.description,
-				title: collection.seo?.title ?? collection.title,
-				type: "website",
-				url,
-			},
 			title: collection.seo?.title ?? collection.title,
-		};
-	} catch {
-		return {};
-	}
+			type: "website",
+			url,
+		},
+		title: collection.seo?.title ?? collection.title,
+	};
 }
 
 export default async function CollectionSinglePage({ params, searchParams }: Readonly<Props>) {
