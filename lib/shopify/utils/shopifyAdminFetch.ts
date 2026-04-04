@@ -36,13 +36,15 @@ export async function shopifyAdminFetch<T>({
 	query,
 	tags,
 	variables,
+	safe = false,
 }: {
 	cache?: RequestCache;
 	headers?: HeadersInit;
 	query: string;
 	tags?: string[];
 	variables?: ExtractVariables<T>;
-}): Promise<{ status: number; body: T }> {
+	safe?: boolean;
+}): Promise<{ status: number; body: T | null }> {
 	try {
 		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, {
 			method: "POST",
@@ -68,7 +70,8 @@ export async function shopifyAdminFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			if (!safe) throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			return { status: result.status, body: null };
 		}
 		return {
 			status: result.status,
@@ -84,7 +87,8 @@ export async function shopifyAdminFetch<T>({
 					query,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			if (!safe) throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			return { status: 500, body: null };
 		}
 
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
@@ -93,7 +97,8 @@ export async function shopifyAdminFetch<T>({
 			});
 		}
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		if (!safe) throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		return { status: 500, body: null };
 	}
 }
 
@@ -103,6 +108,10 @@ export async function getCollections(): Promise<Collection[]> {
 		query: getCollectionsQuery,
 		tags: [TAGS.collections],
 	});
+
+	if (!res.body) {
+		return [];
+	}
 
 	const shopifyCollections = removeEdgesAndNodes(res?.body?.data?.collections);
 	const collections: Collection[] = [
@@ -129,11 +138,48 @@ export async function getCollections(): Promise<Collection[]> {
 	return collections;
 }
 
+export async function getCollectionsSafe() {
+	try {
+		const res = await shopifyAdminFetch<ShopifyCollectionsOperation>({
+			cache: "force-cache",
+			query: getCollectionsQuery,
+			tags: [TAGS.collections],
+			safe: true,
+		});
+
+		if (!res.body?.data?.collections) return [];
+
+		const shopifyCollections = removeEdgesAndNodes(res.body.data.collections);
+
+		return [
+			{
+				handle: "",
+				title: "Tous les articles",
+				description: "Tous les articles",
+				seo: { title: "Tous les articles", description: "Tous les articles" },
+				path: "/collections",
+				updatedAt: "",
+				image: DEFAULT_COLLECTION_IMAGE,
+				productsCount: { count: 1 },
+			},
+			...reshapeCollections(shopifyCollections).filter(
+				collection => !collection.handle.startsWith("hidden"),
+			),
+		];
+	} catch {
+		return [];
+	}
+}
+
 export async function getDiscount(): Promise<DiscountNode[]> {
 	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
 		query: getDiscountsQuery,
 		tags: [TAGS.discounts],
 	});
+
+	if (!res.body) {
+		return [];
+	}
 
 	return res.body.data.discountNodes.edges.map(edge => edge.node);
 }
@@ -144,6 +190,10 @@ export async function getProductVariantsInventory(productId: string): Promise<Va
 		cache: "no-store",
 		variables: { productId },
 	});
+
+	if (!res.body) {
+		return [];
+	}
 
 	return (
 		res.body.data.product?.variants.edges.map(edge => ({
