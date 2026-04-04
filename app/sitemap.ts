@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getProducts } from "@/lib/shopify";
 import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
-import { getWorksSiteMap } from "@/studio/lib/queries";
+import { getStaticWorksSiteMap } from "@/studio/lib/queries";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const [collections, { products }, { data: works }] = await Promise.all([
+	const [collections, { products }, works] = await Promise.all([
 		getCollections(),
 		getProducts({ first: 250 }),
-		getWorksSiteMap(),
+		getStaticWorksSiteMap(),
 	]);
 
 	const productUrls = products.map(p => ({

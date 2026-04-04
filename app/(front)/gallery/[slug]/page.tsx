@@ -4,14 +4,14 @@ import { cache } from "react";
 import GalleryImages from "@/components/GalleryImages";
 import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
-import { getWork, getWorksSiteMap } from "@/studio/lib/queries";
+import { getStaticWorksSiteMap, getWork } from "@/studio/lib/queries";
 
 const getWorkCached = cache(getWork);
 
 export async function generateStaticParams() {
-	const { data } = await getWorksSiteMap();
-	if (!data) return [];
-	return data.map((work: { slug: string }) => ({ slug: work.slug }));
+	const works = await getStaticWorksSiteMap();
+	if (!works) return [];
+	return works.map((work: { slug: string }) => ({ slug: work.slug }));
 }
 
 export async function generateMetadata({
