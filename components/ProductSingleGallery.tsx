@@ -43,7 +43,9 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 	);
 
 	const handleTouchStart = useCallback((e: React.TouchEvent) => {
-		touchStartX.current = e.touches[0].clientX;
+		const startX = e.touches[0].clientX;
+		if (startX < 20) return;
+		touchStartX.current = startX;
 		setDragging(true);
 		setDragOffset(0);
 	}, []);
@@ -54,18 +56,22 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 		setDragOffset(delta);
 	}, []);
 
-	const handleTouchEnd = useCallback(() => {
-		setDragging(false);
-		setDragOffset(0);
-		const delta = dragX.current;
-		if (Math.abs(delta) < 50) return;
-		if (delta < 0) {
-			setActiveIndex(i => Math.min(i + 1, images.length - 1));
-		} else {
-			setActiveIndex(i => Math.max(i - 1, 0));
-		}
-		dragX.current = 0;
-	}, [images.length]);
+	const handleTouchEnd = useCallback(
+		(e: React.TouchEvent) => {
+			setDragging(false);
+			setDragOffset(0);
+			const delta = dragX.current;
+			dragX.current = 0;
+			if (Math.abs(delta) < 50) return;
+			e.preventDefault();
+			if (delta < 0) {
+				setActiveIndex(i => Math.min(i + 1, images.length - 1));
+			} else {
+				setActiveIndex(i => Math.max(i - 1, 0));
+			}
+		},
+		[images.length],
+	);
 
 	useEffect(() => {
 		setActiveIndex(0);
