@@ -1,20 +1,22 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { getProduct, getProducts } from "@/lib/shopify";
-import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
-import ProductSingleBuyControls from "@/components/ProductSingleBuyControls";
+import ProductSingleBuyControlsWrapper from "@/components/ProductSingleBuyControlsWrapper";
 import ProductSingleDescription from "@/components/ProductSingleDescription";
 import ProductSingleGallery from "@/components/ProductSingleGallery";
 import ProductSingleRelated from "@/components/ProductSingleRelated";
 import ShopDisabled from "@/components/ShopDisabled";
+import SkeletonProductSingleBuyControlsWrapper from "@/components/SkeletonProductSingleBuyControlsWrapper";
 import Title from "@/components/Title";
 
 type Props = {
 	params: Promise<{ handle: string }>;
 };
+
+export const dynamicParams = true;
 
 const getProductCached = cache(getProduct);
 
@@ -71,8 +73,6 @@ export default async function ProductSinglePage({ params }: Readonly<Props>) {
 		notFound();
 	}
 
-	const variantsInventory = await getProductVariantsInventory(product.id);
-
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "Product",
@@ -103,7 +103,9 @@ export default async function ProductSinglePage({ params }: Readonly<Props>) {
 					{!!product.descriptionHtml && (
 						<ProductSingleDescription className="mt-10" html={product.descriptionHtml} />
 					)}
-					<ProductSingleBuyControls product={product} variantsInventory={variantsInventory} />
+					<Suspense fallback={<SkeletonProductSingleBuyControlsWrapper />}>
+						<ProductSingleBuyControlsWrapper product={product} />
+					</Suspense>
 				</div>
 			</section>
 			<ProductSingleRelated id={product.id} />

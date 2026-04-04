@@ -134,7 +134,7 @@ const stockWarningMessage = (quantityAdded: number): string => {
 };
 
 export async function shopifyFetch<T>({
-	cache = "force-cache",
+	cache = "no-store",
 	headers,
 	query,
 	tags,

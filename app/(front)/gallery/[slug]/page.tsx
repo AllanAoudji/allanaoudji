@@ -6,6 +6,8 @@ import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
 import { getStaticWorksSiteMap, getWork } from "@/studio/lib/queries";
 
+export const dynamicParams = true;
+
 const getWorkCached = cache(getWork);
 
 export async function generateStaticParams() {

@@ -31,7 +31,7 @@ const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	: "";
 
 export async function shopifyAdminFetch<T>({
-	cache = "force-cache",
+	cache = "no-store",
 	headers,
 	query,
 	tags,
