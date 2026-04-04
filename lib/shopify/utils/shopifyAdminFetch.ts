@@ -99,6 +99,7 @@ export async function shopifyAdminFetch<T>({
 
 export async function getCollections(): Promise<Collection[]> {
 	const res = await shopifyAdminFetch<ShopifyCollectionsOperation>({
+		cache: "force-cache",
 		query: getCollectionsQuery,
 		tags: [TAGS.collections],
 	});

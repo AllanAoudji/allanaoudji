@@ -288,6 +288,7 @@ export async function getCollectionProducts({
 	products: Product[] | null;
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
+		cache: "force-cache",
 		query: getCollectionProductsQuery,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
@@ -416,6 +417,7 @@ export async function getProducts({
 	products: Product[];
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
+		cache: "force-cache",
 		query: getProductsQuery,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },
