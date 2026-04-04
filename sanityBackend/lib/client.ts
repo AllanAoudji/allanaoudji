@@ -7,3 +7,13 @@ export const client = createClient({
 	projectId,
 	useCdn: false,
 });
+
+export async function sanityFetchStatic<T>({
+	query,
+	params,
+}: {
+	query: string;
+	params?: Record<string, unknown>;
+}): Promise<T> {
+	return client.fetch(query, params);
+}

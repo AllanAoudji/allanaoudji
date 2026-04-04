@@ -1,4 +1,6 @@
+import { WORKS_SITEMAP_QUERY_RESULT } from "../types";
 import { defineQuery } from "next-sanity";
+import { sanityFetchStatic } from "./client";
 import { sanityFetch } from "./live";
 
 /*-----------------------------------
@@ -215,4 +217,10 @@ export const getWork = (slug: string) => {
 
 export const getWorksSiteMap = () => {
 	return sanityFetch({ query: WORKS_SITEMAP_QUERY });
+};
+
+export const getStaticWorksSiteMap = () => {
+	return sanityFetchStatic<WORKS_SITEMAP_QUERY_RESULT>({
+		query: WORKS_SITEMAP_QUERY,
+	});
 };
