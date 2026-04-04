@@ -91,7 +91,6 @@ const nextConfig: NextConfig = {
 			},
 		];
 	},
-	cacheComponents: true,
 	images: {
 		unoptimized: isDev,
 		dangerouslyAllowSVG: false,

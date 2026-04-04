@@ -18,6 +18,8 @@ type Props = {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+export const dynamicParams = true;
+
 const getCollectionCached = cache(getCollection);
 
 export async function generateStaticParams() {
@@ -27,16 +29,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Readonly<MetadataProps>): Promise<Metadata> {
 	const { handle } = await params;
-
 	const collection = await getCollectionCached(handle);
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
 
 	if (!collection) return {};
 
 	return {
-		alternates: {
-			canonical: url,
-		},
+		alternates: { canonical: url },
 		description: collection.seo?.description ?? collection.description,
 		openGraph: {
 			description: collection.seo?.description ?? collection.description,
