@@ -16,11 +16,26 @@ type Props = {
 };
 
 export default async function ProductSingleContent({ handle }: Readonly<Props>) {
-	const product = await getCachedProduct(handle);
-	if (!product) {
+	let product;
+	try {
+		product = await getCachedProduct(handle);
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "ProductSingleContent", handle },
+		});
 		notFound();
 	}
+
+	if (!product) notFound();
+
 	let variantsInventory: VariantInventory[] = [];
+	try {
+		variantsInventory = await getProductVariantsInventory(product.id);
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "ProductSingleContent inventory", productId: product.id },
+		});
+	}
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -37,14 +52,6 @@ export default async function ProductSingleContent({ handle }: Readonly<Props>) 
 			priceCurrency: product.priceRange.minVariantPrice.currencyCode,
 		},
 	};
-
-	try {
-		variantsInventory = await getProductVariantsInventory(product.id);
-	} catch (error) {
-		Sentry.captureException(error, {
-			extra: { context: "BuyControls", productId: product.id },
-		});
-	}
 
 	return (
 		<>

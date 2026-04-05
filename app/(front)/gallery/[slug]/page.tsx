@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 		works = await getStaticWorksSiteMap();
 	} catch (error) {
 		Sentry.captureException(error, {
-			extra: { context: "generateStaticParams products" },
+			extra: { context: "generateStaticParams gallery" },
 		});
 		throw error;
 	}
@@ -76,11 +76,18 @@ export async function generateMetadata({
 
 export default async function GallerySinglePage({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const result = await getCachedWork(slug);
 
-	if (!result || !result.data) {
+	let result;
+	try {
+		result = await getCachedWork(slug);
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "GallerySinglePage", slug },
+		});
 		notFound();
 	}
+
+	if (!result?.data) notFound();
 
 	return (
 		<>

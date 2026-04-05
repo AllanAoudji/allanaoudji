@@ -30,21 +30,24 @@ const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
 
-export async function shopifyAdminFetch<T>({
-	cache = "force-cache",
-	headers,
-	query,
-	revalidate = 60 * 60,
-	tags,
-	variables,
-}: {
-	cache?: RequestCache;
-	headers?: HeadersInit;
-	query: string;
-	revalidate?: number;
-	tags?: string[];
-	variables?: ExtractVariables<T>;
-}): Promise<{ status: number; body: T }> {
+export async function shopifyAdminFetch<T>(
+	{
+		cache = "force-cache",
+		headers,
+		query,
+		revalidate = 60 * 60,
+		tags,
+		variables,
+	}: {
+		cache?: RequestCache;
+		headers?: HeadersInit;
+		query: string;
+		revalidate?: number;
+		tags?: string[];
+		variables?: ExtractVariables<T>;
+	},
+	retries = 1, // 1 retry = 2 tentatives au total
+): Promise<{ status: number; body: T }> {
 	try {
 		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, {
 			method: "POST",
@@ -64,26 +67,33 @@ export async function shopifyAdminFetch<T>({
 			},
 		});
 		const body = await result.json();
+
+		// Erreur GraphQL → erreur métier, pas de retry
 		if (body.errors) {
 			Sentry.captureMessage("Shopify Admin GraphQL error", {
 				level: "error",
-				extra: {
-					errors: body.errors,
-					query,
-					variables,
-				},
+				extra: { errors: body.errors, query, variables },
 			});
 			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
-		return {
-			status: result.status,
-			body,
-		};
+
+		return { status: result.status, body };
 	} catch (error) {
+		// Erreur GraphQL déjà loggée → ne pas retenter
+		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
+			throw error;
+		}
+
+		// Erreur réseau/transitoire → retry
+		if (retries > 0) {
+			await new Promise(resolve => setTimeout(resolve, 1000));
+			return shopifyAdminFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);
+		}
+
 		if (isShopifyError(error)) {
 			Sentry.captureException(error, {
 				extra: {
-					context: "Shopify API error",
+					context: "Shopify Admin API error",
 					cause: error.cause?.toString() ?? "unknown",
 					status: error.status ?? 500,
 					query,
@@ -92,11 +102,9 @@ export async function shopifyAdminFetch<T>({
 			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
-		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
-			Sentry.captureException(error, {
-				extra: { context: "Unexpected error in shopifyFetch", query },
-			});
-		}
+		Sentry.captureException(error, {
+			extra: { context: "Unexpected error in shopifyAdminFetch", query },
+		});
 
 		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
