@@ -1,15 +1,14 @@
+import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
 import { getProducts } from "@/lib/shopify";
 import { getCachedProduct } from "@/lib/shopify/utils/cached";
 import { getProductDefaultVariant } from "@/lib/utils";
-import ProductPrice from "@/components/ProductPrice";
-import ProductSingleBuyControlsWrapper from "@/components/ProductSingleBuyControlsWrapper";
-import ProductSingleDescription from "@/components/ProductSingleDescription";
-import ProductSingleGallery from "@/components/ProductSingleGallery";
-import ProductSingleRelated from "@/components/ProductSingleRelated";
-import ShopDisabled from "@/components/ShopDisabled";
-import Title from "@/components/Title";
+import ProductSingleContent from "@/components/ProductSingleContent";
+import SectionError from "@/components/SectionError";
+import SkeletonProductSingle from "@/components/SkeletonProductSingle";
+import Product from "@/types/product";
 
 type Props = {
 	params: Promise<{ handle: string }>;
@@ -22,12 +21,18 @@ export async function generateStaticParams() {
 	const handles: { handle: string }[] = [];
 	let after: string | undefined = undefined;
 	let hasNextPage = true;
-
-	while (hasNextPage) {
-		const { products, pageInfo } = await getProducts({ first: 100, after });
-		products.forEach(p => handles.push({ handle: p.handle }));
-		hasNextPage = pageInfo.hasNextPage;
-		after = pageInfo.endCursor ?? undefined;
+	try {
+		while (hasNextPage) {
+			const { products, pageInfo } = await getProducts({ first: 100, after });
+			products.forEach(p => handles.push({ handle: p.handle }));
+			hasNextPage = pageInfo.hasNextPage;
+			after = pageInfo.endCursor ?? undefined;
+		}
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "generateStaticParams products" },
+		});
+		throw error;
 	}
 
 	return handles;
@@ -35,7 +40,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Readonly<Props>): Promise<Metadata> {
 	const { handle } = await params;
-	const product = await getCachedProduct(handle);
+	let product: Product | undefined;
+	try {
+		product = await getCachedProduct(handle);
+	} catch {
+		return {};
+	}
 
 	if (!product) return {};
 
@@ -66,50 +76,12 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 
 export default async function ProductSinglePage({ params }: Readonly<Props>) {
 	const { handle } = await params;
-	const product = await getCachedProduct(handle);
-
-	if (!product) {
-		notFound();
-	}
-
-	const jsonLd = {
-		"@context": "https://schema.org",
-		"@type": "Product",
-		description: product.description,
-		image: product.featuredImage?.url,
-		name: product.title,
-		offers: {
-			"@type": "Offer",
-			availability: product.availableForSale
-				? "https://schema.org/InStock"
-				: "https://schema.org/OutOfStock",
-			price: product.priceRange.minVariantPrice.amount,
-			priceCurrency: product.priceRange.minVariantPrice.currencyCode,
-		},
-	};
 
 	return (
-		<>
-			<section className="grid grid-cols-6 gap-8 md:gap-4">
-				<ProductSingleGallery
-					className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-4"
-					product={product}
-				/>
-				<div className="col-span-6 self-start md:sticky md:top-[calc(var(--spacing-header)+1rem)] md:col-span-3 lg:col-span-2">
-					<Title className="mb-0">{product.title}</Title>
-					<ProductPrice product={product} />
-					<ShopDisabled className="mt-2" />
-					{!!product.descriptionHtml && (
-						<ProductSingleDescription className="mt-10" html={product.descriptionHtml} />
-					)}
-					<ProductSingleBuyControlsWrapper product={product} />
-				</div>
-			</section>
-			<ProductSingleRelated id={product.id} />
-			<script
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-				type="application/ld+json"
-			/>
-		</>
+		<ErrorBoundary errorComponent={SectionError}>
+			<Suspense fallback={<SkeletonProductSingle />}>
+				<ProductSingleContent handle={handle} />
+			</Suspense>
+		</ErrorBoundary>
 	);
 }
