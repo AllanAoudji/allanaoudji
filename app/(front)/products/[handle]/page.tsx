@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
-import { getProduct, getProducts } from "@/lib/shopify";
+import { getProducts } from "@/lib/shopify";
+import { getCachedProduct } from "@/lib/shopify/utils/cached";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControlsWrapper from "@/components/ProductSingleBuyControlsWrapper";
@@ -16,8 +16,7 @@ type Props = {
 };
 
 export const dynamicParams = true;
-
-const getProductCached = cache(getProduct);
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
 	const handles: { handle: string }[] = [];
@@ -36,13 +35,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Readonly<Props>): Promise<Metadata> {
 	const { handle } = await params;
-	const product = await getProductCached(handle);
+	const product = await getCachedProduct(handle);
 
 	if (!product) return {};
 
 	const { description, title } = product;
-	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${handle}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
-	const variantUrl = `${url}${getProductDefaultVariant(product) ? `?${getProductDefaultVariant(product)}` : ""}`;
+	const defaultVariant = getProductDefaultVariant(product);
+	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${handle}`;
+	const variantUrl = defaultVariant ? `${url}?${defaultVariant}` : url;
 
 	return {
 		alternates: {
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 
 export default async function ProductSinglePage({ params }: Readonly<Props>) {
 	const { handle } = await params;
-	const product = await getProductCached(handle);
+	const product = await getCachedProduct(handle);
 
 	if (!product) {
 		notFound();

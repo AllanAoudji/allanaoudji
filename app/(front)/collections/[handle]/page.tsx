@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
-import { cache } from "react";
-import { getCollection } from "@/lib/shopify";
+import { getCachedCollection } from "@/lib/shopify/utils/cached";
 import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
 import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
@@ -19,8 +18,7 @@ type Props = {
 };
 
 export const dynamicParams = true;
-
-const getCollectionCached = cache(getCollection);
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
 	const collections = await getCollections();
@@ -29,7 +27,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Readonly<MetadataProps>): Promise<Metadata> {
 	const { handle } = await params;
-	const collection = await getCollectionCached(handle);
+	const collection = await getCachedCollection(handle);
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
 
 	if (!collection) return {};

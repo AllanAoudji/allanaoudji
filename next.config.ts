@@ -6,12 +6,10 @@ const isDev = process.env.NODE_ENV === "development";
 const csp = [
 	"default-src 'self'",
 
-	// scripts
 	`script-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://sanity-cdn.com${
 		isDev ? " 'unsafe-eval'" : ""
 	}`,
 
-	// APIs / fetch
 	[
 		"connect-src",
 		"'self'",
@@ -29,7 +27,6 @@ const csp = [
 		"https://*.ingest.de.sentry.io",
 	].join(" "),
 
-	// styles
 	[
 		"style-src",
 		"'self'",
@@ -38,10 +35,8 @@ const csp = [
 		"https://p.typekit.net",
 	].join(" "),
 
-	// fonts
 	["font-src", "'self'", "https://use.typekit.net", "https://p.typekit.net"].join(" "),
 
-	// images
 	[
 		"img-src",
 		"'self'",
@@ -53,32 +48,32 @@ const csp = [
 		"https://*.cdninstagram.com",
 	].join(" "),
 
-	// frames (Sanity preview)
 	["frame-src", "'self'", "https://*.sanity.io"].join(" "),
 
 	"worker-src 'self' blob:",
 	"child-src 'self'",
-
 	"object-src 'none'",
 	"base-uri 'self'",
 	"form-action 'self'",
 	"frame-ancestors 'self'",
-
 	"upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
+	experimental: {
+		// Corrige le 404 au premier accès sur une page ISR non encore générée :
+		// le router client ne sert plus une entrée périmée depuis son cache.
+		staleTimes: {
+			dynamic: 0, // pages dynamiques / ISR : jamais cachées côté client
+			static: 180, // pages 100% statiques : 3 min de cache client
+		},
+	},
 	async headers() {
 		return [
 			{
 				source: "/(.*)",
-				headers: [
-					{
-						key: "Content-Security-Policy",
-						value: csp,
-					},
-				],
+				headers: [{ key: "Content-Security-Policy", value: csp }],
 			},
 		];
 	},
@@ -96,20 +91,9 @@ const nextConfig: NextConfig = {
 		dangerouslyAllowSVG: false,
 		minimumCacheTTL: 60 * 60 * 24 * 7,
 		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "cdn.sanity.io",
-			},
-			{
-				protocol: "https",
-				hostname: "*.cdninstagram.com",
-				port: "",
-			},
-			{
-				protocol: "https",
-				hostname: "cdn.shopify.com",
-				pathname: "/s/files/**",
-			},
+			{ protocol: "https", hostname: "cdn.sanity.io" },
+			{ protocol: "https", hostname: "*.cdninstagram.com", port: "" },
+			{ protocol: "https", hostname: "cdn.shopify.com", pathname: "/s/files/**" },
 		],
 	},
 };

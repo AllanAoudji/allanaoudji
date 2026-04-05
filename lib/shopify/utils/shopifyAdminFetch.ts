@@ -73,7 +73,7 @@ export async function shopifyAdminFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(body.errors);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -89,7 +89,7 @@ export async function shopifyAdminFetch<T>({
 					query,
 				},
 			});
-			throw new Error(`${error.cause} ${error.message}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
@@ -98,7 +98,7 @@ export async function shopifyAdminFetch<T>({
 			});
 		}
 
-		throw new Error(`admin: ${ERROR_CODE.SHOPIFY_API_ERROR}`);
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
@@ -137,7 +137,7 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getDiscount(): Promise<DiscountNode[]> {
 	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
 		query: getDiscountsQuery,
-		revalidate: 60 * 10,
+		revalidate: 60 * 5,
 		tags: [TAGS.discounts],
 	});
 

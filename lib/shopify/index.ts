@@ -176,7 +176,7 @@ export async function shopifyFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(body.errors);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -192,7 +192,7 @@ export async function shopifyFetch<T>({
 					query,
 				},
 			});
-			throw new Error(`${error.cause} ${error.message}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
 		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
@@ -202,7 +202,7 @@ export async function shopifyFetch<T>({
 			});
 		}
 
-		throw new Error(`last: ${ERROR_CODE.SHOPIFY_API_ERROR}`);
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
@@ -324,6 +324,7 @@ export async function getCollectionProducts({
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
 		query: getLatestProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 	});
 
@@ -337,6 +338,7 @@ export async function getLatestProducts(): Promise<Product[]> {
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 	const res = await shopifyFetch<ShopifyMenuOperation>({
 		query: getMenuQuery,
+		revalidate: 60 * 60 * 24 * 7,
 		variables: { handle },
 	});
 
@@ -368,6 +370,7 @@ export async function getPages(): Promise<ShopifyPage[]> {
 export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
 		query: getPopularProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 	});
 
