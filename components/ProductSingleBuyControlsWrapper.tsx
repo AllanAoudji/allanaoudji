@@ -7,6 +7,8 @@ type Props = {
 	product: Product;
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductSingleBuyControlsWrapper({
 	className,
 	product,
