@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
@@ -5,6 +6,7 @@ import GalleryImages from "@/components/GalleryImages";
 import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
 import { getStaticWorksSiteMap, getWork } from "@/studio/lib/queries";
+import { WORKS_SITEMAP_QUERY_RESULT } from "@/studio/types";
 
 export const dynamicParams = true;
 export const revalidate = 86400;
@@ -14,7 +16,15 @@ const getCachedWork = unstable_cache(async (slug: string) => getWork(slug), ["wo
 });
 
 export async function generateStaticParams() {
-	const works = await getStaticWorksSiteMap();
+	let works: WORKS_SITEMAP_QUERY_RESULT;
+	try {
+		works = await getStaticWorksSiteMap();
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "generateStaticParams products" },
+		});
+		throw error;
+	}
 	if (!works) return [];
 	return works.map((work: { slug: string }) => ({ slug: work.slug }));
 }
@@ -25,7 +35,13 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
 	const { slug } = await params;
-	const { data } = await getCachedWork(slug);
+
+	let data;
+	try {
+		({ data } = await getCachedWork(slug));
+	} catch {
+		return {};
+	}
 
 	if (!data) return {};
 
