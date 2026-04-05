@@ -1,4 +1,11 @@
-import { ERROR_CODE, HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
+import {
+	collectionTag,
+	ERROR_CODE,
+	HIDDEN_PRODUCT_TAG,
+	productTag,
+	SHOPIFY_GRAPHQL_API_ENDPOINT,
+	TAGS,
+} from "../constants";
 import { isShopifyError } from "../type-guards";
 import {
 	ensureEndWithout,
@@ -269,7 +276,7 @@ export async function getCollection(handle: string): Promise<Collection | undefi
 	const res = await shopifyFetch<ShopifyCollectionOperation>({
 		query: getCollectionQuery,
 		revalidate: 60 * 60 * 24,
-		tags: [TAGS.collections],
+		tags: [TAGS.collections, collectionTag(handle)],
 		variables: { handle },
 	});
 	if (!res.body.data.collection) return undefined;
@@ -295,6 +302,7 @@ export async function getCollectionProducts({
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
 		query: getCollectionProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
 			after,
@@ -325,7 +333,7 @@ export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
 		query: getLatestProductsQuery,
 		revalidate: 60 * 60 * 24,
-		tags: [TAGS.products],
+		tags: [TAGS.products, TAGS.collections],
 	});
 
 	if (!res.body.data.collection) {
@@ -371,7 +379,7 @@ export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
 		query: getPopularProductsQuery,
 		revalidate: 60 * 60 * 24,
-		tags: [TAGS.products],
+		tags: [TAGS.products, TAGS.collections],
 	});
 
 	if (!res.body.data.collection) {
@@ -384,7 +392,7 @@ export async function getPopularProducts(): Promise<Product[]> {
 export async function getProduct(handle: string): Promise<Product | undefined> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
 		query: getProductQuery,
-		tags: [TAGS.products],
+		tags: [TAGS.products, productTag(handle)],
 		variables: { handle },
 	});
 
@@ -398,6 +406,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
 		query: getProductRecommendationsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 		variables: { productId },
 	});
@@ -423,6 +432,7 @@ export async function getProducts({
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
 		query: getProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },
 	});
