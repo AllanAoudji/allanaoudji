@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
@@ -7,6 +8,7 @@ import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
 import SectionError from "@/components/SectionError";
 import SkeletonCollections from "@/components/SkeletonCollections";
+import Collection from "@/types/collection";
 
 type MetadataProps = {
 	params: Promise<{ handle: string }>;
@@ -21,14 +23,28 @@ export const dynamicParams = true;
 export const revalidate = 86400;
 
 export async function generateStaticParams() {
-	const collections = await getCollections();
+	let collections: Collection[];
+	try {
+		collections = await getCollections();
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "generateStaticParams products" },
+		});
+		throw error;
+	}
 	return collections.filter(c => c.handle !== "").map(c => ({ handle: c.handle }));
 }
 
 export async function generateMetadata({ params }: Readonly<MetadataProps>): Promise<Metadata> {
 	const { handle } = await params;
-	const collection = await getCachedCollection(handle);
 	const url = `${process.env.NEXT_PUBLIC_SITE_URL}/collections/${handle}`;
+
+	let collection;
+	try {
+		collection = await getCachedCollection(handle);
+	} catch {
+		return {};
+	}
 
 	if (!collection) return {};
 
