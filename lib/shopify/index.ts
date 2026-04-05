@@ -176,7 +176,7 @@ export async function shopifyFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			throw new Error(body.errors);
 		}
 		return {
 			status: result.status,
@@ -202,7 +202,7 @@ export async function shopifyFetch<T>({
 			});
 		}
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		throw new Error(`last: ${ERROR_CODE.SHOPIFY_API_ERROR}`);
 	}
 }
 
