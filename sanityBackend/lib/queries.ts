@@ -1,5 +1,6 @@
 import { WORKS_SITEMAP_QUERY_RESULT } from "../types";
 import { defineQuery } from "next-sanity";
+import { TAGS } from "@/lib/constants";
 import { sanityFetchStatic } from "./client";
 import { sanityFetch } from "./live";
 
@@ -178,45 +179,42 @@ const WORK_QUERY = defineQuery(`
 /*-----------------------------------
 -- Fetchs ---------------------------
 -----------------------------------*/
-
-export const getAbout = () => {
-	return sanityFetch({ query: ABOUT_QUERY });
-};
-
-export const getBanner = () => {
-	return sanityFetch({ query: BANNER_QUERY });
-};
-
-export const getContacts = () => {
-	return sanityFetch({ query: CONTACTS_QUERY });
-};
-
-export const getGeneralConditionOfSale = () => {
-	return sanityFetch({ query: GENERAL_CONDITION_OF_SALE_QUERY });
-};
-
-export const getLegalNotices = () => {
-	return sanityFetch({ query: LEGAL_NOTICES_QUERY });
-};
-
-export const getPrivacyPolicy = () => {
-	return sanityFetch({ query: PRIVACY_POLICY_QUERY });
-};
-
-export const getShippingPolicy = () => {
-	return sanityFetch({ query: SHIPPING_POLICY_QUERY });
+// studio/lib/queries.ts
+export const getWork = (slug: string) => {
+	return sanityFetch({ query: WORK_QUERY, params: { slug }, tags: [TAGS.sanityWorks] });
 };
 
 export const getWorks = (from: number, to: number) => {
-	return sanityFetch({ query: WORKS_QUERY, params: { from, to } });
+	return sanityFetch({ query: WORKS_QUERY, params: { from, to }, tags: [TAGS.sanityWorks] });
 };
 
-export const getWork = (slug: string) => {
-	return sanityFetch({ query: WORK_QUERY, params: { slug } });
+export const getAbout = () => {
+	return sanityFetch({ query: ABOUT_QUERY, tags: [TAGS.sanityAbout] });
 };
 
-export const getWorksSiteMap = () => {
-	return sanityFetch({ query: WORKS_SITEMAP_QUERY });
+export const getBanner = () => {
+	return sanityFetch({ query: BANNER_QUERY, tags: [TAGS.sanitySettings] });
+};
+
+export const getContacts = () => {
+	return sanityFetch({ query: CONTACTS_QUERY, tags: [TAGS.sanitySettings] });
+};
+
+// pages légales → même tag car changent ensemble
+export const getGeneralConditionOfSale = () => {
+	return sanityFetch({ query: GENERAL_CONDITION_OF_SALE_QUERY, tags: [TAGS.sanityPages] });
+};
+
+export const getLegalNotices = () => {
+	return sanityFetch({ query: LEGAL_NOTICES_QUERY, tags: [TAGS.sanityPages] });
+};
+
+export const getPrivacyPolicy = () => {
+	return sanityFetch({ query: PRIVACY_POLICY_QUERY, tags: [TAGS.sanityPages] });
+};
+
+export const getShippingPolicy = () => {
+	return sanityFetch({ query: SHIPPING_POLICY_QUERY, tags: [TAGS.sanityPages] });
 };
 
 export const getStaticWorksSiteMap = () => {

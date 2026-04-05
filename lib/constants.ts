@@ -86,6 +86,11 @@ export const TAGS = {
 	products: "produits",
 	cart: "cart",
 	discounts: "discounts",
+
+	sanityWorks: "sanity-works",
+	sanityAbout: "sanity-about",
+	sanitySettings: "sanity-settings",
+	sanityPages: "sanity-pages",
 };
 
 export const CONTACT_FORM_SCHEMA = z.object({
