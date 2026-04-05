@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { DEFAULT_COLLECTION_IMAGE } from "@/lib/constants";
 import { getCollection } from "@/lib/shopify";
 import { shopifyImageUrl } from "@/lib/utils";
 
@@ -26,7 +25,9 @@ export default async function CollectionSingleOGImage({
 		);
 	}
 
-	const image = collection.image ?? DEFAULT_COLLECTION_IMAGE;
+	const imageUrl = collection.image
+		? shopifyImageUrl(collection.image.url)
+		: `${process.env.NEXT_PUBLIC_SITE_URL}/images/og-collections.jpg`;
 
 	return new ImageResponse(
 		<div
@@ -40,7 +41,7 @@ export default async function CollectionSingleOGImage({
 		>
 			<img
 				alt=""
-				src={shopifyImageUrl(image.url)}
+				src={imageUrl}
 				style={{ height: "100%", objectFit: "cover", opacity: 0.7, width: "100%" }}
 			/>
 			<div
