@@ -192,7 +192,7 @@ export async function shopifyFetch<T>({
 					query,
 				},
 			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+			throw new Error(`${error.cause} ${error.message}`);
 		}
 
 		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
