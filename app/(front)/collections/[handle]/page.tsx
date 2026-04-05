@@ -53,9 +53,10 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 		description: collection.seo?.description ?? collection.description,
 		openGraph: {
 			description: collection.seo?.description ?? collection.description,
+			locale: "fr_FR",
+			siteName: "Allan Aoudji",
 			title: collection.seo?.title ?? collection.title,
 			type: "website",
-			url,
 		},
 		title: collection.seo?.title ?? collection.title,
 	};

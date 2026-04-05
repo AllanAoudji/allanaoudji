@@ -55,6 +55,8 @@ export async function generateMetadata({
 		description,
 		openGraph: {
 			description,
+			locale: "fr_FR",
+			siteName: "Allan Aoudji",
 			modifiedTime: data._updatedAt,
 			title,
 			type: "article",

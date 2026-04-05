@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyGeneralConditionsOfSale from "@/components/EmptyGeneralConditionsOfSale";
 import LegalPageContainer from "@/components/LegalPageContainer";
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 	},
 	description: "Conditions générales de vente d'Allan Aoudji.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "Conditions générales de vente | Allan Aoudji",
-		type: "website",
 	},
 	title: "Conditions générales de vente",
 };

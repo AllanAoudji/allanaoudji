@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyPrivacyPolicy from "@/components/EmptyPrivacyPolicy";
 import LegalPageContainer from "@/components/LegalPageContainer";
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 	},
 	description: "Politique de confidentialité d'Allan Aoudji.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "Politique de confidentialité | Allan Aoudji",
-		type: "website",
 	},
 	title: "Politique de confidentialité",
 };

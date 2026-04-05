@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyAbout from "@/components/EmptyAbout";
 import PortableTextContent from "@/components/PortableTextContent";
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 	},
 	description: "Graphiste & illustrateur — retrouvez mon parcours et mes inspirations.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "À propos | Allan Aoudji",
-		type: "website",
 	},
 	title: "À propos",
 };

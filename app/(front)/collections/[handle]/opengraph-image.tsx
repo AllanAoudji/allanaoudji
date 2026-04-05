@@ -17,7 +17,7 @@ export default async function CollectionSingleOGImage({
 		return new ImageResponse(
 			<img
 				alt="default opengraph image"
-				src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/og-default.jpg`}
+				src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/og-collections.jpg`}
 				width={1200}
 				height={630}
 			/>,
