@@ -26,6 +26,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 	if (!isValid) return ok();
 
 	const topic = (await headers()).get("x-shopify-topic") ?? "unknown";
+	const payload = JSON.parse(body) as { id?: number; handle?: string };
 
 	const collectionWebhooks = ["collections/create", "collections/delete", "collections/update"];
 	const productWebhooks = ["products/create", "products/delete", "products/update"];
@@ -33,9 +34,15 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
 	if (collectionWebhooks.includes(topic)) {
 		revalidateTag(TAGS.collections, { expire: 0 });
+		if (payload.handle) {
+			revalidateTag(`collection-${payload.handle}`, { expire: 0 });
+		}
 	} else if (productWebhooks.includes(topic)) {
 		revalidateTag(TAGS.products, { expire: 0 });
 		revalidateTag(TAGS.collections, { expire: 0 });
+		if (payload.handle) {
+			revalidateTag(`product-${payload.handle}`, { expire: 0 });
+		}
 	} else if (discountWebhooks.includes(topic)) {
 		revalidateTag(TAGS.discounts, { expire: 0 });
 	}

@@ -93,6 +93,9 @@ export const TAGS = {
 	sanityPages: "sanity-pages",
 };
 
+export const productTag = (handle: string) => `product-${handle}`;
+export const collectionTag = (handle: string) => `collection-${handle}`;
+
 export const CONTACT_FORM_SCHEMA = z.object({
 	firstName: z
 		.string()
