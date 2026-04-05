@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getProduct } from "@/lib/shopify";
+import { getProduct } from "@/lib/shopify/utils/products";
 
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };

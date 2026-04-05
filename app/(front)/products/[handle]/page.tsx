@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
-import { getProduct, getProducts } from "@/lib/shopify";
+import { getProduct, getProducts } from "@/lib/shopify/utils/products";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControlsWrapper from "@/components/ProductSingleBuyControlsWrapper";

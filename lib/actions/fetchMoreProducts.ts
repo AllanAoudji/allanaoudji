@@ -1,7 +1,8 @@
 "use server";
 
+import { getProducts } from "../shopify/utils/products";
 import { withMinimumDelay } from "../utils";
-import { getProducts, getCollectionProducts } from "@/lib/shopify";
+import { getCollectionProducts } from "@/lib/shopify";
 
 export async function fetchMoreProducts({
 	after,
