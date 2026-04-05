@@ -134,15 +134,17 @@ const stockWarningMessage = (quantityAdded: number): string => {
 };
 
 export async function shopifyFetch<T>({
-	cache = "no-store",
+	cache = "force-cache",
 	headers,
 	query,
+	revalidate = 60 * 60,
 	tags,
 	variables,
 }: {
 	cache?: RequestCache;
 	headers?: HeadersInit;
 	query: string;
+	revalidate?: number;
 	tags?: string[];
 	variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: T } | never> {
@@ -159,7 +161,10 @@ export async function shopifyFetch<T>({
 				...(variables && { variables }),
 			}),
 			cache,
-			...(tags && { next: { tags } }),
+			next: {
+				tags: tags ?? [],
+				revalidate,
+			},
 		});
 		const body = await result.json();
 		if (body.errors) {
@@ -171,7 +176,7 @@ export async function shopifyFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(`1${ERROR_CODE.SHOPIFY_API_ERROR}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -187,7 +192,7 @@ export async function shopifyFetch<T>({
 					query,
 				},
 			});
-			throw new Error(`2${ERROR_CODE.SHOPIFY_API_ERROR}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
 		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
@@ -197,7 +202,7 @@ export async function shopifyFetch<T>({
 			});
 		}
 
-		throw new Error(`3${ERROR_CODE.SHOPIFY_API_ERROR}`);
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
@@ -263,6 +268,7 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 export async function getCollection(handle: string): Promise<Collection | undefined> {
 	const res = await shopifyFetch<ShopifyCollectionOperation>({
 		query: getCollectionQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.collections],
 		variables: { handle },
 	});
@@ -288,7 +294,6 @@ export async function getCollectionProducts({
 	products: Product[] | null;
 }> {
 	const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
-		cache: "force-cache",
 		query: getCollectionProductsQuery,
 		tags: [TAGS.collections, TAGS.products],
 		variables: {
@@ -332,7 +337,6 @@ export async function getLatestProducts(): Promise<Product[]> {
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 	const res = await shopifyFetch<ShopifyMenuOperation>({
 		query: getMenuQuery,
-		tags: [TAGS.collections],
 		variables: { handle },
 	});
 
@@ -347,7 +351,6 @@ export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
 export async function getPage(handle: string): Promise<ShopifyPage> {
 	const res = await shopifyFetch<ShopifyPageOperation>({
 		query: getPageQuery,
-		cache: "no-store",
 		variables: { handle },
 	});
 
@@ -357,7 +360,6 @@ export async function getPage(handle: string): Promise<ShopifyPage> {
 export async function getPages(): Promise<ShopifyPage[]> {
 	const res = await shopifyFetch<ShopifyPagesOperation>({
 		query: getPagesQuery,
-		cache: "no-store",
 	});
 
 	return removeEdgesAndNodes(res.body.data.pages);
@@ -417,7 +419,6 @@ export async function getProducts({
 	products: Product[];
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
-		cache: "force-cache",
 		query: getProductsQuery,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },

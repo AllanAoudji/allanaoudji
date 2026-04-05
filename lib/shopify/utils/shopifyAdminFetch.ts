@@ -31,15 +31,17 @@ const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	: "";
 
 export async function shopifyAdminFetch<T>({
-	cache = "no-store",
+	cache = "force-cache",
 	headers,
 	query,
+	revalidate = 60 * 60,
 	tags,
 	variables,
 }: {
 	cache?: RequestCache;
 	headers?: HeadersInit;
 	query: string;
+	revalidate?: number;
 	tags?: string[];
 	variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: T }> {
@@ -56,7 +58,10 @@ export async function shopifyAdminFetch<T>({
 				...(variables && { variables }),
 			}),
 			cache,
-			...(tags && { next: { tags } }),
+			next: {
+				tags: tags ?? [],
+				revalidate,
+			},
 		});
 		const body = await result.json();
 		if (body.errors) {
@@ -68,7 +73,7 @@ export async function shopifyAdminFetch<T>({
 					variables,
 				},
 			});
-			throw new Error(`4${ERROR_CODE.SHOPIFY_API_ERROR}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 		return {
 			status: result.status,
@@ -84,7 +89,7 @@ export async function shopifyAdminFetch<T>({
 					query,
 				},
 			});
-			throw new Error(`${error.message} ${error.cause}`);
+			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
@@ -93,14 +98,14 @@ export async function shopifyAdminFetch<T>({
 			});
 		}
 
-		throw new Error(`6${ERROR_CODE.SHOPIFY_API_ERROR}`);
+		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
 }
 
 export async function getCollections(): Promise<Collection[]> {
 	const res = await shopifyAdminFetch<ShopifyCollectionsOperation>({
-		cache: "force-cache",
 		query: getCollectionsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.collections],
 	});
 
@@ -132,6 +137,7 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getDiscount(): Promise<DiscountNode[]> {
 	const res = await shopifyAdminFetch<ShopifyDiscountsQueryOperation>({
 		query: getDiscountsQuery,
+		revalidate: 60 * 10,
 		tags: [TAGS.discounts],
 	});
 
