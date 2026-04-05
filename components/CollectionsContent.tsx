@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { DEFAULT_SORT, FETCH_PRODUCTS, SORTING } from "@/lib/constants";
-import { getCollectionProducts } from "@/lib/shopify";
-import { getProducts } from "@/lib/shopify/utils/products";
+import { getCollectionProducts, getProducts } from "@/lib/shopify";
 import CollectionsContentInfiniteScroll from "./CollectionsContentInfiniteScroll";
 import EmptyCollection from "./EmptyCollection";
 import Product from "@/types/product";

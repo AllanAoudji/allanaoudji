@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getProducts } from "@/lib/shopify/utils/products";
+import { getProducts } from "@/lib/shopify";
 import { getCollections } from "@/lib/shopify/utils/shopifyAdminFetch";
 import { getStaticWorksSiteMap } from "@/studio/lib/queries";
 

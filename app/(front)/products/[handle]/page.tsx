@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache, Suspense } from "react";
-import { getProduct, getProducts } from "@/lib/shopify/utils/products";
+import { cache } from "react";
+import { getProduct, getProducts } from "@/lib/shopify";
 import { getProductDefaultVariant } from "@/lib/utils";
 import ProductPrice from "@/components/ProductPrice";
 import ProductSingleBuyControlsWrapper from "@/components/ProductSingleBuyControlsWrapper";
@@ -9,7 +9,6 @@ import ProductSingleDescription from "@/components/ProductSingleDescription";
 import ProductSingleGallery from "@/components/ProductSingleGallery";
 import ProductSingleRelated from "@/components/ProductSingleRelated";
 import ShopDisabled from "@/components/ShopDisabled";
-import SkeletonProductSingleBuyControlsWrapper from "@/components/SkeletonProductSingleBuyControlsWrapper";
 import Title from "@/components/Title";
 
 type Props = {
@@ -103,9 +102,7 @@ export default async function ProductSinglePage({ params }: Readonly<Props>) {
 					{!!product.descriptionHtml && (
 						<ProductSingleDescription className="mt-10" html={product.descriptionHtml} />
 					)}
-					<Suspense fallback={<SkeletonProductSingleBuyControlsWrapper />}>
-						<ProductSingleBuyControlsWrapper product={product} />
-					</Suspense>
+					<ProductSingleBuyControlsWrapper product={product} />
 				</div>
 			</section>
 			<ProductSingleRelated id={product.id} />

@@ -1,5 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
 import ProductSingleBuyControls from "./ProductSingleBuyControls";
+import SkeletonProductSingleBuyControlsWrapper from "./SkeletonProductSingleBuyControlsWrapper";
+import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
 
 type Props = {
@@ -7,13 +12,14 @@ type Props = {
 	product: Product;
 };
 
-export const dynamic = "force-dynamic";
+export default function ProductSingleBuyControlsWrapper({ className, product }: Props) {
+	const [variantsInventory, setVariantsInventory] = useState<VariantInventory[] | null>(null);
 
-export default async function ProductSingleBuyControlsWrapper({
-	className,
-	product,
-}: Readonly<Props>) {
-	const variantsInventory = await getProductVariantsInventory(product.id);
+	useEffect(() => {
+		getProductVariantsInventory(product.id).then(setVariantsInventory);
+	}, [product.id]);
+
+	if (!variantsInventory) return <SkeletonProductSingleBuyControlsWrapper />;
 
 	return (
 		<ProductSingleBuyControls

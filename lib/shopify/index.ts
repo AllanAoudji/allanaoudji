@@ -21,7 +21,9 @@ import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
 	getLatestProductsQuery,
 	getPopularProductsQuery,
+	getProductQuery,
 	getProductRecommendationsQuery,
+	getProductsQuery,
 } from "./queries/product";
 import ShopifyCart from "@/types/ShopifyCart";
 import Cart from "@/types/cart";
@@ -42,7 +44,9 @@ import {
 	ShopifyPageOperation,
 	ShopifyPagesOperation,
 	ShopifyPopularProductsOperation,
+	ShopifyProductOperation,
 	ShopifyProductRecommendationsOperation,
+	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
 } from "@/types/shopifyOperations";
@@ -89,7 +93,7 @@ function reshapeImages(images: Connection<shopifyImage>, title: string) {
 	});
 }
 
-export function reshapeProduct(
+function reshapeProduct(
 	product: ShopifyProduct,
 	filterHiddenProducts: boolean = true,
 ): Product | undefined {
@@ -107,7 +111,7 @@ export function reshapeProduct(
 	};
 }
 
-export function reshapeProducts(products: ShopifyProduct[]): Product[] {
+function reshapeProducts(products: ShopifyProduct[]): Product[] {
 	const reshapedProducts = [];
 	for (const product of products) {
 		if (product) {
@@ -374,6 +378,20 @@ export async function getPopularProducts(): Promise<Product[]> {
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
+export async function getProduct(handle: string): Promise<Product | undefined> {
+	const res = await shopifyFetch<ShopifyProductOperation>({
+		query: getProductQuery,
+		tags: [TAGS.products],
+		variables: { handle },
+	});
+
+	if (!res.body.data.product) {
+		return undefined;
+	}
+
+	return reshapeProduct(res.body.data.product, false);
+}
+
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
 		query: getProductRecommendationsQuery,
@@ -382,6 +400,34 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 	});
 
 	return reshapeProducts(res.body.data.productRecommendations);
+}
+
+export async function getProducts({
+	after,
+	first = 10,
+	query,
+	reverse = true,
+	sortKey,
+}: {
+	after?: string;
+	query?: string;
+	reverse?: boolean;
+	sortKey?: string;
+	first?: number;
+}): Promise<{
+	pageInfo: ShopifyPageInfo;
+	products: Product[];
+}> {
+	const res = await shopifyFetch<ShopifyProductsOperation>({
+		query: getProductsQuery,
+		tags: [TAGS.products],
+		variables: { after, first, query, reverse, sortKey },
+	});
+
+	return {
+		pageInfo: res.body.data.products.pageInfo,
+		products: reshapeProducts(removeEdgesAndNodes(res.body.data.products)),
+	};
 }
 
 export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
