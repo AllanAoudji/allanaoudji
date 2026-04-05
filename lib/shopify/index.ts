@@ -195,6 +195,7 @@ export async function shopifyFetch<T>({
 			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
+		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
 		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
 			Sentry.captureException(error, {
 				extra: { context: "Unexpected error in shopifyFetch", query },
@@ -221,8 +222,11 @@ export async function addToCart(
 	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesAdd.cart);
+
 	const line = updatedCart.lines.find(line => line.merchandise.id === variantId);
+
 	const newQuantity = line?.quantity ?? 0;
+
 	const actuallyAdded = Math.max(0, newQuantity - previousQuantity);
 
 	return {
@@ -261,20 +265,13 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 	return reshapeCart(res.body.data.cart);
 }
 
-// Paramètre cache optionnel : "no-store" quand appelé depuis unstable_cache
-// pour éviter le conflit entre les deux couches de cache pendant le build.
-export async function getCollection(
-	handle: string,
-	cache: RequestCache = "force-cache",
-): Promise<Collection | undefined> {
+export async function getCollection(handle: string): Promise<Collection | undefined> {
 	const res = await shopifyFetch<ShopifyCollectionOperation>({
 		query: getCollectionQuery,
 		revalidate: 60 * 60 * 24,
 		tags: [TAGS.collections],
 		variables: { handle },
-		cache,
 	});
-
 	if (!res.body.data.collection) return undefined;
 
 	return reshapeCollection(res.body.data.collection);
@@ -327,6 +324,7 @@ export async function getCollectionProducts({
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
 		query: getLatestProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 	});
 
@@ -372,6 +370,7 @@ export async function getPages(): Promise<ShopifyPage[]> {
 export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
 		query: getPopularProductsQuery,
+		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products],
 	});
 
@@ -382,17 +381,11 @@ export async function getPopularProducts(): Promise<Product[]> {
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
-// Paramètre cache optionnel : "no-store" quand appelé depuis unstable_cache
-// pour éviter le conflit entre les deux couches de cache pendant le build.
-export async function getProduct(
-	handle: string,
-	cache: RequestCache = "force-cache",
-): Promise<Product | undefined> {
+export async function getProduct(handle: string): Promise<Product | undefined> {
 	const res = await shopifyFetch<ShopifyProductOperation>({
 		query: getProductQuery,
 		tags: [TAGS.products],
 		variables: { handle },
-		cache,
 	});
 
 	if (!res.body.data.product) {
@@ -464,8 +457,10 @@ export async function updateCart(
 	});
 
 	const updatedCart = reshapeCart(res.body.data.cartLinesUpdate.cart);
+
 	const newQuantity = getLineQuantity(updatedCart, variantId);
 	const actuallyAdded = newQuantity - previousQuantity;
+
 	const decremente = previousQuantity > quantity;
 
 	return {
