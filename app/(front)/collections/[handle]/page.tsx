@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: Readonly<MetadataProps>): Pro
 		alternates: { canonical: url },
 		description: collection.seo?.description ?? collection.description,
 		openGraph: {
+			url,
 			description: collection.seo?.description ?? collection.description,
 			locale: "fr_FR",
 			siteName: "Allan Aoudji",

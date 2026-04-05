@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		...DEFAULT_OG,
 		title: "Conditions générales de vente | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/general-condition-of-sale`,
 	},
 	title: "Conditions générales de vente",
 };

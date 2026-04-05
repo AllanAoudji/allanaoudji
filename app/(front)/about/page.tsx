@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		...DEFAULT_OG,
 		title: "À propos | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/about`,
 	},
 	title: "À propos",
 };

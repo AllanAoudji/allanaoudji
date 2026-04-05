@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		...DEFAULT_OG,
 		title: "Politique de confidentialité | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/privacy-policy`,
 	},
 	title: "Politique de confidentialité",
 };

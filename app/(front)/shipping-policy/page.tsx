@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		...DEFAULT_OG,
 		title: "Politique d’expédition | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/shipping-policy`,
 	},
 	title: "Politique d’expédition",
 };

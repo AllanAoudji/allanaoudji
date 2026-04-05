@@ -60,6 +60,7 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 		},
 		description,
 		openGraph: {
+			url,
 			description,
 			locale: "fr_FR",
 			siteName: "Allan Aoudji",

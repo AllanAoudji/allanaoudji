@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		...DEFAULT_OG,
 		title: "Contact | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
 	},
 	title: "Contact",
 };

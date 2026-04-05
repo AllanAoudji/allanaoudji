@@ -28,6 +28,7 @@ export const metadata: Metadata = {
 			},
 		],
 		title: "Collections | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
 	},
 	title: "Collections",
 };
