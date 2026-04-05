@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { parseBody } from "next-sanity/webhook";
 import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
-import { ERROR_CODE, TAGS } from "@/lib/constants";
+import { ERROR_CODE, TAGS, workTag } from "@/lib/constants";
 
 // Mapping _type Sanity → tags à invalider
 const typeTagMap: Record<string, string[]> = {
@@ -28,20 +28,23 @@ export async function POST(req: NextRequest) {
 		return new Response(ERROR_CODE.INVALID_SIGNATURE, { status: 401 });
 	}
 
-	const documentType = (body as { _type?: string })?._type;
+	const documentType = (body as { _type?: string; slug?: { current?: string } })?._type;
+	const slug = (body as { slug?: { current?: string } })?.slug?.current;
 	const tagsToRevalidate = documentType ? typeTagMap[documentType] : undefined;
 
 	if (!tagsToRevalidate) {
-		if (!tagsToRevalidate) {
-			Sentry.captureMessage("Sanity webhook: unmapped document type", {
-				level: "warning",
-				extra: { documentType },
-			});
-			return new Response("Revalidated (no-op)");
-		}
-		return new Response("Revalidated (fallback)");
+		Sentry.captureMessage("Sanity webhook: unmapped document type", {
+			level: "warning",
+			extra: { documentType },
+		});
+		return new Response("Revalidated (no-op)");
 	}
 
 	tagsToRevalidate.forEach(tag => revalidateTag(tag, { expire: 0 }));
+
+	if (documentType === "work" && slug) {
+		revalidateTag(workTag(slug), { expire: 0 });
+	}
+
 	return new Response("Revalidated");
 }

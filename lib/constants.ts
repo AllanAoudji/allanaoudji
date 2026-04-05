@@ -95,6 +95,7 @@ export const TAGS = {
 
 export const productTag = (handle: string) => `product-${handle}`;
 export const collectionTag = (handle: string) => `collection-${handle}`;
+export const workTag = (slug: string) => `sanity-work-${slug}`;
 
 export const CONTACT_FORM_SCHEMA = z.object({
 	firstName: z

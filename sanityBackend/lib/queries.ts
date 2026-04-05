@@ -1,6 +1,6 @@
 import { WORKS_SITEMAP_QUERY_RESULT } from "../types";
 import { defineQuery } from "next-sanity";
-import { TAGS } from "@/lib/constants";
+import { TAGS, workTag } from "@/lib/constants";
 import { sanityFetchStatic } from "./client";
 import { sanityFetch } from "./live";
 
@@ -181,7 +181,11 @@ const WORK_QUERY = defineQuery(`
 -----------------------------------*/
 // studio/lib/queries.ts
 export const getWork = (slug: string) => {
-	return sanityFetch({ query: WORK_QUERY, params: { slug }, tags: [TAGS.sanityWorks] });
+	return sanityFetch({
+		query: WORK_QUERY,
+		params: { slug },
+		tags: [TAGS.sanityWorks, workTag(slug)],
+	});
 };
 
 export const getWorks = (from: number, to: number) => {
