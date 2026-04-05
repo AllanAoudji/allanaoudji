@@ -1,7 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { getProductVariantsInventoryAction } from "@/lib/actions/getProductVariantsInventoryAction";
+import * as Sentry from "@sentry/nextjs";
+import { Suspense } from "react";
+import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
 import ProductSingleBuyControls from "./ProductSingleBuyControls";
 import SkeletonProductSingleBuyControlsWrapper from "./SkeletonProductSingleBuyControlsWrapper";
 import VariantInventory from "@/types/VariantInventory";
@@ -12,15 +11,16 @@ type Props = {
 	product: Product;
 };
 
-export default function ProductSingleBuyControlsWrapper({ className, product }: Props) {
-	const [variantsInventory, setVariantsInventory] = useState<VariantInventory[] | null>(null);
+async function BuyControls({ className, product }: Props) {
+	let variantsInventory: VariantInventory[] = [];
 
-	useEffect(() => {
-		getProductVariantsInventoryAction(product.id).then(setVariantsInventory);
-	}, [product.id]);
-
-	// null = chargement en cours, [] = erreur ou inventaire vide
-	if (!variantsInventory) return <SkeletonProductSingleBuyControlsWrapper />;
+	try {
+		variantsInventory = await getProductVariantsInventory(product.id);
+	} catch (error) {
+		Sentry.captureException(error, {
+			extra: { context: "BuyControls", productId: product.id },
+		});
+	}
 
 	return (
 		<ProductSingleBuyControls
@@ -28,5 +28,13 @@ export default function ProductSingleBuyControlsWrapper({ className, product }: 
 			product={product}
 			variantsInventory={variantsInventory}
 		/>
+	);
+}
+
+export default function ProductSingleBuyControlsWrapper({ className, product }: Props) {
+	return (
+		<Suspense fallback={<SkeletonProductSingleBuyControlsWrapper />}>
+			<BuyControls className={className} product={product} />
+		</Suspense>
 	);
 }
