@@ -35,6 +35,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 		revalidateTag(TAGS.collections, { expire: 0 });
 	} else if (productWebhooks.includes(topic)) {
 		revalidateTag(TAGS.products, { expire: 0 });
+		revalidateTag(TAGS.collections, { expire: 0 });
 	} else if (discountWebhooks.includes(topic)) {
 		revalidateTag(TAGS.discounts, { expire: 0 });
 	}
