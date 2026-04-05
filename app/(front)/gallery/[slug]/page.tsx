@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
+import { TAGS, workTag } from "@/lib/constants";
 import GalleryImages from "@/components/GalleryImages";
 import GalleryText from "@/components/GalleryText";
 import Title from "@/components/Title";
@@ -11,9 +12,11 @@ import { WORKS_SITEMAP_QUERY_RESULT } from "@/studio/types";
 export const dynamicParams = true;
 export const revalidate = 86400;
 
-const getCachedWork = unstable_cache(async (slug: string) => getWork(slug), ["work"], {
-	revalidate: 3600,
-});
+const getCachedWork = (slug: string) =>
+	unstable_cache(async () => getWork(slug), [`work-${slug}`], {
+		tags: [TAGS.sanityWorks, workTag(slug)],
+		revalidate: 86400,
+	})();
 
 export async function generateStaticParams() {
 	let works: WORKS_SITEMAP_QUERY_RESULT;
