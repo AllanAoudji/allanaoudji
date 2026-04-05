@@ -1,11 +1,9 @@
-// app/api/revalidate/sanity/route.ts
 import * as Sentry from "@sentry/nextjs";
 import { parseBody } from "next-sanity/webhook";
 import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
 import { ERROR_CODE, TAGS, workTag } from "@/lib/constants";
 
-// Mapping _type Sanity → tags à invalider
 const typeTagMap: Record<string, string[]> = {
 	work: [TAGS.sanityWorks],
 	about: [TAGS.sanityAbout],
@@ -16,6 +14,8 @@ const typeTagMap: Record<string, string[]> = {
 	privacyPolicy: [TAGS.sanityPages],
 	shippingPolicy: [TAGS.sanityPages],
 };
+
+const IGNORED_TYPES = new Set(["sanity.imageAsset", "sanity.fileAsset"]);
 
 export async function POST(req: NextRequest) {
 	const { isValidSignature, body } = await parseBody(req, process.env.SANITY_WEBHOOK_SECRET);
@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
 	const tagsToRevalidate = documentType ? typeTagMap[documentType] : undefined;
 
 	if (!tagsToRevalidate) {
+		if (documentType && IGNORED_TYPES.has(documentType)) {
+			return new Response("Revalidated (no-op)");
+		}
+
 		Sentry.captureMessage("Sanity webhook: unmapped document type", {
 			level: "warning",
 			extra: { documentType },
