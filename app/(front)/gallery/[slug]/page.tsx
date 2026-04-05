@@ -57,6 +57,7 @@ export async function generateMetadata({
 		},
 		description,
 		openGraph: {
+			url: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery/${slug}`,
 			description,
 			locale: "fr_FR",
 			siteName: "Allan Aoudji",

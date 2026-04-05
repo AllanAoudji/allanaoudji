@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getWork } from "@/studio/lib/queries";
 
-export const contentType = "image/png";
+export const contentType = "image/jpeg";
 export const size = { width: 1200, height: 630 };
 
 export default async function GallerySingleOGImage({

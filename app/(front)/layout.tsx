@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	},
 	description: "Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
 	metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
-	openGraph: DEFAULT_OG,
+	openGraph: { ...DEFAULT_OG, url: process.env.NEXT_PUBLIC_SITE_URL },
 	title: {
 		default: "Allan Aoudji",
 		template: "%s | Allan Aoudji",

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 		description:
 			"Découvrez toutes mes créations graphiques et illustrations — affiches, prints et projets originaux.",
 		title: "Galerie | Allan Aoudji",
+		url: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery`,
 	},
 	title: "Galerie",
 };

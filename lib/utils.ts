@@ -243,3 +243,11 @@ export async function withMinimumDelay<T>(
 
 	return result;
 }
+
+export function shopifyImageUrl(url: string, width = 1200, height = 630) {
+	const u = new URL(url);
+	u.searchParams.set("width", String(width));
+	u.searchParams.set("height", String(height));
+	u.searchParams.set("crop", "center");
+	return u.toString();
+}
