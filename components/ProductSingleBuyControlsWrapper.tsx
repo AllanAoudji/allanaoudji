@@ -1,7 +1,10 @@
-import { Suspense } from "react";
-import { getProductVariantsInventory } from "@/lib/shopify/utils/shopifyAdminFetch";
+"use client";
+
+import { useEffect, useState } from "react";
+import { getProductVariantsInventoryAction } from "@/lib/actions/getProductVariantsInventoryAction";
 import ProductSingleBuyControls from "./ProductSingleBuyControls";
 import SkeletonProductSingleBuyControlsWrapper from "./SkeletonProductSingleBuyControlsWrapper";
+import VariantInventory from "@/types/VariantInventory";
 import Product from "@/types/product";
 
 type Props = {
@@ -9,10 +12,15 @@ type Props = {
 	product: Product;
 };
 
-// Composant interne qui fetch l'inventaire — isolé pour que Suspense
-// puisse l'intercepter sans bloquer le reste de la page produit.
-async function BuyControls({ className, product }: Props) {
-	const variantsInventory = await getProductVariantsInventory(product.id);
+export default function ProductSingleBuyControlsWrapper({ className, product }: Props) {
+	const [variantsInventory, setVariantsInventory] = useState<VariantInventory[] | null>(null);
+
+	useEffect(() => {
+		getProductVariantsInventoryAction(product.id).then(setVariantsInventory);
+	}, [product.id]);
+
+	// null = chargement en cours, [] = erreur ou inventaire vide
+	if (!variantsInventory) return <SkeletonProductSingleBuyControlsWrapper />;
 
 	return (
 		<ProductSingleBuyControls
@@ -20,13 +28,5 @@ async function BuyControls({ className, product }: Props) {
 			product={product}
 			variantsInventory={variantsInventory}
 		/>
-	);
-}
-
-export default function ProductSingleBuyControlsWrapper({ className, product }: Props) {
-	return (
-		<Suspense fallback={<SkeletonProductSingleBuyControlsWrapper />}>
-			<BuyControls className={className} product={product} />
-		</Suspense>
 	);
 }
