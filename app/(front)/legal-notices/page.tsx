@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyLegalNotices from "@/components/EmptyLegalNotices";
 import LegalPageContainer from "@/components/LegalPageContainer";
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 	},
 	description: "Mentions légales d'Allan Aoudji.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "Mentions légales | Allan Aoudji",
-		type: "website",
 	},
 	title: "Mentions légales",
 };

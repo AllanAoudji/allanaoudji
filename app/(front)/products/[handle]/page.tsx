@@ -61,9 +61,10 @@ export async function generateMetadata({ params }: Readonly<Props>): Promise<Met
 		description,
 		openGraph: {
 			description,
+			locale: "fr_FR",
+			siteName: "Allan Aoudji",
 			title,
 			type: "website",
-			url,
 		},
 		title,
 		twitter: {

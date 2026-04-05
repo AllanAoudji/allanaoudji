@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
+import { DEFAULT_OG } from "@/lib/constants";
 import CollectionsContent from "@/components/CollectionsContent";
 import CollectionsNavBar from "@/components/CollectionsNavBar";
 import SectionError from "@/components/SectionError";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 	},
 	description: "Découvrez toutes les collections.",
 	openGraph: {
+		...DEFAULT_OG,
 		description: "Découvrez toutes les collections.",
 		images: [
 			{
@@ -26,8 +28,6 @@ export const metadata: Metadata = {
 			},
 		],
 		title: "Collections | Allan Aoudji",
-		type: "website",
-		url: `${process.env.NEXT_PUBLIC_SITE_URL}/collections`,
 	},
 	title: "Collections",
 };

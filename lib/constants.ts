@@ -11,6 +11,13 @@ export const DEFAULT_COLLECTION_IMAGE: shopifyImage = {
 	altText: "image de collection par défault",
 };
 
+export const DEFAULT_OG = {
+	images: [{ url: "/images/og-default.jpg", width: 1200, height: 630 }],
+	locale: "fr_FR",
+	siteName: "Allan Aoudji",
+	type: "website",
+};
+
 export const DEFAULT_SORT: SortFilterItem = {
 	reverse: true,
 	title: "Lastest arrival",

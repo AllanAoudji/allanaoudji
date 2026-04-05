@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
 import EmptyShippingPolicy from "@/components/EmptyShippingPolicy";
 import LegalPageContainer from "@/components/LegalPageContainer";
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 	},
 	description: "Politique d’expédition d'Allan Aoudji.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "Politique d’expédition | Allan Aoudji",
-		type: "website",
 	},
 	title: "Politique d’expédition",
 };

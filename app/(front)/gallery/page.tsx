@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { DEFAULT_OG } from "@/lib/constants";
 import GalleryContent from "@/components/GalleryContent";
 import SkeletonWorks from "@/components/SkeletonWorks";
 import Title from "@/components/Title";
@@ -11,10 +12,10 @@ export const metadata: Metadata = {
 	description:
 		"Découvrez toutes mes créations graphiques et illustrations — affiches, prints et projets originaux.",
 	openGraph: {
+		...DEFAULT_OG,
 		description:
 			"Découvrez toutes mes créations graphiques et illustrations — affiches, prints et projets originaux.",
 		title: "Galerie | Allan Aoudji",
-		type: "website",
 	},
 	title: "Galerie",
 };

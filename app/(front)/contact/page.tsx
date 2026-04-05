@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG } from "@/lib/constants";
 import ContactContainer from "@/components/ContactContainer";
 
 export const metadata: Metadata = {
@@ -8,9 +9,8 @@ export const metadata: Metadata = {
 	description:
 		"Contactez Allan Aoudji pour toute demande de collaboration, commande ou renseignement.",
 	openGraph: {
+		...DEFAULT_OG,
 		title: "Contact | Allan Aoudji",
-		type: "website",
-		url: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
 	},
 	title: "Contact",
 };
