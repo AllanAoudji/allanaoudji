@@ -28,7 +28,7 @@ export async function generateStaticParams() {
 		collections = await getCollections();
 	} catch (error) {
 		Sentry.captureException(error, {
-			extra: { context: "generateStaticParams products" },
+			extra: { context: "generateStaticParams collections" },
 		});
 		throw error;
 	}

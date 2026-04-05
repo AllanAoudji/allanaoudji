@@ -140,21 +140,24 @@ const stockWarningMessage = (quantityAdded: number): string => {
 	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
 };
 
-export async function shopifyFetch<T>({
-	cache = "force-cache",
-	headers,
-	query,
-	revalidate = 60 * 60,
-	tags,
-	variables,
-}: {
-	cache?: RequestCache;
-	headers?: HeadersInit;
-	query: string;
-	revalidate?: number;
-	tags?: string[];
-	variables?: ExtractVariables<T>;
-}): Promise<{ status: number; body: T } | never> {
+export async function shopifyFetch<T>(
+	{
+		cache = "force-cache",
+		headers,
+		query,
+		revalidate = 60 * 60,
+		tags,
+		variables,
+	}: {
+		cache?: RequestCache;
+		headers?: HeadersInit;
+		query: string;
+		revalidate?: number;
+		tags?: string[];
+		variables?: ExtractVariables<T>;
+	},
+	retries = 1, // 1 retry = 2 tentatives au total
+): Promise<{ status: number; body: T } | never> {
 	try {
 		const result = await fetch(endpoint, {
 			method: "POST",
@@ -174,22 +177,29 @@ export async function shopifyFetch<T>({
 			},
 		});
 		const body = await result.json();
+
+		// Erreur GraphQL → erreur métier, pas de retry
 		if (body.errors) {
 			Sentry.captureMessage("Shopify GraphQL error", {
 				level: "error",
-				extra: {
-					errors: body.errors,
-					query,
-					variables,
-				},
+				extra: { errors: body.errors, query, variables },
 			});
 			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
-		return {
-			status: result.status,
-			body,
-		};
+
+		return { status: result.status, body };
 	} catch (error) {
+		// Erreur GraphQL déjà loggée → ne pas retenter
+		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
+			throw error;
+		}
+
+		// Erreur réseau/transitoire → retry
+		if (retries > 0) {
+			await new Promise(resolve => setTimeout(resolve, 1000));
+			return shopifyFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);
+		}
+
 		if (isShopifyError(error)) {
 			Sentry.captureException(error, {
 				extra: {
@@ -202,12 +212,9 @@ export async function shopifyFetch<T>({
 			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 		}
 
-		// Ne pas re-logger si c'est déjà une Error qu'on a throwée plus haut
-		if (!(error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR)) {
-			Sentry.captureException(error, {
-				extra: { context: "Unexpected error in shopifyFetch", query },
-			});
-		}
+		Sentry.captureException(error, {
+			extra: { context: "Unexpected error in shopifyFetch", query },
+		});
 
 		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
 	}
