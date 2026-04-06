@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
-import { ERROR_CODE } from "@/lib/constants";
+import { ERROR_CODE, TAGS } from "@/lib/constants";
 import InstagramSectionContainer from "./InstagramSectionContainer";
 import InstagramSectionItem from "./InstagramSectionItem";
 import InstagramFeeds from "@/types/instagramFeed";
@@ -48,8 +48,8 @@ const getData = cache(
 		},
 		["instagram-feeds"],
 		{
-			revalidate: 3600,
-			tags: ["instagram"],
+			revalidate: 86400,
+			tags: [TAGS.instagram],
 		},
 	),
 );

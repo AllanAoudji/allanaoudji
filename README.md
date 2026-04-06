@@ -74,7 +74,7 @@ cd allanaoudji
 npm install
 
 # Copier les variables d'environnement
-cp .env.example .env.local
+cp env.example .env.local
 ```
 
 Renseigner les variables dans `.env.local` (voir [ci-dessous](#variables-denvironnement)), puis
@@ -117,7 +117,8 @@ Le Sanity Studio est accessible sur [http://localhost:3000/studio](http://localh
 │   │   ├── legal-notices/
 │   │   ├── privacy-policy/
 │   │   └── shipping-policy/
-│   └── api/revalidate/             # Webhooks Sanity & Shopify
+│   └── api/revalidate/             # Webhooks Sanity, Shopify & Instagram
+│       ├── instagram/
 │       ├── sanity/
 │       └── shopify/
 ├── components/                     # Composants React (~100 composants)
@@ -128,8 +129,9 @@ Le Sanity Studio est accessible sur [http://localhost:3000/studio](http://localh
 │   ├── reducers/                   # Reducer panier
 │   └── shopify/                    # Client Shopify (queries, mutations, fragments)
 ├── sanityBackend/                  # Schémas, client, queries Sanity
+│   ├── components/                 # Composants Studio custom (navbar…)
 │   ├── schemaTypes/                # Schémas (work, about, contact, settings…)
-│   └── lib/                       # Client, live queries, utilitaires
+│   └── lib/                        # Client, live queries, utilitaires
 ├── types/                          # Types TypeScript globaux
 ├── public/                         # Assets statiques (logos, og-image)
 ├── env.ts                          # Validation des variables d'env (Zod)
@@ -141,10 +143,10 @@ Le Sanity Studio est accessible sur [http://localhost:3000/studio](http://localh
 
 ## Variables d'environnement
 
-Copier `.env.example` en `.env.local` et renseigner les valeurs :
+Copier `env.example` en `.env.local` et renseigner les valeurs :
 
 ```bash
-cp .env.example .env.local
+cp env.example .env.local
 ```
 
 ### Contact & Emails — Resend
@@ -200,12 +202,14 @@ cp .env.example .env.local
 
 ### Divers
 
-| Variable                      | Description                                          |
-| ----------------------------- | ---------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`        | URL publique du site (ex: `https://allanaoudji.com`) |
-| `NEXT_PUBLIC_TWITTER_CREATOR` | Handle Twitter/X (ex: `@allanaoudji`)                |
-| `UPSTASH_REDIS_REST_URL`      | URL REST de l'instance Upstash Redis                 |
-| `UPSTASH_REDIS_REST_TOKEN`    | Token d'accès Redis                                  |
+| Variable                        | Description                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | URL publique du site (ex: `https://allanaoudji.com`)                             |
+| `NEXT_PUBLIC_TWITTER_CREATOR`   | Handle Twitter/X (ex: `@allanaoudji`)                                            |
+| `UPSTASH_REDIS_REST_URL`        | URL REST de l'instance Upstash Redis                                             |
+| `UPSTASH_REDIS_REST_TOKEN`      | Token d'accès Redis                                                              |
+| `NEXT_PUBLIC_REVALIDATE_SECRET` | Secret exposé au Sanity Studio pour déclencher la revalidation du feed Instagram |
+| `REVALIDATE_SECRET`             | Secret server-side vérifié par la route `/api/revalidate/instagram`              |
 
 > Toutes ces variables sont validées au démarrage via **Zod** (`env.ts`). Le serveur refusera de
 > démarrer si l'une d'elles est manquante.
@@ -241,4 +245,6 @@ cp .env.example .env.local
 > projet. Aucun hébergement séparé nécessaire.
 >
 > **Note :** Configurer les webhooks Sanity et Shopify pour pointer vers `/api/revalidate/sanity` et
-> `/api/revalidate/shopify` afin d'activer la revalidation du cache à la publication.
+> `/api/revalidate/shopify` afin d'activer la revalidation du cache à la publication. Le feed
+> Instagram peut être rafraîchi manuellement depuis le Studio via le bouton dédié dans la navbar
+> (`/api/revalidate/instagram`).

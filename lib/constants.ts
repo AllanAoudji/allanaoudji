@@ -98,6 +98,8 @@ export const TAGS = {
 	sanityAbout: "sanity-about",
 	sanitySettings: "sanity-settings",
 	sanityPages: "sanity-pages",
+
+	instagram: "instagram",
 };
 
 export const productTag = (handle: string) => `product-${handle}`;

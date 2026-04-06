@@ -26,6 +26,8 @@ const envVariables = z.object({
 	SHOPIFY_WEBHOOK_SECRET: z.string(),
 	UPSTASH_REDIS_REST_TOKEN: z.string(),
 	UPSTASH_REDIS_REST_URL: z.string(),
+	NEXT_PUBLIC_REVALIDATE_SECRET: z.string(),
+	REVALIDATE_SECRET: z.string(),
 });
 
 envVariables.parse(process.env);
