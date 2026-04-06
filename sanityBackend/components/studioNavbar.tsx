@@ -171,23 +171,8 @@ export default function StudioNavbar(props: NavbarProps) {
 					flexShrink: 0,
 				}}
 			>
-				{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-				<a
-					href="/"
-					style={{
-						display: "flex",
-						alignItems: "center",
-						padding: "6px 10px",
-						borderRadius: "4px",
-						fontSize: "13px",
-						color: "white",
-						textDecoration: "none",
-						background: "rgba(255,255,255,0.15)",
-						whiteSpace: "nowrap",
-					}}
-				>
-					← Site
-				</a>
+				{}
+				<Button as="a" href="/" text="Front" mode="ghost" tone="default" fontSize={1} paddingX={2} />
 
 				<MenuButton
 					button={
