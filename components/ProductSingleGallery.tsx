@@ -111,6 +111,7 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 									image={image}
 									onClick={() => handleClick(image.id)}
 									ratio="3/4"
+									sizes="(max-width: 1024px) 100vw, 50vw"
 								/>
 							</div>
 						))}
@@ -129,7 +130,7 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 								key={image.id}
 								onClick={() => setActiveIndex(index)}
 							>
-								<ImageContainer image={image} ratio="4/3" />
+								<ImageContainer image={image} ratio="4/3" sizes="(max-width: 1024px) 25vw, 12vw" />
 							</button>
 						))}
 					</div>
@@ -145,6 +146,7 @@ export default function ProductSingleGallery({ className, product }: Readonly<Pr
 						key={image.url}
 						onClick={() => handleClick(image.id)}
 						ratio="3/4"
+						sizes="(max-width: 1024px) 100vw, 50vw"
 					/>
 				))}
 			</div>

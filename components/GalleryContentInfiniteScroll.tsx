@@ -23,7 +23,7 @@ export default function GalleryContentInfiniteScroll({
 	initialTotal,
 	initialWorks,
 }: Readonly<Props>) {
-	const { appendImages } = useLightBox();
+	const { appendImages, resetImages } = useLightBox();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [works, setWorks] = useState<Works>(initialWorks);
@@ -39,12 +39,18 @@ export default function GalleryContentInfiniteScroll({
 	const [, startTransition] = useTransition();
 
 	useEffect(() => {
+		appendImages(getLightBoxImages(initialWorks));
+		return () => resetImages();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		if (!works || works.length <= prevWorksLengthRef.current) return;
 
 		const newWorks = works.slice(prevWorksLengthRef.current);
 		appendImages(getLightBoxImages(newWorks));
 		prevWorksLengthRef.current = works.length;
-	}, [works, appendImages]);
+	}, [appendImages, works]);
 
 	useEffect(() => {
 		loadMore.current = () => {
@@ -99,7 +105,7 @@ export default function GalleryContentInfiniteScroll({
 			entries => {
 				if (entries[0].isIntersecting) loadMore.current();
 			},
-			{ rootMargin: "400px" },
+			{ rootMargin: "100px" },
 		);
 
 		observerRef.current.observe(sentinel);
@@ -112,8 +118,8 @@ export default function GalleryContentInfiniteScroll({
 
 	return (
 		<>
-			{works.map(work => (
-				<GalleryContentInfiniteScrollItem key={work._id} work={work} />
+			{works.map((work, index) => (
+				<GalleryContentInfiniteScrollItem isFirst={index === 0} key={work._id} work={work} />
 			))}
 
 			<div aria-hidden="true" ref={sentinelRef} />

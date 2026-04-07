@@ -68,7 +68,7 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 			<CartContenItemCallbackMessage className="mb-2" item={item} />
 			<div className="grid grid-cols-3 gap-4">
 				<Link className="col-span-1" href={merchandiseUrl} onClick={closeModal}>
-					<ImageContainer image={image} priority={true} ratio="3/4" />
+					<ImageContainer image={image} priority={true} ratio="3/4" sizes="15vw" />
 				</Link>
 				<div className="col-span-2 flex justify-between gap-2">
 					<div className="flex grow flex-col justify-between pb-1">

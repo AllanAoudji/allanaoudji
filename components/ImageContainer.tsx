@@ -12,6 +12,7 @@ type Props = {
 	className?: string;
 	image: WorkGalleryImage | shopifyImage | WorkMainImage;
 	priority?: boolean;
+	sizes?: string;
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 	ratio: AspectRatio;
 };
@@ -36,6 +37,7 @@ export default function ImageContainer({
 	image,
 	onClick,
 	priority = false,
+	sizes,
 	ratio,
 }: Readonly<Props>) {
 	const normalized = useMemo(() => {
@@ -62,7 +64,7 @@ export default function ImageContainer({
 					fill
 					placeholder={normalized.blur ? "blur" : "empty"}
 					priority={priority}
-					sizes="(max-width: 768px) 100vw, 50vw"
+					sizes={sizes ?? "(max-width: 768px) 100vw, 50vw"}
 					src={normalized.url}
 				/>
 			</div>

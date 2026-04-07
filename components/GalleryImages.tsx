@@ -7,9 +7,11 @@ import { WorkGallery } from "@/types/sanityType";
 
 type Props = {
 	images: WorkGallery | null;
+	isFirst?: boolean;
+	standalone?: boolean;
 };
 
-export default function GalleryImages({ images }: Readonly<Props>) {
+export default function GalleryImages({ images, isFirst, standalone = false }: Readonly<Props>) {
 	const { setImage, resetImages, appendImages } = useLightBox();
 
 	const handleClick = useCallback(
@@ -20,12 +22,14 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 	);
 
 	useEffect(() => {
+		if (!standalone) return;
 		appendImages(images || []);
-	}, [appendImages, images]);
+	}, [appendImages, images, standalone]);
 
 	useEffect(() => {
+		if (!standalone) return;
 		return () => resetImages();
-	}, [resetImages]);
+	}, [resetImages, standalone]);
 
 	if (
 		!images ||
@@ -36,18 +40,18 @@ export default function GalleryImages({ images }: Readonly<Props>) {
 	}
 
 	return (
-		<>
-			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-				{images.map(image => (
-					<ImageContainer
-						className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
-						image={image}
-						key={image._id}
-						onClick={() => handleClick(image._id)}
-						ratio="3/4"
-					/>
-				))}
-			</div>
-		</>
+		<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+			{images.map((image, index) => (
+				<ImageContainer
+					className="cursor-pointer transition-transform duration-500 hover:scale-[103%]"
+					image={image}
+					key={image._id}
+					onClick={() => handleClick(image._id)}
+					priority={isFirst && index < 4}
+					sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+					ratio="3/4"
+				/>
+			))}
+		</div>
 	);
 }

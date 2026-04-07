@@ -8,10 +8,11 @@ import Product from "@/types/product";
 type Props = {
 	className?: string;
 	onClick?: MouseEventHandler<HTMLAnchorElement>;
+	priority?: boolean;
 	product: Product;
 };
 
-export default function ProductLink({ className, onClick, product }: Readonly<Props>) {
+export default function ProductLink({ className, onClick, priority, product }: Readonly<Props>) {
 	const hasSecondImage = product.images.length > 1;
 
 	return (
@@ -25,12 +26,19 @@ export default function ProductLink({ className, onClick, product }: Readonly<Pr
 					"bg-gray-300": !product.availableForSale,
 				})}
 			>
-				<ImageContainer image={product.featuredImage} priority={true} ratio="3/4" />
+				<ImageContainer
+					image={product.featuredImage}
+					priority={priority}
+					ratio="3/4"
+					sizes="(max-width: 768px) 50vw, 25vw"
+				/>
 				{hasSecondImage && (
 					<ImageContainer
 						className="absolute top-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 						image={product.images[1]}
+						priority={false}
 						ratio="3/4"
+						sizes="(max-width: 768px) 50vw, 25vw"
 					/>
 				)}
 				{!product.availableForSale && (
