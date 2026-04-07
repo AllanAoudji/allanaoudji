@@ -8,7 +8,6 @@ import parse, {
 	DOMNode,
 	Text,
 } from "html-react-parser";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Fragment, isValidElement, ReactElement, ReactNode } from "react";
 import { applyFrenchTypography, cn } from "@/lib/utils";
@@ -94,16 +93,29 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					if (!src) return;
 
 					const floatMatch = style.match(/float:\s*(left|right)/);
-					let floatClass = "";
-					if (floatMatch) {
-						const direction = floatMatch[1];
-						if (direction === "left") floatClass = "float-left";
-						if (direction === "right") floatClass = "float-right";
-					}
+					const floatClass = floatMatch ? (floatMatch[1] === "left" ? "float-left" : "float-right") : "";
+
+					// Shopify supporte ?width= nativement
+					const sep = src.includes("?") ? "&" : "?";
+					const srcSet = [320, 480, 640, 768, 960, 1200]
+						.map(w => `${src}${sep}width=${w} ${w}w`)
+						.join(", ");
+					const finalSrc = `${src}${sep}width=960`;
 
 					return (
-						<figure className={floatClass}>
-							<Image src={src} alt={alt} width={900} height={700} className="h-auto w-full object-cover" />
+						<figure className={cn(floatClass, "relative w-full")}>
+							<div className="relative w-full" style={{ aspectRatio: "4 / 3" }}>
+								{/* eslint-disable-next-line @next/next/no-img-element */}
+								<img
+									alt={alt}
+									className="absolute inset-0 h-full w-full object-contain"
+									decoding="async"
+									loading="lazy"
+									sizes="(max-width: 768px) 100vw, 70vw"
+									src={finalSrc}
+									srcSet={srcSet}
+								/>
+							</div>
 							{alt && <figcaption className="editorial-caption">{alt}</figcaption>}
 						</figure>
 					);

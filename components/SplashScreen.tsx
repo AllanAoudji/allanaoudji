@@ -7,6 +7,7 @@ export default function SplashScreen() {
 				alt={"logo"}
 				className="w-72 max-w-full p-4"
 				height={762}
+				priority={true}
 				src="/images/logo-square-dark.png"
 				width={1419}
 			/>

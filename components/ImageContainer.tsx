@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { MouseEventHandler, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { WorkGalleryImage, WorkMainImage } from "@/types/sanityType";
@@ -32,17 +31,34 @@ const getAspectRatioClass = (ratio: AspectRatio) => {
 	}
 };
 
+const widths = [320, 480, 640, 768, 960, 1200];
+
+function isSanity(url: string) {
+	return url.includes("cdn.sanity.io");
+}
+function isShopify(url: string) {
+	return url.includes("cdn.shopify.com");
+}
+
+function buildSanityUrl(url: string, width: number) {
+	return `${url}?w=${width}&auto=format&fit=max`;
+}
+
+function buildShopifyUrl(url: string, width: number) {
+	const sep = url.includes("?") ? "&" : "?";
+	return `${url}${sep}width=${width}`;
+}
+
 export default function ImageContainer({
 	className,
 	image,
 	onClick,
 	priority = false,
-	sizes,
+	sizes = "(max-width: 768px) 100vw, 50vw",
 	ratio,
 }: Readonly<Props>) {
 	const normalized = useMemo(() => {
 		if (!image) return null;
-
 		return {
 			alt: "alt" in image ? image.alt : "altText" in image ? image.altText : null,
 			blur: "lqip" in image ? image.lqip : null,
@@ -54,18 +70,37 @@ export default function ImageContainer({
 		return <div className={cn(getAspectRatioClass(ratio), "bg-tertiary w-full")} />;
 	}
 
+	const src = normalized.url;
+	let srcSet: string | undefined;
+	let finalSrc = src;
+
+	if (isSanity(src)) {
+		srcSet = widths.map(w => `${buildSanityUrl(src, w)} ${w}w`).join(", ");
+		finalSrc = buildSanityUrl(src, 768);
+	} else if (isShopify(src)) {
+		srcSet = widths.map(w => `${buildShopifyUrl(src, w)} ${w}w`).join(", ");
+		finalSrc = buildShopifyUrl(src, 768);
+	}
+
 	const content = (
 		<div className="overflow-hidden">
 			<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
-				<Image
+				{normalized.blur && (
+					<div
+						className="absolute inset-0 scale-110 bg-cover bg-center blur-xl"
+						style={{ backgroundImage: `url(${normalized.blur})` }}
+					/>
+				)}
+				{/* eslint-disable-next-line @next/next/no-img-element */}
+				<img
 					alt={normalized.alt ?? "image"}
-					blurDataURL={normalized.blur ?? undefined}
-					className="object-cover"
-					fill
-					placeholder={normalized.blur ? "blur" : "empty"}
-					priority={priority}
-					sizes={sizes ?? "(max-width: 768px) 100vw, 50vw"}
-					src={normalized.url}
+					className="absolute inset-0 h-full w-full object-cover"
+					decoding="async"
+					fetchPriority={priority ? "high" : "low"}
+					loading={priority ? "eager" : "lazy"}
+					sizes={sizes}
+					src={finalSrc}
+					srcSet={srcSet}
 				/>
 			</div>
 		</div>

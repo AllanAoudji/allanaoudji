@@ -48,7 +48,7 @@ const getData = cache(
 		},
 		["instagram-feeds"],
 		{
-			revalidate: 86400,
+			revalidate: 3600,
 			tags: [TAGS.instagram],
 		},
 	),

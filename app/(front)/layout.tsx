@@ -37,6 +37,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="fr-FR">
+			<head>
+				<link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="" />
+				<link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="" />
+				<link rel="dns-prefetch" href="https://use.typekit.net" />
+				<link rel="preconnect" href="https://use.typekit.net" crossOrigin="" />
+			</head>
 			<body className="font-gopher bg-primary text-secondary flex min-h-dvh flex-col antialiased">
 				<Suspense fallback={<SplashScreen />}>
 					<LocalShopifyDispenser>

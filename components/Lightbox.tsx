@@ -3,7 +3,6 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { FocusTrap } from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
@@ -20,16 +19,43 @@ type Props = {
 
 const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
 
+const widths = [320, 480, 640, 768, 960, 1200];
+
+function isSanity(url: string) {
+	return url.includes("cdn.sanity.io");
+}
+function isShopify(url: string) {
+	return url.includes("cdn.shopify.com");
+}
+
+function buildSanityUrl(url: string, width: number) {
+	return `${url}?w=${width}&auto=format&fit=max`;
+}
+
+function buildShopifyUrl(url: string, width: number) {
+	const sep = url.includes("?") ? "&" : "?";
+	return `${url}${sep}width=${width}`;
+}
+
+function buildSrcSet(url: string) {
+	if (isSanity(url)) return widths.map(w => `${buildSanityUrl(url, w)} ${w}w`).join(", ");
+	if (isShopify(url)) return widths.map(w => `${buildShopifyUrl(url, w)} ${w}w`).join(", ");
+	return undefined;
+}
+
+function buildFinalSrc(url: string) {
+	if (isSanity(url)) return buildSanityUrl(url, 1200);
+	if (isShopify(url)) return buildShopifyUrl(url, 1200);
+	return url;
+}
+
 export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
 	useEscape(resetClick);
 	useLeftArrow(() => prevImage?.());
 	useRightArrow(() => nextImage?.());
 
 	const [isLoaded, setIsLoaded] = useState(false);
-
 	const imgRef = useRef<HTMLImageElement>(null);
-
-	const isVisible = !!image;
 
 	const handleClick = useCallback(
 		(e: MouseEvent<HTMLDivElement>) => {
@@ -38,7 +64,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		},
 		[resetClick],
 	);
-
 	const handleClose = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -46,7 +71,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		},
 		[resetClick],
 	);
-
 	const handleNextClick = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -54,7 +78,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		},
 		[nextImage],
 	);
-
 	const handlePrevClick = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -65,27 +88,21 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 
 	useEffect(() => {
 		setIsLoaded(false);
-		if (imgRef.current?.complete) {
-			setIsLoaded(true);
-		}
+		if (imgRef.current?.complete) setIsLoaded(true);
 	}, [image?._id]);
 
 	return (
 		<AnimatePresence>
-			{isVisible && (
+			{!!image && (
 				<FocusTrap
-					active={isVisible}
+					active
 					focusTrapOptions={{
 						allowOutsideClick: true,
 						escapeDeactivates: false,
 						fallbackFocus: () => document.body,
 						returnFocusOnDeactivate: true,
-
-						// Peut-être instable
 						setReturnFocus: el => {
-							if (el instanceof HTMLElement) {
-								el.focus({ preventScroll: true });
-							}
+							if (el instanceof HTMLElement) el.focus({ preventScroll: true });
 							return false;
 						},
 					}}
@@ -108,7 +125,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 							icon={IconX}
 							onClick={handleClose}
 						/>
-
 						{!!nextImage && (
 							<LightBoxButton
 								aria-label="Image suivante"
@@ -126,7 +142,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 							/>
 						)}
 
-						{/* Image + placeholder */}
 						<motion.div
 							animate={{ opacity: 1, y: 0, scale: 1 }}
 							className="flex h-full w-full items-center justify-center"
@@ -138,10 +153,10 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 								className="relative"
 								style={{
 									aspectRatio: `${image.width} / ${image.height}`,
-									height: "auto",
 									maxHeight: "calc(100dvh - 4rem)",
 									maxWidth: "calc(100dvw - 4rem)",
 									width: `min(calc(100dvw - 4rem), calc((100dvh - 4rem) * ${image.width} / ${image.height}))`,
+									height: "auto",
 								}}
 							>
 								<AnimatePresence>
@@ -156,15 +171,19 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 									)}
 								</AnimatePresence>
 
-								<Image
-									alt={image.alt || "image"}
-									className="object-contain drop-shadow-md"
-									fill
-									key={image._id}
-									onLoad={() => setIsLoaded(true)}
+								{/* eslint-disable-next-line @next/next/no-img-element */}
+								<img
 									ref={imgRef}
-									sizes="100vw"
-									src={image.url}
+									key={image._id}
+									alt={image.alt || "image"}
+									className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
+									decoding="async"
+									fetchPriority="high"
+									loading="eager"
+									onLoad={() => setIsLoaded(true)}
+									sizes="(max-width: 768px) 100vw, 80vw"
+									src={buildFinalSrc(image.url)}
+									srcSet={buildSrcSet(image.url)}
 								/>
 							</div>
 						</motion.div>

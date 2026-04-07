@@ -2,11 +2,11 @@
 
 import { PortableText, PortableTextComponents, PortableTextBlock } from "@portabletext/react";
 import { createImageUrlBuilder, SanityImageSource } from "@sanity/image-url";
-import Image from "next/image";
 import { applyFrenchTypography, cn } from "@/lib/utils";
 import { dataset, projectId } from "@/studio/env.public";
 
 const builder = createImageUrlBuilder({ projectId, dataset });
+const widths = [320, 480, 640, 768, 960, 1200];
 
 function urlFor(source: SanityImageSource) {
 	return builder.image(source);
@@ -163,20 +163,32 @@ const components: PortableTextComponents = {
 			if (!value.image) return null;
 			const w = value.image.width ?? 900;
 			const h = value.image.height ?? 700;
-			const src = urlFor(value.image).width(w).auto("format").url();
 			const lqip = value.image.lqip;
+
+			// srcSet Sanity natif
+			const srcSet = widths
+				.map(width => `${urlFor(value.image).width(width).auto("format").url()} ${width}w`)
+				.join(", ");
+			const finalSrc = urlFor(value.image).width(w).auto("format").url();
 
 			return (
 				<figure className="editorial-figure">
 					<div className="bg-quaternary relative w-full" style={{ aspectRatio: `${w}/${h}` }}>
-						<Image
+						{lqip && (
+							<div
+								className="absolute inset-0 scale-110 bg-cover bg-center blur-xl"
+								style={{ backgroundImage: `url(${lqip})` }}
+							/>
+						)}
+						{/* eslint-disable-next-line @next/next/no-img-element */}
+						<img
 							alt={value.alt ?? ""}
-							blurDataURL={lqip ?? undefined}
-							className="h-auto object-cover"
-							fill
-							placeholder={lqip ? "blur" : "empty"}
+							className="absolute inset-0 h-full w-full object-cover"
+							decoding="async"
+							loading="lazy"
 							sizes="(max-width: 768px) 100vw, 70vw"
-							src={src}
+							src={finalSrc}
+							srcSet={srcSet}
 						/>
 					</div>
 					{value.caption && <figcaption className="editorial-caption">{value.caption}</figcaption>}

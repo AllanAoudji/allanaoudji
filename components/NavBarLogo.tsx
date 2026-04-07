@@ -20,7 +20,7 @@ const logoPath = (type?: Type, color?: Color) => {
 			return color === "dark" ? "/images/logo-large-dark.png" : "/images/logo-large-light.png";
 		default:
 		case "square":
-			return color === "dark" ? "/images/logo-square-dark.png" : "logo-square-light.png";
+			return color === "dark" ? "/images/logo-square-dark.png" : "/images/logo-square-light.png";
 	}
 };
 
@@ -40,6 +40,7 @@ export default function NavBarLogo({
 						"py-3": type === "large",
 					})}
 					height={762}
+					priority={true}
 					src={logoPath(type, color)}
 					width={type === "square" ? 1419 : 2183}
 				/>
