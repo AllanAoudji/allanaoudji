@@ -26,7 +26,7 @@ export const DEFAULT_SORT: SortFilterItem = {
 };
 
 export const FETCH_WORKS_HOME = 6;
-export const FETCH_WORKS_GALLERY = 4;
+export const FETCH_WORKS_GALLERY = 2;
 export const FETCH_PRODUCTS = 12;
 
 export const FOOT_MENU: Menu[] = [

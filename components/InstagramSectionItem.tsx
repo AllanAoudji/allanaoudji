@@ -28,6 +28,7 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 					className="border"
 					image={convertInstagramImageForContainerImage(post)}
 					ratio="4/5"
+					sizes="(max-width: 768px) 50vw, 20vw"
 				/>
 			) : (
 				<div className="bg-tertiary aspect-4/5 w-full border" />

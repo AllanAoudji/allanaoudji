@@ -19,6 +19,7 @@ export default function ImageLink({ href, image, onClick, title }: Readonly<Prop
 				<ImageContainer
 					className="animation scale-[103%] transition-all duration-500 group-hover:scale-100"
 					image={image}
+					sizes="(max-width: 768px) 50vw, 25vw"
 					ratio="4/3"
 				/>
 			</div>

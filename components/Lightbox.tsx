@@ -163,6 +163,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 									key={image._id}
 									onLoad={() => setIsLoaded(true)}
 									ref={imgRef}
+									sizes="100vw"
 									src={image.url}
 								/>
 							</div>

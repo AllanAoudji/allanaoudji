@@ -111,7 +111,7 @@ export default function CollectionsContentInfiniteScroll({
 					loadMore.current();
 				}
 			},
-			{ rootMargin: "400px" },
+			{ rootMargin: "100px" },
 		);
 
 		observerRef.current.observe(sentinel);
@@ -125,8 +125,8 @@ export default function CollectionsContentInfiniteScroll({
 	return (
 		<>
 			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-				{products.map(product => (
-					<ProductLink key={product.id} product={product} />
+				{products.map((product, index) => (
+					<ProductLink key={product.id} priority={index < 8} product={product} />
 				))}
 			</div>
 

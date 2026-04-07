@@ -94,7 +94,7 @@ export default async function GallerySinglePage({ params }: { params: Promise<{ 
 			<Title>{result.data.title}</Title>
 			<section>
 				<GalleryText text={result.data.text} />
-				<GalleryImages images={result.data.gallery} />
+				<GalleryImages images={result.data.gallery} standalone={true} />
 			</section>
 		</>
 	);
