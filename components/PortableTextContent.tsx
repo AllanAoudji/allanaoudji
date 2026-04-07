@@ -176,7 +176,7 @@ const components: PortableTextComponents = {
 					<div className="bg-quaternary relative w-full" style={{ aspectRatio: `${w}/${h}` }}>
 						{lqip && (
 							<div
-								className="absolute inset-0 scale-110 bg-cover bg-center blur-xl"
+								className="absolute inset-0 bg-cover bg-center blur-xl"
 								style={{ backgroundImage: `url(${lqip})` }}
 							/>
 						)}
