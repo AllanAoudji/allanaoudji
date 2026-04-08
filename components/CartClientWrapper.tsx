@@ -31,10 +31,6 @@ export default function CartClientWrapper({
 		setHasError(false);
 	}, []);
 
-	if (hasError) {
-		return <CartRecoveryProvider onCartCreated={onCartCreated}>{children}</CartRecoveryProvider>;
-	}
-
 	return (
 		<CartDispenserErrorBoundary onError={() => setHasError(true)}>
 			<Suspense fallback={null}>
@@ -43,7 +39,11 @@ export default function CartClientWrapper({
 					cartPromise={currentCartPromise}
 					discountNodes={discountNodes}
 				>
-					{children}
+					{hasError ? (
+						<CartRecoveryProvider onCartCreated={onCartCreated}>{children}</CartRecoveryProvider>
+					) : (
+						children
+					)}
 				</CartProvider>
 			</Suspense>
 		</CartDispenserErrorBoundary>
