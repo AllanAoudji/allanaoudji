@@ -1,7 +1,6 @@
 import {
 	collectionTag,
 	ERROR_CODE,
-	HIDDEN_PRODUCT_TAG,
 	productTag,
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
 	TAGS,
@@ -13,6 +12,8 @@ import {
 	getLineQuantity,
 	removeEdgesAndNodes,
 	reshapeCollection,
+	reshapeProductSafe,
+	reshapeProductsSafe,
 } from "../utils";
 import * as Sentry from "@sentry/nextjs";
 import {
@@ -35,10 +36,8 @@ import {
 import ShopifyCart from "@/types/ShopifyCart";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
-import Connection from "@/types/connection";
 import ExtractVariables from "@/types/extractVariables";
 import Product from "@/types/product";
-import shopifyImage from "@/types/shopifyImage";
 import ShopifyMenu from "@/types/shopifyMenu";
 import {
 	ShopifyAddToCartOperation,
@@ -59,7 +58,6 @@ import {
 } from "@/types/shopifyOperations";
 import { ShopifyPage } from "@/types/shopifyPage";
 import ShopifyPageInfo from "@/types/shopifyPageInfo";
-import ShopifyProduct from "@/types/shopifyProduct";
 
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
@@ -85,50 +83,6 @@ function reshapeCart(cart: ShopifyCart): Cart {
 	}));
 
 	return { ...cart, lines };
-}
-
-function reshapeImages(images: Connection<shopifyImage>, title: string) {
-	const flattened = removeEdgesAndNodes(images);
-
-	return flattened.map(image => {
-		const filename = image.url.match(/.*\/(.*)\..*/)?.[1];
-
-		return {
-			...image,
-			altText: image.altText || `${title} $ ${filename}`,
-		};
-	});
-}
-
-function reshapeProduct(
-	product: ShopifyProduct,
-	filterHiddenProducts: boolean = true,
-): Product | undefined {
-	if (!product || (filterHiddenProducts && product.tags.includes(HIDDEN_PRODUCT_TAG))) {
-		return undefined;
-	}
-
-	const { images, variants, collections, ...rest } = product;
-
-	return {
-		...rest,
-		images: reshapeImages(images, product.title),
-		variants: removeEdgesAndNodes(variants),
-		collections: collections.edges.map(edge => edge.node),
-	};
-}
-
-function reshapeProducts(products: ShopifyProduct[]): Product[] {
-	const reshapedProducts = [];
-	for (const product of products) {
-		if (product) {
-			const reshapedProduct = reshapeProduct(product);
-			if (reshapedProduct) {
-				reshapedProducts.push(reshapedProduct);
-			}
-		}
-	}
-	return reshapedProducts;
 }
 
 const stockWarningMessage = (quantityAdded: number): string => {
@@ -332,7 +286,7 @@ export async function getCollectionProducts({
 
 	return {
 		pageInfo: res.body.data.collection.products.pageInfo,
-		products: reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products)),
+		products: reshapeProductsSafe(removeEdgesAndNodes(res.body.data.collection.products)),
 	};
 }
 
@@ -347,7 +301,7 @@ export async function getLatestProducts(): Promise<Product[]> {
 		return [];
 	}
 
-	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+	return reshapeProductsSafe(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
@@ -393,7 +347,7 @@ export async function getPopularProducts(): Promise<Product[]> {
 		return [];
 	}
 
-	return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+	return reshapeProductsSafe(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -407,7 +361,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 		return undefined;
 	}
 
-	return reshapeProduct(res.body.data.product, false);
+	return reshapeProductSafe(res.body.data.product, false);
 }
 
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
@@ -418,7 +372,7 @@ export async function getProductRecommendations(productId: string): Promise<Prod
 		variables: { productId },
 	});
 
-	return reshapeProducts(res.body.data.productRecommendations);
+	return reshapeProductsSafe(res.body.data.productRecommendations);
 }
 
 export async function getProducts({
@@ -446,7 +400,7 @@ export async function getProducts({
 
 	return {
 		pageInfo: res.body.data.products.pageInfo,
-		products: reshapeProducts(removeEdgesAndNodes(res.body.data.products)),
+		products: reshapeProductsSafe(removeEdgesAndNodes(res.body.data.products)),
 	};
 }
 
