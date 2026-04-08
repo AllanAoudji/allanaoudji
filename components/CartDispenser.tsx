@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { cache, Suspense } from "react";
+import { cache } from "react";
 import { getCart } from "@/lib/shopify";
 import { getDiscount } from "@/lib/shopify/utils/shopifyAdminFetch";
 import CartClientWrapper from "./CartClientWrapper";
@@ -24,9 +24,5 @@ async function CartDispenserInner({ children }: { children: React.ReactNode }) {
 }
 
 export default function CartDispenser({ children }: { children: React.ReactNode }) {
-	return (
-		<Suspense fallback={null}>
-			<CartDispenserInner>{children}</CartDispenserInner>
-		</Suspense>
-	);
+	return <CartDispenserInner>{children}</CartDispenserInner>;
 }

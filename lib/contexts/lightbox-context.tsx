@@ -114,7 +114,7 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 
 export function useLightBox() {
 	const context = useContext(LightboxContext);
-	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+	if (!context) throw new Error(`lightboxContext: ${ERROR_CODE.CONTEXT_NOT_FOUND}`);
 
 	return context;
 }

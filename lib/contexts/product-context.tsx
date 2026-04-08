@@ -69,7 +69,7 @@ export function ProductProvider({ children }: Readonly<Props>) {
 
 export function useProduct() {
 	const context = useContext(ProductContext);
-	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+	if (!context) throw new Error(`productContext: ${ERROR_CODE.CONTEXT_NOT_FOUND}`);
 
 	return context;
 }

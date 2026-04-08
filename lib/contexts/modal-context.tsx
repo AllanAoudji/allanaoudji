@@ -32,7 +32,7 @@ export function ModalProvider({ children }: Readonly<Props>) {
 
 export function useModal() {
 	const context = useContext(ModalContext);
-	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+	if (!context) throw new Error(`modalcontext: ${ERROR_CODE.CONTEXT_NOT_FOUND}`);
 
 	return context;
 }

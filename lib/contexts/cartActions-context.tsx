@@ -294,6 +294,6 @@ export function CartActionsProvider({ children }: Readonly<Props>) {
 
 export function useCartActions() {
 	const context = useContext(CartActionsContext);
-	if (!context) throw new Error(ERROR_CODE.CONTEXT_NOT_FOUND);
+	if (!context) throw new Error(`carActionsContext: ${ERROR_CODE.CONTEXT_NOT_FOUND}`);
 	return context;
 }
