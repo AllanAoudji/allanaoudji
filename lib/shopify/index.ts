@@ -170,7 +170,7 @@ export async function shopifyFetch<T>(
 				...(query && { query }),
 				...(variables && { variables }),
 			}),
-			cache,
+			...(cache === "no-store" || cache === "no-cache" ? { cache } : {}),
 			next: {
 				tags: tags ?? [],
 				revalidate,
