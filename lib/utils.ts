@@ -24,21 +24,22 @@ export function reshapeProductSafe(
 	filterHiddenProducts: boolean = true,
 ): Product | undefined {
 	if (!product) return undefined;
-	if (filterHiddenProducts && product.tags?.includes("HIDDEN_PRODUCT_TAG")) return undefined;
 
-	// Transform edges en arrays, en filtrant les valeurs null
+	// Filtrage uniquement des produits non répertoriés
+	if (filterHiddenProducts && product.tags?.includes("HIDDEN_PRODUCT_TAG")) {
+		return undefined;
+	}
+
 	const images = removeEdgesAndNodes(product.images ?? { edges: [] }).filter(Boolean);
 	const variants = removeEdgesAndNodes(product.variants ?? { edges: [] }).filter(Boolean);
 	const collections = (product.collections?.edges?.map(e => e.node) ?? []).filter(Boolean);
 
-	// Assure que chaque variant a selectedOptions et image
 	const safeVariants = variants.map(variant => ({
 		...variant,
 		selectedOptions: variant.selectedOptions ?? [],
 		image: variant.image ?? undefined,
 	}));
 
-	// Assure que chaque image a altText
 	const safeImages = images.map((img: shopifyImage, idx: number) => ({
 		...img,
 		altText: img.altText ?? `${product.title} image ${idx + 1}`,
@@ -53,7 +54,9 @@ export function reshapeProductSafe(
 }
 
 export function reshapeProductsSafe(products: (ShopifyProduct | null | undefined)[]): Product[] {
-	return products.map(product => reshapeProductSafe(product)).filter(Boolean) as Product[];
+	return products
+		.map(product => reshapeProductSafe(product, true)) // true = filtre les produits non répertoriés
+		.filter(Boolean) as Product[];
 }
 
 export function applyFrenchTypography(text: string): string {
