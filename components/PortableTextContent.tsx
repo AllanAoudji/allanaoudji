@@ -3,6 +3,7 @@
 import { PortableText, PortableTextComponents, PortableTextBlock } from "@portabletext/react";
 import { createImageUrlBuilder, SanityImageSource } from "@sanity/image-url";
 import { applyFrenchTypography, cn } from "@/lib/utils";
+import { FigureImage } from "./FigureImage";
 import { dataset, projectId } from "@/studio/env.public";
 
 const builder = createImageUrlBuilder({ projectId, dataset });
@@ -165,7 +166,6 @@ const components: PortableTextComponents = {
 			const h = value.image.height ?? 700;
 			const lqip = value.image.lqip;
 
-			// srcSet Sanity natif
 			const srcSet = widths
 				.map(width => `${urlFor(value.image).width(width).auto("format").url()} ${width}w`)
 				.join(", ");
@@ -174,22 +174,7 @@ const components: PortableTextComponents = {
 			return (
 				<figure className="editorial-figure">
 					<div className="bg-quaternary relative w-full" style={{ aspectRatio: `${w}/${h}` }}>
-						{lqip && (
-							<div
-								className="absolute inset-0 bg-cover bg-center blur-xl"
-								style={{ backgroundImage: `url(${lqip})` }}
-							/>
-						)}
-						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img
-							alt={value.alt ?? ""}
-							className="absolute inset-0 h-full w-full object-cover"
-							decoding="async"
-							loading="lazy"
-							sizes="(max-width: 768px) 100vw, 70vw"
-							src={finalSrc}
-							srcSet={srcSet}
-						/>
+						<FigureImage alt={value.alt ?? ""} lqip={lqip} src={finalSrc} srcSet={srcSet} />
 					</div>
 					{value.caption && <figcaption className="editorial-caption">{value.caption}</figcaption>}
 				</figure>
