@@ -11,6 +11,7 @@ import parse, {
 import { useEffect, useState } from "react";
 import { Fragment, isValidElement, ReactElement, ReactNode } from "react";
 import { applyFrenchTypography, cn } from "@/lib/utils";
+import { ProductSingleDescriptionImage } from "./ProductSingleDescriptionImage";
 
 type Props = { className?: string; html: string };
 
@@ -95,7 +96,6 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					const floatMatch = style.match(/float:\s*(left|right)/);
 					const floatClass = floatMatch ? (floatMatch[1] === "left" ? "float-left" : "float-right") : "";
 
-					// Shopify supporte ?width= nativement
 					const sep = src.includes("?") ? "&" : "?";
 					const srcSet = [320, 480, 640, 768, 960, 1200]
 						.map(w => `${src}${sep}width=${w} ${w}w`)
@@ -103,21 +103,12 @@ export default function ProductSingleDescription({ className, html }: Readonly<P
 					const finalSrc = `${src}${sep}width=960`;
 
 					return (
-						<figure className={cn(floatClass, "relative w-full")}>
-							<div className="relative w-full" style={{ aspectRatio: "4 / 3" }}>
-								{/* eslint-disable-next-line @next/next/no-img-element */}
-								<img
-									alt={alt}
-									className="absolute inset-0 h-full w-full object-contain"
-									decoding="async"
-									loading="lazy"
-									sizes="(max-width: 768px) 100vw, 70vw"
-									src={finalSrc}
-									srcSet={srcSet}
-								/>
-							</div>
-							{alt && <figcaption className="editorial-caption">{alt}</figcaption>}
-						</figure>
+						<ProductSingleDescriptionImage
+							alt={alt}
+							floatClass={floatClass}
+							src={finalSrc}
+							srcSet={srcSet}
+						/>
 					);
 				}
 

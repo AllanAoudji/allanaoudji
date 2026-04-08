@@ -3,7 +3,7 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { FocusTrap } from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
@@ -15,6 +15,15 @@ type Props = {
 	nextImage?: () => void;
 	prevImage?: () => void;
 	resetClick: () => void;
+	nextImageData?: LightboxImage | null;
+	prevImageData?: LightboxImage | null;
+};
+
+type DisplayedImage = {
+	id: string;
+	src: string;
+	srcSet: string | undefined;
+	alt: string;
 };
 
 const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
@@ -31,7 +40,6 @@ function isShopify(url: string) {
 function buildSanityUrl(url: string, width: number) {
 	return `${url}?w=${width}&auto=format&fit=max`;
 }
-
 function buildShopifyUrl(url: string, width: number) {
 	const sep = url.includes("?") ? "&" : "?";
 	return `${url}${sep}width=${width}`;
@@ -49,34 +57,71 @@ function buildFinalSrc(url: string) {
 	return url;
 }
 
-export default function LightBox({ image, nextImage, prevImage, resetClick }: Readonly<Props>) {
+function preloadImage(url: string) {
+	const img = new Image();
+	img.src = buildFinalSrc(url);
+}
+
+export default function LightBox({
+	image,
+	nextImage,
+	prevImage,
+	resetClick,
+	prevImageData,
+	nextImageData,
+}: Readonly<Props>) {
 	useEscape(resetClick);
-	useLeftArrow(() => prevImage?.());
-	useRightArrow(() => nextImage?.());
 
-	// Image actuellement visible
-	const [displayedSrc, setDisplayedSrc] = useState<string | null>(null);
-	// Image en cours de chargement en arrière-plan
+	// Toutes les données de l'image visible, pas juste le src
+	const [displayed, setDisplayed] = useState<DisplayedImage | null>(null);
 	const [loadingSrc, setLoadingSrc] = useState<string | null>(null);
+	// Premier chargement = pas d'animation sur x
 
-	const targetSrc = image ? buildFinalSrc(image.url) : null;
+	// Snapshot de l'image à charger, capturé au moment du déclenchement
+	// pour éviter que image.url/alt soient déjà différents au moment du onLoad
+	const pendingImage = useRef<LightboxImage | null>(null);
+
+	useLeftArrow(() => {
+		prevImage?.();
+	});
+
+	useRightArrow(() => {
+		nextImage?.();
+	});
 
 	useEffect(() => {
-		if (!targetSrc) {
-			setDisplayedSrc(null);
+		if (nextImageData?.url) {
+			preloadImage(nextImageData.url);
+		}
+		if (prevImageData?.url) {
+			preloadImage(prevImageData.url);
+		}
+	}, [nextImageData, prevImageData]);
+
+	useEffect(() => {
+		if (!image || !image.url) {
+			setDisplayed(null);
 			setLoadingSrc(null);
+			pendingImage.current = null;
 			return;
 		}
-		// Déjà affichée, rien à faire
-		if (image?.url === displayedSrc) return;
 
-		setLoadingSrc(targetSrc);
-	}, [targetSrc]); // eslint-disable-line react-hooks/exhaustive-deps
+		const finalSrc = buildFinalSrc(image.url);
+		if (finalSrc === displayed?.src) return;
+
+		// On snapshote l'image courante avant que le context la change
+		pendingImage.current = image;
+		setLoadingSrc(finalSrc);
+	}, [image?._id]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const handleLoad = useCallback(() => {
-		setDisplayedSrc(prev => {
-			// On ne met à jour que si c'est bien le src en cours de chargement
-			return loadingSrc ?? prev;
+		const snap = pendingImage.current;
+		if (!snap || !snap.url || !loadingSrc) return;
+		setDisplayed({
+			id: snap._id,
+			src: loadingSrc,
+			srcSet: buildSrcSet(snap.url),
+			alt: "image",
 		});
 		setLoadingSrc(null);
 	}, [loadingSrc]);
@@ -102,6 +147,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		},
 		[nextImage],
 	);
+
 	const handlePrevClick = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -169,7 +215,7 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 							transition={transition}
 						>
 							<div
-								className="relative"
+								className="relative overflow-hidden"
 								style={{
 									aspectRatio: `${image.width} / ${image.height}`,
 									maxHeight: "calc(100dvh - 4rem)",
@@ -178,25 +224,26 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 									height: "auto",
 								}}
 							>
-								{/* Fond pendant le tout premier chargement */}
-								{!displayedSrc && <div className="bg-quaternary absolute inset-0" />}
+								{!displayed && <div className="bg-quaternary absolute inset-0" />}
 
-								{/* Image visible — reste en place pendant que la suivante charge */}
-								{displayedSrc && (
-									/* eslint-disable-next-line @next/next/no-img-element */
-									<img
-										key={displayedSrc}
-										alt={image.alt || "image"}
-										className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
-										decoding="async"
-										fetchPriority="high"
-										src={displayedSrc}
-										srcSet={image ? buildSrcSet(image.url) : undefined}
-										sizes="(max-width: 768px) 100vw, 80vw"
-									/>
-								)}
+								<div className="absolute inset-0">
+									{displayed && (
+										/* eslint-disable-next-line @next/next/no-img-element */
+										<img
+											key={displayed.id}
+											// Premier chargement : pas d'animation sur x
+											alt={displayed.alt}
+											className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
+											decoding="async"
+											fetchPriority="high"
+											sizes="(max-width: 768px) 100vw, 80vw"
+											src={displayed.src}
+											srcSet={displayed.srcSet}
+										/>
+									)}
+								</div>
 
-								{/* Image fantôme — charge en arrière-plan, invisible */}
+								{/* Fantôme de préchargement */}
 								{loadingSrc && (
 									/* eslint-disable-next-line @next/next/no-img-element */
 									<img
@@ -206,8 +253,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 										className="absolute inset-0 h-full w-full opacity-0"
 										decoding="async"
 										src={loadingSrc}
-										srcSet={image ? buildSrcSet(image.url) : undefined}
-										sizes="(max-width: 768px) 100vw, 80vw"
 										onLoad={handleLoad}
 									/>
 								)}

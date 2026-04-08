@@ -33,6 +33,13 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 	const [images, setImages] = useState<LightboxImage[] | null>(null);
 
 	const clickedImage = clickedIndex !== null && images ? (images[clickedIndex] ?? null) : null;
+	const prevImageData =
+		clickedIndex !== null && images
+			? images[(clickedIndex - 1 + images.length) % images.length]
+			: null;
+
+	const nextImageData =
+		clickedIndex !== null && images ? images[(clickedIndex + 1) % images.length] : null;
 
 	const resetClick = useCallback(() => {
 		setClickedIndex(null);
@@ -94,6 +101,8 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		<LightboxContext.Provider value={value}>
 			<LightBox
 				image={clickedImage}
+				prevImageData={prevImageData}
+				nextImageData={nextImageData}
 				nextImage={images && images.length > 1 ? nextImage : undefined}
 				prevImage={images && images.length > 1 ? prevImage : undefined}
 				resetClick={resetClick}

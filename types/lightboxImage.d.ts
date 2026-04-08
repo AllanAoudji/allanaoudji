@@ -1,3 +1,6 @@
-type LightboxImage = (workGalleryImage & { _id: string }) | (shopifyImage & { _id: string });
+import { WorkGalleryImage } from "./sanityType";
+import shopifyImage from "./shopifyImage";
+
+type LightboxImage = (WorkGalleryImage & { _id: string }) | (shopifyImage & { _id: string });
 
 export default LightboxImage;
