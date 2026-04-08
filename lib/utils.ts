@@ -238,15 +238,15 @@ export function getLineQuantity(cart: Cart, variantId: string): number {
 }
 
 export function getProductDefaultVariant(product: Product): string | undefined {
-	const { variants } = product;
+	const firstVariant = product?.variants?.[0];
 
-	if (variants.length === 1) {
-		return undefined;
-	}
+	const params = firstVariant?.selectedOptions
+		?.filter(opt => opt?.name && opt?.value)
+		.map(opt => [opt.name.toLowerCase(), opt.value]);
 
-	return new URLSearchParams(
-		variants[0].selectedOptions.map(option => [option.name.toLocaleLowerCase(), option.value]),
-	).toString();
+	if (!params || params.length === 0) return undefined;
+
+	return new URLSearchParams(params).toString();
 }
 
 export function isPortableTextEmpty(value: SanityBlock[] | null | undefined): boolean {

@@ -46,23 +46,22 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 	const { closeModal } = useModal();
 
 	const image = useMemo(
-		() => item.merchandise.image ?? item.merchandise.product.featuredImage,
+		() => item.merchandise?.image ?? item.merchandise?.product?.featuredImage,
 		[item],
 	);
 
 	const { discounted, original } = getCartItemPricing(item);
 
 	const merchandiseSearchParams: MerchandiseSearchParams = {};
-	item.merchandise.selectedOptions.forEach(({ name, value }) => {
+	item.merchandise?.selectedOptions?.forEach(({ name, value }) => {
 		if (value !== DEFAULT_OPTION) {
 			merchandiseSearchParams[name.toLocaleLowerCase()] = value;
 		}
 	});
-	const merchandiseUrl = createUrl(
-		`/products/${item.merchandise.product.handle}`,
-		new URLSearchParams(merchandiseSearchParams),
-	);
-
+	const searchParams = new URLSearchParams(merchandiseSearchParams);
+	const merchandiseUrl = item.merchandise?.product?.handle
+		? createUrl(`/products/${item.merchandise.product.handle}`, searchParams)
+		: "#";
 	return (
 		<div>
 			<CartContenItemCallbackMessage className="mb-2" item={item} />
@@ -76,7 +75,7 @@ export default function CartContentItem({ item }: Readonly<Props>) {
 							<h5 className="text-sm font-bold uppercase">{item.merchandise.product.title}</h5>
 							<p className="text-xs">
 								{!!Object.keys(merchandiseSearchParams).length &&
-									item.merchandise.selectedOptions.map(selectedOption => selectedOption.value).join("/")}
+									item.merchandise?.selectedOptions?.map(selectedOption => selectedOption.value).join("/")}
 							</p>
 						</Link>
 						<div>

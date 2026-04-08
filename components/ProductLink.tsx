@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function ProductLink({ className, onClick, priority, product }: Readonly<Props>) {
-	const hasSecondImage = product.images.length > 1;
+	const hasSecondImage = product.images?.length > 1;
 
 	return (
 		<Link
