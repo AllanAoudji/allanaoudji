@@ -11,11 +11,51 @@ import Connection from "@/types/connection";
 import Product from "@/types/product";
 import ProductVariant from "@/types/productVariant";
 import ShopifyCollection from "@/types/shopifyCollection";
+import shopifyImage from "@/types/shopifyImage";
+import ShopifyProduct from "@/types/shopifyProduct";
 
 type SanityBlock = {
 	_type: string;
 	children?: Array<{ _type: string; text?: string }>;
 };
+
+export function reshapeProductSafe(
+	product: ShopifyProduct | null | undefined,
+	filterHiddenProducts: boolean = true,
+): Product | undefined {
+	if (!product) return undefined;
+	if (filterHiddenProducts && product.tags?.includes("HIDDEN_PRODUCT_TAG")) return undefined;
+
+	const images = removeEdgesAndNodes(product.images ?? { edges: [] });
+	const variants = removeEdgesAndNodes(product.variants ?? { edges: [] });
+	const collections = product.collections?.edges?.map(e => e.node) ?? [];
+
+	// Assure que chaque variant a selectedOptions et image
+	const safeVariants = variants.map(variant => ({
+		...variant,
+		selectedOptions: variant.selectedOptions ?? [],
+		image: variant.image ?? undefined,
+	}));
+
+	// Assure que chaque image a altText
+	const safeImages = images.map((img: shopifyImage, idx: number) => ({
+		...img,
+		altText: img.altText ?? `${product.title} image ${idx + 1}`,
+	}));
+
+	return {
+		...product,
+		images: safeImages,
+		variants: safeVariants,
+		collections,
+	};
+}
+
+export function reshapeProductsSafe(products: (ShopifyProduct | null | undefined)[]): Product[] {
+	return products
+		.map(product => reshapeProductSafe(product))
+		.filter((p): p is Product => p !== undefined);
+}
 
 export function applyFrenchTypography(text: string): string {
 	let t = text;
