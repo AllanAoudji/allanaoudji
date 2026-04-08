@@ -8,9 +8,14 @@ import CartItem from "@/types/cartItem";
 type Props = {
 	className?: string;
 	item: CartItem;
+	disabled?: boolean;
 };
 
-export default function CartContentItemDeleteButton({ className, item }: Readonly<Props>) {
+export default function CartContentItemDeleteButton({
+	className,
+	item,
+	disabled,
+}: Readonly<Props>) {
 	const { isCartPending, removeItem, resetCartMessage } = useCartActions();
 
 	const handleAction = useCallback(() => {
@@ -18,22 +23,25 @@ export default function CartContentItemDeleteButton({ className, item }: Readonl
 		removeItem(item);
 	}, [item, removeItem, resetCartMessage]);
 
+	const isDisabled = disabled || isCartPending;
+
 	return (
 		<button
 			aria-label="Remove cart item"
 			className={cn("uppercase opacity-50 transition", className, {
 				"hover:text-danger hover:[&_span]:after:bg-danger cursor-pointer opacity-100 duration-700 hover:[&_span]:after:origin-left hover:[&_span]:after:scale-x-100":
-					!isCartPending,
+					!isDisabled,
+				"cursor-not-allowed": isDisabled,
 				"cursor-progress": isCartPending,
 			})}
-			disabled={isCartPending}
+			disabled={isDisabled}
 			onClick={handleAction}
 			type="button"
 		>
 			<span
 				className={cn({
 					"after:bg-secondary after:ease relative py-0.5 transition duration-700 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:transition after:duration-700 after:will-change-transform":
-						!isCartPending,
+						!isDisabled,
 				})}
 			>
 				delete

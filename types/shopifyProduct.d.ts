@@ -24,6 +24,7 @@ type ShopifyProduct = {
 	tags: string[];
 	updatedAt: string;
 	collections: Connection<{ id: string; title: string }>;
+	publishedAt: string | null;
 };
 
 export default ShopifyProduct;

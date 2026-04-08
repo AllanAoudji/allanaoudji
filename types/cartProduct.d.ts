@@ -2,6 +2,7 @@ import Money from "./money";
 import shopifyImage from "./shopifyImage";
 
 type CartProduct = {
+	publishedAt: string | null;
 	featuredImage: shopifyImage;
 	handle: string;
 	id: string;

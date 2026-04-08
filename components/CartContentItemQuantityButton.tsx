@@ -11,12 +11,14 @@ type Props = {
 	className?: string;
 	item: CartItem;
 	type: Exclude<UpdateCartType, "delete">;
+	disabled?: boolean;
 };
 
 export default function CartContentItemQuantityButton({
 	className = "",
 	item,
 	type,
+	disabled = false,
 }: Readonly<Props>) {
 	const { decrementItem, incrementItem, isCartPending, resetCartMessage } = useCartActions();
 
@@ -35,11 +37,13 @@ export default function CartContentItemQuantityButton({
 		}
 	}, [decrementItem, incrementItem, item, resetCartMessage, type]);
 
+	const isDisabled = disabled || isCartPending;
+
 	return (
 		<button
 			aria-label={type === "plus" ? "Increase item quantity" : "Reduce item quantity"}
-			className={cn("group", { "opacity-50": isCartPending }, className)}
-			disabled={isCartPending}
+			className={cn("group", { "cursor-not-allowed opacity-50": isDisabled }, className)}
+			disabled={isDisabled}
 			onClick={handleAction}
 			type="button"
 		>
@@ -47,8 +51,8 @@ export default function CartContentItemQuantityButton({
 				className={cn(
 					"flex h-6 w-6 origin-center items-center justify-center transition-transform duration-500",
 					{
-						"group-hover:rotate-180": !isCartPending,
-						"cursor-progress": isCartPending,
+						"group-hover:rotate-180": !isDisabled,
+						"cursor-progress": isDisabled,
 					},
 				)}
 			>

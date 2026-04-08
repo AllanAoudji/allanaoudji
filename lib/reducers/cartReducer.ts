@@ -83,6 +83,7 @@ export function cartReducer(
 					selectedOptions: variant.selectedOptions,
 					image: variant.image,
 					product: {
+						publishedAt: product.publishedAt,
 						id: product.id,
 						title: product.title,
 						handle: product.handle,
@@ -146,6 +147,7 @@ export function cartReducer(
 					selectedOptions: variant.selectedOptions,
 					image: variant.image,
 					product: {
+						publishedAt: product.publishedAt,
 						id: product.id,
 						title: product.title,
 						handle: product.handle,

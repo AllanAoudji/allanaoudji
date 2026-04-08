@@ -71,9 +71,10 @@ export type ShopifyCreateCartOperation = {
 
 export type ShopifyLatestProductsOperation = {
 	data: {
-		collection: {
-			products: Connection<ShopifyProduct>;
-		};
+		products: Connection<ShopifyProduct>;
+	};
+	variables: {
+		first: number;
 	};
 };
 
@@ -108,9 +109,10 @@ export type ShopifyPagesOperation = {
 
 export type ShopifyPopularProductsOperation = {
 	data: {
-		collection: {
-			products: Connection<ShopifyProduct>;
-		};
+		products: Connection<ShopifyProduct>;
+	};
+	variables: {
+		first: number;
 	};
 };
 

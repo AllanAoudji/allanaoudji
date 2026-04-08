@@ -110,10 +110,10 @@ export async function shopifyFetch<T>(
 		tags?: string[];
 		variables?: ExtractVariables<T>;
 	},
-	retries = 1, // 1 retry = 2 tentatives au total
+	retries = 1,
 ): Promise<{ status: number; body: T } | never> {
 	try {
-		const result = await fetch(endpoint, {
+		const fetchOptions: RequestInit = {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -124,15 +124,22 @@ export async function shopifyFetch<T>(
 				...(query && { query }),
 				...(variables && { variables }),
 			}),
-			...(cache === "no-store" || cache === "no-cache" ? { cache } : {}),
-			next: {
+		};
+
+		// ✅ Utilise SOIT cache SOIT revalidate, pas les deux
+		if (cache === "no-store" || cache === "no-cache") {
+			fetchOptions.cache = cache;
+		} else {
+			fetchOptions.cache = cache; // "force-cache" par défaut
+			fetchOptions.next = {
 				tags: tags ?? [],
 				revalidate,
-			},
-		});
+			};
+		}
+
+		const result = await fetch(endpoint, fetchOptions);
 		const body = await result.json();
 
-		// Erreur GraphQL → erreur métier, pas de retry
 		if (body.errors) {
 			Sentry.captureMessage("Shopify GraphQL error", {
 				level: "error",
@@ -143,12 +150,10 @@ export async function shopifyFetch<T>(
 
 		return { status: result.status, body };
 	} catch (error) {
-		// Erreur GraphQL déjà loggée → ne pas retenter
 		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
 			throw error;
 		}
 
-		// Erreur réseau/transitoire → retry
 		if (retries > 0) {
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			return shopifyFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);
@@ -295,13 +300,16 @@ export async function getLatestProducts(): Promise<Product[]> {
 		query: getLatestProductsQuery,
 		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products, TAGS.collections],
+		variables: { first: 10 },
 	});
 
-	if (!res.body.data.collection) {
+	if (!res.body.data.products) {
 		return [];
 	}
 
-	return reshapeProductsSafe(removeEdgesAndNodes(res.body.data.collection.products));
+	const products = removeEdgesAndNodes(res.body.data.products);
+	const publishedProducts = products.filter(p => p.publishedAt !== null);
+	return reshapeProductsSafe(publishedProducts.slice(0, 4));
 }
 
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
@@ -341,13 +349,13 @@ export async function getPopularProducts(): Promise<Product[]> {
 		query: getPopularProductsQuery,
 		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products, TAGS.collections],
+		variables: { first: 10 },
 	});
 
-	if (!res.body.data.collection) {
-		return [];
-	}
+	const products = removeEdgesAndNodes(res.body.data.products);
 
-	return reshapeProductsSafe(removeEdgesAndNodes(res.body.data.collection.products));
+	const publishedProducts = products.filter(p => p.publishedAt !== null);
+	return reshapeProductsSafe(publishedProducts.slice(0, 4));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -400,7 +408,9 @@ export async function getProducts({
 
 	return {
 		pageInfo: res.body.data.products.pageInfo,
-		products: reshapeProductsSafe(removeEdgesAndNodes(res.body.data.products)),
+		products: reshapeProductsSafe(
+			removeEdgesAndNodes(res.body.data.products).filter(p => p.publishedAt !== null),
+		),
 	};
 }
 

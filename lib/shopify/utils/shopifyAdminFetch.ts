@@ -46,10 +46,10 @@ export async function shopifyAdminFetch<T>(
 		tags?: string[];
 		variables?: ExtractVariables<T>;
 	},
-	retries = 1, // 1 retry = 2 tentatives au total
+	retries = 1,
 ): Promise<{ status: number; body: T }> {
 	try {
-		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, {
+		const fetchOptions: RequestInit = {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -60,15 +60,22 @@ export async function shopifyAdminFetch<T>(
 				...(query && { query }),
 				...(variables && { variables }),
 			}),
-			...(cache === "no-store" || cache === "no-cache" ? { cache } : {}),
-			next: {
+		};
+
+		// ✅ Utilise SOIT cache SOIT revalidate, pas les deux
+		if (cache === "no-store" || cache === "no-cache") {
+			fetchOptions.cache = cache;
+		} else {
+			fetchOptions.cache = cache; // "force-cache" par défaut
+			fetchOptions.next = {
 				tags: tags ?? [],
 				revalidate,
-			},
-		});
+			};
+		}
+
+		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, fetchOptions);
 		const body = await result.json();
 
-		// Erreur GraphQL → erreur métier, pas de retry
 		if (body.errors) {
 			Sentry.captureMessage("Shopify Admin GraphQL error", {
 				level: "error",
@@ -79,12 +86,10 @@ export async function shopifyAdminFetch<T>(
 
 		return { status: result.status, body };
 	} catch (error) {
-		// Erreur GraphQL déjà loggée → ne pas retenter
 		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
 			throw error;
 		}
 
-		// Erreur réseau/transitoire → retry
 		if (retries > 0) {
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			return shopifyAdminFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);

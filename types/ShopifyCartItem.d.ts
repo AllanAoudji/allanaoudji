@@ -21,6 +21,7 @@ type ShopifyCartItem = {
 		selectedOptions: { name: string; value: string }[];
 		image?: shopifyImage;
 		product: {
+			publishedAt: string | null;
 			featuredImage: shopifyImage;
 			handle: string;
 			id: string;

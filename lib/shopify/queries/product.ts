@@ -1,28 +1,23 @@
 import productFragment from "../fragments/product";
 
 export const getPopularProductsQuery = /* GraphQL */ `
-	query getPopularProducts($first: Int = 4) {
-		collection(handle: "hidden_in-stock") {
-			products(first: $first, sortKey: BEST_SELLING) {
-				edges {
-					node {
-						...product
-					}
+	query getPopularProducts($first: Int!) {
+		products(first: $first, sortKey: BEST_SELLING) {
+			edges {
+				node {
+					...product
 				}
 			}
 		}
 	}
 	${productFragment}
 `;
-
 export const getLatestProductsQuery = /* GraphQL */ `
-	query getLatestProducts($first: Int = 4) {
-		collection(handle: "hidden_in-stock") {
-			products(first: $first, sortKey: CREATED, reverse: true) {
-				edges {
-					node {
-						...product
-					}
+	query GetLatestProducts($first: Int!) {
+		products(first: $first, sortKey: CREATED_AT, reverse: true) {
+			edges {
+				node {
+					...product
 				}
 			}
 		}
