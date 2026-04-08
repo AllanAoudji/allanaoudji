@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEventHandler, useMemo } from "react";
+import { MouseEventHandler, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { WorkGalleryImage, WorkMainImage } from "@/types/sanityType";
 import shopifyImage from "@/types/shopifyImage";
@@ -57,6 +57,16 @@ export default function ImageContainer({
 	sizes = "(max-width: 768px) 100vw, 50vw",
 	ratio,
 }: Readonly<Props>) {
+	const [loaded, setLoaded] = useState(false);
+
+	const imgRef = useRef<HTMLImageElement>(null);
+
+	useEffect(() => {
+		if (imgRef.current?.complete) {
+			setLoaded(true);
+		}
+	}, []);
+
 	const normalized = useMemo(() => {
 		if (!image) return null;
 		return {
@@ -85,22 +95,30 @@ export default function ImageContainer({
 	const content = (
 		<div className="overflow-hidden">
 			<div className={cn("bg-quaternary relative w-full", getAspectRatioClass(ratio), className)}>
+				{/* Blur placeholder */}
 				{normalized.blur && (
 					<div
-						className="absolute inset-0 scale-110 bg-cover bg-center blur-xl"
-						style={{ backgroundImage: `url(${normalized.blur})` }}
+						className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
+						style={{
+							backgroundImage: `url(${normalized.blur})`,
+							opacity: loaded ? 0 : 1,
+						}}
 					/>
 				)}
+
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
 					alt={normalized.alt ?? "image"}
-					className="absolute inset-0 h-full w-full object-cover"
+					className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
 					decoding="async"
 					fetchPriority={priority ? "high" : "low"}
 					loading={priority ? "eager" : "lazy"}
 					sizes={sizes}
 					src={finalSrc}
 					srcSet={srcSet}
+					style={{ opacity: loaded ? 1 : 0 }}
+					ref={imgRef}
+					onLoad={() => setLoaded(true)}
 				/>
 			</div>
 		</div>

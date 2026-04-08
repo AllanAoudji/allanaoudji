@@ -3,7 +3,7 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { FocusTrap } from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
@@ -54,8 +54,32 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 	useLeftArrow(() => prevImage?.());
 	useRightArrow(() => nextImage?.());
 
-	const [isLoaded, setIsLoaded] = useState(false);
-	const imgRef = useRef<HTMLImageElement>(null);
+	// Image actuellement visible
+	const [displayedSrc, setDisplayedSrc] = useState<string | null>(null);
+	// Image en cours de chargement en arrière-plan
+	const [loadingSrc, setLoadingSrc] = useState<string | null>(null);
+
+	const targetSrc = image ? buildFinalSrc(image.url) : null;
+
+	useEffect(() => {
+		if (!targetSrc) {
+			setDisplayedSrc(null);
+			setLoadingSrc(null);
+			return;
+		}
+		// Déjà affichée, rien à faire
+		if (image?.url === displayedSrc) return;
+
+		setLoadingSrc(targetSrc);
+	}, [targetSrc]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const handleLoad = useCallback(() => {
+		setDisplayedSrc(prev => {
+			// On ne met à jour que si c'est bien le src en cours de chargement
+			return loadingSrc ?? prev;
+		});
+		setLoadingSrc(null);
+	}, [loadingSrc]);
 
 	const handleClick = useCallback(
 		(e: MouseEvent<HTMLDivElement>) => {
@@ -85,11 +109,6 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 		},
 		[prevImage],
 	);
-
-	useEffect(() => {
-		setIsLoaded(false);
-		if (imgRef.current?.complete) setIsLoaded(true);
-	}, [image?._id]);
 
 	return (
 		<AnimatePresence>
@@ -159,32 +178,39 @@ export default function LightBox({ image, nextImage, prevImage, resetClick }: Re
 									height: "auto",
 								}}
 							>
-								<AnimatePresence>
-									{!isLoaded && (
-										<motion.div
-											className="bg-quaternary absolute inset-0"
-											exit={{ opacity: 0 }}
-											initial={{ opacity: 1 }}
-											key="placeholder"
-											transition={{ duration: 0.3 }}
-										/>
-									)}
-								</AnimatePresence>
+								{/* Fond pendant le tout premier chargement */}
+								{!displayedSrc && <div className="bg-quaternary absolute inset-0" />}
 
-								{/* eslint-disable-next-line @next/next/no-img-element */}
-								<img
-									ref={imgRef}
-									key={image._id}
-									alt={image.alt || "image"}
-									className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
-									decoding="async"
-									fetchPriority="high"
-									loading="eager"
-									onLoad={() => setIsLoaded(true)}
-									sizes="(max-width: 768px) 100vw, 80vw"
-									src={buildFinalSrc(image.url)}
-									srcSet={buildSrcSet(image.url)}
-								/>
+								{/* Image visible — reste en place pendant que la suivante charge */}
+								{displayedSrc && (
+									/* eslint-disable-next-line @next/next/no-img-element */
+									<img
+										key={displayedSrc}
+										alt={image.alt || "image"}
+										className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
+										decoding="async"
+										fetchPriority="high"
+										src={displayedSrc}
+										srcSet={image ? buildSrcSet(image.url) : undefined}
+										sizes="(max-width: 768px) 100vw, 80vw"
+									/>
+								)}
+
+								{/* Image fantôme — charge en arrière-plan, invisible */}
+								{loadingSrc && (
+									/* eslint-disable-next-line @next/next/no-img-element */
+									<img
+										key={`loading-${loadingSrc}`}
+										alt=""
+										aria-hidden="true"
+										className="absolute inset-0 h-full w-full opacity-0"
+										decoding="async"
+										src={loadingSrc}
+										srcSet={image ? buildSrcSet(image.url) : undefined}
+										sizes="(max-width: 768px) 100vw, 80vw"
+										onLoad={handleLoad}
+									/>
+								)}
 							</div>
 						</motion.div>
 					</motion.div>

@@ -22,7 +22,7 @@ export default function InstagramSectionItem({ post }: Readonly<Props>) {
 						fill
 						sizes="(max-width: 768px) 50vw, 20vw"
 						className="object-cover"
-						priority={false} // LCP non critique
+						priority={false}
 					/>
 				)}
 			</div>
