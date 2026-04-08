@@ -26,9 +26,10 @@ export function reshapeProductSafe(
 	if (!product) return undefined;
 	if (filterHiddenProducts && product.tags?.includes("HIDDEN_PRODUCT_TAG")) return undefined;
 
-	const images = removeEdgesAndNodes(product.images ?? { edges: [] });
-	const variants = removeEdgesAndNodes(product.variants ?? { edges: [] });
-	const collections = product.collections?.edges?.map(e => e.node) ?? [];
+	// Transform edges en arrays, en filtrant les valeurs null
+	const images = removeEdgesAndNodes(product.images ?? { edges: [] }).filter(Boolean);
+	const variants = removeEdgesAndNodes(product.variants ?? { edges: [] }).filter(Boolean);
+	const collections = (product.collections?.edges?.map(e => e.node) ?? []).filter(Boolean);
 
 	// Assure que chaque variant a selectedOptions et image
 	const safeVariants = variants.map(variant => ({
@@ -52,9 +53,7 @@ export function reshapeProductSafe(
 }
 
 export function reshapeProductsSafe(products: (ShopifyProduct | null | undefined)[]): Product[] {
-	return products
-		.map(product => reshapeProductSafe(product))
-		.filter((p): p is Product => p !== undefined);
+	return products.map(product => reshapeProductSafe(product)).filter(Boolean) as Product[];
 }
 
 export function applyFrenchTypography(text: string): string {
