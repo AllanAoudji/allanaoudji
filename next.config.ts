@@ -22,9 +22,6 @@ const csp = [
 		"https://*.myshopify.com",
 		"https://use.typekit.net",
 		"https://p.typekit.net",
-		"https://*.sentry.io",
-		"https://*.ingest.sentry.io",
-		"https://*.ingest.de.sentry.io",
 		"https://va.vercel-scripts.com",
 		"https://vitals.vercel-insights.com",
 	].join(" "),
@@ -64,11 +61,9 @@ const csp = [
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	experimental: {
-		// Corrige le 404 au premier accès sur une page ISR non encore générée :
-		// le router client ne sert plus une entrée périmée depuis son cache.
 		staleTimes: {
-			dynamic: 0, // pages dynamiques / ISR : jamais cachées côté client
-			static: 180, // pages 100% statiques : 3 min de cache client
+			dynamic: 0,
+			static: 180,
 		},
 	},
 	async headers() {
@@ -104,6 +99,7 @@ export default withSentryConfig(nextConfig, {
 	org: process.env.SENTRY_ORG,
 	project: process.env.SENTRY_PROJECT,
 	silent: true,
+	tunnelRoute: "/monitoring",
 	widenClientFileUpload: true,
 	sourcemaps: {
 		disable: false,
