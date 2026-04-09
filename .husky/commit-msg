@@ -1,12 +1,1 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 npx --no -- commitlint --edit "$1"
-```
-
-Tes commits devront suivre le format **Conventional Commits** :
-```
-feat: ajout du composant Hero
-fix: correction du type sanity
-chore: mise à jour des dépendances
-docs: mise à jour du README
