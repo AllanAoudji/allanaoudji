@@ -118,7 +118,7 @@ export async function shopifyAdminFetch<T>(
 export async function getCollections(): Promise<Collection[]> {
 	const res = await shopifyAdminFetch<ShopifyCollectionsOperation>({
 		query: getCollectionsQuery,
-		revalidate: 60 * 60 * 24,
+		revalidate: 60 * 60 * 4,
 		tags: [TAGS.collections],
 	});
 

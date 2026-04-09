@@ -298,7 +298,7 @@ export async function getCollectionProducts({
 export async function getLatestProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyLatestProductsOperation>({
 		query: getLatestProductsQuery,
-		revalidate: 60 * 60 * 24,
+		revalidate: 60 * 60 * 4,
 		tags: [TAGS.products, TAGS.collections],
 		variables: { first: 4 },
 	});
@@ -346,7 +346,7 @@ export async function getPages(): Promise<ShopifyPage[]> {
 export async function getPopularProducts(): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyPopularProductsOperation>({
 		query: getPopularProductsQuery,
-		revalidate: 60 * 60 * 24,
+		revalidate: 60 * 60 * 4,
 		tags: [TAGS.products, TAGS.collections],
 		variables: { first: 4 },
 	});
@@ -399,7 +399,7 @@ export async function getProducts({
 }> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
 		query: getProductsQuery,
-		revalidate: 60 * 60 * 24,
+		revalidate: 60 * 60,
 		tags: [TAGS.products],
 		variables: { after, first, query, reverse, sortKey },
 	});
