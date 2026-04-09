@@ -300,7 +300,7 @@ export async function getLatestProducts(): Promise<Product[]> {
 		query: getLatestProductsQuery,
 		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products, TAGS.collections],
-		variables: { first: 10 },
+		variables: { first: 4 },
 	});
 
 	if (!res.body.data.products) {
@@ -308,8 +308,7 @@ export async function getLatestProducts(): Promise<Product[]> {
 	}
 
 	const products = removeEdgesAndNodes(res.body.data.products);
-	const publishedProducts = products.filter(p => p.publishedAt !== null);
-	return reshapeProductsSafe(publishedProducts.slice(0, 4));
+	return reshapeProductsSafe(products);
 }
 
 export async function getMenu(handle: string): Promise<ShopifyMenu[]> {
@@ -349,13 +348,12 @@ export async function getPopularProducts(): Promise<Product[]> {
 		query: getPopularProductsQuery,
 		revalidate: 60 * 60 * 24,
 		tags: [TAGS.products, TAGS.collections],
-		variables: { first: 10 },
+		variables: { first: 4 },
 	});
 
 	const products = removeEdgesAndNodes(res.body.data.products);
 
-	const publishedProducts = products.filter(p => p.publishedAt !== null);
-	return reshapeProductsSafe(publishedProducts.slice(0, 4));
+	return reshapeProductsSafe(products);
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -365,7 +363,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 		variables: { handle },
 	});
 
-	if (!res.body.data.product) {
+	if (!res.body.data.product || !res.body.data.product.publishedAt) {
 		return undefined;
 	}
 
@@ -408,9 +406,7 @@ export async function getProducts({
 
 	return {
 		pageInfo: res.body.data.products.pageInfo,
-		products: reshapeProductsSafe(
-			removeEdgesAndNodes(res.body.data.products).filter(p => p.publishedAt !== null),
-		),
+		products: reshapeProductsSafe(removeEdgesAndNodes(res.body.data.products)),
 	};
 }
 
