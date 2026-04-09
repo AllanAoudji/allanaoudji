@@ -65,6 +65,7 @@ const cartFragment = /* GraphQL */ `
 						... on ProductVariant {
 							id
 							title
+							availableForSale
 							image {
 								id
 								url

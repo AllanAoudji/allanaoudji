@@ -78,11 +78,13 @@ export function cartReducer(
 					},
 				},
 				merchandise: {
+					availableForSale: variant.availableForSale,
 					id: variant.id,
 					title: variant.title,
 					selectedOptions: variant.selectedOptions,
 					image: variant.image,
 					product: {
+						availableForSale: product.availableForSale,
 						publishedAt: product.publishedAt,
 						id: product.id,
 						title: product.title,
@@ -146,7 +148,9 @@ export function cartReducer(
 					title: variant.title,
 					selectedOptions: variant.selectedOptions,
 					image: variant.image,
+					availableForSale: variant.availableForSale,
 					product: {
+						availableForSale: product.availableForSale,
 						publishedAt: product.publishedAt,
 						id: product.id,
 						title: product.title,

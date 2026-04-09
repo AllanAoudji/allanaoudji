@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Title from "@/components/Title";
 import "@/app/globals.css";
 
-export default function GlobalError({ error, reset }: { error: Error; reset: () => void }) {
+export default function GlobalError({ error }: { error: Error; reset: () => void }) {
 	useEffect(() => {
 		Sentry.captureException(error);
 	}, [error]);
@@ -24,7 +24,7 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
 					)}
 					<button
 						className="border-secondary hover:bg-secondary hover:text-quaternary mt-4 cursor-pointer border px-6 py-2 text-sm tracking-widest uppercase transition-colors"
-						onClick={reset}
+						onClick={() => window.location.reload()}
 					>
 						Réessayer
 					</button>

@@ -4,6 +4,7 @@ import shopifyImage from "./shopifyImage";
 type CartProduct = {
 	publishedAt: string | null;
 	featuredImage: shopifyImage;
+	availableForSale: boolean;
 	handle: string;
 	id: string;
 	priceRange: {

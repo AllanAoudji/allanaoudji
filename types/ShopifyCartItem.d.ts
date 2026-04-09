@@ -18,9 +18,11 @@ type ShopifyCartItem = {
 	merchandise: {
 		id: string;
 		title: string;
+		availableForSale: boolean;
 		selectedOptions: { name: string; value: string }[];
 		image?: shopifyImage;
 		product: {
+			availableForSale: boolean;
 			publishedAt: string | null;
 			featuredImage: shopifyImage;
 			handle: string;

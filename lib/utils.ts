@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { ERROR_MESSAGE_FR } from "./constants";
+import { ERROR_MESSAGE_FR, HIDDEN_PRODUCT_TAG } from "./constants";
 import MediaQuery from "@/types/MediaQuery";
 import Cart from "@/types/cart";
 import Collection from "@/types/collection";
@@ -25,8 +25,7 @@ export function reshapeProductSafe(
 ): Product | undefined {
 	if (!product) return undefined;
 
-	// Filtrage uniquement des produits non répertoriés
-	if (filterHiddenProducts && product.tags?.includes("HIDDEN_PRODUCT_TAG")) {
+	if (filterHiddenProducts && product.tags?.includes(HIDDEN_PRODUCT_TAG)) {
 		return undefined;
 	}
 
@@ -53,9 +52,12 @@ export function reshapeProductSafe(
 	};
 }
 
-export function reshapeProductsSafe(products: (ShopifyProduct | null | undefined)[]): Product[] {
+export function reshapeProductsSafe(
+	products: (ShopifyProduct | null | undefined)[],
+	filterHiddenProducts: boolean = true,
+): Product[] {
 	return products
-		.map(product => reshapeProductSafe(product, true)) // true = filtre les produits non répertoriés
+		.map(product => reshapeProductSafe(product, filterHiddenProducts))
 		.filter(Boolean) as Product[];
 }
 

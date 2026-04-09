@@ -19,6 +19,7 @@ type CartItem = {
 	discountAllocations?: DiscountAllocation[];
 	merchandise: {
 		id: string;
+		availableForSale: boolean;
 		title: string;
 		selectedOptions: {
 			name: string;
