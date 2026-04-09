@@ -36,7 +36,7 @@ avec App Router et déployé sur **Vercel**.
 
 | Couche                | Technologie                                      |
 | --------------------- | ------------------------------------------------ |
-| Framework             | Next.js 16 (App Router)                          |
+| Framework             | Next.js 16.2.3 (App Router)                      |
 | Language              | TypeScript 5                                     |
 | CMS                   | Sanity v5                                        |
 | E-commerce            | Shopify (Storefront API + Admin API)             |
@@ -52,7 +52,7 @@ avec App Router et déployé sur **Vercel**.
 
 ## Prérequis
 
-- [Node.js](https://nodejs.org/) `>= 18.x`
+- [Node.js](https://nodejs.org/) `22.x`
 - [npm](https://www.npmjs.com/) `>= 9.x`
 - Un projet [Sanity](https://www.sanity.io/) configuré
 - Une boutique [Shopify](https://www.shopify.com/) avec Storefront API et Admin API activées
@@ -135,6 +135,10 @@ Le Sanity Studio est accessible sur [http://localhost:3000/studio](http://localh
 ├── types/                          # Types TypeScript globaux
 ├── public/                         # Assets statiques (logos, og-image)
 ├── env.ts                          # Validation des variables d'env (Zod)
+├── instrumentation.ts              # Sentry server/edge + onRequestError hook
+├── instrumentation-client.ts       # Sentry client + onRouterTransitionStart hook
+├── sentry.server.config.ts
+├── sentry.edge.config.ts
 ├── sanity.config.ts
 └── next.config.ts
 ```
@@ -239,7 +243,8 @@ cp env.example .env.local
 
 1. Importer le dépôt sur [Vercel](https://vercel.com)
 2. Configurer toutes les variables d'environnement listées ci-dessus
-3. Déployer — Vercel détecte automatiquement Next.js
+3. S'assurer que la version Node.js est fixée à `22.x` dans les paramètres Vercel
+4. Déployer — Vercel détecte automatiquement Next.js
 
 > **Note :** Le Sanity Studio est embarqué dans l'app (`/studio`) et se déploie avec le reste du
 > projet. Aucun hébergement séparé nécessaire.
@@ -248,3 +253,7 @@ cp env.example .env.local
 > `/api/revalidate/shopify` afin d'activer la revalidation du cache à la publication. Le feed
 > Instagram peut être rafraîchi manuellement depuis le Studio via le bouton dédié dans la navbar
 > (`/api/revalidate/instagram`).
+>
+> **Note :** La configuration Sentry utilise `instrumentation-client.ts` (client) et
+> `instrumentation.ts` (server/edge) conformément aux conventions Next.js 16. Le fichier
+> `sentry.client.config.ts` n'est plus utilisé.

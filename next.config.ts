@@ -6,7 +6,7 @@ const isDev = process.env.NODE_ENV === "development";
 const csp = [
 	"default-src 'self'",
 
-	`script-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://sanity-cdn.com${
+	`script-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://sanity-cdn.com https://va.vercel-scripts.com${
 		isDev ? " 'unsafe-eval'" : ""
 	}`,
 
@@ -25,6 +25,8 @@ const csp = [
 		"https://*.sentry.io",
 		"https://*.ingest.sentry.io",
 		"https://*.ingest.de.sentry.io",
+		"https://va.vercel-scripts.com",
+		"https://vitals.vercel-insights.com",
 	].join(" "),
 
 	[

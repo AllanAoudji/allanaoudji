@@ -1,20 +1,11 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import next from "eslint-config-next";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-	...compat.config({
-		extends: ["next/core-web-vitals", "next/typescript", "prettier"],
+export default [
+	...next,
+	{
 		rules: {
-			"@typescript-eslint/no-empty-object-type": ["off"],
-			"@typescript-eslint/no-namespace": ["off"],
+			"@typescript-eslint/no-empty-object-type": "off",
+			"@typescript-eslint/no-namespace": "off",
 			"comma-dangle": ["error", "always-multiline"],
 			indent: ["error", "tab", { SwitchCase: 1 }],
 			"key-spacing": [
@@ -40,7 +31,5 @@ const eslintConfig = [
 			quotes: ["error", "double", { avoidEscape: true, allowTemplateLiterals: true }],
 			semi: ["error"],
 		},
-	}),
+	},
 ];
-
-export default eslintConfig;
