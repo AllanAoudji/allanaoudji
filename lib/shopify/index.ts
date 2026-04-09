@@ -5,7 +5,6 @@ import {
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
 	TAGS,
 } from "../constants";
-import { isShopifyError } from "../type-guards";
 import {
 	ensureEndWithout,
 	ensureStartWith,
@@ -93,90 +92,103 @@ const stockWarningMessage = (quantityAdded: number): string => {
 
 	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
 };
+const MAX_RETRIES = 1;
+const RETRY_DELAY_MS = 1000;
 
 export async function shopifyFetch<T>(
 	{
-		cache = "force-cache",
 		headers,
 		query,
 		revalidate = 60 * 60,
 		tags,
 		variables,
+		noCache = false,
 	}: {
-		cache?: RequestCache;
 		headers?: HeadersInit;
 		query: string;
 		revalidate?: number;
 		tags?: string[];
 		variables?: ExtractVariables<T>;
+		noCache?: boolean;
 	},
-	retries = 1,
-): Promise<{ status: number; body: T } | never> {
+	retries = MAX_RETRIES,
+): Promise<{ status: number; body: T }> {
+	const fetchOptions: RequestInit = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Shopify-Storefront-Access-Token": key,
+			...headers,
+		},
+		body: JSON.stringify({
+			...(query && { query }),
+			...(variables && { variables }),
+		}),
+		// next.revalidate gère le Data Cache — pas besoin de cache: explicite
+		next: noCache ? { revalidate: 0 } : { revalidate, tags: tags ?? [] },
+	};
+
+	let result: Response;
+
 	try {
-		const fetchOptions: RequestInit = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-Shopify-Storefront-Access-Token": key,
-				...headers,
-			},
-			body: JSON.stringify({
-				...(query && { query }),
-				...(variables && { variables }),
-			}),
-		};
+		result = await fetch(endpoint, fetchOptions);
+	} catch (networkError) {
+		// Erreur réseau pure (DNS, timeout, connexion refusée)
+		const message = networkError instanceof Error ? networkError.message : String(networkError);
 
-		// ✅ Utilise SOIT cache SOIT revalidate, pas les deux
-		if (cache === "no-store" || cache === "no-cache") {
-			fetchOptions.cache = cache;
-		} else {
-			fetchOptions.cache = cache; // "force-cache" par défaut
-			fetchOptions.next = {
-				tags: tags ?? [],
-				revalidate,
-			};
-		}
-
-		const result = await fetch(endpoint, fetchOptions);
-		const body = await result.json();
-
-		if (body.errors) {
-			Sentry.captureMessage("Shopify GraphQL error", {
-				level: "error",
-				extra: { errors: body.errors, query, variables },
-			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
-		}
-
-		return { status: result.status, body };
-	} catch (error) {
-		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
-			throw error;
-		}
-
-		if (retries > 0) {
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			return shopifyFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);
-		}
-
-		if (isShopifyError(error)) {
-			Sentry.captureException(error, {
-				extra: {
-					context: "Shopify API error",
-					cause: error.cause?.toString() ?? "unknown",
-					status: error.status ?? 500,
-					query,
-				},
-			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
-		}
-
-		Sentry.captureException(error, {
-			extra: { context: "Unexpected error in shopifyFetch", query },
+		Sentry.captureException(networkError, {
+			extra: { context: "shopifyFetch: network error", query, variables },
 		});
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		if (retries > 0) {
+			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+			return shopifyFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
+		}
+
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: network error — ${message}`);
 	}
+
+	if (!result.ok) {
+		// HTTP 4xx / 5xx de Shopify
+		const text = await result.text().catch(() => "(unreadable body)");
+
+		Sentry.captureMessage("shopifyFetch: HTTP error", {
+			level: "error",
+			extra: { status: result.status, body: text, query, variables },
+		});
+
+		if (retries > 0 && result.status >= 500) {
+			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+			return shopifyFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
+		}
+
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: HTTP ${result.status}`);
+	}
+
+	let body: T;
+
+	try {
+		body = await result.json();
+	} catch (parseError) {
+		Sentry.captureException(parseError, {
+			extra: { context: "shopifyFetch: JSON parse error", query, variables },
+		});
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: invalid JSON response`);
+	}
+
+	if ((body as { errors?: unknown }).errors) {
+		const errors = (body as { errors: unknown }).errors;
+
+		Sentry.captureMessage("shopifyFetch: GraphQL errors", {
+			level: "error",
+			extra: { errors, query, variables },
+		});
+
+		// Pas de retry sur les erreurs GraphQL (requête invalide, throttle géré par Shopify)
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: GraphQL — ${JSON.stringify(errors)}`);
+	}
+
+	return { status: result.status, body };
 }
 
 export async function addToCart(
@@ -186,7 +198,7 @@ export async function addToCart(
 	previousQuantity: number,
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
 	const res = await shopifyFetch<ShopifyAddToCartOperation>({
-		cache: "no-store",
+		noCache: true,
 		query: addToCartMutation,
 		variables: {
 			cartId,
@@ -214,7 +226,7 @@ export async function addToCart(
 export async function createCart(): Promise<Cart> {
 	const res = await shopifyFetch<ShopifyCreateCartOperation>({
 		query: createCartMutation,
-		cache: "no-cache",
+		noCache: true,
 	});
 
 	return reshapeCart(res.body.data.cartCreate.cart);
@@ -228,7 +240,7 @@ export async function getCart(cartId: string | undefined): Promise<Cart | undefi
 	const res = await shopifyFetch<ShopifyCartOperation>({
 		query: getCartQuery,
 		variables: { cartId },
-		cache: "no-store",
+		noCache: true,
 	});
 
 	if (!res.body.data.cart) {
@@ -413,7 +425,7 @@ export async function getProducts({
 export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
 	const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
 		query: removeFromCartMutation,
-		cache: "no-store",
+		noCache: true,
 		variables: { cartId, lineIds },
 	});
 
@@ -429,7 +441,7 @@ export async function updateCart(
 ): Promise<{ warning?: string; data: { cart: Cart; quantityAdded: number } }> {
 	const res = await shopifyFetch<ShopifyUpdateCartOperation>({
 		query: editCartItemMutation,
-		cache: "no-store",
+		noCache: true,
 		variables: { cartId, lines: [{ id: lineId, merchandiseId: variantId, quantity }] },
 	});
 

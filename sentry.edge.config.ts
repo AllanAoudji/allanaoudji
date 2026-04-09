@@ -10,7 +10,7 @@ Sentry.init({
 
 	tracesSampleRate: isDev && !sentryEnabled ? 0 : 0.2,
 
-	ignoreErrors: ["NetworkError"],
+	ignoreErrors: [],
 
 	beforeSend(event, hint) {
 		const error = hint?.originalException as Error | undefined;

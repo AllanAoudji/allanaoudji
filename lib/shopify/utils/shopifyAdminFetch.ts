@@ -9,7 +9,6 @@ import {
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
 	TAGS,
 } from "@/lib/constants";
-import { isShopifyError } from "@/lib/type-guards";
 import {
 	ensureEndWithout,
 	ensureStartWith,
@@ -30,89 +29,99 @@ const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
 
+const MAX_RETRIES = 1;
+const RETRY_DELAY_MS = 1000;
+
 export async function shopifyAdminFetch<T>(
 	{
-		cache = "force-cache",
 		headers,
 		query,
 		revalidate = 60 * 60,
 		tags,
 		variables,
+		noCache = false,
 	}: {
-		cache?: RequestCache;
 		headers?: HeadersInit;
 		query: string;
 		revalidate?: number;
 		tags?: string[];
 		variables?: ExtractVariables<T>;
+		noCache?: boolean;
 	},
-	retries = 1,
+	retries = MAX_RETRIES,
 ): Promise<{ status: number; body: T }> {
+	const fetchOptions: RequestInit = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+			...headers,
+		},
+		body: JSON.stringify({
+			...(query && { query }),
+			...(variables && { variables }),
+		}),
+		next: noCache ? { revalidate: 0 } : { revalidate, tags: tags ?? [] },
+	};
+
+	let result: Response;
+
 	try {
-		const fetchOptions: RequestInit = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
-				...headers,
-			},
-			body: JSON.stringify({
-				...(query && { query }),
-				...(variables && { variables }),
-			}),
-		};
+		result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, fetchOptions);
+	} catch (networkError) {
+		const message = networkError instanceof Error ? networkError.message : String(networkError);
 
-		// ✅ Utilise SOIT cache SOIT revalidate, pas les deux
-		if (cache === "no-store" || cache === "no-cache") {
-			fetchOptions.cache = cache;
-		} else {
-			fetchOptions.cache = cache; // "force-cache" par défaut
-			fetchOptions.next = {
-				tags: tags ?? [],
-				revalidate,
-			};
-		}
-
-		const result = await fetch(`${DOMAIN}/admin/${SHOPIFY_GRAPHQL_API_ENDPOINT}`, fetchOptions);
-		const body = await result.json();
-
-		if (body.errors) {
-			Sentry.captureMessage("Shopify Admin GraphQL error", {
-				level: "error",
-				extra: { errors: body.errors, query, variables },
-			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
-		}
-
-		return { status: result.status, body };
-	} catch (error) {
-		if (error instanceof Error && error.message === ERROR_CODE.SHOPIFY_API_ERROR) {
-			throw error;
-		}
-
-		if (retries > 0) {
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			return shopifyAdminFetch({ cache, headers, query, revalidate, tags, variables }, retries - 1);
-		}
-
-		if (isShopifyError(error)) {
-			Sentry.captureException(error, {
-				extra: {
-					context: "Shopify Admin API error",
-					cause: error.cause?.toString() ?? "unknown",
-					status: error.status ?? 500,
-					query,
-				},
-			});
-			throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
-		}
-
-		Sentry.captureException(error, {
-			extra: { context: "Unexpected error in shopifyAdminFetch", query },
+		Sentry.captureException(networkError, {
+			extra: { context: "shopifyAdminFetch: network error", query, variables },
 		});
 
-		throw new Error(ERROR_CODE.SHOPIFY_API_ERROR);
+		if (retries > 0) {
+			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+			return shopifyAdminFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
+		}
+
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: network error — ${message}`);
 	}
+
+	if (!result.ok) {
+		const text = await result.text().catch(() => "(unreadable body)");
+
+		Sentry.captureMessage("shopifyAdminFetch: HTTP error", {
+			level: "error",
+			extra: { status: result.status, body: text, query, variables },
+		});
+
+		if (retries > 0 && result.status >= 500) {
+			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+			return shopifyAdminFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
+		}
+
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: HTTP ${result.status}`);
+	}
+
+	let body: T;
+
+	try {
+		body = await result.json();
+	} catch (parseError) {
+		Sentry.captureException(parseError, {
+			extra: { context: "shopifyAdminFetch: JSON parse error", query, variables },
+		});
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: invalid JSON response`);
+	}
+
+	if ((body as { errors?: unknown }).errors) {
+		const errors = (body as { errors: unknown }).errors;
+
+		Sentry.captureMessage("shopifyAdminFetch: GraphQL errors", {
+			level: "error",
+			extra: { errors, query, variables },
+		});
+
+		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: GraphQL — ${JSON.stringify(errors)}`);
+	}
+
+	return { status: result.status, body };
 }
 
 export async function getCollections(): Promise<Collection[]> {
@@ -160,7 +169,7 @@ export async function getDiscount(): Promise<DiscountNode[]> {
 export async function getProductVariantsInventory(productId: string): Promise<VariantInventory[]> {
 	const res = await shopifyAdminFetch<ShopifyVariantsInventoryQueryOperation>({
 		query: getProductVariantsInventoryQuery,
-		cache: "no-store",
+		noCache: true,
 		variables: { productId },
 	});
 
