@@ -48,7 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 					<LocalShopifyDispenser>
 						<CartDispenser>
 							<ModalProvider>
-								<header className="bg-primary fixed start-0 top-0 z-20 w-full">
+								<header className="bg-primary fixed inset-s-0 top-0 z-20 w-full">
 									<NavBar />
 								</header>
 								<CartActionsProvider>
