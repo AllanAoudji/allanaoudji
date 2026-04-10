@@ -24,8 +24,21 @@ Sentry.init({
 
 		if (error.name === "AbortError") return null;
 
-		if (error.message?.includes("aborted")) return null;
+		if (error.message === "Rejected" || error.message?.toLowerCase().includes("serviceworker"))
+			return null;
 
+		const frames = event?.exception?.values?.[0]?.stacktrace?.frames;
+		if (
+			frames?.some(
+				f =>
+					f?.filename?.includes("serwist") ||
+					f?.function?.includes("serviceWorker") ||
+					f?.function?.includes("_registerScript"),
+			)
+		)
+			return null;
+
+		if (error.message?.includes("aborted")) return null;
 		if (error.message?.includes("was not found on the server")) return null;
 		if (error.message?.includes("NEXT_REDIRECT")) return null;
 		if (error.message?.includes("NEXT_NOT_FOUND")) return null;
