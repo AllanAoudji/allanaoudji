@@ -7,6 +7,14 @@ import "@/app/globals.css";
 
 export default function GlobalError({ error }: { error: Error; reset: () => void }) {
 	useEffect(() => {
+		if (
+			error?.message?.includes("was not found on the server") ||
+			error?.message?.includes("NEXT_REDIRECT") ||
+			error?.message?.includes("NEXT_NOT_FOUND")
+		) {
+			window.location.reload();
+			return;
+		}
 		Sentry.captureException(error);
 	}, [error]);
 
