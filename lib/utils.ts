@@ -247,6 +247,7 @@ export function getProductDefaultVariant(product: Product): string | undefined {
 
 	const params = firstVariant?.selectedOptions
 		?.filter(opt => opt?.name && opt?.value)
+		.filter(opt => !(opt.name.toLowerCase() === "title" && opt.value === "Default Title")) // 👈
 		.map(opt => [opt.name.toLowerCase(), opt.value]);
 
 	if (!params || params.length === 0) return undefined;
