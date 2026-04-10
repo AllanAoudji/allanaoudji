@@ -26,6 +26,7 @@ Sentry.init({
 
 		if (error.message?.includes("aborted")) return null;
 
+		if (error.message?.includes("was not found on the server")) return null;
 		if (error.message?.includes("NEXT_REDIRECT")) return null;
 		if (error.message?.includes("NEXT_NOT_FOUND")) return null;
 
