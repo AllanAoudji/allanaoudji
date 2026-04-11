@@ -28,7 +28,6 @@ import {
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN
 	? ensureStartWith(ensureEndWithout(process.env.SHOPIFY_STORE_DOMAIN, "/"), "https://")
 	: "";
-
 const MAX_RETRIES = 1;
 const RETRY_DELAY_MS = 1000;
 
@@ -64,6 +63,9 @@ export async function shopifyAdminFetch<T>(
 		next: noCache ? { revalidate: 0 } : { revalidate, tags: tags ?? [] },
 	};
 
+	const isLastRetry = retries === 0;
+	const retryAttempt = MAX_RETRIES - retries;
+
 	let result: Response;
 
 	try {
@@ -72,10 +74,16 @@ export async function shopifyAdminFetch<T>(
 		const message = networkError instanceof Error ? networkError.message : String(networkError);
 
 		Sentry.captureException(networkError, {
+			level: isLastRetry ? "error" : "warning",
+			tags: {
+				retry_attempt: retryAttempt,
+				is_last_retry: isLastRetry,
+				shopify_error_type: "network",
+			},
 			extra: { context: "shopifyAdminFetch: network error", query, variables },
 		});
 
-		if (retries > 0) {
+		if (!isLastRetry) {
 			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
 			return shopifyAdminFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
 		}
@@ -85,13 +93,20 @@ export async function shopifyAdminFetch<T>(
 
 	if (!result.ok) {
 		const text = await result.text().catch(() => "(unreadable body)");
+		const canRetry = !isLastRetry && result.status >= 500;
 
 		Sentry.captureMessage("shopifyAdminFetch: HTTP error", {
-			level: "error",
+			level: canRetry ? "warning" : "error",
+			tags: {
+				retry_attempt: retryAttempt,
+				is_last_retry: isLastRetry,
+				shopify_error_type: "http",
+				http_status: result.status,
+			},
 			extra: { status: result.status, body: text, query, variables },
 		});
 
-		if (retries > 0 && result.status >= 500) {
+		if (canRetry) {
 			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
 			return shopifyAdminFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
 		}
@@ -105,6 +120,10 @@ export async function shopifyAdminFetch<T>(
 		body = await result.json();
 	} catch (parseError) {
 		Sentry.captureException(parseError, {
+			level: "error",
+			tags: {
+				shopify_error_type: "parse",
+			},
 			extra: { context: "shopifyAdminFetch: JSON parse error", query, variables },
 		});
 		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: invalid JSON response`);
@@ -115,6 +134,9 @@ export async function shopifyAdminFetch<T>(
 
 		Sentry.captureMessage("shopifyAdminFetch: GraphQL errors", {
 			level: "error",
+			tags: {
+				shopify_error_type: "graphql",
+			},
 			extra: { errors, query, variables },
 		});
 

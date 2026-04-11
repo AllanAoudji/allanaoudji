@@ -92,6 +92,7 @@ const stockWarningMessage = (quantityAdded: number): string => {
 
 	return `Stock indisponible. Seulement ${quantityAdded} articles ont été ajouté au panier.`;
 };
+
 const MAX_RETRIES = 1;
 const RETRY_DELAY_MS = 1000;
 
@@ -124,23 +125,30 @@ export async function shopifyFetch<T>(
 			...(query && { query }),
 			...(variables && { variables }),
 		}),
-		// next.revalidate gère le Data Cache — pas besoin de cache: explicite
 		next: noCache ? { revalidate: 0 } : { revalidate, tags: tags ?? [] },
 	};
+
+	const isLastRetry = retries === 0;
+	const retryAttempt = MAX_RETRIES - retries;
 
 	let result: Response;
 
 	try {
 		result = await fetch(endpoint, fetchOptions);
 	} catch (networkError) {
-		// Erreur réseau pure (DNS, timeout, connexion refusée)
 		const message = networkError instanceof Error ? networkError.message : String(networkError);
 
 		Sentry.captureException(networkError, {
+			level: isLastRetry ? "error" : "warning",
+			tags: {
+				retry_attempt: retryAttempt,
+				is_last_retry: isLastRetry,
+				shopify_error_type: "network",
+			},
 			extra: { context: "shopifyFetch: network error", query, variables },
 		});
 
-		if (retries > 0) {
+		if (!isLastRetry) {
 			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
 			return shopifyFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
 		}
@@ -149,15 +157,21 @@ export async function shopifyFetch<T>(
 	}
 
 	if (!result.ok) {
-		// HTTP 4xx / 5xx de Shopify
 		const text = await result.text().catch(() => "(unreadable body)");
+		const canRetry = !isLastRetry && result.status >= 500;
 
 		Sentry.captureMessage("shopifyFetch: HTTP error", {
-			level: "error",
+			level: canRetry ? "warning" : "error",
+			tags: {
+				retry_attempt: retryAttempt,
+				is_last_retry: isLastRetry,
+				shopify_error_type: "http",
+				http_status: result.status,
+			},
 			extra: { status: result.status, body: text, query, variables },
 		});
 
-		if (retries > 0 && result.status >= 500) {
+		if (canRetry) {
 			await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
 			return shopifyFetch({ headers, query, revalidate, tags, variables, noCache }, retries - 1);
 		}
@@ -171,6 +185,10 @@ export async function shopifyFetch<T>(
 		body = await result.json();
 	} catch (parseError) {
 		Sentry.captureException(parseError, {
+			level: "error",
+			tags: {
+				shopify_error_type: "parse",
+			},
 			extra: { context: "shopifyFetch: JSON parse error", query, variables },
 		});
 		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: invalid JSON response`);
@@ -181,10 +199,12 @@ export async function shopifyFetch<T>(
 
 		Sentry.captureMessage("shopifyFetch: GraphQL errors", {
 			level: "error",
+			tags: {
+				shopify_error_type: "graphql",
+			},
 			extra: { errors, query, variables },
 		});
 
-		// Pas de retry sur les erreurs GraphQL (requête invalide, throttle géré par Shopify)
 		throw new Error(`${ERROR_CODE.SHOPIFY_API_ERROR}: GraphQL — ${JSON.stringify(errors)}`);
 	}
 
