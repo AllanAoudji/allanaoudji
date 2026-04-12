@@ -4,6 +4,7 @@ import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { FocusTrap } from "focus-trap-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import useEscape from "@/lib/hooks/useEscape";
 import useLeftArrow from "@/lib/hooks/useLeftArrow";
 import useRightArrow from "@/lib/hooks/useRightArrow";
@@ -27,6 +28,7 @@ type DisplayedImage = {
 };
 
 const transition = { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } as const;
+const fadeTransition = { duration: 0.3, ease: "easeInOut" } as const;
 
 const widths = [320, 480, 640, 768, 960, 1200];
 
@@ -36,7 +38,6 @@ function isSanity(url: string) {
 function isShopify(url: string) {
 	return url.includes("cdn.shopify.com");
 }
-
 function buildSanityUrl(url: string, width: number) {
 	return `${url}?w=${width}&auto=format&fit=max`;
 }
@@ -44,19 +45,16 @@ function buildShopifyUrl(url: string, width: number) {
 	const sep = url.includes("?") ? "&" : "?";
 	return `${url}${sep}width=${width}`;
 }
-
 function buildSrcSet(url: string) {
 	if (isSanity(url)) return widths.map(w => `${buildSanityUrl(url, w)} ${w}w`).join(", ");
 	if (isShopify(url)) return widths.map(w => `${buildShopifyUrl(url, w)} ${w}w`).join(", ");
 	return undefined;
 }
-
 function buildFinalSrc(url: string) {
 	if (isSanity(url)) return buildSanityUrl(url, 1200);
 	if (isShopify(url)) return buildShopifyUrl(url, 1200);
 	return url;
 }
-
 function preloadImage(url: string) {
 	const img = new Image();
 	img.src = buildFinalSrc(url);
@@ -72,58 +70,67 @@ export default function LightBox({
 }: Readonly<Props>) {
 	useEscape(resetClick);
 
-	// Toutes les données de l'image visible, pas juste le src
 	const [displayed, setDisplayed] = useState<DisplayedImage | null>(null);
+	const [previousDisplayed, setPreviousDisplayed] = useState<DisplayedImage | null>(null);
 	const [loadingSrc, setLoadingSrc] = useState<string | null>(null);
-	// Premier chargement = pas d'animation sur x
+	const [isRevealed, setIsRevealed] = useState(false);
 
-	// Snapshot de l'image à charger, capturé au moment du déclenchement
-	// pour éviter que image.url/alt soient déjà différents au moment du onLoad
 	const pendingImage = useRef<LightboxImage | null>(null);
-
-	useLeftArrow(() => {
-		prevImage?.();
-	});
-
-	useRightArrow(() => {
-		nextImage?.();
-	});
+	const displayedRef = useRef<DisplayedImage | null>(null);
 
 	useEffect(() => {
-		if (nextImageData?.url) {
-			preloadImage(nextImageData.url);
-		}
-		if (prevImageData?.url) {
-			preloadImage(prevImageData.url);
-		}
+		displayedRef.current = displayed;
+	}, [displayed]);
+
+	useLeftArrow(() => prevImage?.());
+	useRightArrow(() => nextImage?.());
+
+	useEffect(() => {
+		if (nextImageData?.url) preloadImage(nextImageData.url);
+		if (prevImageData?.url) preloadImage(prevImageData.url);
 	}, [nextImageData, prevImageData]);
 
 	useEffect(() => {
 		if (!image || !image.url) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setDisplayed(null);
+			setPreviousDisplayed(null);
 			setLoadingSrc(null);
+			setIsRevealed(false);
 			pendingImage.current = null;
 			return;
 		}
 
 		const finalSrc = buildFinalSrc(image.url);
-		if (finalSrc === displayed?.src) return;
+		if (finalSrc === displayedRef.current?.src) return;
 
-		// On snapshote l'image courante avant que le context la change
 		pendingImage.current = image;
+		// On fige l'ancienne image comme fond — elle restera visible
+		// à opacity:1 jusqu'à ce que la nouvelle soit complètement révélée.
+		setPreviousDisplayed(displayedRef.current);
+		setIsRevealed(false);
 		setLoadingSrc(finalSrc);
 	}, [image?._id]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const handleLoad = useCallback(() => {
 		const snap = pendingImage.current;
 		if (!snap || !snap.url || !loadingSrc) return;
-		setDisplayed({
+
+		const next: DisplayedImage = {
 			id: snap._id,
 			src: loadingSrc,
 			srcSet: buildSrcSet(snap.url),
 			alt: "image",
+		};
+
+		// flushSync : React peint d'abord l'image à opacity:0 dans le DOM,
+		// puis on déclenche le fade-in. Pas de double rAF fragile.
+		flushSync(() => {
+			setDisplayed(next);
+			setLoadingSrc(null);
 		});
-		setLoadingSrc(null);
+
+		setIsRevealed(true);
 	}, [loadingSrc]);
 
 	const handleClick = useCallback(
@@ -133,6 +140,7 @@ export default function LightBox({
 		},
 		[resetClick],
 	);
+
 	const handleClose = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -140,6 +148,7 @@ export default function LightBox({
 		},
 		[resetClick],
 	);
+
 	const handleNextClick = useCallback(
 		(e: MouseEvent<HTMLButtonElement>) => {
 			e.stopPropagation();
@@ -224,33 +233,58 @@ export default function LightBox({
 									height: "auto",
 								}}
 							>
-								{!displayed && <div className="bg-quaternary absolute inset-0" />}
+								{/* Placeholder : TOUJOURS présent en fond.
+								    Il est recouvert par les images au-dessus,
+								    donc jamais visible quand une image est affichée — 
+								    mais jamais la cause d'un clignotement non plus. */}
+								<div className="bg-quaternary absolute inset-0" />
 
-								<div className="absolute inset-0">
-									{displayed && (
-										/* eslint-disable-next-line @next/next/no-img-element */
-										<img
-											key={displayed.id}
-											// Premier chargement : pas d'animation sur x
-											alt={displayed.alt}
-											className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
-											decoding="async"
-											fetchPriority="high"
-											sizes="(max-width: 768px) 100vw, 80vw"
-											src={displayed.src}
-											srcSet={displayed.srcSet}
-										/>
-									)}
-								</div>
+								{/* Ancienne image : toujours à opacity:1, sert de fond stable
+								    pendant le chargement et le fade-in de la nouvelle.
+								    Disparaît uniquement quand le fade est réellement terminé. */}
+								{previousDisplayed && (
+									/* eslint-disable-next-line @next/next/no-img-element */
+									<img
+										key={`prev-${previousDisplayed.id}`}
+										alt=""
+										aria-hidden="true"
+										className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
+										decoding="async"
+										src={previousDisplayed.src}
+										srcSet={previousDisplayed.srcSet}
+									/>
+								)}
 
-								{/* Fantôme de préchargement */}
+								{/* Nouvelle image : fade-in par-dessus le fond.
+								    onAnimationComplete efface previousDisplayed uniquement
+								    quand Framer confirme que l'animation est réellement terminée. */}
+								{displayed && (
+									<motion.img
+										key={displayed.id}
+										alt={displayed.alt}
+										animate={{ opacity: isRevealed ? 1 : 0 }}
+										className="absolute inset-0 h-full w-full object-contain drop-shadow-md"
+										decoding="async"
+										fetchPriority="high"
+										initial={{ opacity: 0 }}
+										sizes="(max-width: 768px) 100vw, 80vw"
+										src={displayed.src}
+										srcSet={displayed.srcSet}
+										transition={fadeTransition}
+										onAnimationComplete={() => {
+											if (isRevealed) setPreviousDisplayed(null);
+										}}
+									/>
+								)}
+
+								{/* Fantôme de préchargement — invisible, déclenche handleLoad */}
 								{loadingSrc && (
 									/* eslint-disable-next-line @next/next/no-img-element */
 									<img
 										key={`loading-${loadingSrc}`}
 										alt=""
 										aria-hidden="true"
-										className="absolute inset-0 h-full w-full opacity-0"
+										className="pointer-events-none absolute inset-0 h-full w-full opacity-0"
 										decoding="async"
 										src={loadingSrc}
 										onLoad={handleLoad}
