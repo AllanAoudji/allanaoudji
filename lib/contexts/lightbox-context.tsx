@@ -1,7 +1,8 @@
 "use client";
 
 import { ERROR_CODE } from "../constants";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import useBodyScrollLock from "../hooks/useBodyScrollLock";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import LightBox from "@/components/Lightbox";
 import LightboxImage from "@/types/lightboxImage";
 import { WorkGalleryImage } from "@/types/sanityType";
@@ -83,14 +84,7 @@ export function LightboxProvider({ children }: Readonly<Props>) {
 		setClickedIndex(null);
 	}, []);
 
-	useEffect(() => {
-		if (clickedImage === null) return;
-		const prev = document.documentElement.style.overflow;
-		document.documentElement.style.overflow = "hidden";
-		return () => {
-			document.documentElement.style.overflow = prev;
-		};
-	}, [clickedImage]);
+	useBodyScrollLock(!!clickedImage);
 
 	const value = useMemo(
 		() => ({ appendImages, resetImages, setImage, updateImages }),
