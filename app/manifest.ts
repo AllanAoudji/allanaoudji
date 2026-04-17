@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
 			"Allan Aoudji | graphiste & illustrateur — prints, affiches et créations originales.",
 		start_url: "/",
 		display: "standalone",
-		background_color: "#f5f0eb",
-		theme_color: "#1e3142",
+		background_color: "#f1f3f7",
+		theme_color: "#192f40",
 		icons: [
 			{
 				src: "/images/icon-192.png",
