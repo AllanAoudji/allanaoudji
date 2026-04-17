@@ -8,7 +8,7 @@ export default function SplashScreen() {
 				className="w-72 max-w-full p-4"
 				height={762}
 				priority={true}
-				src="/images/logo-square-dark.png"
+				src="/images/splash-logo.png"
 				width={1419}
 			/>
 		</div>

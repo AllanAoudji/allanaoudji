@@ -6,14 +6,14 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-primary: #f5f0eb;
-	--color-secondary: #1e3142;
+	--color-primary: #f1f3f7;
+	--color-secondary: #192f40;
 	--color-tertiary: #baddff;
-	--color-quaternary: #e8dbcf;
+	--color-quaternary: #e2e7ec;
 
-	--color-danger: #d41e39;
-	--color-warning: #f0cb48;
-	--color-success: #3bed65;
+	--color-danger: #d41e4d;
+	--color-warning: #e8e758;
+	--color-success: #5feda6;
 
 	--font-gopher: "gopher";
 
