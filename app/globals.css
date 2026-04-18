@@ -6,10 +6,10 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-primary: #f1f3f7;
+	--color-primary: #f7f6f1;
 	--color-secondary: #192f40;
 	--color-tertiary: #baddff;
-	--color-quaternary: #e2e7ec;
+	--color-quaternary: #f2ebe6;
 
 	--color-danger: #d41e4d;
 	--color-warning: #e8e758;
