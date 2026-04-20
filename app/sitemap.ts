@@ -37,9 +37,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	return [
 		{ url: BASE_URL, changeFrequency: "weekly", priority: 1 },
-		{ url: `${BASE_URL}/collections`, changeFrequency: "weekly", priority: 0.6 },
 		{ url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
-		{ url: `${BASE_URL}/legal`, changeFrequency: "yearly", priority: 0.3 },
+		{ url: `${BASE_URL}/collections`, changeFrequency: "weekly", priority: 0.6 },
+		{ url: `${BASE_URL}/contact`, changeFrequency: "yearly", priority: 0.6 },
+		{ url: `${BASE_URL}/gallery`, changeFrequency: "weekly", priority: 0.6 },
+		{ url: `${BASE_URL}/general-conditions-of-sale`, changeFrequency: "yearly", priority: 0.3 },
+		{ url: `${BASE_URL}/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
+		{ url: `${BASE_URL}/shipping-policy`, changeFrequency: "yearly", priority: 0.3 },
 		...collectionUrls,
 		...productUrls,
 		...workUrls,
