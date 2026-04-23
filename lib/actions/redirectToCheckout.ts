@@ -11,9 +11,10 @@ export async function redirectToCheckout() {
 	let cartId: string | undefined;
 	let cart: Cart | undefined;
 
-	if (!process.env.NEXT_PUBLIC_SHOP_ENABLED) {
-		return ERROR_CODE.INVALID_CART;
-	}
+	// TODO: remettre cette ligne en production une fois que le shop sera prêt
+	// if (!process.env.NEXT_PUBLIC_SHOP_ENABLED) {
+	// 	return ERROR_CODE.INVALID_CART;
+	// }
 
 	try {
 		cartId = (await cookies()).get("cartId")?.value;
@@ -41,5 +42,8 @@ export async function redirectToCheckout() {
 		return ERROR_CODE.INVALID_CART;
 	}
 
-	redirect(cart.checkoutUrl, RedirectType.push);
+	const checkoutUrl = new URL(cart.checkoutUrl);
+	checkoutUrl.searchParams.set("return_to", "https://allanaoudji.fr/commande/confirmation");
+
+	redirect(checkoutUrl.toString(), RedirectType.push);
 }
