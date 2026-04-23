@@ -32,6 +32,12 @@ function recalcCart(lines: CartItem[], currency: string) {
 	};
 }
 
+function resolveUnitPrice(item: CartItem): number {
+	return item.cost.amountPerQuantity
+		? Number(item.cost.amountPerQuantity.amount)
+		: Number(item.cost.totalAmount.amount) / item.quantity;
+}
+
 function buildItemWithDiscount(item: CartItem, discountNodes: DiscountNode[]): CartItem {
 	const collectionIds = item.merchandise.product.collections?.map(c => c.id) ?? [];
 	const discounts = getApplicableDiscounts(
@@ -39,24 +45,29 @@ function buildItemWithDiscount(item: CartItem, discountNodes: DiscountNode[]): C
 		item.merchandise.product.id,
 		collectionIds,
 	);
-	const originalPrice = Number(item.cost.totalAmount.amount) / item.quantity;
-	const { finalPrice } = computeFinalPrice(originalPrice, discounts);
-	const discountedAmount = originalPrice - finalPrice;
+	const unitPrice = resolveUnitPrice(item);
+	const { finalPrice } = computeFinalPrice(unitPrice, discounts);
+	const discountedAmount = unitPrice - finalPrice;
 
-	const getDiscountAllocations = (discountedAmount: number) => {
-		return [
-			{
-				discountedAmount: {
-					amount: (discountedAmount * item.quantity).toFixed(2),
-					currencyCode: item.cost.totalAmount.currencyCode,
-				},
+	const discountAllocations = [
+		{
+			discountedAmount: {
+				amount: (discountedAmount * item.quantity).toFixed(2),
+				currencyCode: item.cost.totalAmount.currencyCode,
 			},
-		];
-	};
+		},
+	];
 
 	return {
 		...item,
-		discountAllocations: discountedAmount > 0 ? getDiscountAllocations(discountedAmount) : [],
+		cost: {
+			...item.cost,
+			totalAmount: {
+				amount: (finalPrice * item.quantity).toFixed(2),
+				currencyCode: item.cost.totalAmount.currencyCode,
+			},
+		},
+		discountAllocations: discountedAmount > 0 ? discountAllocations : [],
 	};
 }
 
@@ -68,12 +79,17 @@ export function cartReducer(
 	if (!cart) {
 		if (action.type === "ADD_ITEM") {
 			const { product, variant, quantity, realCartLineId } = action;
+			const unitPrice = Number(variant.price.amount);
 			const rawItem: CartItem = {
 				id: realCartLineId ?? `cartitem-${variant.id}-${Date.now()}`,
 				quantity,
 				cost: {
 					totalAmount: {
-						amount: (Number(variant.price.amount) * quantity).toFixed(2),
+						amount: (unitPrice * quantity).toFixed(2),
+						currencyCode: variant.price.currencyCode,
+					},
+					amountPerQuantity: {
+						amount: variant.price.amount,
 						currencyCode: variant.price.currencyCode,
 					},
 				},
@@ -133,13 +149,18 @@ export function cartReducer(
 			const { product, variant, quantity, realCartLineId } = action;
 			const existingItem = cart.lines.find(line => line.merchandise.id === variant.id);
 			const newQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+			const unitPrice = Number(variant.price.amount);
 
 			const rawItem: CartItem = {
 				id: realCartLineId ?? existingItem?.id ?? `cartitem-${variant.id}-${Date.now()}`,
 				quantity: newQuantity,
 				cost: {
 					totalAmount: {
-						amount: (Number(variant.price.amount) * newQuantity).toFixed(2),
+						amount: (unitPrice * newQuantity).toFixed(2),
+						currencyCode: variant.price.currencyCode,
+					},
+					amountPerQuantity: {
+						amount: variant.price.amount,
 						currencyCode: variant.price.currencyCode,
 					},
 				},
@@ -174,26 +195,27 @@ export function cartReducer(
 		}
 
 		case "UPDATE_CART_LINE": {
-			const updatedLine = (line: CartItem): CartItem => {
+			const updatedLines = cart.lines.map(line => {
+				if (line.merchandise.id !== action.variantId) return line;
+				const unitPrice = resolveUnitPrice(line);
 				const raw: CartItem = {
 					...line,
 					id: action.realCartLineId,
 					quantity: action.realQuantity,
 					cost: {
+						...line.cost,
 						totalAmount: {
-							amount: (
-								(Number(line.cost.totalAmount.amount) / line.quantity) *
-								action.realQuantity
-							).toFixed(2),
+							amount: (unitPrice * action.realQuantity).toFixed(2),
+							currencyCode: line.cost.totalAmount.currencyCode,
+						},
+						amountPerQuantity: {
+							amount: String(unitPrice),
 							currencyCode: line.cost.totalAmount.currencyCode,
 						},
 					},
 				};
 				return buildItemWithDiscount(raw, discountNodes);
-			};
-			const updatedLines = cart.lines.map(line =>
-				line.merchandise.id === action.variantId ? updatedLine(line) : line,
-			);
+			});
 			return {
 				...cart,
 				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
@@ -223,12 +245,18 @@ export function cartReducer(
 					if (line.merchandise.id !== action.merchandiseId) return line;
 					const newQuantity = action.updateType === "plus" ? line.quantity + 1 : line.quantity - 1;
 					if (newQuantity <= 0) return null;
+					const unitPrice = resolveUnitPrice(line);
 					const raw: CartItem = {
 						...line,
 						quantity: newQuantity,
 						cost: {
+							...line.cost,
 							totalAmount: {
-								amount: ((Number(line.cost.totalAmount.amount) / line.quantity) * newQuantity).toFixed(2),
+								amount: (unitPrice * newQuantity).toFixed(2),
+								currencyCode: line.cost.totalAmount.currencyCode,
+							},
+							amountPerQuantity: {
+								amount: String(unitPrice),
 								currencyCode: line.cost.totalAmount.currencyCode,
 							},
 						},

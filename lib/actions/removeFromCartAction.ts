@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 import { updateTag } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
+import createCartAndSetCookie from "@/lib/actions/createCartAndSetCookie";
 import RemoveActionFromCartActionData from "@/types/RemoveFromCartActionData";
 import ActionReponse from "@/types/actionResponse";
 import CartItem from "@/types/cartItem";
@@ -35,10 +36,15 @@ export async function removeFromCartAction(
 
 	const cartId = cookieStore.get("cartId")?.value;
 	if (!cartId) {
-		return {
-			message: ERROR_CODE.INVALID_CART,
-			type: "error",
-		};
+		try {
+			await createCartAndSetCookie();
+		} catch (error) {
+			Sentry.captureException(error, {
+				extra: { context: "Failed to recreate cart after missing cookie" },
+			});
+		}
+		// Le client va rollback puis SYNC_CART récupère le nouveau cart vide
+		return { data: { cartItem }, type: "success" };
 	}
 
 	try {
@@ -60,9 +66,7 @@ export async function removeFromCartAction(
 	updateTag(TAGS.cart);
 
 	return {
-		data: {
-			cartItem,
-		},
+		data: { cartItem },
 		type: "success",
 	};
 }
