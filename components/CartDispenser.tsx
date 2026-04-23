@@ -13,15 +13,14 @@ async function CartDispenserInner({ children }: { children: React.ReactNode }) {
 	const cartId = cookieStore.get("cartId")?.value;
 	const [cart, discountNodes] = await Promise.all([getCartCached(cartId), getDiscount()]);
 
-	if (cartId && !cart) {
-		cookieStore.delete("cartId");
-	}
+	const shouldResetCart = !!cartId && !cart;
 
 	return (
 		<CartClientWrapper
 			cartPromise={Promise.resolve(cart)}
 			discountNodes={discountNodes}
 			initialCartId={cart ? cartId : undefined}
+			shouldResetCart={shouldResetCart}
 		>
 			{children}
 		</CartClientWrapper>
