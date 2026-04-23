@@ -46,8 +46,6 @@ export default function CartClientWrapper({
 
 		(async () => {
 			await resetCartCookie();
-
-			// important: on clear le state local aussi
 			setCurrentCartId(undefined);
 			setCurrentCartPromise(Promise.resolve(undefined));
 		})();
@@ -56,7 +54,7 @@ export default function CartClientWrapper({
 	useEffect(() => {
 		if (currentCartId) return;
 		if (creatingRef.current) return;
-		if (shouldResetCart) return;
+		if (shouldResetCart && !resetDoneRef.current) return;
 
 		creatingRef.current = true;
 
