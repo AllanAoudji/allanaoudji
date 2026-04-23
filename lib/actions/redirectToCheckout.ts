@@ -42,8 +42,5 @@ export async function redirectToCheckout() {
 		return ERROR_CODE.INVALID_CART;
 	}
 
-	const checkoutUrl = new URL(cart.checkoutUrl);
-	checkoutUrl.searchParams.set("return_to", "https://allanaoudji.fr/commande/confirmation");
-
-	redirect(checkoutUrl.toString(), RedirectType.push);
+	redirect(cart.checkoutUrl, RedirectType.push);
 }

@@ -9,14 +9,19 @@ const getCartCached = cache(async (cartId: string | undefined) => {
 });
 
 async function CartDispenserInner({ children }: { children: React.ReactNode }) {
-	const cartId = (await cookies()).get("cartId")?.value;
+	const cookieStore = await cookies();
+	const cartId = cookieStore.get("cartId")?.value;
 	const [cart, discountNodes] = await Promise.all([getCartCached(cartId), getDiscount()]);
+
+	if (cartId && !cart) {
+		cookieStore.delete("cartId");
+	}
 
 	return (
 		<CartClientWrapper
 			cartPromise={Promise.resolve(cart)}
 			discountNodes={discountNodes}
-			initialCartId={cartId}
+			initialCartId={cart ? cartId : undefined}
 		>
 			{children}
 		</CartClientWrapper>
