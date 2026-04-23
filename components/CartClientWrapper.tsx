@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useState, Suspense } from "react";
+import { useCallback, useState, Suspense, useEffect } from "react";
+import createCartAndSetCookie from "@/lib/actions/createCartAndSetCookie";
 import { getCartAction } from "@/lib/actions/getCartAction";
 import { CartProvider } from "@/lib/contexts/cart-context";
 import { CartRecoveryProvider } from "@/lib/contexts/cartRecovery-context";
@@ -30,6 +31,14 @@ export default function CartClientWrapper({
 		setCurrentCartPromise(getCartAction(newCartId));
 		setHasError(false);
 	}, []);
+
+	useEffect(() => {
+		if (!currentCartId) {
+			createCartAndSetCookie().then(newCartId => {
+				onCartCreated(newCartId);
+			});
+		}
+	}, [currentCartId, onCartCreated]);
 
 	if (hasError) {
 		return <CartRecoveryProvider onCartCreated={onCartCreated}>{children}</CartRecoveryProvider>;
