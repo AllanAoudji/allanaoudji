@@ -17,6 +17,7 @@ type CartItem = {
 		compareAtAmountPerQuantity?: Money | null;
 	};
 	discountAllocations?: DiscountAllocation[];
+	originalUnitPrice?: string;
 	merchandise: {
 		id: string;
 		availableForSale: boolean;

@@ -4,7 +4,7 @@ import CartAction from "@/types/cartAction";
 import CartItem from "@/types/cartItem";
 import { DiscountNode } from "@/types/shopifyDiscount";
 
-function recalcCart(lines: CartItem[], currency: string) {
+function recalcCart(lines: CartItem[], currency: string, previousCost?: Cart["cost"]) {
 	const totalQuantity = lines.reduce((sum, l) => sum + l.quantity, 0);
 
 	const subtotal = lines.reduce((sum, l) => sum + Number(l.cost.totalAmount.amount), 0).toFixed(2);
@@ -19,20 +19,26 @@ function recalcCart(lines: CartItem[], currency: string) {
 		}, 0)
 		.toFixed(2);
 
-	const total = (Number(subtotal) - Number(totalDiscount)).toFixed(2);
+	// Frais de port = totalAmount Shopify - subtotalAmount Shopify
+	const shippingCost = previousCost
+		? Number(previousCost.totalAmount.amount) - Number(previousCost.subtotalAmount.amount)
+		: 0;
+
+	const estimatedTotal = (Number(subtotal) + shippingCost).toFixed(2);
 
 	return {
 		lines,
 		totalQuantity,
-		cost: {
+		partialCost: {
 			subtotalAmount: { amount: subtotal, currencyCode: currency },
-			totalAmount: { amount: total, currencyCode: currency },
-			totalTaxAmount: { amount: "0.00", currencyCode: currency },
+			totalDiscount: { amount: totalDiscount, currencyCode: currency },
+			estimatedTotal: { amount: estimatedTotal, currencyCode: currency },
 		},
 	};
 }
 
 function resolveUnitPrice(item: CartItem): number {
+	if (item.originalUnitPrice) return Number(item.originalUnitPrice);
 	return item.cost.amountPerQuantity
 		? Number(item.cost.amountPerQuantity.amount)
 		: Number(item.cost.totalAmount.amount) / item.quantity;
@@ -71,6 +77,13 @@ function buildItemWithDiscount(item: CartItem, discountNodes: DiscountNode[]): C
 	};
 }
 
+function enrichLines(lines: CartItem[]): CartItem[] {
+	return lines.map(line => ({
+		...line,
+		originalUnitPrice: line.originalUnitPrice ?? line.cost.amountPerQuantity?.amount ?? undefined,
+	}));
+}
+
 export function cartReducer(
 	cart: Cart | undefined,
 	action: CartAction,
@@ -83,6 +96,7 @@ export function cartReducer(
 			const rawItem: CartItem = {
 				id: realCartLineId ?? `cartitem-${variant.id}-${Date.now()}`,
 				quantity,
+				originalUnitPrice: variant.price.amount,
 				cost: {
 					totalAmount: {
 						amount: (unitPrice * quantity).toFixed(2),
@@ -135,14 +149,14 @@ export function cartReducer(
 			};
 		}
 		if (action.type === "SYNC_CART") {
-			return action.cart;
+			return { ...action.cart, lines: enrichLines(action.cart.lines) };
 		}
 		return cart;
 	}
 
 	switch (action.type) {
 		case "SYNC_CART": {
-			return action.cart;
+			return { ...action.cart, lines: enrichLines(action.cart.lines) };
 		}
 
 		case "ADD_ITEM": {
@@ -154,6 +168,7 @@ export function cartReducer(
 			const rawItem: CartItem = {
 				id: realCartLineId ?? existingItem?.id ?? `cartitem-${variant.id}-${Date.now()}`,
 				quantity: newQuantity,
+				originalUnitPrice: variant.price.amount,
 				cost: {
 					totalAmount: {
 						amount: (unitPrice * newQuantity).toFixed(2),
@@ -188,9 +203,21 @@ export function cartReducer(
 				? cart.lines.map(line => (line.merchandise.id === variant.id ? updatedItem : line))
 				: [...cart.lines, updatedItem];
 
+			const { lines, totalQuantity, partialCost } = recalcCart(
+				updatedLines,
+				cart.cost.totalAmount.currencyCode,
+				cart.cost,
+			);
+
 			return {
 				...cart,
-				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
+				lines,
+				totalQuantity,
+				cost: {
+					...cart.cost,
+					subtotalAmount: partialCost.subtotalAmount,
+					totalAmount: partialCost.estimatedTotal,
+				},
 			};
 		}
 
@@ -198,10 +225,12 @@ export function cartReducer(
 			const updatedLines = cart.lines.map(line => {
 				if (line.merchandise.id !== action.variantId) return line;
 				const unitPrice = resolveUnitPrice(line);
+
 				const raw: CartItem = {
 					...line,
 					id: action.realCartLineId,
 					quantity: action.realQuantity,
+					originalUnitPrice: line.originalUnitPrice,
 					cost: {
 						...line.cost,
 						totalAmount: {
@@ -216,26 +245,64 @@ export function cartReducer(
 				};
 				return buildItemWithDiscount(raw, discountNodes);
 			});
+
+			const { lines, totalQuantity, partialCost } = recalcCart(
+				updatedLines,
+				cart.cost.totalAmount.currencyCode,
+				cart.cost,
+			);
+
 			return {
 				...cart,
-				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
+				lines,
+				totalQuantity,
+				cost: {
+					...cart.cost,
+					subtotalAmount: partialCost.subtotalAmount,
+					totalAmount: partialCost.estimatedTotal,
+				},
 			};
 		}
 
 		case "ROLLBACK_ADD":
 		case "ROLLBACK_REMOVE":
 		case "ROLLBACK_UPDATE": {
+			const { lines, totalQuantity, partialCost } = recalcCart(
+				action.previousLines,
+				cart.cost.totalAmount.currencyCode,
+				cart.cost,
+			);
+
 			return {
 				...cart,
-				...recalcCart(action.previousLines, cart.cost.totalAmount.currencyCode),
+				lines,
+				totalQuantity,
+				cost: {
+					...cart.cost,
+					subtotalAmount: partialCost.subtotalAmount,
+					totalAmount: partialCost.estimatedTotal,
+				},
 			};
 		}
 
 		case "REMOVE_ITEM": {
 			const updatedLines = cart.lines.filter(line => line.merchandise.id !== action.merchandiseId);
+
+			const { lines, totalQuantity, partialCost } = recalcCart(
+				updatedLines,
+				cart.cost.totalAmount.currencyCode,
+				cart.cost,
+			);
+
 			return {
 				...cart,
-				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
+				lines,
+				totalQuantity,
+				cost: {
+					...cart.cost,
+					subtotalAmount: partialCost.subtotalAmount,
+					totalAmount: partialCost.estimatedTotal,
+				},
 			};
 		}
 
@@ -249,6 +316,7 @@ export function cartReducer(
 					const raw: CartItem = {
 						...line,
 						quantity: newQuantity,
+						originalUnitPrice: line.originalUnitPrice,
 						cost: {
 							...line.cost,
 							totalAmount: {
@@ -264,9 +332,22 @@ export function cartReducer(
 					return buildItemWithDiscount(raw, discountNodes);
 				})
 				.filter(Boolean) as CartItem[];
+
+			const { lines, totalQuantity, partialCost } = recalcCart(
+				updatedLines,
+				cart.cost.totalAmount.currencyCode,
+				cart.cost,
+			);
+
 			return {
 				...cart,
-				...recalcCart(updatedLines, cart.cost.totalAmount.currencyCode),
+				lines,
+				totalQuantity,
+				cost: {
+					...cart.cost,
+					subtotalAmount: partialCost.subtotalAmount,
+					totalAmount: partialCost.estimatedTotal,
+				},
 			};
 		}
 

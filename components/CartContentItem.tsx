@@ -34,12 +34,16 @@ function getCartItemPricing(item: CartItem) {
 		return { original: totalAmount, discounted: null };
 	}
 
+	// Prix original = prix brut unitaire × quantité
+	const unitPrice = item.originalUnitPrice
+		? parseFloat(item.originalUnitPrice)
+		: parseFloat(totalAmount.amount) / item.quantity;
+
+	const originalTotal = (unitPrice * item.quantity).toFixed(2);
+
 	return {
-		discounted: {
-			amount: (parseFloat(totalAmount.amount) - totalDiscounted).toFixed(2),
-			currencyCode,
-		},
-		original: totalAmount,
+		original: { amount: originalTotal, currencyCode }, // ← 30€ barré ✅
+		discounted: totalAmount, // ← 24€ en gras ✅
 	};
 }
 
