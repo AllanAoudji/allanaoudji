@@ -4,7 +4,7 @@ import CartAction from "@/types/cartAction";
 import CartItem from "@/types/cartItem";
 import { DiscountNode } from "@/types/shopifyDiscount";
 
-function recalcCart(lines: CartItem[], currency: string, previousCost?: Cart["cost"]) {
+function recalcCart(lines: CartItem[], currency: string) {
 	const totalQuantity = lines.reduce((sum, l) => sum + l.quantity, 0);
 
 	const subtotal = lines.reduce((sum, l) => sum + Number(l.cost.totalAmount.amount), 0).toFixed(2);
@@ -19,20 +19,13 @@ function recalcCart(lines: CartItem[], currency: string, previousCost?: Cart["co
 		}, 0)
 		.toFixed(2);
 
-	// Frais de port = totalAmount Shopify - subtotalAmount Shopify
-	const shippingCost = previousCost
-		? Number(previousCost.totalAmount.amount) - Number(previousCost.subtotalAmount.amount)
-		: 0;
-
-	const estimatedTotal = (Number(subtotal) + shippingCost).toFixed(2);
-
 	return {
 		lines,
 		totalQuantity,
 		partialCost: {
 			subtotalAmount: { amount: subtotal, currencyCode: currency },
 			totalDiscount: { amount: totalDiscount, currencyCode: currency },
-			estimatedTotal: { amount: estimatedTotal, currencyCode: currency },
+			estimatedTotal: { amount: subtotal, currencyCode: currency },
 		},
 	};
 }
@@ -206,7 +199,6 @@ export function cartReducer(
 			const { lines, totalQuantity, partialCost } = recalcCart(
 				updatedLines,
 				cart.cost.totalAmount.currencyCode,
-				cart.cost,
 			);
 
 			return {
@@ -249,7 +241,6 @@ export function cartReducer(
 			const { lines, totalQuantity, partialCost } = recalcCart(
 				updatedLines,
 				cart.cost.totalAmount.currencyCode,
-				cart.cost,
 			);
 
 			return {
@@ -270,7 +261,6 @@ export function cartReducer(
 			const { lines, totalQuantity, partialCost } = recalcCart(
 				action.previousLines,
 				cart.cost.totalAmount.currencyCode,
-				cart.cost,
 			);
 
 			return {
@@ -291,7 +281,6 @@ export function cartReducer(
 			const { lines, totalQuantity, partialCost } = recalcCart(
 				updatedLines,
 				cart.cost.totalAmount.currencyCode,
-				cart.cost,
 			);
 
 			return {
@@ -336,7 +325,6 @@ export function cartReducer(
 			const { lines, totalQuantity, partialCost } = recalcCart(
 				updatedLines,
 				cart.cost.totalAmount.currencyCode,
-				cart.cost,
 			);
 
 			return {
