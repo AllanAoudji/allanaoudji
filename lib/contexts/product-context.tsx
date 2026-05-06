@@ -21,16 +21,18 @@ type Props = {
 export function ProductProvider({ children }: Readonly<Props>) {
 	const searchParams = useSearchParams();
 
-	const getInitialState = () => {
+	// FIX: useMemo pour éviter de recréer l'état initial à chaque render,
+	// ce qui réinitialisait le state optimiste inutilement.
+	const initialState = useMemo(() => {
 		const params: ProductState = {};
 		for (const [key, value] of searchParams.entries()) {
 			params[key] = value;
 		}
 		return params;
-	};
+	}, [searchParams]);
 
 	const [state, setOptimisticState] = useOptimistic(
-		getInitialState(),
+		initialState,
 		(prevState: ProductState, update: ProductState) => ({
 			...prevState,
 			...update,
@@ -50,7 +52,8 @@ export function ProductProvider({ children }: Readonly<Props>) {
 		(index: string) => {
 			const newState = { image: index };
 			setOptimisticState(newState);
-			return { ...state, ...updateImage };
+			// FIX: était { ...state, ...updateImage } — référence circulaire avant déclaration.
+			return { ...state, ...newState };
 		},
 		[state, setOptimisticState],
 	);
