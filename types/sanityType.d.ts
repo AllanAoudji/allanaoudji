@@ -20,8 +20,3 @@ export type SanityImage = {
 	url: string | null;
 	width: number | null;
 };
-
-export type About = NonNullable<ABOUT_QUERY_RESULT>;
-export type AboutImages = NonNullable<About["images"]>;
-export type AboutImage = Unpacked<AboutImages>;
-export type AboutText = NonNullable<About["text"]>;
