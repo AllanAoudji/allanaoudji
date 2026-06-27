@@ -1,5 +1,5 @@
-import SkeletonPortableText from "@/components/SkeletonPortableText";
+import SkeletonAbout from "@/components/SkeletonAbout";
 
 export default function AboutLoading() {
-	return <SkeletonPortableText />;
+	return <SkeletonAbout />;
 }
