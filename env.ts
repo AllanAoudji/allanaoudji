@@ -20,7 +20,8 @@ const envVariables = z.object({
 	SENTRY_AUTH_TOKEN: z.string(),
 	SENTRY_ORG: z.string(),
 	SENTRY_PROJECT: z.string(),
-	SHOPIFY_ADMIN_ACCESS_TOKEN: z.string(),
+	SHOPIFY_ADMIN_CLIENT_ID: z.string(),
+	SHOPIFY_ADMIN_CLIENT_SECRET: z.string(),
 	SHOPIFY_PUBLIC_ACCESS_TOKEN: z.string(),
 	SHOPIFY_STORE_DOMAIN: z.string(),
 	SHOPIFY_WEBHOOK_SECRET: z.string(),
@@ -33,7 +34,9 @@ const envVariables = z.object({
 envVariables.parse(process.env);
 
 declare global {
+	// eslint-disable-next-line no-unused-vars
 	namespace NodeJS {
+		// eslint-disable-next-line no-unused-vars
 		interface ProcessEnv extends z.infer<typeof envVariables> {}
 	}
 }

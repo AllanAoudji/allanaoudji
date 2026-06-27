@@ -191,7 +191,6 @@ cp env.example .env.local
 | `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` | Domaine public de la boutique (`xxx.myshopify.com`) |
 | `SHOPIFY_STORE_DOMAIN`             | Domaine (server-side)                               |
 | `SHOPIFY_PUBLIC_ACCESS_TOKEN`      | Token Storefront API (public)                       |
-| `SHOPIFY_ADMIN_ACCESS_TOKEN`       | Token Admin API (server-side uniquement)            |
 | `SHOPIFY_WEBHOOK_SECRET`           | Secret pour valider les webhooks Shopify            |
 
 ### Monitoring — Sentry
