@@ -1,3 +1,4 @@
+import { getAdminAccessToken } from "../adminToken";
 import { getCollectionsQuery } from "../queries/collection";
 import { getDiscountsQuery } from "../queries/discount";
 import { getProductVariantsInventoryQuery } from "../queries/product";
@@ -49,11 +50,13 @@ export async function shopifyAdminFetch<T>(
 	},
 	retries = MAX_RETRIES,
 ): Promise<{ status: number; body: T }> {
+	const accessToken = await getAdminAccessToken();
+
 	const fetchOptions: RequestInit = {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			"X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
+			"X-Shopify-Access-Token": accessToken,
 			...headers,
 		},
 		body: JSON.stringify({
