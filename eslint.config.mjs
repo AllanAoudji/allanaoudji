@@ -3,6 +3,7 @@ import next from "eslint-config-next";
 export default [
 	...next,
 	{
+		ignores: ["sanityBackend/types.ts"],
 		rules: {
 			"@typescript-eslint/no-empty-object-type": "off",
 			"@typescript-eslint/no-namespace": "off",

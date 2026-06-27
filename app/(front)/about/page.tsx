@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { DEFAULT_OG } from "@/lib/constants";
 import { isPortableTextEmpty } from "@/lib/utils";
+import AboutContainer from "@/components/AboutContainer";
 import EmptyAbout from "@/components/EmptyAbout";
-import PortableTextContent from "@/components/PortableTextContent";
 import { getAbout } from "@/studio/lib/queries";
 
 export const metadata: Metadata = {
@@ -21,9 +21,12 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
 	const result = await getAbout();
 
-	if (!result?.data?.content || isPortableTextEmpty(result.data.content)) {
+	if (
+		!result?.data?.text ||
+		(isPortableTextEmpty(result.data.text) && !result.data.images?.length)
+	) {
 		return <EmptyAbout />;
 	}
 
-	return <PortableTextContent value={result.data.content} />;
+	return <AboutContainer images={result.data.images} text={result.data.text} />;
 }

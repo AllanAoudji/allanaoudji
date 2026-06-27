@@ -10,18 +10,15 @@ import { sanityFetch } from "./live";
 
 const ABOUT_QUERY = defineQuery(`
   *[_type == "about"][0]{
-    content[]{
-      ...,
-      _type == "figure" => {
-        ...,
-        "image": image{
-          ...,
-          "width": asset->metadata.dimensions.width,
-          "height": asset->metadata.dimensions.height,
-          "lqip": asset->metadata.lqip
-        }
-      }
+    images[]{
+      _key,
+      alt,
+      asset->{ ... },
+      "lqip": asset->metadata.lqip,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
     },
+    text
   }
 `);
 
