@@ -100,6 +100,7 @@ type CalloutBlock = {
 type Props = {
 	className?: string;
 	value: unknown[];
+	variant?: "default" | "feature";
 };
 
 const components: PortableTextComponents = {
@@ -216,7 +217,7 @@ const components: PortableTextComponents = {
 	},
 };
 
-export default function PortableTextContent({ className, value }: Readonly<Props>) {
+export default function PortableTextContent({ className, value, variant }: Readonly<Props>) {
 	if (!value?.length) return null;
 
 	const processed = applyTypography(
@@ -226,7 +227,14 @@ export default function PortableTextContent({ className, value }: Readonly<Props
 	if (!processed.length) return null;
 
 	return (
-		<div className={cn("editorial-root editorial-columns", className)}>
+		<div
+			className={cn(
+				"editorial-root",
+				variant === "default" && "editorial-columns",
+				variant === "feature" && "editorial-feature",
+				className,
+			)}
+		>
 			<PortableText components={components} value={processed as never} />
 		</div>
 	);

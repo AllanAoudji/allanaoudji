@@ -374,3 +374,37 @@
 		@apply pb-0;
 	}
 }
+
+/* ─── VARIANTE FEATURE — peu de contenu (À propos, bio, etc.) ───────────── */
+
+.editorial-feature {
+	/* une seule colonne, on désactive le système multi-colonnes */
+	columns: 1;
+	margin-inline: auto;
+}
+
+.editorial-feature .editorial-p,
+.editorial-feature p {
+	@apply text-base leading-relaxed; /* plus grand que text-sm */
+	font-family: "gopher", Georgia, serif;
+}
+
+.editorial-feature h1,
+.editorial-feature .editorial-h1 {
+	@apply text-2xl;
+}
+
+.editorial-feature h2,
+.editorial-feature .editorial-h2 {
+	@apply text-xl;
+}
+
+/* figures pas flottantes ici : on veut un rendu "feature", image pleine largeur ou centrée */
+.editorial-feature figure {
+	@apply float-none my-6 max-w-full;
+}
+
+.editorial-feature figure.float-left,
+.editorial-feature figure.float-right {
+	@apply float-none max-w-full;
+}

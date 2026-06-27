@@ -11,7 +11,7 @@ export type WorkGallery = NonNullable<Work["gallery"]>;
 export type WorkGalleryImage = Unpacked<WorkGallery>;
 export type WorkMainImage = Work["mainImage"];
 
-type SanityImage = {
+export type SanityImage = {
 	_id: string;
 	alt: string | null;
 	blurHash: string | null;
@@ -20,3 +20,8 @@ type SanityImage = {
 	url: string | null;
 	width: number | null;
 };
+
+export type About = NonNullable<ABOUT_QUERY_RESULT>;
+export type AboutImages = NonNullable<About["images"]>;
+export type AboutImage = Unpacked<AboutImages>;
+export type AboutText = NonNullable<About["text"]>;
