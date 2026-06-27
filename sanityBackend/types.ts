@@ -385,36 +385,16 @@ export type AllSanitySchemaTypes =
 
 // Source: sanityBackend/lib/queries.ts
 // Variable: ABOUT_QUERY
-// Query: *[_type == "about"][0]{    images[]{      _key,      alt,      asset->{ ... },      "lqip": asset->metadata.lqip,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    text  }
+// Query: *[_type == "about"][0]{   "images": images[]{      "_id": _key,      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "blurHash": asset->metadata.blurHash,      "lqip": asset->metadata.lqip,    },    text  }
 export type ABOUT_QUERY_RESULT = {
 	images: Array<{
-		_key: string;
+		_id: string;
 		alt: null;
-		asset: {
-			_id: string;
-			_type: "sanity.imageAsset";
-			_createdAt: string;
-			_updatedAt: string;
-			_rev: string;
-			originalFilename?: string;
-			label?: string;
-			title?: string;
-			description?: string;
-			altText?: string;
-			sha1hash: string;
-			extension: string;
-			mimeType: string;
-			size: number;
-			assetId: string;
-			uploadId?: string;
-			path: string;
-			url: string;
-			metadata?: SanityImageMetadata;
-			source?: SanityAssetSourceData;
-		} | null;
-		lqip: string | null;
+		url: string | null;
 		width: number | null;
 		height: number | null;
+		blurHash: string | null;
+		lqip: string | null;
 	}> | null;
 	text: PortableText | null;
 } | null;
@@ -804,7 +784,7 @@ export type WORK_QUERY_RESULT = {
 
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n  *[_type == "about"][0]{\n    images[]{\n      _key,\n      alt,\n      asset->{ ... },\n      "lqip": asset->metadata.lqip,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    text\n  }\n': ABOUT_QUERY_RESULT;
+		'\n  *[_type == "about"][0]{\n   "images": images[]{\n      "_id": _key,\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "blurHash": asset->metadata.blurHash,\n      "lqip": asset->metadata.lqip,\n    },\n    text\n  }\n': ABOUT_QUERY_RESULT;
 		'\n  *[_type == "settings"][0]{\n    banner\n  }\n': BANNER_QUERY_RESULT;
 		'\n  *[_type == "contact" && (hidden == false || !defined(hidden))] | order(orderRank) [0...10]{\n    _id,\n    "slug": slug.current,\n    text,\n    title,\n    url,\n    blank\n  }\n': CONTACTS_QUERY_RESULT;
 		'\n  *[_type == "generalConditionsOfSale"][0]{\n    content[]{\n      ...,\n      _type == "figure" => {\n        ...,\n        "image": image{\n          ...,\n          "width": asset->metadata.dimensions.width,\n          "height": asset->metadata.dimensions.height,\n          "lqip": asset->metadata.lqip\n        }\n      }\n    },\n    _updatedAt\n  }\n': GENERAL_CONDITION_OF_SALE_QUERY_RESULT;

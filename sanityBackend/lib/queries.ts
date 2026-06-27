@@ -10,13 +10,14 @@ import { sanityFetch } from "./live";
 
 const ABOUT_QUERY = defineQuery(`
   *[_type == "about"][0]{
-    images[]{
-      _key,
+   "images": images[]{
+      "_id": _key,
       alt,
-      asset->{ ... },
-      "lqip": asset->metadata.lqip,
+      "url": asset->url,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      "blurHash": asset->metadata.blurHash,
+      "lqip": asset->metadata.lqip,
     },
     text
   }
