@@ -217,7 +217,11 @@ const components: PortableTextComponents = {
 	},
 };
 
-export default function PortableTextContent({ className, value, variant }: Readonly<Props>) {
+export default function PortableTextContent({
+	className,
+	value,
+	variant = "default",
+}: Readonly<Props>) {
 	if (!value?.length) return null;
 
 	const processed = applyTypography(

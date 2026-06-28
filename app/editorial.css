@@ -387,16 +387,19 @@
 .editorial-feature p {
 	@apply text-base leading-relaxed; /* plus grand que text-sm */
 	font-family: "gopher", Georgia, serif;
+	line-height: 1.35;
 }
 
 .editorial-feature h1,
 .editorial-feature .editorial-h1 {
 	@apply text-2xl;
+	line-height: 1.1;
 }
 
 .editorial-feature h2,
 .editorial-feature .editorial-h2 {
 	@apply text-xl;
+	line-height: 1.15;
 }
 
 /* figures pas flottantes ici : on veut un rendu "feature", image pleine largeur ou centrée */
