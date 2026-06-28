@@ -1,6 +1,6 @@
 import next from "eslint-config-next";
 
-export default [
+const eslintConfig = [
 	...next,
 	{
 		ignores: ["sanityBackend/types.ts"],
@@ -19,7 +19,8 @@ export default [
 			],
 			"object-shorthand": "error",
 			"linebreak-style": ["error", "unix"],
-			"no-unused-vars": [
+			"no-unused-vars": "off",
+			"@typescript-eslint/no-unused-vars": [
 				"error",
 				{
 					vars: "all",
@@ -34,3 +35,5 @@ export default [
 		},
 	},
 ];
+
+export default eslintConfig;
