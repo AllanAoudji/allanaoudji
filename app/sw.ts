@@ -13,6 +13,10 @@ const serwist = new Serwist({
 	navigationPreload: true,
 	runtimeCaching: [
 		{
+			matcher: ({ url }) => url.searchParams.has("_rsc"),
+			handler: new NetworkOnly(),
+		},
+		{
 			matcher: ({ url }) => url.hostname.endsWith(".api.sanity.io"),
 			handler: new NetworkOnly(),
 		},
