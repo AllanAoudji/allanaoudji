@@ -10,7 +10,9 @@ export default function GlobalError({ error }: { error: Error; reset: () => void
 		if (
 			error?.message?.includes("was not found on the server") ||
 			error?.message?.includes("NEXT_REDIRECT") ||
-			error?.message?.includes("NEXT_NOT_FOUND")
+			error?.message?.includes("NEXT_NOT_FOUND") ||
+			error.message?.toLowerCase().includes("network error") ||
+			error.message?.toLowerCase().includes("failed to fetch")
 		) {
 			window.location.reload();
 			return;
