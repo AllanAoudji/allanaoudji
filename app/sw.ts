@@ -1,6 +1,6 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry } from "serwist";
-import { NetworkOnly, Serwist } from "serwist";
+import { NetworkFirst, NetworkOnly, Serwist } from "serwist";
 
 declare const self: ServiceWorkerGlobalScope & {
 	__SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
@@ -15,6 +15,10 @@ const serwist = new Serwist({
 		{
 			matcher: ({ url }) => url.searchParams.has("_rsc"),
 			handler: new NetworkOnly(),
+		},
+		{
+			matcher: ({ request }) => request.mode === "navigate",
+			handler: new NetworkFirst(), // import à ajouter
 		},
 		{
 			matcher: ({ url }) => url.hostname.endsWith(".api.sanity.io"),
